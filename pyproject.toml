@@ -1,0 +1,50 @@
+[project]
+name = "filing-qa"
+version = "0.1.0"
+description = "Citation-grounded QA over SEC filings, built around a CI-gated evaluation harness"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "lxml>=5.2",
+    "psycopg[binary]>=3.2",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "syrupy>=4.6",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["api*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# ruff format rewrites Python blocks inside markdown. docs/PRD.md is the spec and
+# must not be reformatted by a linter.
+extend-exclude = ["docs", "data"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # import sorting
+    "UP",   # pyupgrade
+    "B",    # bugbear
+    "SIM",  # simplify
+    "RUF",  # ruff-specific
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "network: hits SEC EDGAR; deselected by default in CI",
+]

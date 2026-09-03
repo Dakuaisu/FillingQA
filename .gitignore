@@ -1,0 +1,17 @@
+# Corpus. Raw filings are re-downloadable and large; never commit them.
+# Test fixtures under tests/fixtures/filings/ ARE committed -- see CLAUDE.md rule 2.
+data/
+
+.env
+.venv/
+venv/
+
+.bridge/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/

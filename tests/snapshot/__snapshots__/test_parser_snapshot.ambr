@@ -1,0 +1,349 @@
+# serializer version: 1
+# name: test_aapl_10k_snapshot
+  dict({
+    'blocks_paragraph': 644,
+    'blocks_table': 54,
+    'blocks_total': 698,
+    'contextref_dimensional': 420,
+    'contextref_resolved': 967,
+    'contexts': 182,
+    'fiscal_period': 'FY',
+    'fiscal_year': 2025,
+    'missing_required_items': list([
+    ]),
+    'sections': list([
+      dict({
+        'chars': 15995,
+        'code': 'I.1',
+        'title': 'Business',
+      }),
+      dict({
+        'chars': 68042,
+        'code': 'I.1A',
+        'title': 'Risk Factors',
+      }),
+      dict({
+        'chars': 40,
+        'code': 'I.1B',
+        'title': 'Unresolved Staff Comments',
+      }),
+      dict({
+        'chars': 2698,
+        'code': 'I.1C',
+        'title': 'Cybersecurity',
+      }),
+      dict({
+        'chars': 516,
+        'code': 'I.2',
+        'title': 'Properties',
+      }),
+      dict({
+        'chars': 5398,
+        'code': 'I.3',
+        'title': 'Legal Proceedings',
+      }),
+      dict({
+        'chars': 88,
+        'code': 'I.4',
+        'title': 'Mine Safety Disclosures',
+      }),
+      dict({
+        'chars': 2663,
+        'code': 'II.5',
+        'title': 'Market for Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities',
+      }),
+      dict({
+        'chars': 51,
+        'code': 'II.6',
+        'title': '[Reserved]',
+      }),
+      dict({
+        'chars': 18023,
+        'code': 'II.7',
+        'title': 'Management’s Discussion and Analysis of Financial Condition and Results of Operations',
+      }),
+      dict({
+        'chars': 3023,
+        'code': 'II.7A',
+        'title': 'Quantitative and Qualitative Disclosures About Market Risk',
+      }),
+      dict({
+        'chars': 61072,
+        'code': 'II.8',
+        'title': 'Financial Statements and Supplementary Data',
+      }),
+      dict({
+        'chars': 98,
+        'code': 'II.9',
+        'title': 'Changes in and Disagreements with Accountants on Accounting and Financial Disclosure',
+      }),
+      dict({
+        'chars': 4497,
+        'code': 'II.9A',
+        'title': 'Controls and Procedures',
+      }),
+      dict({
+        'chars': 569,
+        'code': 'II.9B',
+        'title': 'Other Information',
+      }),
+      dict({
+        'chars': 101,
+        'code': 'II.9C',
+        'title': 'Disclosure Regarding Foreign Jurisdictions that Prevent Inspections',
+      }),
+      dict({
+        'chars': 397,
+        'code': 'III.10',
+        'title': 'Directors, Executive Officers and Corporate Governance',
+      }),
+      dict({
+        'chars': 156,
+        'code': 'III.11',
+        'title': 'Executive Compensation',
+      }),
+      dict({
+        'chars': 228,
+        'code': 'III.12',
+        'title': 'Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters',
+      }),
+      dict({
+        'chars': 207,
+        'code': 'III.13',
+        'title': 'Certain Relationships and Related Transactions, and Director Independence',
+      }),
+      dict({
+        'chars': 213,
+        'code': 'III.14',
+        'title': 'Principal Accountant Fees and Services',
+      }),
+      dict({
+        'chars': 11796,
+        'code': 'IV.15',
+        'title': 'Exhibit and Financial Statement Schedules',
+      }),
+      dict({
+        'chars': 2098,
+        'code': 'IV.16',
+        'title': 'Form 10-K Summary',
+      }),
+    ]),
+    'spans_numeric': 967,
+    'spans_total': 1107,
+    'spans_unparsed': 5,
+    'text_chars': 206502,
+    'text_sha256': '7555b4c136b66c2012c783e26cdbc59b1bc4a563888a475ea800e05348ec63cd',
+  })
+# ---
+# name: test_aapl_10q_snapshot
+  dict({
+    'blocks_paragraph': 281,
+    'blocks_table': 31,
+    'blocks_total': 312,
+    'contextref_dimensional': 406,
+    'contextref_resolved': 754,
+    'contexts': 158,
+    'fiscal_period': 'Q2',
+    'fiscal_year': 2026,
+    'missing_required_items': list([
+    ]),
+    'sections': list([
+      dict({
+        'chars': 26287,
+        'code': 'I.1',
+        'title': 'Financial Statements',
+      }),
+      dict({
+        'chars': 21896,
+        'code': 'I.2',
+        'title': 'Management’s Discussion and Analysis of Financial Condition and Results of Operations',
+      }),
+      dict({
+        'chars': 389,
+        'code': 'I.3',
+        'title': 'Quantitative and Qualitative Disclosures About Market Risk',
+      }),
+      dict({
+        'chars': 1412,
+        'code': 'I.4',
+        'title': 'Controls and Procedures',
+      }),
+      dict({
+        'chars': 5148,
+        'code': 'II.1',
+        'title': 'Legal Proceedings',
+      }),
+      dict({
+        'chars': 22092,
+        'code': 'II.1A',
+        'title': 'Risk Factors',
+      }),
+      dict({
+        'chars': 1544,
+        'code': 'II.2',
+        'title': 'Unregistered Sales of Equity Securities and Use of Proceeds',
+      }),
+      dict({
+        'chars': 45,
+        'code': 'II.3',
+        'title': 'Defaults Upon Senior Securities',
+      }),
+      dict({
+        'chars': 47,
+        'code': 'II.4',
+        'title': 'Mine Safety Disclosures',
+      }),
+      dict({
+        'chars': 718,
+        'code': 'II.5',
+        'title': 'Other Information',
+      }),
+      dict({
+        'chars': 1449,
+        'code': 'II.6',
+        'title': 'Exhibits',
+      }),
+    ]),
+    'spans_numeric': 754,
+    'spans_total': 831,
+    'spans_unparsed': 4,
+    'text_chars': 84547,
+    'text_sha256': 'e1c36e2061173cf47977986330be95d9953ef926eec9557c78c5d6452b5db212',
+  })
+# ---
+# name: test_tgt_10k_snapshot
+  dict({
+    'blocks_paragraph': 614,
+    'blocks_table': 250,
+    'blocks_total': 864,
+    'contextref_dimensional': 347,
+    'contextref_resolved': 990,
+    'contexts': 226,
+    'fiscal_period': 'FY',
+    'fiscal_year': 2025,
+    'missing_required_items': list([
+    ]),
+    'sections': list([
+      dict({
+        'chars': 19295,
+        'code': 'I.1',
+        'title': 'Business',
+      }),
+      dict({
+        'chars': 56221,
+        'code': 'I.1A',
+        'title': 'Risk Factors',
+      }),
+      dict({
+        'chars': 152,
+        'code': 'I.1B',
+        'title': 'Unresolved Staff Comments',
+      }),
+      dict({
+        'chars': 7177,
+        'code': 'I.1C',
+        'title': 'Cybersecurity.',
+      }),
+      dict({
+        'chars': 2014,
+        'code': 'I.2',
+        'title': 'Properties',
+      }),
+      dict({
+        'chars': 1896,
+        'code': 'I.3',
+        'title': 'Legal Proceedings',
+      }),
+      dict({
+        'chars': 161,
+        'code': 'I.4',
+        'title': 'Mine Safety Disclosures',
+      }),
+      dict({
+        'chars': 2995,
+        'code': 'II.5',
+        'title': "Market for the Registrant's Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities",
+      }),
+      dict({
+        'chars': 183,
+        'code': 'II.6',
+        'title': '[Reserved]',
+      }),
+      dict({
+        'chars': 39835,
+        'code': 'II.7',
+        'title': "Management's Discussion and Analysis of Financial Condition and Results of Operations",
+      }),
+      dict({
+        'chars': 2786,
+        'code': 'II.7A',
+        'title': 'Quantitative and Qualitative Disclosures About Market Risk',
+      }),
+      dict({
+        'chars': 77778,
+        'code': 'II.8',
+        'title': 'Financial Statements and Supplementary Data',
+      }),
+      dict({
+        'chars': 108,
+        'code': 'II.9',
+        'title': 'Changes in and Disagreements with Accountants on Accounting and Financial Disclosure',
+      }),
+      dict({
+        'chars': 2061,
+        'code': 'II.9A',
+        'title': 'Controls and Procedures',
+      }),
+      dict({
+        'chars': 42,
+        'code': 'II.9B',
+        'title': 'Other Information',
+      }),
+      dict({
+        'chars': 590,
+        'code': 'II.9C',
+        'title': 'Disclosure Regarding Foreign Jurisdictions that Prevent Inspections',
+      }),
+      dict({
+        'chars': 598,
+        'code': 'III.10',
+        'title': 'Directors, Executive Officers and Corporate Governance',
+      }),
+      dict({
+        'chars': 368,
+        'code': 'III.11',
+        'title': 'Executive Compensation',
+      }),
+      dict({
+        'chars': 388,
+        'code': 'III.12',
+        'title': 'Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters',
+      }),
+      dict({
+        'chars': 309,
+        'code': 'III.13',
+        'title': 'Certain Relationships and Related Transactions, and Director Independence',
+      }),
+      dict({
+        'chars': 391,
+        'code': 'III.14',
+        'title': 'Principal Accountant Fees and Services',
+      }),
+      dict({
+        'chars': 15829,
+        'code': 'IV.15',
+        'title': 'Exhibits, Financial Statement Schedules',
+      }),
+      dict({
+        'chars': 1723,
+        'code': 'IV.16',
+        'title': 'Form 10-K Summary',
+      }),
+    ]),
+    'spans_numeric': 990,
+    'spans_total': 1163,
+    'spans_unparsed': 13,
+    'text_chars': 238493,
+    'text_sha256': '41ca1b1d4a37ee9dadca141bcc275a861f92e903b238d0c7ad71427d7f4452ce',
+  })
+# ---

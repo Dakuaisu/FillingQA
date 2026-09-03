@@ -1,0 +1,42 @@
+# Corpus definition. PRD 4.4 and Appendix A.
+#
+# NOTE ON `sector`: these four labels are OURS, not SEC's. PRD 4.4 picked eight
+# companies across four sectors with two deliberately confusable pairs
+# (COST/TGT, JPM/BAC) to exercise entity bleed. SIC codes do not map cleanly
+# onto those four buckets -- SIC is a much finer taxonomy built for a different
+# purpose -- so the bucket is recorded here as corpus-design metadata rather
+# than derived from SEC data. `companies.sic_code` carries SEC's own value
+# alongside it, unmodified.
+
+corpus:
+  form_types: [10-K, 10-Q]
+  years_back: 3
+
+  companies:
+    - ticker: COST
+      sector: retail        # retail pair #1 -- near-identical line items to TGT
+    - ticker: TGT
+      sector: retail        # retail pair #2 -- the entity-bleed test lives here
+    - ticker: JPM
+      sector: financials    # bank pair #1
+    - ticker: BAC
+      sector: financials    # bank pair #2
+    - ticker: AAPL
+      sector: tech          # clean, well-structured filing; parser baseline
+    - ticker: NVDA
+      sector: tech          # rapid YoY changes sharpen comparison questions
+    - ticker: XOM
+      sector: energy        # segment tables and unusual units
+    # PRD 4.4 says "Sectors | 4 (tech, retail, energy, financials)" but its own
+    # company table describes PFE as "Pharma". Five labels, not four. Left as
+    # `pharma` because the company table is the more specific statement and
+    # because folding pharma into any of the other four would be arbitrary.
+    # Nothing consumes `sector` yet, so this is cheap to change -- flag if you
+    # want PFE bucketed into one of the four instead.
+    - ticker: PFE
+      sector: pharma        # dense footnotes and complex risk-factor prose
+
+  # The parser-development slice. NOT an eval corpus -- see docs/TRADEOFFS.md.
+  dev_slice:
+    tickers: [COST, TGT, AAPL]
+    years_back: 1

@@ -1,0 +1,36 @@
+name: ci
+
+# Lint and unit tests only. The eval gate (PRD 11.5) is a separate workflow and
+# does not exist until Phase 4 -- do not add eval steps here.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Ruff lint
+        run: ruff check .
+
+      - name: Ruff format check
+        run: ruff format --check .
+
+      - name: Tests
+        # Network-marked tests hit SEC EDGAR and are excluded from CI so a
+        # rate-limit or outage can never fail a build. See PRD 6.1.
+        run: pytest -m "not network"

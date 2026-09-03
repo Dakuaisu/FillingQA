@@ -1,0 +1,47 @@
+{
+  "note": "Real SEC filings, committed unmodified and gzipped. CLAUDE.md rule 2: fixtures must be real filings with their accession numbers recorded. sha256 is of the UNCOMPRESSED bytes as downloaded from EDGAR.",
+  "filings": [
+    {
+      "accession": "0000027419-26-000016",
+      "cik": "0000027419",
+      "ticker": "TGT",
+      "company_name": "TARGET CORP",
+      "form_type": "10-K",
+      "filing_date": "2026-03-11",
+      "period_end": "2026-01-31",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/27419/000002741926000016/tgt-20260131.htm",
+      "sha256": "20bc4552dcb1df7c0bbd837f721de931e2ab4cdd2cb2e3c147f335d41eb68a52",
+      "raw_bytes": 2059294,
+      "file": "0000027419-26-000016.htm.gz",
+      "why": "layout-table heavy: 250 table blocks vs AAPL's 54 (F-35)"
+    },
+    {
+      "accession": "0000320193-25-000079",
+      "cik": "0000320193",
+      "ticker": "AAPL",
+      "company_name": "Apple Inc.",
+      "form_type": "10-K",
+      "filing_date": "2025-10-31",
+      "period_end": "2025-09-27",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "sha256": "548ae59778cf08ee0f2ee088e7ece20d947076c3c01f74d2d65db4c2777e436a",
+      "raw_bytes": 1520208,
+      "file": "0000320193-25-000079.htm.gz",
+      "why": "clean, well-structured 10-K; parser baseline (PRD 4.4)"
+    },
+    {
+      "accession": "0000320193-26-000013",
+      "cik": "0000320193",
+      "ticker": "AAPL",
+      "company_name": "Apple Inc.",
+      "form_type": "10-Q",
+      "filing_date": "2026-05-01",
+      "period_end": "2026-03-28",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm",
+      "sha256": "bb90060d61a273e51b5a472d65ae15d8b51bfd037ddf91e559f9d9adfe2a0228",
+      "raw_bytes": 999810,
+      "file": "0000320193-26-000013.htm.gz",
+      "why": "10-Q with Part I Item 1 and Part II Item 1/1A collision (F-04)"
+    }
+  ]
+}

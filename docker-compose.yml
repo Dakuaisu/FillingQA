@@ -1,0 +1,27 @@
+# Phase 1: Postgres only. redis, api, worker and langfuse arrive in later phases
+# (PRD 13.2) -- do not add them ahead of the phase that uses them.
+#
+# Development happens against a local Postgres 18 in WSL, not this container.
+# The image is pinned to pg18 to match, so a container-based run (CI, or a clean
+# machine) exercises the same major version. PRD 13.2 says pg16; the environment
+# moved and the pinned version follows it.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    environment:
+      POSTGRES_USER: filingqa
+      POSTGRES_PASSWORD: filingqa
+      POSTGRES_DB: filingqa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U filingqa -d filingqa"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
