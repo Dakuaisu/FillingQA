@@ -267,3 +267,36 @@ eval_comparison:
   gaps: [1, 2]              # fiscal years between the two sides
   dataset_version: comparison_candidates_v1
   spot_check_n: 4           # PRD 11.1: 10%
+
+# LLM seeding (PRD 11.1 Stage 1/2; TRADEOFFS, LLM seeding). Seeds fixed before
+# the first draw; one draw, no re-draw. `per_ticker` for tables: 6 each plus one
+# for the two tickers picked by `pick_extra(tickers, seed, 2)` (AAPL, XOM).
+eval_seeding:
+  table:
+    seed: 20261003
+    total: 50
+    per_ticker:
+      COST: 6
+      TGT: 6
+      JPM: 6
+      BAC: 6
+      AAPL: 7
+      NVDA: 6
+      XOM: 7
+      PFE: 6
+    overdraw: 2             # chunks seeded per slot
+  synthesis:
+    seed: 20261004
+    total: 40
+    per_ticker:
+      COST: 5
+      TGT: 5
+      JPM: 5
+      BAC: 5
+      AAPL: 5
+      NVDA: 5
+      XOM: 5
+      PFE: 5
+    overdraw: 2
+    min_body_tokens: null   # proposed 40 (TRADEOFFS); not decided, so not applied
+  near_duplicate_cosine: 0.92   # PRD 11.1 Stage 2

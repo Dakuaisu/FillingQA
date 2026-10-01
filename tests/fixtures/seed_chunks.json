@@ -1,0 +1,63 @@
+{
+ "source": "python -m scripts.seed_supply --write-fixture",
+ "parser_version": "d58d26e08e5a",
+ "chunker_version": "964f77f6f9cb",
+ "chunks": [
+  {
+   "chunk_id": "0000027419-23-000052:273.0:274.0",
+   "ticker": "TGT",
+   "chunk_type": "prose",
+   "unit_scale": null,
+   "text": "[TARGET CORPORATION (TGT) | 10-Q | Q3 FY2023 | Part II, Item 1A: Risk Factors]\nItem 1A. Risk Factors\nThere have been no material changes to the risk factors described in Part I, Item 1A, Risk Factors of our Form 10-K for the fiscal year ended January 28, 2023.",
+   "raw_text": "Item 1A. Risk Factors\nThere have been no material changes to the risk factors described in Part I, Item 1A, Risk Factors of our Form 10-K for the fiscal year ended January 28, 2023."
+  },
+  {
+   "chunk_id": "0000078003-24-000039:343.0:344.0",
+   "ticker": "PFE",
+   "chunk_type": "prose",
+   "unit_scale": null,
+   "text": "[PFIZER INC (PFE) | 10-K | FY2023 | Item 1A: RISK FACTORS]\nOur manufacturing facility in Rocky Mount, NC was damaged by a tornado in July 2023. While manufacturing has resumed, the supply of medicines impacted by the tornado is expected to be affected through 2024. See the Overview of Our Performance, Operating Environment, Strategy and Outlook—Our Operating Environment section within MD&A.\nCOLLABORATIONS AND OTHER RELATIONSHIPS WITH THIRD PARTIES",
+   "raw_text": "Our manufacturing facility in Rocky Mount, NC was damaged by a tornado in July 2023. While manufacturing has resumed, the supply of medicines impacted by the tornado is expected to be affected through 2024. See the Overview of Our Performance, Operating Environment, Strategy and Outlook—Our Operating Environment section within MD&A.\nCOLLABORATIONS AND OTHER RELATIONSHIPS WITH THIRD PARTIES"
+  },
+  {
+   "chunk_id": "0000320193-23-000106:327.0:327.0",
+   "ticker": "AAPL",
+   "chunk_type": "table",
+   "unit_scale": null,
+   "text": "[Apple Inc. (AAPL) | 10-K | FY2023 | Item 7: Management’s Discussion and Analysis of Financial Condition and Results of Operations]\n[Table | Apple Inc. | FY2023 10-K | Item 7]\n| Gross margin percentage: |  |  |  |\n| Products | 36.5% | 36.3% | 35.3% |\n| Services | 70.8% | 71.7% | 69.7% |\n| Total gross margin percentage | 44.1% | 43.3% | 41.8% |",
+   "raw_text": "[Table | Apple Inc. | FY2023 10-K | Item 7]\n| Gross margin percentage: |  |  |  |\n| Products | 36.5% | 36.3% | 35.3% |\n| Services | 70.8% | 71.7% | 69.7% |\n| Total gross margin percentage | 44.1% | 43.3% | 41.8% |"
+  },
+  {
+   "chunk_id": "0000320193-23-000106:458.0:458.0",
+   "ticker": "AAPL",
+   "chunk_type": "table",
+   "unit_scale": null,
+   "text": "[Apple Inc. (AAPL) | 10-K | FY2023 | Item 8: Financial Statements and Supplementary Data]\n[Table: Note 3 – Earnings Per Share | Apple Inc. | FY2023 10-K | Item 8 | USD]\n|  | 2023 | 2022 | 2021 |\n|---|---|---|---|\n| Numerator: |  |  |  |\n| Net income | $96,995 | $99,803 | $94,680 |\n| Denominator: |  |  |  |\n| Weighted-average basic shares outstanding | 15,744,231 | 16,215,963 | 16,701,272 |\n| Effect of dilutive share-based awards | 68,316 | 109,856 | 163,647 |\n| Weighted-average diluted shares | 15,812,547 | 16,325,819 | 16,864,919 |\n| Basic earnings per share | $6.16 | $6.15 | $5.67 |\n| Diluted earnings per share | $6.13 | $6.11 | $5.61 |",
+   "raw_text": "[Table: Note 3 – Earnings Per Share | Apple Inc. | FY2023 10-K | Item 8 | USD]\n|  | 2023 | 2022 | 2021 |\n|---|---|---|---|\n| Numerator: |  |  |  |\n| Net income | $96,995 | $99,803 | $94,680 |\n| Denominator: |  |  |  |\n| Weighted-average basic shares outstanding | 15,744,231 | 16,215,963 | 16,701,272 |\n| Effect of dilutive share-based awards | 68,316 | 109,856 | 163,647 |\n| Weighted-average diluted shares | 15,812,547 | 16,325,819 | 16,864,919 |\n| Basic earnings per share | $6.16 | $6.15 | $5.67 |\n| Diluted earnings per share | $6.13 | $6.11 | $5.61 |"
+  },
+  {
+   "chunk_id": "0000909832-25-000015:68.1:68.1",
+   "ticker": "COST",
+   "chunk_type": "table",
+   "unit_scale": "millions",
+   "text": "[COSTCO WHOLESALE CORP /NEW (COST) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]\n[Table: CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS | COSTCO WHOLESALE CORP /NEW | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]\n|  | 24 Weeks Ended February 16, 2025 | 24 Weeks Ended February 18, 2024 |\n|---|---|---|\n| Financing lease payments and other financing activities, net | (98) | (96) |\n| Net cash used in financing activities | (1,434) | (8,250) |\n| EFFECT OF EXCHANGE RATE CHANGES ON CASH AND CASH EQUIVALENTS | (117) | 15 |\n| Net change in cash and cash equivalents | 2,450 | (4,605) |\n| CASH AND CASH EQUIVALENTS BEGINNING OF YEAR | 9,906 | 13,700 |\n| CASH AND CASH EQUIVALENTS END OF PERIOD | $12,356 | $9,095 |\n| SUPPLEMENTAL DISCLOSURE OF CASH FLOW INFORMATION: |  |  |\n| Cash paid during the first half of the year for: |  |  |\n| Interest | $55 | $62 |\n| Income taxes, net | $798 | $1,197 |\n| SUPPLEMENTAL DISCLOSURE OF NON-CASH ACTIVITIES: |  |  |\n| Cash dividend declared, but not yet paid | $515 | $— |\n| Financing lease assets obtained in exchange for new or modified leases | $103 | $97 |\n| Operating lease assets obtained in exchange for new or modified leases | $57 | $145 |\n| Capital expenditures included in liabilities | $164 | $144 |",
+   "raw_text": "[Table: CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS | COSTCO WHOLESALE CORP /NEW | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]\n|  | 24 Weeks Ended February 16, 2025 | 24 Weeks Ended February 18, 2024 |\n|---|---|---|\n| Financing lease payments and other financing activities, net | (98) | (96) |\n| Net cash used in financing activities | (1,434) | (8,250) |\n| EFFECT OF EXCHANGE RATE CHANGES ON CASH AND CASH EQUIVALENTS | (117) | 15 |\n| Net change in cash and cash equivalents | 2,450 | (4,605) |\n| CASH AND CASH EQUIVALENTS BEGINNING OF YEAR | 9,906 | 13,700 |\n| CASH AND CASH EQUIVALENTS END OF PERIOD | $12,356 | $9,095 |\n| SUPPLEMENTAL DISCLOSURE OF CASH FLOW INFORMATION: |  |  |\n| Cash paid during the first half of the year for: |  |  |\n| Interest | $55 | $62 |\n| Income taxes, net | $798 | $1,197 |\n| SUPPLEMENTAL DISCLOSURE OF NON-CASH ACTIVITIES: |  |  |\n| Cash dividend declared, but not yet paid | $515 | $— |\n| Financing lease assets obtained in exchange for new or modified leases | $103 | $97 |\n| Operating lease assets obtained in exchange for new or modified leases | $57 | $145 |\n| Capital expenditures included in liabilities | $164 | $144 |"
+  },
+  {
+   "chunk_id": "0001045810-24-000029:742.0:746.0",
+   "ticker": "NVDA",
+   "chunk_type": "prose",
+   "unit_scale": null,
+   "text": "[NVIDIA CORP (NVDA) | 10-K | FY2024 | Item 15: Exhibit and Financial Statement Schedules]\nSee accompanying notes to the consolidated financial statements.\nConsolidated Statements of Comprehensive Income",
+   "raw_text": "See accompanying notes to the consolidated financial statements.\nConsolidated Statements of Comprehensive Income"
+  },
+  {
+   "chunk_id": "0001045810-24-000029:748.0:752.0",
+   "ticker": "NVDA",
+   "chunk_type": "prose",
+   "unit_scale": null,
+   "text": "[NVIDIA CORP (NVDA) | 10-K | FY2024 | Item 15: Exhibit and Financial Statement Schedules]\nSee accompanying notes to the consolidated financial statements.\nConsolidated Balance Sheets",
+   "raw_text": "See accompanying notes to the consolidated financial statements.\nConsolidated Balance Sheets"
+  }
+ ]
+}

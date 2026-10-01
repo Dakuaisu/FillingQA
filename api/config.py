@@ -92,6 +92,11 @@ def eval_comparison(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_comparison"]
 
 
+def eval_seeding(path: Path = CORPUS_FILE) -> dict:
+    """The `eval_seeding:` block of api/config.yaml: LLM seeding sampler and filters."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_seeding"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

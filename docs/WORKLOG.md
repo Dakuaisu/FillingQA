@@ -3551,3 +3551,178 @@ prose but 2 chunks are untouched. JPM and BAC hold 6,367 of the 9,865 table
 chunks. JPM and XOM have no 10-K chunks (F-66, F-70). F-59 extended to Stage 1
 and the no-context filter and moved under Blocking Phase 3; F-88 records the 90
 `llm_seeded` items.
+
+## 2026-10-01 — LLM seeding: allocation measured, key-free filters built (no draw, no model call)
+
+`eval_seeding` config block added (seeds, `per_ticker`, overdraw 2,
+`min_body_tokens: null`, `near_duplicate_cosine: 0.92`). The two extra table
+slots went to `pick_extra(tickers, 20261003, 2)` = AAPL, XOM, printed by the
+script below and asserted by `test_extra_table_tickers_match_config`.
+
+`python -m scripts.seed_supply`:
+
+    parsed accessions: 90; chunks: 22354; candidate files: ['comparison_candidates.jsonl', 'xbrl_numeric_candidates.jsonl']
+    
+    chunks by (chunk_type, form): count, gold for a candidate, tokens
+      prose 10-K   4067 gold    2  tokens min 28, p25 224, median 385, p75 459, max 500
+      prose 10-Q   8422 gold    0  tokens min 34, p25 153, median 327, p75 446, max 500
+      table 10-K   1973 gold   94  tokens min 72, p25 209, median 331, p75 475, max 500
+      table 10-Q   7892 gold  345  tokens min 113, p25 252, median 395, p75 481, max 500
+      gold chunks by candidate file: {'comparison_candidates': 162, 'xbrl_numeric_candidates': 326}; distinct 441
+    
+    strata (ticker, form_type, item_code, chunk_type): 270 non-empty
+      table: 55 strata; chunks per stratum min 1, p25 8, median 25, p75 174, max 2101
+      prose: 215 strata; chunks per stratum min 2, p25 3, median 9, p75 18, max 1546
+    
+    chunks by (form, item_code) x chunk_type: table (gold) / prose (gold)
+      10-K II.8   table  1198 ( 79)   prose  1436 (  2)
+      10-K II.7   table   470 (  0)   prose   837 (  0)
+      10-K I.1A   table     0 (  0)   prose   709 (  0)
+      10-K IV.15  table   228 ( 15)   prose   298 (  0)
+      10-K I.1    table    26 (  0)   prose   354 (  0)
+      10-K II.5   table    33 (  0)   prose    39 (  0)
+      10-K I.1C   table     0 (  0)   prose    40 (  0)
+      10-K II.9A  table     0 (  0)   prose    40 (  0)
+      10-K I.2    table    12 (  0)   prose    24 (  0)
+      10-K II.7A  table     3 (  0)   prose    30 (  0)
+      10-K I.3    table     0 (  0)   prose    30 (  0)
+      10-K IV.16  table     0 (  0)   prose    28 (  0)
+      10-K III.10 table     0 (  0)   prose    25 (  0)
+      10-K III.12 table     3 (  0)   prose    21 (  0)
+      10-K II.9B  table     0 (  0)   prose    21 (  0)
+      10-K II.6   table     0 (  0)   prose    18 (  0)
+      10-K II.9   table     0 (  0)   prose    18 (  0)
+      10-K III.11 table     0 (  0)   prose    18 (  0)
+      10-K III.13 table     0 (  0)   prose    18 (  0)
+      10-K III.14 table     0 (  0)   prose    18 (  0)
+      10-K I.1B   table     0 (  0)   prose    15 (  0)
+      10-K I.4    table     0 (  0)   prose    15 (  0)
+      10-K II.9C  table     0 (  0)   prose    15 (  0)
+      10-Q I.1    table  5075 (344)   prose  4042 (  0)
+      10-Q I.2    table  2725 (  1)   prose  3468 (  0)
+      10-Q II.1A  table     0 (  0)   prose   273 (  0)
+      10-Q II.2   table    68 (  0)   prose   136 (  0)
+      10-Q II.6   table    24 (  0)   prose   110 (  0)
+      10-Q II.1   table     0 (  0)   prose    93 (  0)
+      10-Q II.5   table     0 (  0)   prose    82 (  0)
+      10-Q I.3    table     0 (  0)   prose    72 (  0)
+      10-Q I.4    table     0 (  0)   prose    72 (  0)
+      10-Q II.3   table     0 (  0)   prose    36 (  0)
+      10-Q II.4   table     0 (  0)   prose    36 (  0)
+      10-Q I.7A   table     0 (  0)   prose     2 (  0)
+    
+    per ticker: table (10-K / 10-Q) and prose (10-K / 10-Q); not gold for any candidate
+      JPM   table     0 /  3315 (free 0 / 3256)   prose     0 /  2992 (free 0 / 2992)
+      TGT   table   197 /   309 (free 183 / 268)   prose   427 /   354 (free 427 / 354)
+      XOM   table     0 /   476 (free 0 / 434)   prose     0 /   463 (free 0 / 463)
+      BAC   table   901 /  2151 (free 886 / 2091)   prose  1291 /  1838 (free 1291 / 1838)
+      PFE   table   366 /   674 (free 346 / 645)   prose  1008 /  1101 (free 1006 / 1101)
+      AAPL  table   173 /   270 (free 158 / 223)   prose   356 /   396 (free 356 / 396)
+      COST  table   154 /   283 (free 139 / 247)   prose   388 /   480 (free 388 / 480)
+      NVDA  table   182 /   414 (free 167 / 383)   prose   597 /   798 (free 597 / 798)
+    
+    config allocation:
+      table: total 50, sum 50, overdraw 2, per_ticker {'COST': 6, 'TGT': 6, 'JPM': 6, 'BAC': 6, 'AAPL': 7, 'NVDA': 6, 'XOM': 7, 'PFE': 6}
+      synthesis: total 40, sum 40, overdraw 2, per_ticker {'COST': 5, 'TGT': 5, 'JPM': 5, 'BAC': 5, 'AAPL': 5, 'NVDA': 5, 'XOM': 5, 'PFE': 5}
+      table extra slots: pick_extra(seed 20261003) = ['AAPL', 'XOM']; config gives 7 to ['AAPL', 'XOM']; match
+    
+    excluded as already gold, by stratum (ticker, form, item_code, chunk_type): 441 in 16 strata
+      AAPL 10-K II.8 table: 15
+      AAPL 10-Q I.1 table: 47
+      BAC 10-K II.8 table: 15
+      BAC 10-Q I.1 table: 60
+      COST 10-K II.8 table: 15
+      COST 10-Q I.1 table: 36
+      JPM 10-Q I.1 table: 59
+      NVDA 10-K IV.15 table: 15
+      NVDA 10-Q I.1 table: 31
+      PFE 10-K II.8 prose: 2
+      PFE 10-K II.8 table: 20
+      PFE 10-Q I.1 table: 29
+      TGT 10-K II.8 table: 14
+      TGT 10-Q I.1 table: 41
+      XOM 10-Q I.1 table: 41
+      XOM 10-Q I.2 table: 1
+    
+    prose body tokens (header excluded), 12489 chunks: {'0-9': 315, '10-19': 380, '20-29': 239, '30-39': 299, '40-49': 254, '50-59': 230, '60-79': 421, '80-99': 352, '100-149': 950, '150-199': 775, '200-500': 8274}
+      below the proposed 40: 1233; at or above: 11256
+      just below the cut (141 chunks; every 23th shown):
+         35 0000019617-23-000524:328.0:330.0: '(a)Predominantly recognized in CIB, CB and Corporate.\nThe following table provides information on net interest income, net yield, and noninterest reve'
+         36 0000019617-24-000453:1267.0:1270.0: 'The Notes to Consolidated Financial Statements (unaudited) are an integral part of these statements.\nJPMorgan Chase & Co.\nConsolidated statements of c'
+         36 0000078003-24-000039:699.0:700.0: '(k)January 2024 filing date refers to application for conversion from accelerated to full approval.\nThe following provides information about additiona'
+         36 0000909832-25-000101:728.0:729.0: 'Disaggregated Revenue\nThe following table summarizes net sales by merchandise category; sales from e-commerce sites and business centers have been all'
+         37 0000070858-24-000122:1651.0:1651.0: 'The table below presents the December 31, 2022 and 2021 carrying value for consumer real estate loans that were modified in a TDR during 2022 and 2021'
+         38 0001628280-26-054343:1548.0:1549.0: 'Contractual maturities and yields\nThe following table presents the amortized cost and estimated fair value at June 30, 2026, of JPMorganChase’s invest'
+      just above the cut (142 chunks; every 23th shown):
+         40 0000019617-23-000524:1392.0:1395.0: 'The Notes to Consolidated Financial Statements (unaudited) are an integral part of these statements.\nJPMorgan Chase & Co.\nConsolidated statements of c'
+         40 0000078003-25-000114:154.0:155.0: '(a)Taxes are not provided for foreign currency translation adjustments relating to investments in international subsidiaries that are expected to be h'
+         40 0001045810-24-000029:892.0:893.0: 'Stock-based compensation capitalized in inventories was not significant during fiscal years 2024, 2023, and 2022.\nThe following is a summary of equity'
+         42 0000027419-23-000052:273.0:274.0: 'Item 1A. Risk Factors\nThere have been no material changes to the risk factors described in Part I, Item 1A, Risk Factors of our Form 10-K for the fisc'
+         43 0000027419-23-000052:271.0:272.0: 'Item 1. Legal Proceedings\nFor the quarterly period ended October 28, 2023, no response is required under Item 103 of Regulation S-K, nor have there be'
+         43 0000070858-26-000157:1961.0:1962.0: '(1) Income is related to the tax jurisdiction of the legal entity’s principal place of business.\nThe components of income tax expense for 2025, 2024 a'
+    
+    allocation, table (table chunks, gold excluded): 9426 chunks
+      JPM   x1 ( 6 of  3256): 10-Q I.1 4, 10-Q I.2 2
+      JPM   x2 (12 of  3256): 10-Q I.1 8, 10-Q I.2 4
+      TGT   x1 ( 6 of   451): 10-K II.8 2, 10-Q I.1 2, 10-Q I.2 2
+      TGT   x2 (12 of   451): 10-K II.7 1, 10-K II.8 3, 10-Q I.1 4, 10-Q I.2 4
+      XOM   x1 ( 7 of   434): 10-Q I.1 4, 10-Q I.2 3
+      XOM   x2 (14 of   434): 10-Q I.1 9, 10-Q I.2 5
+      BAC   x1 ( 6 of  2977): 10-K II.7 1, 10-K II.8 1, 10-Q I.1 2, 10-Q I.2 2
+      BAC   x2 (12 of  2977): 10-K II.7 1, 10-K II.8 2, 10-Q I.1 5, 10-Q I.2 4
+      PFE   x1 ( 6 of   991): 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 1
+      PFE   x2 (12 of   991): 10-K II.7 1, 10-K II.8 3, 10-Q I.1 5, 10-Q I.2 3
+      AAPL  x1 ( 7 of   381): 10-K II.8 2, 10-K IV.15 1, 10-Q I.1 3, 10-Q I.2 1
+      AAPL  x2 (14 of   381): 10-K II.7 1, 10-K II.8 4, 10-K IV.15 1, 10-Q I.1 6, 10-Q I.2 2
+      COST  x1 ( 6 of   386): 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 1
+      COST  x2 (12 of   386): 10-K I.1 1, 10-K II.7 1, 10-K II.8 3, 10-Q I.1 5, 10-Q I.2 2
+      NVDA  x1 ( 6 of   550): 10-K IV.15 2, 10-Q I.1 3, 10-Q I.2 1
+      NVDA  x2 (12 of   550): 10-K II.7 1, 10-K IV.15 3, 10-Q I.1 6, 10-Q I.2 2
+      tickers with zero MD&A slots at x1: none
+      tickers with zero MD&A slots at x2: none
+    
+    allocation, synthesis (prose chunks, gold excluded): 12487 chunks
+      JPM   x1 ( 5 of  2992): 10-Q I.1 3, 10-Q I.2 2
+      JPM   x2 (10 of  2992): 10-Q I.1 5, 10-Q I.2 5
+      TGT   x1 ( 5 of   781): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1
+      TGT   x2 (10 of   781): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-K IV.15 1, 10-Q I.1 2, 10-Q I.2 2
+      XOM   x1 ( 5 of   463): 10-Q I.1 2, 10-Q I.2 3
+      XOM   x2 (10 of   463): 10-Q I.1 4, 10-Q I.2 5, 10-Q II.2 1
+      BAC   x1 ( 5 of  3129): 10-K II.7 1, 10-K II.8 1, 10-Q I.1 2, 10-Q I.2 1
+      BAC   x2 (10 of  3129): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 3
+      PFE   x1 ( 5 of  2107): 10-K II.7 1, 10-K II.8 1, 10-Q I.1 2, 10-Q I.2 1
+      PFE   x2 (10 of  2107): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 2
+      AAPL  x1 ( 5 of   752): 10-K I.1A 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1, 10-Q II.1A 1
+      AAPL  x2 (10 of   752): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 2, 10-Q I.2 2, 10-Q II.1 1, 10-Q II.1A 1
+      COST  x1 ( 5 of   868): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1
+      COST  x2 (10 of   868): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 2
+      NVDA  x1 ( 5 of  1395): 10-K I.1A 1, 10-K IV.15 1, 10-Q I.1 1, 10-Q I.2 1, 10-Q II.1A 1
+      NVDA  x2 (10 of  1395): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K IV.15 2, 10-Q I.1 3, 10-Q I.2 1, 10-Q II.1A 1
+      tickers with zero MD&A slots at x1: none
+      tickers with zero MD&A slots at x2: none
+    
+    allocation, synthesis (prose chunks, gold excluded, body tokens >= 40): 11254 chunks
+      JPM   x1 ( 5 of  2779): 10-Q I.1 3, 10-Q I.2 2
+      JPM   x2 (10 of  2779): 10-Q I.1 5, 10-Q I.2 5
+      TGT   x1 ( 5 of   651): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1
+      TGT   x2 (10 of   651): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-K IV.15 1, 10-Q I.1 1, 10-Q I.2 2, 10-Q II.6 1
+      XOM   x1 ( 5 of   322): 10-Q I.1 2, 10-Q I.2 3
+      XOM   x2 (10 of   322): 10-Q I.1 3, 10-Q I.2 6, 10-Q II.6 1
+      BAC   x1 ( 5 of  2976): 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 2
+      BAC   x2 (10 of  2976): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 3
+      PFE   x1 ( 5 of  1944): 10-K I.1 1, 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1
+      PFE   x2 (10 of  1944): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 3, 10-Q I.2 2
+      AAPL  x1 ( 5 of   629): 10-K I.1A 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1, 10-Q II.1A 1
+      AAPL  x2 (10 of   629): 10-K I.1A 2, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 2, 10-Q I.2 2, 10-Q II.1A 1
+      COST  x1 ( 5 of   706): 10-K I.1A 1, 10-K II.7 1, 10-K II.8 1, 10-Q I.1 1, 10-Q I.2 1
+      COST  x2 (10 of   706): 10-K I.1 1, 10-K I.1A 1, 10-K II.7 1, 10-K II.8 2, 10-Q I.1 2, 10-Q I.2 3
+      NVDA  x1 ( 5 of  1247): 10-K I.1A 1, 10-K IV.15 1, 10-Q I.1 1, 10-Q I.2 1, 10-Q II.1A 1
+      NVDA  x2 (10 of  1247): 10-K I.1 1, 10-K I.1A 2, 10-K II.7 1, 10-K IV.15 1, 10-Q I.1 2, 10-Q I.2 1, 10-Q II.1A 2
+      tickers with zero MD&A slots at x1: none
+      tickers with zero MD&A slots at x2: none
+
+`eval/generate/seeding.py`: `allocate`, `pick_extra`, and the key-free Stage 2
+filters and review aids. They are tested in `tests/unit/test_seeding.py` (12
+tests) on 7 real chunks in `tests/fixtures/seed_chunks.json` (`python -m
+scripts.seed_supply --write-fixture`, stamped with the freeze's parser and
+chunker versions). `make test`: 294 passed; `make lint` clean.

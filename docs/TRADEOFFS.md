@@ -1571,3 +1571,90 @@ filters before metrics, and nothing in OPEN recorded the 90 `llm_seeded` items.
 *Alternative:* definitions first. Rejected: the definitions would be fitted to
 the two auto slices alone, and the seeded items' evidence shapes (table vs prose,
 one chunk vs several) are what F-77 and F-81 must cover.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: LLM seeding
+
+PRD 11.1 Stage 1 and 2 for the 50 `table` and 40 `synthesis` (`llm_seeded`)
+items. Numbers are printed by `python -m scripts.seed_supply`; settings live in
+the `eval_seeding` config block. No model call has been made (F-59).
+
+1. **Table count: 50.** Six per ticker plus one each for two tickers picked by
+   the seed (`pick_extra`, seed 20261003: AAPL, XOM), written into `per_ticker`
+   before the draw. *Alternative:* 48, six per ticker. Rejected: it departs
+   from PRD 11.1 for no data reason.
+2. **Synthesis is single-chunk**, as Stage 1 writes it ("answerable ONLY from
+   it"). No multi-chunk seeding design. PRD 7.1's `synthesis` intent
+   (summaries, top-10 lists) has no eval item behind it (F-89), and no report
+   may call this slice multi-chunk. *Alternative:* a multi-chunk seeding design.
+   Not taken: Stage 1 does not describe one.
+3. **Gold chunks excluded.** The 441 chunks already gold for a candidate are not
+   seeded (439 table, 2 prose, in 16 strata), for the same reason as the
+   comparison no-reuse rule. The manifest records the excluded count per
+   stratum. *Alternative:* seed them (statement tables tested twice).
+4. **Overdraw 2x, one draw.** `overdraw` is config. The draw order is fixed; the
+   first survivors in draw order fill each stratum's slots; a short stratum is a
+   `Shortfall`, with no backfill and no second draw. One model call per chunk: an
+   unparseable or filtered output is a drop, never a re-generation; only
+   transport errors are retried. Raw responses are committed with model id and
+   prompt sha, and candidates are rebuilt from that file offline. Surplus
+   survivors go to a reserve file in draw order, outside the 90; whether review
+   rejections are replaced from it is the owner's call. *Alternatives:* seed
+   exactly the target (a shortfall wherever Stage 2 drops); re-generate on a
+   drop (selects outputs by the filter); re-draw (a second draw after seeing
+   the first).
+5. **Extra key-free filters, built** (`eval/generate/seeding.py`, tested on real
+   chunk text):
+   - *answer in quote / question leaks answer*: numeric answers only, exact
+     after `api.numbers` normalization; the figure must be inside the supporting
+     quote and not in the question. These drop.
+   - No token-overlap score for interpretive answers: it would need a threshold
+     with no basis.
+   - *same number elsewhere*: a review aid, never evidence; same filer only;
+     tagged-span matches listed apart from bare figure matches.
+   - *quote elsewhere*: other chunks containing the supporting quote verbatim
+     (the prose counterpart), a review aid.
+   - Every drop goes to a dropped file with filter and reason; counts per filter
+     in the manifest.
+   *Alternative:* PRD's four filters only (the review catches the rest).
+
+**Allocation: proportional within ticker, not round-robin.** Slots per
+(form, item_code) follow eligible chunk counts, by largest remainder, with a
+seeded draw within each stratum. Round-robin over shuffled strata would put ten
+synthesis draws per ticker mostly into tiny item codes: 24 of the 35
+(form, item_code) prose combinations hold under two chunks per filing (10-K II.6,
+III.11, III.13, III.14: 18 chunks across 18 10-Ks; 10-Q II.3, II.4: 36 across 72),
+and 10-Q II.6's 24 table chunks would weigh the same as I.1's 5,075. No
+item-code exclusion list is needed. Every ticker gets MD&A slots (10-K II.7 or
+10-Q I.2) at 1x and 2x for both types. *Alternative:* `sample`'s round-robin.
+
+**Minimum prose length: proposed 40 body tokens (header excluded), not
+decided** (`min_body_tokens: null` until then). Content criterion: below 40, a
+body holds at most one sentence -- a heading ("Item 2. Properties"), "None.", a
+pointer ("See accompanying notes ..."), a table lead-in ("The following table
+presents ...") or a single footnote -- none of which can carry an interpretive
+question. 1,233 of 12,489 prose chunks fall below. The cut is not clean: just
+above it there are still lead-ins and "no material changes to the risk factors"
+boilerplate, left to Stage 2 and the review. *Alternative:* no floor (the
+allocation would then send slots to headings), or a percentile (not a reason).
+
+**Also settled:**
+- The model returns the printed figure only. Code attaches the scale from
+  `chunks.unit_scale`; a percent is not scaled; a NULL scale is flagged on the
+  sheet, never guessed (e.g. Apple's per-share note prints net income in
+  millions with no `unit_scale`).
+- Verbatim match normalizes whitespace and table pipes only; no fuzzy ratio.
+- No-context filter (needs a model, F-59): numeric answers are compared by code;
+  for interpretive ones the no-context answer is printed on the review sheet,
+  and no judge drops items before its kappa exists.
+- "Unanchored" pronoun, as a testable rule: a deictic phrase pointing at the
+  source ("this table", "these periods") always is; a personal pronoun (it, its,
+  they, ...) is unless a company name or ticker occurs before it. A question that
+  names no company or ticker is dropped by `names_company`.
+- 0.92, overdraw, minimum length and seeds live in `eval_seeding`, not in Python.
+- **Known bias:** the seeding model is the system's own `tier_large`, so seeded
+  questions may favour phrasings that model answers well.
+- F-81 extended to seeded numeric answers (percentages, per-share, counts).
+- Filter tests use real fixture chunk text (`tests/fixtures/seed_chunks.json`);
+  question and answer strings stay inline in the tests, never under `eval/`.

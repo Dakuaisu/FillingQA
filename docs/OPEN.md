@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 47 |
+| OPEN | 48 |
 | RESOLVED | 41 |
-| **Total** | **88** |
+| **Total** | **89** |
 
 ---
 
@@ -22,7 +22,7 @@ carries the state.
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
 | F-77 | PRD 11.2 defines neither `rel_i` nor IDCG over alternative evidence sets. With union-as-relevant, an item with 8 single-chunk alternatives scores nDCG@10 of about 0.25 (1 / 3.95) for one gold chunk at rank 1 and nothing else; sufficiency gets easier as alternatives grow. Sets per item: xbrl_numeric 1 to 10 (`{1: 54, 2: 45, 3: 23, 4: 11, 5: 9, 6: 13, 7: 2, 8: 1, 10: 2}`), each one chunk; comparison 1 to 27 two-chunk sets (`{1: 6, 2: 17, 3: 1, 4: 3, 6: 1, 8: 7, 12: 1, 18: 1, 21: 2, 27: 1}`) over 2 to 12 distinct gold chunks (`{2: 6, 3: 17, 4: 4, 5: 1, 6: 7, 7: 1, 9: 1, 10: 2, 12: 1}`), printed by `scripts.xbrl_candidates` / `scripts.comparison_candidates`. Settle the definition when metrics are built, before any run; gold is not shaped around it | Phase 3 metrics | OPEN |
-| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold Also, for comparison items: which of the three figures (two values, difference) numeric accuracy requires, and how an answer giving only the two values, or a correct percent change, is scored. Also the printed sign (F-87): 296 exact-value gold spans of positive facts print in parentheses, so an answer reading the chunk's "(2,815)" as -2,815 disagrees with the reference "$2,815 million" | Phase 3 metrics | OPEN |
+| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold Also, for comparison items: which of the three figures (two values, difference) numeric accuracy requires, and how an answer giving only the two values, or a correct percent change, is scored. Also the printed sign (F-87): 296 exact-value gold spans of positive facts print in parentheses, so an answer reading the chunk's "(2,815)" as -2,815 disagrees with the reference "$2,815 million". Also seeded numeric answers: percentages, per-share figures and counts, and a figure from a table whose `unit_scale` is NULL (flagged, never guessed) | Phase 3 metrics | OPEN |
 
 ## Blocking Phase 2
 
@@ -41,7 +41,8 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried. Extended 2026-10-01: also blocks PRD 11.1 Stage 1 (LLM seeding of the 50 `table` and 40 `synthesis` items) and Stage 2's no-context filter ("is the question answerable without the chunk"), both model calls. `.env` still has no key; neither is stubbed | OPEN |
-| F-88 | The 90 `llm_seeded` items (PRD 11.1: 50 `table` from table chunks, 40 `synthesis` from prose chunks) are not built. Supply measured (`python -m scripts.seed_supply`: 9,865 table and 12,489 prose chunks in the frozen 90; 439 table and 2 prose chunks already gold for a candidate); sampler, prompt and Stage 2 filters proposed, not decided. Generation is blocked by F-59 | OPEN |
+| F-88 | The 90 `llm_seeded` items (PRD 11.1: 50 `table`, 40 `synthesis`) are not built. Decided 2026-10-01 (TRADEOFFS, LLM seeding): 6 per ticker + AAPL, XOM 7 for tables, 5 per ticker for synthesis; the 441 gold chunks excluded; proportional allocation within ticker by (form, item_code), 2x overdraw, one draw; key-free filters built and tested (`eval/generate/seeding.py`). Allocation at 1x/2x printed by `python -m scripts.seed_supply`; every ticker has MD&A slots. Open: the minimum prose length (proposed 40 body tokens), the draw, the runner. Generation is blocked by F-59 | OPEN |
+| F-89 | PRD 7.1's `synthesis` intent (summaries, top-10 lists, answers drawn from several chunks) has no eval item behind it: PRD 11.1 Stage 1 seeds `synthesis` items from one chunk each (TRADEOFFS, LLM seeding). No report may call the `synthesis` slice multi-chunk | OPEN |
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
 | F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
 | F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |

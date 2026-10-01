@@ -1,23 +1,45 @@
 """What LLM seeding (PRD 11.1 Stage 1: 50 table, 40 synthesis items) would draw on.
 
 python -m scripts.seed_supply
+python -m scripts.seed_supply --write-fixture  # real chunks for tests/unit/test_seeding.py
 
-Measurement only: no model call, no item. Chunks of the frozen 90 parsed
-accessions by PRD 11.1's strata (ticker, form_type, item_code, chunk_type), and
-how many are already gold for a candidate (eval/candidates/*.jsonl).
+Measurement only: no model call, no item, no draw. Chunks of the frozen 90
+parsed accessions by PRD 11.1's strata (ticker, form_type, item_code,
+chunk_type); how many are already gold for a candidate (eval/candidates/*.jsonl)
+and so excluded; prose body tokens (header excluded) around the proposed
+minimum; and the proportional allocation per ticker (TRADEOFFS, LLM seeding) at
+1x and at the configured overdraw.
 """
 
 from __future__ import annotations
 
 import json
+import sys
 from collections import Counter, defaultdict
+from itertools import pairwise
 
 import yaml
 
-from api.config import REPO_ROOT
+from api.chunk.tokens import count_tokens
+from api.config import REPO_ROOT, eval_seeding
 from api.db import connect
+from eval.generate.seeding import allocate, pick_extra
 from scripts.write_freeze import FREEZE_FILE
 
+MDNA = {("10-K", "II.7"), ("10-Q", "I.2")}
+PROPOSED_MIN_BODY_TOKENS = 40  # the proposal under review; config holds the decision
+FIXTURE_FILE = REPO_ROOT / "tests" / "fixtures" / "seed_chunks.json"
+# Real chunks for tests/unit/test_seeding.py: a millions table, two NULL-scale
+# tables (percentages, per-share), two prose chunks, two sharing a sentence.
+FIXTURE_CHUNKS = (
+    "0000909832-25-000015:68.1:68.1",
+    "0000320193-23-000106:327.0:327.0",
+    "0000320193-23-000106:458.0:458.0",
+    "0000078003-24-000039:343.0:344.0",
+    "0000027419-23-000052:273.0:274.0",
+    "0001045810-24-000029:742.0:746.0",
+    "0001045810-24-000029:748.0:752.0",
+)
 CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
 
 
@@ -27,13 +49,35 @@ def quantiles(xs: list[int]) -> str:
     return f"min {xs[0]}, p25 {q(0.25)}, median {q(0.5)}, p75 {q(0.75)}, max {xs[-1]}"
 
 
+def write_fixture() -> None:
+    record = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT chunk_id, ticker, chunk_type, unit_scale, text, raw_text FROM chunks "
+            "WHERE chunk_id = ANY(%s) ORDER BY chunk_id",
+            (list(FIXTURE_CHUNKS),),
+        ).fetchall()
+    keys = ("chunk_id", "ticker", "chunk_type", "unit_scale", "text", "raw_text")
+    doc = {
+        "source": "python -m scripts.seed_supply --write-fixture",
+        "parser_version": record["parser_version"],
+        "chunker_version": record["chunker_version"],
+        "chunks": [dict(zip(keys, r, strict=True)) for r in rows],
+    }
+    FIXTURE_FILE.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"wrote {len(rows)} chunks to {FIXTURE_FILE.relative_to(REPO_ROOT)}")
+
+
 def main() -> None:
+    if "--write-fixture" in sys.argv:
+        write_fixture()
+        return
     record = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
     parsed = [e["accession"] for e in record["filings"] if e["status"] == "parsed"]
     with connect() as conn:
         rows = conn.execute(
-            "SELECT chunk_id, ticker, form_type, item_code, chunk_type, token_count "
-            "FROM chunks WHERE accession = ANY(%s)",
+            "SELECT chunk_id, ticker, form_type, item_code, chunk_type, token_count, raw_text "
+            "FROM chunks WHERE accession = ANY(%s) ORDER BY chunk_id",
             (parsed,),
         ).fetchall()
     gold: dict[str, set[str]] = defaultdict(set)  # chunk -> candidate files using it
@@ -47,6 +91,9 @@ def main() -> None:
 
     print("\nchunks by (chunk_type, form): count, gold for a candidate, tokens")
     by_tf = defaultdict(list)
+    body = {r[0]: count_tokens(r[6]) for r in rows if r[4] == "prose"}
+    text = {r[0]: r[6] for r in rows}
+    rows = [r[:6] for r in rows]
     for cid, _, form, _, ctype, tok in rows:
         by_tf[(ctype, form)].append((cid, tok))
     for key in sorted(by_tf):
@@ -86,6 +133,64 @@ def main() -> None:
             for ct in ("table", "prose")
         ]
         print(f"  {t:5} " + "   ".join(cells))
+
+    cfg = eval_seeding()
+    tickers = list(dict.fromkeys(r[1] for r in rows))
+    print("\nconfig allocation:")
+    for kind in ("table", "synthesis"):
+        c = cfg[kind]
+        print(f"  {kind}: total {c['total']}, sum {sum(c['per_ticker'].values())}, "
+              f"overdraw {c['overdraw']}, per_ticker {c['per_ticker']}")  # fmt: skip
+    extra = pick_extra(tickers, cfg["table"]["seed"], 2)
+    above = sorted(t for t, n in cfg["table"]["per_ticker"].items() if n == 7)
+    print(f"  table extra slots: pick_extra(seed {cfg['table']['seed']}) = {extra}; "
+          f"config gives 7 to {above}; {'match' if extra == above else 'MISMATCH'}")  # fmt: skip
+
+    excluded = Counter((t, f, i, c) for cid, t, f, i, c, _ in rows if cid in gold)
+    print(f"\nexcluded as already gold, by stratum (ticker, form, item_code, chunk_type): "
+          f"{sum(excluded.values())} in {len(excluded)} strata")  # fmt: skip
+    for k, n in sorted(excluded.items()):
+        print(f"  {' '.join(x or '-' for x in k)}: {n}")
+
+    prose = sorted((body[cid], cid) for cid, _, _, _, c, _ in rows if c == "prose")
+    edges = [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 501]
+    names = [f"{a}-{b - 1}" for a, b in pairwise(edges)]
+    bands = Counter(
+        next(name for (a, b), name in zip(pairwise(edges), names, strict=True) if a <= n < b)
+        for n, _ in prose
+    )
+    print(f"\nprose body tokens (header excluded), {len(prose)} chunks: "
+          f"{ {name: bands[name] for name in names} }")  # fmt: skip
+    cut = PROPOSED_MIN_BODY_TOKENS
+    below = [x for x in prose if x[0] < cut]
+    print(f"  below the proposed {cut}: {len(below)}; at or above: {len(prose) - len(below)}")
+    for label, band in (("just below", [x for x in prose if cut - 5 <= x[0] < cut]),
+                        ("just above", [x for x in prose if cut <= x[0] < cut + 5])):  # fmt: skip
+        print(f"  {label} the cut ({len(band)} chunks; every {max(1, len(band) // 6)}th shown):")
+        for n, cid in band[:: max(1, len(band) // 6)][:6]:
+            print(f"    {n:3} {cid}: {text[cid][:150]!r}")
+
+    eligible = [r for r in rows if r[0] not in gold]
+    for kind, ctype in (("table", "table"), ("synthesis", "prose")):
+        c = cfg[kind]
+        floors = [None] if ctype == "table" else [None, cut]
+        for floor in floors:
+            pool = [r for r in eligible if r[4] == ctype and (floor is None or body[r[0]] >= floor)]
+            title = f"{kind} ({ctype} chunks, gold excluded" + (
+                f", body tokens >= {floor})" if floor else ")")  # fmt: skip
+            print(f"\nallocation, {title}: {len(pool)} chunks")
+            no_mdna = {1: [], c["overdraw"]: []}
+            for t in tickers:
+                counts = Counter((r[2], r[3]) for r in pool if r[1] == t)
+                for mult in sorted(no_mdna):
+                    slots = allocate(counts, c["per_ticker"][t] * mult)
+                    cells = ", ".join(f"{f} {i} {n}" for (f, i), n in slots.items())
+                    size = f"{sum(slots.values()):2} of {sum(counts.values()):5}"
+                    print(f"  {t:5} x{mult} ({size}): {cells}")
+                    if not any(k in MDNA for k in slots):
+                        no_mdna[mult].append(t)
+            for mult, ts in no_mdna.items():
+                print(f"  tickers with zero MD&A slots at x{mult}: {ts or 'none'}")
 
 
 if __name__ == "__main__":
