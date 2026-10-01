@@ -109,6 +109,16 @@ def main() -> None:
              ORDER BY c.ticker, f.filing_date
             """
         ).fetchall()
+        # A filing that is no longer `parsed` feeds nothing downstream: drop its
+        # chunks, as validate already drops its spans. Without this, a filing
+        # quarantined after it was chunked kept serving stale chunks.
+        stale = conn.execute(
+            """
+            DELETE FROM chunks c USING filings f
+             WHERE c.accession = f.accession AND f.parse_status <> 'parsed'
+            """
+        ).rowcount
+        print(f"chunks removed for filings not parsed: {stale}")
         conn.commit()  # so each filing's transaction below is a real one
         print(f"{'ticker':6} {'accession':22} {'chunks':>6} {'prose':>5} {'table':>5} {'>512':>4}")
         for filing in filings:

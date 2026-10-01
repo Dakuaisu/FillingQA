@@ -14,7 +14,8 @@ that does not work, and the way it fails is quiet:
 Detection therefore runs on BLOCKS, not on text. A heading is a short, standalone
 block whose text begins with the Item pattern -- which a mid-sentence reference
 never is, and which a TOC row is not either because the TOC lives inside a table
-and a table is a single block. On AAPL's 10-K this yields 23 headings and no
+and a table is a single block. A short table counts as a heading only when its
+first row is its one and only heading-like row (F-63). On AAPL's 10-K this yields 23 headings and no
 false positives, against 61 raw text matches.
 
 10-Q part qualification
@@ -77,6 +78,34 @@ def block_text(doc: ExtractedDocument, block: Block) -> str:
     return " ".join(doc.text[block.char_start : block.char_end].split())
 
 
+def text_without_anchors(doc: ExtractedDocument, block: Block) -> str:
+    """Block text with in-document link text removed ("Table of Contents")."""
+    parts, pos = [], block.char_start
+    for anchor in sorted(block.anchors, key=lambda a: a.char_start):
+        parts.append(doc.text[pos : anchor.char_start])
+        pos = anchor.char_end
+    parts.append(doc.text[pos : block.char_end])
+    return " ".join("".join(parts).split())
+
+
+def is_heading_table(doc: ExtractedDocument, block: Block) -> bool:
+    """A layout table that is a heading, not a table of contents (F-63).
+
+    Some filers wrap each Item or Part heading in a table -- PFE and XOM put
+    every 10-K heading in a one-row table ("ITEM 1." | "BUSINESS"), BAC adds a
+    title row and a "Table of Contents" link. A table of contents or a
+    cross-reference index lists many headings, one per row. So: the first
+    non-empty row matches a heading, and no other row does.
+    """
+    rows = []
+    for row in block.rows or []:
+        text = " ".join(" ".join(doc.text[s:e].split()) for s, e, *_ in row).strip()
+        if text:
+            rows.append(" ".join(text.split()))
+    matches = [i for i, text in enumerate(rows) if _ITEM.match(text) or _PART.match(text)]
+    return matches == [0]
+
+
 def _heading_match(text: str) -> tuple[str, str] | None:
     """Return (item_code, title) if this text is an Item heading."""
     m = _ITEM.match(text)
@@ -92,12 +121,15 @@ def detect_sections(doc: ExtractedDocument, form_type: str) -> list[Section]:
     current_part: str | None = None
 
     for idx, block in enumerate(doc.blocks):
-        if block.kind == "table" or block.length > MAX_HEADING_CHARS:
-            # A table is never a heading, and anything long is body text that
-            # merely happens to start with the word "Item".
+        if block.length > MAX_HEADING_CHARS:
+            # Anything long is body text that merely starts with "Item".
             continue
-
-        text = block_text(doc, block)
+        if block.kind == "table":
+            if not is_heading_table(doc, block):
+                continue
+            text = text_without_anchors(doc, block)
+        else:
+            text = block_text(doc, block)
 
         part_match = _PART.match(text)
         if part_match and not _ITEM.match(part_match.group("rest")):
