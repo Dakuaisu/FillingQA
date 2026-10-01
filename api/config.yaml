@@ -55,3 +55,13 @@ corpus:
     - {ticker: TGT, accession: 0000027419-26-000016, form: 10-K}
     - {ticker: TGT, accession: 0000027419-26-000022, form: 10-Q}
     - {ticker: TGT, accession: 0000027419-26-000042, form: 10-Q}
+
+# Parser validation bounds (PRD 6.2's validation suite). Pipeline parameters in
+# the pattern of PRD Appendix A, not eval-gate thresholds -- those live in
+# eval/thresholds.yaml. See docs/OPEN.md F-23.
+parser:
+  min_sections: 5
+  min_data_tables: 10       # data tables, not layout scaffolding (F-35)
+  alpha_ratio:              # letters / all characters of the normalized text
+    min: 0.4
+    max: 0.95

@@ -621,3 +621,55 @@ accepted by the supervisor on the owner's behalf.
 4. **All taxonomies are stored** (`us-gaap`, `dei`, `srt`, `ecd`, `ffd`), not only
    us-gaap. `CURATED_CONCEPTS` selects later; filtering at load would decide now
    what Phase 3 may ask about.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 6, validation suite and parse-quality score
+
+**Assertions** (`api/parse/validate.py`, `check`). Any failure sets
+`parse_status = 'quarantined'` and `parse_error` to the failed messages; this is
+the only path to quarantine. From PRD 6.2: at least `min_sections` sections;
+Item 1A present on a 10-K (a 10-Q's Part II 1A is optional); at least
+`min_data_tables` tables; alpha ratio inside `alpha_ratio`. Added, each already
+promised elsewhere: the required Items of PRD 6.2 step 2 (10-K 1/1A/7/7A/8,
+10-Q I.1/I.2); a `dei:DocumentFiscalYearFocus` (finding #5: quarantine, never
+default); every iXBRL span slicing back to its text (the module's load-bearing
+invariant). `period_end` is NOT NULL in the schema, so it is not re-asserted.
+
+Choices the PRD leaves open:
+
+1. **The table count counts data tables**, not all table blocks. PRD 6.2 predates
+   F-35; counting layout tables would let TGT pass on page footers alone.
+2. **`alpha_char_ratio` = letters / all characters.** Measured both candidates on
+   the 12 filings: letters/all is 0.720-0.779; letters/non-whitespace is
+   0.857-0.918, close enough to the 0.95 bound that prose-heavy filings could be
+   quarantined for being good.
+3. **`parser_version` is a hash of the parser's own source** (`api/parse/*.py`
+   except `validate.py`, plus `api/numbers.py`; first 12 hex). A hand-bumped version can be forgotten,
+   and the F-42 freeze check -- "text_sha256 differs under the same
+   parser_version: fail" -- is only sound if the version cannot lie. Cost: a
+   comment-only edit also changes it, so re-freezing is more frequent than
+   strictly necessary.
+4. **Bounds live in `api/config.yaml` under `parser:`**, the Appendix A pattern
+   for pipeline parameters, not in `eval/thresholds.yaml` (F-23).
+
+**Score** (`score`, tracked in `filings.parse_score`, never gating). The
+unweighted mean of whichever of these five are defined for the filing, each in
+[0, 1]:
+
+    scale_coverage     = (caption + ixbrl scaled data tables) / data tables with
+                         a caption or a tagged magnitude
+    uncollapsed_tables = 1 - data tables with a multi-figure value cell / data tables
+    span_resolution    = numeric spans with a parsed value / numeric spans
+    required_items     = 1 - missing required Items / required Items
+    alpha_in_bounds    = 1 if the alpha ratio is inside the bounds, else 0
+
+`required_items` and `alpha_in_bounds` are identically 1 on any row that passes
+`check`, so on parsed filings the score separates only through `scale_coverage`,
+`uncollapsed_tables` and `span_resolution`. Equal weights because nothing
+measured yet justifies any other. A component with
+a zero denominator is left out rather than scored as 1 or 0, either of which
+would be a fabricated value. `scale_coverage` is reported with its source
+split (caption / ixbrl) in the runner output so the Phase 3 metric can follow it.
+The remaining imperfections are known: scale misses are the mixed-magnitude
+tables, span misses are word-form numbers (F-33).

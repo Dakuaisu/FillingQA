@@ -27,7 +27,7 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. Needs `filings.parser_version` and `norm_path` written first (nothing writes them yet) | OPEN |
+| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
 
 ## Blocking Phase 3
 
@@ -170,7 +170,13 @@ label them as such, or schedule them overnight. Fix the estimate now.
 **F-17, F-18, F-19, F-26 — stale or drifted PRD text.** Edit the PRD, or accept
 the more specific statement in each case and note it here.
 
-**F-23 — "threshold" definition.** `thresholds.yaml` owns eval-gate thresholds;
+**F-23 — "threshold" definition.** Interpretation in use since step 6
+(2026-10-01): parser validation bounds are pipeline parameters and live in
+`api/config.yaml` under `parser:` (min sections, min data tables, alpha-ratio
+range), following Appendix A; `eval/thresholds.yaml` keeps gate thresholds only.
+Still a code constant: the 500-character caption window from PRD 6.2
+(`CAPTION_WINDOW`), a candidate for the same block. CLAUDE.md rule 4 not yet
+reworded. Original recommendation: `thresholds.yaml` owns eval-gate thresholds;
 Appendix A's config owns runtime pipeline parameters, snapshotted into
 `eval_runs.config_json`. Needs stating explicitly in CLAUDE.md rule 4.
 

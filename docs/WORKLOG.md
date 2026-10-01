@@ -408,3 +408,42 @@ Veto fired 0 times; no fallback table flipped. Caption-less {0,6}: 0, {-2,6}: 5.
 `ixother` is {0,3} (RSU/PSU unit tables). F-47 moved to Blocking Phase 5; the
 `restatements.sql` header now speaks of rows, not restatements. `make test`: 139
 passed, 3 snapshots passed.
+
+## 2026-10-01 — Step 6: parser validation suite and parse-quality score
+
+Monetary veto committed as `411cb47`.
+
+`api/parse/validate.py`: `measure` (quantities the parser already produces),
+`check` (assertions; any failure quarantines), `score` (tracked, never gates).
+The runner parses every filing, writes normalized text to `data/norm/`, and
+updates `filings`: `parse_status`, `parse_error`, `parse_score`,
+`parser_version`, `norm_path`, `fiscal_year`, `fiscal_quarter` -- the last four
+written for the first time. Bounds read from `api/config.yaml` `parser:`.
+
+`python -m api.parse.validate` (`scale`/`uncol`/`spans`/`items` are score
+components; alpha_in_bounds is 1 for all):
+
+    parser_version bfe5929c604b
+    ticker accession              form   FY fp sect miss data alpha scale uncol spans items score  status
+    AAPL   0000320193-25-000079   10-K 2025 FY   23    0   43 0.765 0.974 1.000 0.995 1.000 0.994  parsed
+    AAPL   0000320193-26-000006   10-Q 2026 Q1   11    0   23 0.722 0.957 1.000 0.993 1.000 0.990  parsed
+    AAPL   0000320193-26-000013   10-Q 2026 Q2   11    0   25 0.733 0.960 1.000 0.995 1.000 0.991  parsed
+    AAPL   0000320193-26-000020   10-Q 2026 Q3   11    0   26 0.728 0.962 1.000 0.995 1.000 0.991  parsed
+    COST   0000909832-25-000101   10-K 2025 FY   23    0   44 0.779 0.938 1.000 0.994 1.000 0.986  parsed
+    COST   0000909832-25-000169   10-Q 2026 Q1   11    0   27 0.756 0.895 1.000 0.988 1.000 0.976  parsed
+    COST   0000909832-26-000029   10-Q 2026 Q2   11    0   28 0.738 0.900 1.000 0.991 1.000 0.978  parsed
+    COST   0000909832-26-000051   10-Q 2026 Q3   11    0   28 0.737 0.900 1.000 0.991 1.000 0.978  parsed
+    TGT    0000027419-25-000126   10-Q 2025 Q3   11    0   34 0.720 1.000 1.000 0.983 1.000 0.997  parsed
+    TGT    0000027419-26-000016   10-K 2025 FY   23    0   64 0.774 1.000 1.000 0.987 1.000 0.997  parsed
+    TGT    0000027419-26-000022   10-Q 2026 Q1   11    0   30 0.736 1.000 1.000 0.980 1.000 0.996  parsed
+    TGT    0000027419-26-000042   10-Q 2026 Q2   11    0   32 0.720 1.000 1.000 0.979 1.000 0.996  parsed
+
+Second run identical. `validate.py` itself is excluded from the version hash --
+it measures parser output and does not produce it. DB: 12 `parsed`, 1 parser_version, 12 norm_paths, 12
+fiscal years. Spot checks: AAPL 10-K scale 38/39 (the miss is the mixed EPS
+note); COST 10-K 30/32; TGT's 2025-11-01 10-Q is its own Q3 FY2025.
+
+Nothing quarantined on the slice, so every assertion is exercised in
+`tests/unit/test_validate.py` by moving one measured quantity across its bound
+(24 tests; baseline record = the AAPL 10-K as measured, checked against the
+fixture).

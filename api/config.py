@@ -57,6 +57,11 @@ def data_dir() -> Path:
 CORPUS_FILE = REPO_ROOT / "api" / "config.yaml"
 
 
+def parser_bounds(path: Path = CORPUS_FILE) -> dict:
+    """The `parser:` block of api/config.yaml: validation-suite bounds."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]
+
+
 def sectors(path: Path = CORPUS_FILE) -> dict[str, str]:
     """Ticker -> our corpus-design sector label (PRD 4.4), not SEC data."""
     companies = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]["companies"]
