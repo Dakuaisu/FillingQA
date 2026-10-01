@@ -4862,3 +4862,52 @@ Run-to-run spread against 19693d4aa874 (F-60), `python -m scripts.run_spread
     numeric correctness flips: correct in A only 1, in B only 4
       A only: ['xbrl_0117']
       B only: ['cmp_0033', 'xbrl_0052', 'xbrl_0131', 'xbrl_0140']
+
+## 2026-10-01 — Phase 3 exit statement
+
+PRD 14's Phase 3 checklist, against the repo:
+
+- **XBRL auto-generation, ~160 numeric items with auto-located evidence sets:**
+  done. `eval/candidates/xbrl_numeric_candidates.jsonl` (160), plus 40 auto
+  comparisons (`comparison_candidates.jsonl`, F-83).
+- **Paraphrase templating, 4-6 surface forms per concept:** done.
+  `eval/templates.yaml`: five forms per period type (`duration`, `instant`),
+  filled with each line item's label, so every line item has five; five
+  `comparison_forms` per type. Used by `eval/generate/xbrl_items.py` and
+  `eval/generate/comparison.py`; the form id is a tag on every item.
+- **LLM seeding for table/synthesis items + filters (verbatim, no-context,
+  dedup):** done, development-grade. 83 `llm_seeded` candidates
+  (`llm_seeded_candidates.jsonl`; 7 short slots, F-95), seeded and no-context
+  checked on `claude_cli` (F-59, F-14).
+- **Hand-write 50 unanswerable, 20 adversarial, 30 natural-phrasing (and the 20
+  hand-written comparisons, F-84):** OWNER-BLOCKED, F-103. Kit built: templates,
+  empty item files, `scripts.handwritten_validate`.
+- **Human review:** OWNER-BLOCKED, F-104. Sheets and worksheets ready;
+  `scripts.review`; decisions file empty.
+- **Metrics (sufficiency@k over evidence sets, MRR, nDCG, faithfulness_pre/post,
+  verifier lift, claim retention, abstention 2x2):** done as tested pure
+  functions in `eval/metrics/`; the claim metrics print "n/a: no claims" until
+  Phase 4's structured output (F-10, F-09 resolved). Answer relevance not built
+  (F-107); answer correctness and context precision wait on the judge (F-105).
+- **Per-source breakout for every gated metric:** done; the report has the
+  `xbrl_auto`, `llm_seeded`, `handwritten` and aggregate columns.
+- **LLM judge + Cohen's kappa against 50 hand labels:** tooling done
+  (`eval/judge/`, `scripts.judge`); the 50 labels are OWNER-BLOCKED, F-105; no
+  judge run and no kappa.
+- **Runner, report generation:** done (`scripts.eval_run`, `make eval`).
+  **Freeze `golden_v1`:** OWNER-BLOCKED, F-106 (waits on review and the
+  hand-written items).
+- **Exit: `make eval` prints a metrics table with four source columns for
+  Config 1:** done, run f2e616e0a7d7 (Phase 2 dense baseline on `claude_cli`,
+  development banner). *Not circular:* retrieval and numeric accuracy are scored
+  against fixed gold, not against anything the system or a verifier produced;
+  faithfulness is not computed yet ("n/a: no claims"), so its circularity fix
+  (F-09) has nothing to act on. *Not carried by the easy slice:* the handwritten
+  column is empty for the owner's reason (F-103), so this is checked on the two
+  columns that exist: Sufficiency@10 is 0.285 on `xbrl_auto` and 0.675 on
+  `llm_seeded`, aggregate 0.399, and numeric accuracy 0.390 / 0.757 / 0.447.
+  The aggregate is not carried by `xbrl_auto`; contrary to PRD 11.2's premise it
+  is the hard slice here (F-98). To be re-checked when the owner's items land.
+
+Everything not done is OWNER-BLOCKED (F-103, F-104, F-105, F-106), except
+answer relevance (F-107), which is not on the Phase 3 checklist.
