@@ -4198,3 +4198,171 @@ Target, per the run protocol (ad hoc, eligibility recomputed as `seed_draw` does
 Kept. Both questions name the filing and its quarter ("In JPMorgan Chase & Co's
 10-Q for Q3 FY2023"), copied from the header: the same tendency as F-92, here
 on a prose item. `verify_v1.jsonl`: no email address, no "/Users/".
+
+## 2026-10-01 — Seeding run complete: 180 calls, pending 0
+
+Ten batches, one process at a time (`--run --limit 5`, then `seed_build`, then
+`--limit 20` x 8 and a final 15), 18:40:20Z to about 18:58Z UTC. `raw_v1.jsonl`
+committed after each batch; no halts, `call_errors_v1.jsonl` was never created;
+no run killed. After every batch: all responses started with "{" or a code fence
+(no CLI/API error text), every record served by `claude-sonnet-5-5`, no email
+address and no "/Users/" in the raw file.
+
+`python -m scripts.seed_run`:
+
+    backend claude_cli, model claude-sonnet-5-5 (tier_large); prompt 0dac2295c1cd2a20, draw 1c23e9f6511a554e
+    drawn chunks 180; recorded 180; pending 0
+
+`python -m scripts.seed_build`:
+
+    raw records 180; {'dropped:names_company': 5, 'dropped:sign_only': 0, 'dropped:unanchored_pronoun': 17, 'flagged:quarter_label_on_span': 13, 'kept': 158}
+    wrote eval/seeding/dropped_v1.jsonl: 22 drops
+    model_served: {'claude-sonnet-5-5': 180}
+    responses redacted (a quote_verbatim drop there is not a filter result): none
+    slotted strata: survivors / slots_1x / drawn / pending
+      table AAPL 10-K II.8                4 / 2 / 4 / 0
+      table AAPL 10-K IV.15               2 / 1 / 2 / 0
+      table AAPL 10-Q I.1                 6 / 3 / 6 / 0
+      table AAPL 10-Q I.2                 2 / 1 / 2 / 0
+      table BAC 10-K II.7                 2 / 1 / 2 / 0
+      table BAC 10-K II.8                 2 / 1 / 2 / 0
+      table BAC 10-Q I.1                  4 / 2 / 4 / 0
+      table BAC 10-Q I.2                  4 / 2 / 4 / 0
+      table COST 10-K II.8                4 / 2 / 4 / 0
+      table COST 10-Q I.1                 6 / 3 / 6 / 0
+      table COST 10-Q I.2                 2 / 1 / 2 / 0
+      table JPM 10-Q I.1                  8 / 4 / 8 / 0
+      table JPM 10-Q I.2                  4 / 2 / 4 / 0
+      table NVDA 10-K IV.15               4 / 2 / 4 / 0
+      table NVDA 10-Q I.1                 6 / 3 / 6 / 0
+      table NVDA 10-Q I.2                 2 / 1 / 2 / 0
+      table PFE 10-K II.8                 4 / 2 / 4 / 0
+      table PFE 10-Q I.1                  6 / 3 / 6 / 0
+      table PFE 10-Q I.2                  2 / 1 / 2 / 0
+      table TGT 10-K II.8                 4 / 2 / 4 / 0
+      table TGT 10-Q I.1                  4 / 2 / 4 / 0
+      table TGT 10-Q I.2                  4 / 2 / 4 / 0
+      table XOM 10-Q I.1                  5 / 4 / 8 / 0
+      table XOM 10-Q I.2                  6 / 3 / 6 / 0
+      synthesis AAPL 10-K I.1A            0 / 1 / 2 / 0
+      synthesis AAPL 10-K II.8            1 / 1 / 2 / 0
+      synthesis AAPL 10-Q I.1             2 / 1 / 2 / 0
+      synthesis AAPL 10-Q I.2             1 / 1 / 2 / 0
+      synthesis AAPL 10-Q II.1A           1 / 1 / 2 / 0
+      synthesis BAC 10-K II.7             2 / 1 / 2 / 0
+      synthesis BAC 10-K II.8             2 / 1 / 2 / 0
+      synthesis BAC 10-Q I.1              2 / 1 / 2 / 0
+      synthesis BAC 10-Q I.2              4 / 2 / 4 / 0
+      synthesis COST 10-K I.1A            0 / 1 / 2 / 0
+      synthesis COST 10-K II.7            2 / 1 / 2 / 0
+      synthesis COST 10-K II.8            2 / 1 / 2 / 0
+      synthesis COST 10-Q I.1             2 / 1 / 2 / 0
+      synthesis COST 10-Q I.2             2 / 1 / 2 / 0
+      synthesis JPM 10-Q I.1              6 / 3 / 6 / 0
+      synthesis JPM 10-Q I.2              4 / 2 / 4 / 0
+      synthesis NVDA 10-K I.1A            0 / 1 / 2 / 0
+      synthesis NVDA 10-K IV.15           2 / 1 / 2 / 0
+      synthesis NVDA 10-Q I.1             2 / 1 / 2 / 0
+      synthesis NVDA 10-Q I.2             1 / 1 / 2 / 0
+      synthesis NVDA 10-Q II.1A           1 / 1 / 2 / 0
+      synthesis PFE 10-K I.1              2 / 1 / 2 / 0
+      synthesis PFE 10-K II.7             1 / 1 / 2 / 0
+      synthesis PFE 10-K II.8             2 / 1 / 2 / 0
+      synthesis PFE 10-Q I.1              2 / 1 / 2 / 0
+      synthesis PFE 10-Q I.2              2 / 1 / 2 / 0
+      synthesis TGT 10-K I.1A             0 / 1 / 2 / 0
+      synthesis TGT 10-K II.7             1 / 1 / 2 / 0
+      synthesis TGT 10-K II.8             2 / 1 / 2 / 0
+      synthesis TGT 10-Q I.1              2 / 1 / 2 / 0
+      synthesis TGT 10-Q I.2              2 / 1 / 2 / 0
+      synthesis XOM 10-Q I.1              2 / 2 / 4 / 0
+      synthesis XOM 10-Q I.2              4 / 3 / 6 / 0
+    key-free survivors in draw order:
+      synthesis AAPL 10-K II.8: ['0000320193-25-000079:478.0:485.0']
+      synthesis AAPL 10-Q I.1: ['0000320193-24-000069:105.0:112.0', '0000320193-24-000081:81.0:84.0 [flags]']
+      synthesis AAPL 10-Q I.2: ['0000320193-25-000008:189.0:196.0']
+      synthesis AAPL 10-Q II.1A: ['0000320193-26-000013:270.0:272.0']
+      synthesis BAC 10-K II.7: ['0000070858-24-000122:1193.0:1195.0', '0000070858-24-000122:831.0:835.0']
+      synthesis BAC 10-K II.8: ['0000070858-24-000122:1445.0:1453.0', '0000070858-26-000157:1268.0:1273.0']
+      synthesis BAC 10-Q I.1: ['0000070858-25-000268:991.0:993.0', '0000070858-24-000208:1135.0:1138.0']
+      synthesis BAC 10-Q I.2: ['0000070858-25-000405:253.0:260.0', '0000070858-25-000200:433.0:438.0', '0000070858-25-000405:328.0:331.0', '0000070858-23-000272:397.0:400.0']
+      synthesis COST 10-K II.7: ['0000909832-24-000049:271.0:273.0', '0000909832-23-000042:283.0:285.0']
+      synthesis COST 10-K II.8: ['0000909832-24-000049:704.0:704.0', '0000909832-24-000049:512.0:514.0']
+      synthesis COST 10-Q I.1: ['0000909832-23-000065:143.0:146.0', '0000909832-25-000033:152.0:156.0']
+      synthesis COST 10-Q I.2: ['0000909832-26-000051:204.0:215.0', '0000909832-25-000033:221.0:227.0']
+      synthesis JPM 10-Q I.1: ['0000019617-24-000611:2453.0:2461.0', '0000019617-24-000611:1673.0:1678.0', '0001628280-25-048859:1284.0:1301.0', '0000019617-23-000524:2434.0:2440.0', '0000019617-23-000524:2571.0:2595.0', '0000019617-23-000524:2284.0:2285.0']
+      synthesis JPM 10-Q I.2: ['0001628280-26-029344:908.0:908.0', '0001628280-26-054343:948.0:953.0', '0000019617-23-000524:864.0:871.0', '0000019617-25-000615:813.0:821.0']
+      synthesis NVDA 10-K IV.15: ['0001045810-25-000023:1199.0:1205.0', '0001045810-24-000029:1063.0:1066.0']
+      synthesis NVDA 10-Q I.1: ['0001045810-25-000230:188.0:191.0', '0001045810-24-000316:197.0:198.0']
+      synthesis NVDA 10-Q I.2: ['0001045810-25-000230:354.0:360.0']
+      synthesis NVDA 10-Q II.1A: ['0001045810-25-000209:462.0:465.0']
+      synthesis PFE 10-K I.1: ['0000078003-24-000039:239.0:246.0', '0000078003-26-000026:197.0:201.0']
+      synthesis PFE 10-K II.7: ['0000078003-24-000039:743.0:746.0']
+      synthesis PFE 10-K II.8: ['0000078003-26-000026:1365.0:1366.0', '0000078003-26-000026:1225.0:1233.0']
+      synthesis PFE 10-Q I.1: ['0000078003-26-000095:107.0:110.0', '0000078003-24-000191:396.0:398.0']
+      synthesis PFE 10-Q I.2: ['0000078003-25-000114:498.0:503.0', '0000078003-26-000095:646.0:651.0']
+      synthesis TGT 10-K II.7: ['0000027419-24-000032:392.0:395.0']
+      synthesis TGT 10-K II.8: ['0000027419-25-000018:704.0:708.0', '0000027419-24-000032:664.0:670.0']
+      synthesis TGT 10-Q I.1: ['0000027419-26-000022:131.0:131.0', '0000027419-25-000101:45.0:47.0']
+      synthesis TGT 10-Q I.2: ['0000027419-24-000179:214.0:224.0 [flags]', '0000027419-25-000118:174.0:195.0 [flags]']
+      synthesis XOM 10-Q I.1: ['0000034088-23-000056:75.0:77.0', '0000034088-26-000093:147.0:168.0']
+      synthesis XOM 10-Q I.2: ['0000034088-23-000056:132.0:133.0', '0000034088-24-000029:168.0:177.0', '0000034088-26-000067:231.0:253.0', '0000034088-25-000042:247.0:259.0 [flags]']
+      table AAPL 10-K II.8: ['0000320193-24-000123:512.0:512.0', '0000320193-24-000123:416.1:416.1 [flags]', '0000320193-25-000079:462.0:462.0 [flags]', '0000320193-24-000123:410.0:410.0']
+      table AAPL 10-K IV.15: ['0000320193-23-000106:682.1:682.1', '0000320193-25-000079:680.0:680.0']
+      table AAPL 10-Q I.1: ['0000320193-25-000073:112.0:112.0', '0000320193-24-000006:62.0:62.0', '0000320193-26-000013:38.1:38.1 [flags]', '0000320193-26-000013:85.0:85.0', '0000320193-26-000006:56.0:56.0 [flags]', '0000320193-25-000008:73.0:73.0']
+      table AAPL 10-Q I.2: ['0000320193-24-000081:194.0:194.0', '0000320193-25-000057:175.0:175.0']
+      table BAC 10-K II.7: ['0000070858-26-000157:580.0:580.0', '0000070858-24-000122:508.2:508.2']
+      table BAC 10-K II.8: ['0000070858-26-000157:2172.3:2172.3', '0000070858-25-000139:1474.1:1474.1']
+      table BAC 10-Q I.1: ['0000070858-24-000208:1148.1:1148.1 [flags]', '0000070858-25-000200:750.2:750.2 [flags]', '0000070858-24-000156:646.2:646.2', '0000070858-25-000405:710.2:710.2']
+      table BAC 10-Q I.2: ['0000070858-24-000280:570.0:570.0', '0000070858-24-000156:288.1:288.1', '0000070858-25-000268:138.4:138.4 [flags]', '0000070858-25-000200:546.1:546.1']
+      table COST 10-K II.8: ['0000909832-25-000101:686.0:686.0', '0000909832-23-000042:411.0:411.0 [flags]', '0000909832-23-000042:504.0:504.0', '0000909832-24-000049:511.0:511.0']
+      table COST 10-Q I.1: ['0000909832-26-000029:174.0:174.0', '0000909832-24-000017:33.1:33.1 [flags]', '0000909832-24-000079:95.0:95.0', '0000909832-24-000029:61.0:61.0 [flags]', '0000909832-26-000029:177.0:177.0', '0000909832-23-000065:104.0:104.0 [flags]']
+      table COST 10-Q I.2: ['0000909832-23-000065:211.0:211.0 [flags]', '0000909832-24-000079:210.0:210.0 [flags]']
+      table JPM 10-Q I.1: ['0000019617-25-000615:1344.0:1344.0', '0000019617-24-000611:1549.0:1549.0 [flags]', '0000019617-25-000615:1270.0:1270.0 [flags]', '0001628280-26-054343:1819.1:1819.1', '0000019617-25-000615:1706.0:1706.0 [flags]', '0000019617-24-000326:1130.1:1130.1 [flags]', '0001628280-26-054343:1228.0:1228.0 [flags]', '0001628280-26-029344:1299.0:1299.0 [flags]']
+      table JPM 10-Q I.2: ['0000019617-25-000421:752.0:752.0', '0000019617-24-000453:415.1:415.1', '0001628280-25-048859:475.0:475.0', '0001628280-26-029344:535.0:535.0']
+      table NVDA 10-K IV.15: ['0001045810-26-000021:1010.0:1010.0', '0001045810-25-000023:1122.0:1122.0', '0001045810-26-000021:778.0:778.0', '0001045810-24-000029:963.0:963.0']
+      table NVDA 10-Q I.1: ['0001045810-24-000124:178.0:178.0', '0001045810-24-000316:43.1:43.1 [flags]', '0001045810-24-000264:117.0:117.0', '0001045810-24-000316:71.1:71.1 [flags]', '0001045810-24-000316:192.0:192.0', '0001045810-26-000052:116.0:116.0']
+      table NVDA 10-Q I.2: ['0001045810-24-000316:327.0:327.0 [flags]', '0001045810-26-000075:378.0:378.0']
+      table PFE 10-K II.8: ['0000078003-26-000026:1124.0:1124.0 [flags]', '0000078003-26-000026:1261.0:1261.0', '0000078003-26-000026:1261.1:1261.1', '0000078003-25-000054:1174.1:1174.1 [flags]']
+      table PFE 10-Q I.1: ['0000078003-26-000054:236.0:236.0', '0000078003-26-000054:209.1:209.1', '0000078003-25-000138:70.1:70.1 [flags]', '0000078003-25-000114:153.0:153.0 [flags]', '0000078003-25-000150:70.0:70.0 [flags]', '0000078003-24-000166:203.0:203.0 [flags]']
+      table PFE 10-Q I.2: ['0000078003-23-000115:586.3:586.3', '0000078003-24-000166:593.3:593.3']
+      table TGT 10-K II.8: ['0000027419-24-000032:480.0:480.0', '0000027419-26-000016:688.0:688.0 [flags]', '0000027419-25-000018:716.0:716.0', '0000027419-25-000018:605.0:605.0']
+      table TGT 10-Q I.1: ['0000027419-24-000129:75.0:75.0', '0000027419-23-000052:128.0:128.0 [flags]', '0000027419-25-000118:123.0:123.0 [flags]', '0000027419-24-000152:50.0:50.0 [flags]']
+      table TGT 10-Q I.2: ['0000027419-26-000042:213.0:213.0', '0000027419-25-000101:169.0:169.0', '0000027419-25-000101:203.0:203.0', '0000027419-25-000118:158.0:158.0']
+      table XOM 10-Q I.1: ['0000034088-25-000042:83.0:83.0', '0000034088-24-000050:122.0:122.0', '0000034088-24-000050:117.2:117.2', '0000034088-26-000067:104.0:104.0', '0000034088-24-000068:97.1:97.1']
+      table XOM 10-Q I.2: ['0000034088-24-000050:154.0:154.0 [flags]', '0000034088-25-000061:180.1:180.1 [flags]', '0000034088-25-000061:266.0:266.0', '0000034088-24-000029:190.0:190.0', '0000034088-24-000068:224.0:224.0', '0000034088-24-000068:242.0:242.0']
+    stopped after the key-free stage: 158 key-free survivors lack a no-context record; no candidates or reserve written
+
+The drops (ad hoc over `dropped_v1.jsonl` and the raw file, question shown):
+
+    drops by (kind, filter): {('table', 'names_company'): 3, ('synthesis', 'unanchored_pronoun'): 17, ('synthesis', 'names_company'): 2}
+    drops by stratum: {'table XOM 10-Q I.1': 3, 'synthesis AAPL 10-K I.1A': 2, 'synthesis AAPL 10-K II.8': 1, 'synthesis AAPL 10-Q I.2': 1, 'synthesis AAPL 10-Q II.1A': 1, 'synthesis COST 10-K I.1A': 2, 'synthesis NVDA 10-K I.1A': 2, 'synthesis NVDA 10-Q I.2': 1, 'synthesis NVDA 10-Q II.1A': 1, 'synthesis PFE 10-K II.7': 1, 'synthesis TGT 10-K I.1A': 2, 'synthesis TGT 10-K II.7': 1, 'synthesis XOM 10-Q I.1': 2, 'synthesis XOM 10-Q I.2': 2}
+    - table XOM 10-Q I.1 names_company: question names no company or ticker | What was ExxonMobil Holdings Corporation's net benefit cost for pension and other postretirement benefits for the three months ended June 30, 2026 (Q2
+    - table XOM 10-Q I.1 names_company: question names no company or ticker | What was ExxonMobil Holdings Corporation's net cash used in financing activities for the six months ended June 30, 2026 (Q2 FY2026)?
+    - table XOM 10-Q I.1 names_company: question names no company or ticker | In ExxonMobil Holdings Corporation's 10-Q for Q2 FY2026, what Segment Total was reported for Sales and other operating revenue for the six months ende
+    - synthesis AAPL 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2025 10-K risk factors, what does Apple Inc. say could happen to the Company if its effective tax rates increase or if the final determinatio
+    - synthesis AAPL 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2025 10-K risk factors, what competitor pricing behavior does Apple Inc. cite as making competition particularly intense?
+    - synthesis AAPL 10-K II.8 unanchored_pronoun: deictic reference 'that period' | Based on the figures reported for Apple Inc. for fiscal years 2022 through 2024, how did depreciation expense on property, plant and equipment trend o
+    - synthesis AAPL 10-Q I.2 unanchored_pronoun: deictic reference 'that period' | In its Q1 FY2026 Form 10-Q, what example does Apple Inc. give of a forward-looking statement, and what does this suggest about the uncertainties manag
+    - synthesis AAPL 10-Q II.1A unanchored_pronoun: pronoun 'its' before any company name | In its Q2 FY2025 10-Q risk factors, why does Apple Inc. suggest that its reliance on a single product could make quarterly net sales volatile?
+    - synthesis COST 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2024 10-K, how does Costco Wholesale Corp say its own actions can shape the effect that tariff-related cost increases have on its net sales a
+    - synthesis COST 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its fiscal year 2024 10-K risk factors, what does Costco Wholesale Corp imply about the limits of employee security training as a defense against c
+    - synthesis NVDA 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2026 10-K risk factors, what does NVIDIA Corp's list of operational disruption factors suggest about the range of risks it considers, in term
+    - synthesis NVDA 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its fiscal year 2025 10-K risk factors, under what circumstances does NVIDIA Corp indicate it could incur inventory provisions or impairments as it
+    - synthesis NVDA 10-Q I.2 unanchored_pronoun: pronoun 'its' before any company name | In its 10-Q for Q3 FY2024, how does NVIDIA Corp (NVDA) characterize the risk that further changes in U.S. government export controls pose to its busin
+    - synthesis NVDA 10-Q II.1A unanchored_pronoun: pronoun 'its' before any company name | In its Q2 fiscal year 2027 10-Q, how does NVIDIA Corp characterize its ability to pass the tariff on H200 products shipped under the USG licensing pro
+    - synthesis PFE 10-K II.7 unanchored_pronoun: pronoun 'its' before any company name | In its FY2023 10-K, why does Pfizer Inc acknowledge that major non-acquisition-related cost-reduction programs, though excluded from adjusted income a
+    - synthesis TGT 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2025 10-K risk factors, why does Target Corporation say it expects to keep incurring significant interchange and other processing fee costs, 
+    - synthesis TGT 10-K I.1A unanchored_pronoun: pronoun 'its' before any company name | In its FY2025 10-K, why does Target Corporation say that its own resilience goals and initiatives, not just external climate events, could harm its bu
+    - synthesis TGT 10-K II.7 unanchored_pronoun: pronoun 'its' before any company name | In its fiscal year 2024 10-K, why does Target Corporation believe the risk of inventory obsolescence is largely mitigated?
+    - synthesis XOM 10-Q I.1 unanchored_pronoun: pronoun 'its' before any company name | In its Q1 FY2026 10-Q, how does Exxon Mobil Corporation characterize the likelihood that the ultimate outcomes of the climate change and Louisiana coa
+    - synthesis XOM 10-Q I.1 unanchored_pronoun: pronoun 'its' before any company name | In its Q1 FY2025 10-Q, how does Exxon Mobil Corporation characterize the climate change lawsuits filed by state and local governments, and what does i
+    - synthesis XOM 10-Q I.2 names_company: question names no company or ticker | According to ExxonMobil Holdings Corporation's disclosure for the first six months of fiscal 2026, what factors explained the increase in Corporate an
+    - synthesis XOM 10-Q I.2 names_company: question names no company or ticker | How did ExxonMobil Holdings Corporation characterize global industry refining margins in Q2 FY2026 relative to historical norms, and what reason did i
+
+Findings, not filter changes (the filters are frozen from the first drawn call):
+15 of the 17 `unanchored_pronoun` drops are a cataphoric "In its FY2025 10-K
+..., what does Apple Inc. say ..." (F-94); all 5 `names_company` drops name
+"ExxonMobil Holdings Corporation", which the names list does not hold (F-93). At
+the key-free stage four synthesis strata have no survivor: 10-K I.1A for AAPL,
+COST, NVDA and TGT, 0 of 1 slot each (F-95). F-92's count, 13, is a lower bound.
