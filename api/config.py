@@ -57,6 +57,16 @@ def data_dir() -> Path:
 CORPUS_FILE = REPO_ROOT / "api" / "config.yaml"
 
 
+def chunking(path: Path = CORPUS_FILE) -> dict:
+    """The `chunking:` block of api/config.yaml (PRD 6.3, Appendix A)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["chunking"]
+
+
+def embedding(path: Path = CORPUS_FILE) -> dict:
+    """The `embedding:` block of api/config.yaml (PRD 6.4)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["embedding"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

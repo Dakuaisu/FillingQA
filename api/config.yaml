@@ -65,3 +65,23 @@ parser:
   alpha_ratio:              # letters / all characters of the normalized text
     min: 0.4
     max: 0.95
+
+# Chunking (PRD 6.3, Appendix A). Pipeline parameters, like `parser:` (F-23).
+chunking:
+  # The floor of PRD 6.3's 500-800 range, inside the embedding model's limit
+  # (F-53). Counts the whole embedded text, context header included.
+  target_tokens: 500
+  overlap_pct: 0.15
+  # A non-data block whose digit-normalized text repeats this many times in one
+  # filing, and does not end like a sentence, is page furniture (PRD 6.2 step 4).
+  furniture_min_repeats: 5
+
+# The embedding model (PRD 6.4), pinned so token counts here equal the sequence
+# length sentence-transformers will see. The tokenizer file is vendored at
+# api/chunk/ so counting is offline and reproducible; its sha is checked on load.
+embedding:
+  model: BAAI/bge-base-en-v1.5
+  revision: a5beb1e3e68b9ab74eb54cfd186867f64f240e1a
+  max_seq_length: 512
+  tokenizer_file: api/chunk/bge-base-en-v1.5.tokenizer.json
+  tokenizer_sha256: d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66

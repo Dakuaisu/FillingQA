@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 26 |
-| RESOLVED | 26 |
-| **Total** | **52** |
+| OPEN | 30 |
+| RESOLVED | 27 |
+| **Total** | **57** |
 
 ---
 
@@ -28,6 +28,8 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
+| F-54 | TGT's per-section running headers ("CYBERSECURITY Table of Contents Index to Financial Statements") repeat fewer than `furniture_min_repeats` times, survive as layout-as-prose, and leave 12-29 nav fragments inside TGT prose chunks per filing (at 500 tokens; `navres` in the chunk summary). 0 in AAPL and COST. Revisit after the full ingest; fix by mechanism (a leaf block made entirely of in-document `<a href="#...">` anchors is navigation), as a parser change with an F-50-style diff -- no phrase rule | OPEN |
+| F-56 | TGT's 10-K exhibit index is a layout table kept as prose whose entries run "...by reference). 4.2 Description...": the sentence splitter never breaks before a digit, so two units of 648 and 992 tokens cannot be split and exceed `max_seq_length` | OPEN |
 
 ## Blocking Phase 3
 
@@ -51,6 +53,7 @@ carries the state.
 | F-12 | `eval.compare` compares a fast/CI-corpus run against a full-corpus baseline | OPEN |
 | F-16 | Chunk-size and context-header ablations need a full re-embed; budget is ~10× short | OPEN |
 | F-21 | `PARTIAL` verdict has no place in the abstention 2×2 or the API examples | OPEN |
+| F-57 | PRD 11.7's chunk-size ablation lists 256 / 512 / 800 / 1200 tokens; 800 and 1200 exceed bge-base-en-v1.5's 512-token input (F-53), so those points would embed truncated chunks | OPEN |
 
 ## Blocking Phase 5
 
@@ -70,6 +73,7 @@ carries the state.
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-46 | Some `layout` tables carry prose content, not scaffolding: TGT's critical audit matters and cybersecurity-oversight tables, AAPL's audit-matter tables. Phase 2 must chunk layout tables as prose rather than drop them | OPEN |
+| F-55 | `page_hint` is not computed; `chunks.page_hint` is NULL. PRD 6.2 step 5, the 9 API response and the 10 source panel all carry it | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
 | F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
 
@@ -103,6 +107,7 @@ carries the state.
 | F-39 | `api/config.yaml` sector labels existed but nothing read them; `companies.sector` was NULL | `upsert_company` writes the label via `sector_of`, which raises on an unlabelled ticker. Verified: AAPL tech, COST retail, TGT retail | 2026-10-01 |
 | F-50 | Continuation tables with no header row of their own got the preceding table's caption scale: percentage-only tables read "in millions" | Caption window stops at the end of a preceding table; never inherit labels or scale from a neighbour. 8 percentage tables now unscaled, 4 untagged TGT ROIC tables lose a borrowed scale. Residual: 11 header-less data tables on the slice stay header-less -- the chunker must emit no column-label line for them, not an empty one. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-51 | A dash-only first data row was taken as a header row | A row whose cells right of the label column are all dashes is a body row. Header rows changed on exactly 1 of 404 data tables (AAPL 0000320193-26-000020 share repurchases) | 2026-10-01 |
+| F-53 | PRD 6.3's 500-800-token chunks (Appendix A: 700) exceed bge-base-en-v1.5's 512-token input and would be silently truncated; no tokenizer was installed | `target_tokens: 500` counted with the pinned model's own vendored tokenizer, header and special tokens included; `max_seq_length: 512` violations counted, never truncated. 12 filings: 0 over 512 except 2 in TGT's 10-K (F-56). Consequence: PRD 11.7's 800 and 1200-token chunk-size ablation points are impossible on bge-base (F-57). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 

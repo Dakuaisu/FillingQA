@@ -741,3 +741,78 @@ row.** Header rows changed across 404 tables: exactly 1, AAPL 10-Q
 
 `text_sha256` unchanged on all 12 filings; `parser_version` bfe5929c604b ->
 671106d02317.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the chunker (Phase 2 step 1, PRD 6.3)
+
+Built and stopped for review; not committed. Choices PRD 6.3 does not make:
+
+1. **Blocks before the first Item are not chunked** -- cover page and table of
+   contents, 29-47 blocks per filing. PRD 6.3 rule 2 says a chunk belongs to
+   exactly one Item, and these belong to none. The cover facts (shares
+   outstanding, registrant details) are in `dei` and companyfacts.
+2. **`item_code` is part-qualified on a 10-Q** ("I.1", "II.1A"), plain on a 10-K
+   ("1A"), because a 10-Q has two Item 1s (F-04). PRD 8's `item_code` comment
+   shows plain codes; the metadata filter in PRD 7.1 must match this form.
+3. **A prose run ends at every data table**, so no prose chunk's offsets span a
+   table. Otherwise a span inside the table would resolve to both chunks.
+4. **Page furniture** (PRD 6.2 step 4) is a non-data block whose digit-normalized
+   text repeats `furniture_min_repeats` (5) times in the filing and does not end in
+   "." or ":". Measured: footers 22-80 repeats, real repeated content at most 8,
+   and the repeated content that matters ("None.", "Not applicable.") ends in a
+   full stop. Misses TGT's rarer running headers (F-54).
+5. **Layout tables with prose chunk as prose (F-46)** -- all layout tables that
+   are not furniture. No length rule: tables of contents (85-129 chars) and
+   exhibit indexes (180-370) overlap real prose tables (330-1,105) in cell length.
+6. **Sentence pieces of an oversized paragraph, and row-group parts of an
+   oversized table, keep their block's offsets.** *Reversed for tables by the
+   supervisor -- see "chunk budget and tokenizer (F-53); split-table offsets".* Sub-block offsets would need a
+   second coordinate system. Consequence for span resolution: a span in a split
+   table falls in several chunks' ranges.
+7. **`chunk_id` = `{accession}:{block}.{piece}:{block}.{piece}`**, PRD's
+   `block_start:block_end` plus a piece index so sentence pieces and table parts
+   stay unique.
+8. **A prose chunk's `raw_text` is its kept units joined by newlines**, not a
+   slice of the normalized text: dropped furniture between blocks is not in it.
+   `char_start`/`char_end` still bound it in the normalized text.
+9. **The token budget covers the whole embedded text**, header included.
+10. **`page_hint` is not computed.** PRD 6.2 step 5 is approximate by its own
+    account; nothing consumes it yet.
+
+Open, not chosen: the tokenizer (a dependency) and the target size (F-53).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: chunk budget and tokenizer (F-53); split-table offsets
+
+**Budget: `chunking.target_tokens: 500`**, counted on the whole embedded text --
+context header and [CLS]/[SEP] included -- with the embedding model's own
+tokenizer. 500 is the floor of PRD 6.3's 500-800 range and inside
+`embedding.max_seq_length: 512`. The chunker counts every chunk, prose and table,
+whose `token_count` exceeds 512; a violation is a number in the run summary,
+never a truncation.
+
+*Rejected:*
+- *Keep 700 and accept truncation.* bge-base-en-v1.5 would silently drop the tail
+  of most chunks -- the PRD 7.5 trap for NLI, here for retrieval.
+- *A longer-context embedding model.* Outside PRD 6.4's list, and a larger change
+  than the chunk size.
+- *Below 500.* Outside the PRD's range.
+
+**Tokenizer: `tokenizers` added as a dependency**, loading the vendored
+`tokenizer.json` of the pinned model revision. It is the file sentence-transformers
+loads for the same model at step 3, so the count here and the truncation there
+agree. Truncation and padding are switched off when counting, so a long chunk is
+measured, not capped at 512. Unit counts exclude special tokens so pieces add up;
+a chunk's final `token_count` includes them, so it is the real sequence length.
+
+**Decision 6 reversed for tables.** A row-group part of a split table takes
+`char_start`/`char_end` from its own rows: the first part from the table's start,
+the last to its end, so the parts tile the table without overlap. Otherwise every
+iXBRL span in a split statement would resolve to every part and Phase 3's gold
+chunk would be ambiguous. Row offsets come from `Table.body_offsets`, carried
+through `_cell_rows` and fragment merging, because empty HTML rows are dropped
+before `Table.body` is built and Block.rows cannot be indexed by body position.
+Sentence pieces of an oversized paragraph still share their block's offsets; step
+2 counts spans landing in them.

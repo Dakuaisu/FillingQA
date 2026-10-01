@@ -808,3 +808,86 @@ scale counts 35/3/39 -> 32/5/38. New tests: F-50 on the AAPL 10-K fixture's
 percentage table; F-51 on cells copied from 0000320193-26-000020 (not a fixture,
 and no fixture has the shape), plus a fixture invariant that no column label
 carries a dash. `make test`: 173 passed, 3 snapshots passed.
+
+## 2026-10-01 — Phase 2 step 1: structure-aware chunker (stopped for review)
+
+F-50/F-51 committed as `690a685`.
+
+`api/chunk/context.py` (chunk header, table lines) and `api/chunk/chunker.py`
+(`chunk_document`). Outside `api/parse/`, so `parser_version` is unchanged.
+Config `chunking:` in `api/config.yaml`; `target_tokens: 700` is PRD's value and
+not decided (F-53). Not persisted: no `chunks` migration, no `chunk_id` on spans,
+no embeddings or indexes.
+
+Run over the 12 filings. **The counter is whitespace words, not tokens** -- no
+tokenizer is installed. `tsplit` tables split by row groups, `furn` furniture
+blocks dropped, `layP` layout tables kept as prose, `nohdr` header-less table
+chunks, `psplit` paragraphs split at sentences, `preItem` blocks before Item 1:
+
+    COUNTER = whitespace words (not tokens); target=700 overlap=0.15
+    ticker accession              prose table tsplit furn layP nohdr psplit preItem  p50w  maxw >512w uniq
+    AAPL   0000320193-25-000079      84    45      2   58    7     3      0      47   169   700    30   ok
+    AAPL   0000320193-26-000006      34    23      0   22    2     2      0      34   126   671     2   ok
+    AAPL   0000320193-26-000013      40    25      0   26    2     2      0      34   181   696     9   ok
+    AAPL   0000320193-26-000020      40    26      0   26    2     2      0      34   181   699     5   ok
+    COST   0000909832-25-000101      90    44      0  146    6     1      0      45   143   700    36   ok
+    COST   0000909832-25-000169      42    27      0   55    2     0      0      29    99   700     9   ok
+    COST   0000909832-26-000029      43    28      0   62    2     0      0      29   113   700     9   ok
+    COST   0000909832-26-000051      43    28      0   62    2     0      0      29   113   700     9   ok
+    TGT    0000027419-25-000126      36    34      0   46   16     0      0      35   133   638     4   ok
+    TGT    0000027419-26-000016     105    64      0  132   47     1      2      43   146   699    28   ok
+    TGT    0000027419-26-000022      33    30      0   38   21     0      0      35   125   657     3   ok
+    TGT    0000027419-26-000042      34    32      0   43   16     0      0      35   152   691     3   ok
+
+Even in words, 2-36 chunks per filing exceed 512 -- the embedding model's limit
+(F-53). Samples checked by eye: AAPL 10-Q Part II Item 1A prose chunk; its
+statement of operations as one table chunk with Part I, Item 1 and "in millions,
+USD"; the AAPL 10-K header-less gross-margin-percentage table with no label line
+and no scale; the two split exhibit-index tables repeating context line and
+labels in every part. TGT keeps 10-26 nav fragments in prose (F-54).
+
+Tests: `tests/unit/test_chunker.py` (30, on the 3 fixtures, word counter
+injected). `make test`: 203 passed, 3 snapshots passed.
+
+## 2026-10-01 — Chunker: real tokens, 500-token budget, split-table offsets
+
+**Tokenizer.** `tokenizers` 0.23.2 added to `pyproject.toml` (installed with uv;
+it brings `huggingface-hub` and `tqdm` as its own dependencies). Vendored
+`api/chunk/bge-base-en-v1.5.tokenizer.json` from
+`https://huggingface.co/BAAI/bge-base-en-v1.5/resolve/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a/tokenizer.json`,
+711,396 bytes, sha256
+`d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66` -- pinned in
+`embedding:` and checked on every load. The file sets no truncation or padding;
+`api/chunk/tokens.py` switches both off anyway. `sentence_bert_config.json` at
+that revision: `max_seq_length: 512`.
+
+**Row offsets.** `Cell` carries a trimmed `(char_start, char_end)`;
+`Table.body_offsets` holds one range per body row. Checked on all 3,557 body rows
+of the 12 filings: 0 outside their table, 0 out of order, 0 with a cell's text
+missing from the row slice. A first pass found 306 rows overshooting by one
+whitespace character (untrimmed cell ranges), fixed by trimming. `text_sha256`
+and all 404 tables' columns, scales, titles and first rows unchanged;
+`parser_version` 671106d02317 -> f1090fb5f594; re-validated, 7,877 spans,
+`check_stored_spans` 0 mismatches.
+
+**Run with real tokens** (`navres` = "Table of Contents" fragments left in prose,
+F-54; `parts` = chunks from split tables; `partOverlap` must be 0):
+
+    COUNTER = BAAI/bge-base-en-v1.5@a5beb1e3e68b tokenizer; target_tokens=500 max_seq_length=512 overlap=0.15
+    ticker accession              prose table tsplit parts furn navres layP nohdr psplit preItem  p50  max >512 partOverlap
+    AAPL   0000320193-25-000079     118    56      9    22   58      0    7     3      1      47  308  499    0           0
+    AAPL   0000320193-26-000006      41    28      5    10   22      0    2     2      0      34  223  500    0           0
+    AAPL   0000320193-26-000013      54    33      8    16   26      0    2     2      1      34  292  500    0           0
+    AAPL   0000320193-26-000020      52    34      8    16   26      0    2     2      1      34  304  500    0           0
+    COST   0000909832-25-000101     129    50      5    11  146      0    6     1      1      45  293  500    0           0
+    COST   0000909832-25-000169      51    30      3     6   55      0    2     0      1      29  184  500    0           0
+    COST   0000909832-26-000029      55    34      6    12   62      0    2     0      2      29  240  490    0           0
+    COST   0000909832-26-000051      56    34      6    12   62      0    2     0      2      29  236  499    0           0
+    TGT    0000027419-25-000126      45    38      4     8   46     13   16     0      0      35  227  498    0           0
+    TGT    0000027419-26-000016     147    67      3     6  132     29   47     1      3      43  251  992    2           0
+    TGT    0000027419-26-000022      39    33      3     6   38     17   21     0      0      35  200  499    0           0
+    TGT    0000027419-26-000042      42    35      3     6   43     12   16     0      0      35  227  500    0           0
+
+`>512` is 0 except TGT's 10-K: two units of its exhibit index (648 and 992
+tokens) that the sentence splitter cannot break (F-56). Every split table's parts
+tile it with no overlap. `make test`: 209 passed, 3 snapshots passed.

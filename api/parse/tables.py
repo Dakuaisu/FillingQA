@@ -111,6 +111,9 @@ class Cell:
     col_start: int
     col_end: int
     text: str
+    # Range in the normalized text, so a row of cells can be located there.
+    char_start: int = 0
+    char_end: int = 0
 
 
 @dataclass
@@ -121,6 +124,10 @@ class Table:
     title: str | None = None
     columns: list[str] = field(default_factory=list)  # label per logical column
     body: list[list[str]] = field(default_factory=list)
+    # One (char_start, char_end) per body row, 1:1 with `body`: where that row
+    # sits in the normalized text. Empty HTML rows are dropped before `body` is
+    # built, so Block.rows cannot be indexed by body position.
+    body_offsets: list[tuple[int, int]] = field(default_factory=list)
     unit_scale: str | None = None
     ix_scales: set[str] = field(default_factory=set)
     scale_source: str | None = None  # 'caption' | 'ixbrl' | None
@@ -143,9 +150,13 @@ def _cell_rows(doc: ExtractedDocument, block: Block) -> list[list[Cell]]:
         for start, end, colspan, rowspan in raw:
             while occupied.get(col, 0) > 0:
                 col += 1
-            text = " ".join(doc.text[start:end].split())
+            raw = doc.text[start:end]
+            text = " ".join(raw.split())
             if text:
-                cells.append(Cell(col, col + colspan, text))
+                # Trimmed onto the glyphs, as spans and blocks are, so a row's
+                # range never reaches past its table's.
+                lead, trail = len(raw) - len(raw.lstrip()), len(raw) - len(raw.rstrip())
+                cells.append(Cell(col, col + colspan, text, start + lead, end - trail))
             if rowspan > 1:
                 for c in range(col, col + colspan):
                     occupied[c] = rowspan
@@ -164,11 +175,23 @@ def _merge_fragments(row: list[Cell]) -> list[Cell]:
             pending = cell
             continue
         if pending is not None:
-            cell = Cell(pending.col_start, cell.col_end, pending.text + cell.text)
+            cell = Cell(
+                pending.col_start,
+                cell.col_end,
+                pending.text + cell.text,
+                min(pending.char_start, cell.char_start),
+                max(pending.char_end, cell.char_end),
+            )
             pending = None
         if cell.text in _SUFFIX_FRAGMENTS and out:
             prev = out[-1]
-            out[-1] = Cell(prev.col_start, cell.col_end, prev.text + cell.text)
+            out[-1] = Cell(
+                prev.col_start,
+                cell.col_end,
+                prev.text + cell.text,
+                min(prev.char_start, cell.char_start),
+                max(prev.char_end, cell.char_end),
+            )
             continue
         out.append(cell)
     if pending is not None:
@@ -355,6 +378,7 @@ def extract_table(doc: ExtractedDocument, index: int) -> Table:
             g = _group_of(cell, groups)
             out[g] = f"{out[g]} {cell.text}".strip()
         table.body.append(out)
+        table.body_offsets.append((min(c.char_start for c in row), max(c.char_end for c in row)))
 
     header_text = "\n".join(c.text for row in pre for c in row)
     preceding = doc.text[_caption_window_start(doc, index) : block.char_start]

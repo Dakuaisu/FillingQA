@@ -8,6 +8,7 @@ dependencies = [
     "lxml>=5.2",
     "psycopg[binary]>=3.2",
     "PyYAML>=6.0",
+    "tokenizers>=0.19",
 ]
 
 [project.optional-dependencies]
