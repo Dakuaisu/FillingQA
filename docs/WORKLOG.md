@@ -5078,3 +5078,15 @@ Rerank on mps, first attempt (22:30Z): launched inside a tool call that also pol
 
 Adopted: MiniLM on mps (the only one under 800 ms). F-111 resolved; F-113 logged
 (MiniLM reranks below the fused order).
+
+## 2026-10-01 — `make eval` on Config 4 (supervisor decision 2)
+
+Commit bf0accd: `eval/pipeline.py` (`context_for`, `PIPELINES`), `eval_run`
+stores the pre- and post-rerank lists and `generator_input`; `make test` 430
+passed after the fix below, lint clean.
+
+First launch (22:51Z) failed at the first item: `TypeError: answer_one() takes 5
+positional arguments but 6 were given`. bf0accd changed `answer_one` but not its
+call in `main`; the stubbed smoke test called `answer_one` directly, so it did not
+reach the call. Nothing recorded; `eval/runs/b400b99f7086.meta.json` is kept as
+the artefact. Fixed in 17a803d; relaunched 22:56Z as run 63cf35c328e2.

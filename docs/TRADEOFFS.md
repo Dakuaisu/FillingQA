@@ -2345,3 +2345,26 @@ sufficiency.
 7.3's threshold, which also feeds the p95 latency row); bge-base on CPU (not
 measured; the GPU run already misses the timeout); choose bge-base for its
 sufficiency (rejected: the eval set would pick the component).
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: `make eval` runs Config 4 and stores every list (F-13, F-61)
+
+Implements supervisor decision 2. `eval_run.pipeline` names PRD 11.6's config
+(`config_1_dense | config_3_hybrid | config_4_rerank`); the default is
+`config_4_rerank` (BM25 + dense, RRF, then the cross-encoder). Each result stores
+`retrieved` (the fused pre-rerank list, the F-13 measurement point),
+`retrieved_post_rerank`, `generator_input` (the chunk ids the generator saw),
+`rerank_seconds` and `rerank_fell_back`. Over the 800 ms timeout the pipeline
+falls back to RRF order (PRD 7.3); when the floor empties the list the item
+abstains without a generator call. Run meta names the pipeline, the retrieval and
+rerank config, the BM25 index key and the machine; a resume refuses if any of
+them changed. Dense-only remains selectable as Config 1 (F-61 unchanged: no
+fixed-512-char chunk set exists).
+
+The floor stays at 0.30 with `floor_calibration: pending` (F-112). Runs with
+it are dev runs on `claude_cli` and are not comparable with `f2e616e0a7d7`
+beyond showing direction: that run is Config 1 at ef_search 40.
+
+*Alternatives:* store only the generator's list (rejected: F-13 needs the
+pre-rerank list); make Config 4 a separate target and keep `make eval` dense
+(rejected: decision 2); skip the floor until calibrated (rejected: that changes
+the pipeline the PRD specifies; the floor is reported as pending instead).
