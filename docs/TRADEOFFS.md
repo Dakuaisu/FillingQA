@@ -1049,3 +1049,19 @@ quarantined and JPM's 10-Ks passed while mis-sectioned.
   an "Item 15" context header, and PRD 6.2 says bad parses do not enter the index
   silently.
 - *Existence-only validation.* It passed JPM's 10-Ks with 395-char Items 7 and 8.
+
+**How the fallback works (F-65), as built.** The walker records the text offset
+where every `id`/`name` link target begins (`anchor_targets`; normalized text
+unchanged on all 96). Any table that is not itself a heading table contributes
+the Item and Part rows that carry their own resolvable in-document link -- not a
+count of Items, because JPM splits one index over two tables, the first holding
+only Item 1. A resolved Item row fills only an Item primary detection missed. A
+resolved Part row joins the primary Part markers, and a Part starts at its
+earliest known position: JPM's pages carry "Part IV" running headers that begin a
+few blocks after Item 15's heading, so a fill-missing-only rule left Item 15 in
+Part III. Rows with page numbers and no link contribute nothing (F-55).
+
+**JPM's 10-K MD&A and statements are not relocated.** The index's Item 7 and 8
+rows link to the in-body stubs, and the stubs name the Annual Report pages
+holding the content with no link. That is the stop condition: no page mechanism
+(F-55). The three 10-Ks stay quarantined by the content check (F-66).

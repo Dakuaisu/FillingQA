@@ -132,9 +132,14 @@ def _heading_match(text: str) -> tuple[str, str] | None:
 
 
 def detect_sections(doc: ExtractedDocument, form_type: str) -> list[Section]:
-    """Group the document's blocks into Items, in document order."""
-    headings: list[tuple[int, str, str, str | None]] = []  # block_idx, code, title, part
-    current_part: str | None = None
+    """Group the document's blocks into Items, in document order.
+
+    Primary detection reads heading blocks. PRD 6.2 step 2's table-of-contents
+    fallback then fills only what it missed: an index row's link resolves to the
+    block where that Item or Part starts (F-65).
+    """
+    headings: list[tuple[int, str, str]] = []  # block_idx, code, title
+    part_marks: list[tuple[int, str]] = []  # block_idx, part
 
     for idx, block in enumerate(doc.blocks):
         if block.length > MAX_HEADING_CHARS:
@@ -150,17 +155,41 @@ def detect_sections(doc: ExtractedDocument, form_type: str) -> list[Section]:
         part_match = _PART.match(text)
         if part_match and not _ITEM.match(part_match.group("rest")):
             if not _introduces_index(doc, idx):
-                current_part = part_match.group("part").upper()
+                part_marks.append((idx, part_match.group("part").upper()))
             continue
 
         found = _heading_match(text)
         if found:
-            # Both forms open with Part I, so an Item before any effective Part
-            # heading is in Part I -- whatever order the Items come in (F-64).
-            headings.append((idx, found[0], found[1], current_part or "I"))
+            headings.append((idx, found[0], found[1]))
+
+    # Index Part links join the primary markers: a Part starts at its earliest
+    # known position. JPM's pages carry "Part IV" running headers that begin a
+    # few blocks after Item 15's heading; the index's Part IV link lands on the
+    # heading itself, and without it Item 15 inherited Part III.
+    index_items, index_parts = index_entries(doc)
+    part_marks = sorted(part_marks + index_parts)
+
+    def part_at(block_idx: int) -> str:
+        # Both forms open with Part I, so an Item before any Part marker is in
+        # Part I -- whatever order the Items come in (F-64).
+        current = "I"
+        for mark_idx, part in part_marks:
+            if mark_idx > block_idx:
+                break
+            current = part
+        return current
+
+    present = {(part_at(b), code) for b, code, _ in headings}
+    taken = {b for b, _, _ in headings}
+    for block_idx, part, code, title in index_items:
+        if (part, code) not in present and block_idx not in taken:
+            headings.append((block_idx, code, title))
+            present.add((part, code))
+            taken.add(block_idx)
+    headings.sort()
 
     sections: list[Section] = []
-    for order, (block_idx, code, title, part) in enumerate(headings):
+    for order, (block_idx, code, title) in enumerate(headings):
         next_block = headings[order + 1][0] if order + 1 < len(headings) else len(doc.blocks)
         char_end = (
             doc.blocks[next_block - 1].char_end
@@ -176,11 +205,64 @@ def detect_sections(doc: ExtractedDocument, form_type: str) -> list[Section]:
                 char_end=char_end,
                 block_start=block_idx,
                 block_end=next_block,
-                part=part,
+                part=part_at(block_idx),
             )
         )
 
     return sections
+
+
+_PAGE_REF = re.compile(r"[\s|]*[\d\-–,\s]+$")  # noqa: RUF001
+
+
+def _block_at(doc: ExtractedDocument, offset: int) -> int | None:
+    """The first block ending after `offset`: where a link target's content starts."""
+    for i, block in enumerate(doc.blocks):
+        if block.char_end > offset:
+            return i
+    return None
+
+
+def index_entries(
+    doc: ExtractedDocument,
+) -> tuple[list[tuple[int, str, str, str]], list[tuple[int, str]]]:
+    """Items and Parts an index links to: ([(block, part, code, title)], [(block, part)]).
+
+    Any table that is not itself a heading contributes the Item and Part rows
+    that carry their own in-document link -- not a count of Items, because JPM
+    splits one index across two tables, the first holding only Item 1. The
+    row's first resolvable link gives the block it points at; Part rows set the
+    Part for the Item rows under them. A row with no resolvable link contributes
+    nothing: page numbers alone are not positions (F-55).
+    """
+    items: list[tuple[int, str, str, str]] = []
+    parts: list[tuple[int, str]] = []
+    for block in doc.blocks:
+        if block.kind != "table" or not block.anchors:
+            continue
+        if is_heading_table(doc, block):
+            continue  # a heading, read by primary detection
+        rows = [r for r in block.rows or [] if r]
+        texts = [" ".join(" ".join(doc.text[s:e].split()) for s, e, *_ in r).strip() for r in rows]
+        index_part = "I"
+        for row, text in zip(rows, texts, strict=True):
+            text = " ".join(text.split())
+            start, end = min(c[0] for c in row), max(c[1] for c in row)
+            targets = [
+                doc.anchor_targets[a.target]
+                for a in block.anchors
+                if start <= a.char_start < end and a.target in doc.anchor_targets
+            ]
+            part_match = _PART.match(text)
+            if part_match and not _ITEM.match(part_match.group("rest")):
+                index_part = part_match.group("part").upper()
+                if targets and (b := _block_at(doc, targets[0])) is not None:
+                    parts.append((b, index_part))
+                continue
+            found = _heading_match(text)
+            if found and targets and (b := _block_at(doc, targets[0])) is not None:
+                items.append((b, index_part, found[0], _PAGE_REF.sub("", found[1])))
+    return items, parts
 
 
 def missing_required(sections: list[Section], form_type: str) -> list[str]:

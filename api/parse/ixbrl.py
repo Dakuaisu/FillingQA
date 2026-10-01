@@ -201,6 +201,9 @@ class ExtractedDocument:
     blocks: list[Block] = field(default_factory=list)
     contexts: dict[str, Context] = field(default_factory=dict)
     units: dict[str, Unit] = field(default_factory=dict)
+    # Where each in-document link target (`id` / `name`) begins in the
+    # normalized text, so an index row's href can be resolved to a position.
+    anchor_targets: dict[str, int] = field(default_factory=dict)
     dei: dict[str, str] = field(default_factory=dict)
     unparsed_values: int = 0
 
@@ -309,6 +312,7 @@ class _Walker:
         self.unparsed = 0
         self._table_depth = 0
         self.anchors: list[Anchor] = []
+        self.targets: dict[str, int] = {}
         # One entry per open <table>; a row or cell belongs to the innermost one.
         self._table_rows: list[list[list[tuple[int, int, int, int]]]] = []
 
@@ -414,6 +418,11 @@ class _Walker:
             self.out.separator()
 
         start = len(self.out) if is_ix else None
+        if not is_ix:
+            for attr in ("id", "name"):
+                key = el.get(attr)
+                if key and key not in self.targets:
+                    self.targets[key] = len(self.out)
         block_start = len(self.out) if block else None
         blocks_before = len(self.blocks)
 
@@ -609,6 +618,7 @@ def extract(raw: bytes) -> ExtractedDocument:
         blocks=walker.blocks,
         contexts=contexts,
         units=units,
+        anchor_targets=walker.targets,
         dei=walker.dei,
         unparsed_values=walker.unparsed,
     )
