@@ -949,3 +949,69 @@ of them are in table chunks.
 Tests: `tests/unit/test_resolve.py` (categories on plain ranges; the AAPL 10-K
 fixture end to end: 962 spans, 2 before Item 1, 960 resolved, every one inside its
 chunk's text). `make test`: 212 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-56: sentence splitter breaks before a digit
+
+Checkpoint committed as `b385063`.
+
+`ChunkStats.paragraph_pieces` added first (measurement only) so before and after
+use the same instrument. Then `_SENTENCE_END`'s lookahead gained `0-9`.
+`chunker_version` 40eaec61b7a0 -> 2f9df055b70a; store and resolve re-run.
+
+Before:
+
+    COUNTER = BAAI/bge-base-en-v1.5@a5beb1e3e68b tokenizer; target_tokens=500 max_seq_length=512 overlap=0.15
+    ticker accession              prose table tsplit parts furn navres layP nohdr psplit pieces preItem  p50  max >512 partOverlap
+    AAPL   0000320193-25-000079     118    56      9    22   58      0    7     3      1      2      47  308  499    0           0
+    AAPL   0000320193-26-000006      41    28      5    10   22      0    2     2      0      0      34  223  500    0           0
+    AAPL   0000320193-26-000013      54    33      8    16   26      0    2     2      1      2      34  292  500    0           0
+    AAPL   0000320193-26-000020      52    34      8    16   26      0    2     2      1      2      34  304  500    0           0
+    COST   0000909832-25-000101     129    50      5    11  146      0    6     1      1      2      45  293  500    0           0
+    COST   0000909832-25-000169      51    30      3     6   55      0    2     0      1      2      29  184  500    0           0
+    COST   0000909832-26-000029      55    34      6    12   62      0    2     0      2      4      29  240  490    0           0
+    COST   0000909832-26-000051      56    34      6    12   62      0    2     0      2      4      29  236  499    0           0
+    TGT    0000027419-25-000126      45    38      4     8   46     13   16     0      0      0      35  227  498    0           0
+    TGT    0000027419-26-000016     147    67      3     6  132     29   47     1      3      7      43  251  992    2           0
+    TGT    0000027419-26-000022      39    33      3     6   38     17   21     0      0      0      35  200  499    0           0
+    TGT    0000027419-26-000042      42    35      3     6   43     12   16     0      0      0      35  227  500    0           0
+
+After:
+
+    COUNTER = BAAI/bge-base-en-v1.5@a5beb1e3e68b tokenizer; target_tokens=500 max_seq_length=512 overlap=0.15
+    ticker accession              prose table tsplit parts furn navres layP nohdr psplit pieces preItem  p50  max >512 partOverlap
+    AAPL   0000320193-25-000079     118    56      9    22   58      0    7     3      1      2      47  308  499    0           0
+    AAPL   0000320193-26-000006      41    28      5    10   22      0    2     2      0      0      34  223  500    0           0
+    AAPL   0000320193-26-000013      54    33      8    16   26      0    2     2      1      2      34  292  500    0           0
+    AAPL   0000320193-26-000020      52    34      8    16   26      0    2     2      1      2      34  304  500    0           0
+    COST   0000909832-25-000101     129    50      5    11  146      0    6     1      1      2      45  293  500    0           0
+    COST   0000909832-25-000169      51    30      3     6   55      0    2     0      1      2      29  184  500    0           0
+    COST   0000909832-26-000029      55    34      6    12   62      0    2     0      2      4      29  240  490    0           0
+    COST   0000909832-26-000051      56    34      6    12   62      0    2     0      2      4      29  236  499    0           0
+    TGT    0000027419-25-000126      45    38      4     8   46     13   16     0      0      0      35  227  498    0           0
+    TGT    0000027419-26-000016     150    67      3     6  132     29   47     1      3      8      43  252  500    0           0
+    TGT    0000027419-26-000022      39    33      3     6   38     17   21     0      0      0      35  200  499    0           0
+    TGT    0000027419-26-000042      42    35      3     6   43     12   16     0      0      0      35  227  500    0           0
+
+Only TGT's 10-K moves: prose 147 -> 150, pieces 7 -> 8, max 992 -> 500, `>512`
+2 -> 0. `partOverlap` 0 throughout.
+
+Resolve table before and after is identical:
+
+    ticker accession              spans preItem unique overlap splitPara unresInItem   rate inItems
+    AAPL   0000320193-25-000079     962       2    960       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000006     554       1    553       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000013     750       1    749       0         0           0  0.999   1.000
+    AAPL   0000320193-26-000020     756       1    755       0         0           0  0.999   1.000
+    COST   0000909832-25-000101     818       2    814       2         0           0  0.998   1.000
+    COST   0000909832-25-000169     395       1    394       0         0           0  0.997   1.000
+    COST   0000909832-26-000029     571       1    570       0         0           0  0.998   1.000
+    COST   0000909832-26-000051     570       1    569       0         0           0  0.998   1.000
+    TGT    0000027419-25-000126     576       1    573       2         0           0  0.998   1.000
+    TGT    0000027419-26-000016     977       2    973       2         0           0  0.998   1.000
+    TGT    0000027419-26-000022     401       1    400       0         0           0  0.998   1.000
+    TGT    0000027419-26-000042     547       1    546       0         0           0  0.998   1.000
+    total spans 7877, resolved 7862 (0.998; 1.000 within Items), before first Item 15
+
+`content_hash` diff by chunk_id: TGT 10-K 214 -> 217 chunks, 4 changed, 1
+removed, 4 added; the other 11 filings 0 changed, 0 removed, 0 added. `make test`:
+213 passed, 3 snapshots passed.

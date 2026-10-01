@@ -833,8 +833,21 @@ Sentence pieces of an oversized paragraph still share their block's offsets; ste
 3. **Spans before the first Item are their own category** and stay unresolved:
    on the slice, all 15 are `dei` cover-page facts (shares outstanding, public
    float), which no chunk covers by chunker decision 1.
+   None of the 15 is a `CURATED_CONCEPTS` concept (PRD 6.5.3), so no gold set is
+   lost; if `eval/concepts.yaml` ever adds a `dei` concept, PRD 6.5.3's
+   `len(gold) == 0` branch routes it to human labeling.
 
 `chunker_version` hashes `api/chunk/` code, the vendored tokenizer and the
 `chunking:` config; `store.py` and `resolve.py` are excluded the way
 `validate.py` is from `parser_version`. Chunking refuses a filing whose stored `parser_version` or
 `norm_path` text differs from a fresh parse.
+
+---
+
+## 2026-10-01 — F-56: a sentence may start with a digit
+
+The chunker's sentence splitter now allows 0-9 after a sentence end -- the same
+class of false split as "Mr. Smith" already is, acting only inside paragraphs
+already over budget, so offsets are unaffected; it removed both over-limit chunks
+(TGT 10-K exhibit index, 648 and 992 tokens) and changed nothing outside that
+filing.

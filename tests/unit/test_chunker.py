@@ -164,9 +164,9 @@ def tokenized(request):
     return doc, meta, tables, chunks, stats
 
 
-# Over-limit chunks per fixture. TGT's two are its exhibit index, one "sentence"
-# each because entries run "...reference). 4.2 Description..." (F-56).
-OVER_LIMIT = {AAPL_10K: 0, AAPL_10Q: 0, TGT_10K: 2}
+# Over-limit chunks per fixture. TGT's 10-K had two (its exhibit index) until the
+# sentence splitter learned that a sentence may start with a digit (F-56).
+OVER_LIMIT = {AAPL_10K: 0, AAPL_10Q: 0, TGT_10K: 0}
 
 
 def test_chunks_fit_the_budget_or_are_counted(tokenized):
@@ -223,3 +223,16 @@ def test_aapl_10k_statements_split_at_this_budget():
         sequence_length=sequence_length,
     )  # fmt: skip
     assert stats.tables_split == 9
+
+
+def test_a_sentence_may_start_with_a_digit():
+    # TGT 10-K exhibit index, verbatim (F-56).
+    text = (
+        "(filed as Exhibit 4.1 to Target’s Current Report on Form 8-K on May 1, 2007, and "  # noqa: RUF001
+        "incorporated herein by reference). 4.2 Description of Securities (filed as Exhibit "
+        "(4)D to Target's Annual Report on Form 10-K for the year ended January 30, 2021, and "
+        "incorporated herein by reference). 10.1 * Target Corporation"
+    )
+    pieces = split_sentences(text)
+    assert [p.split()[0] for p in pieces] == ["(filed", "4.2", "10.1"]
+    assert "Exhibit 4.1 to" in pieces[0]  # no split inside "4.1" -- no whitespace there

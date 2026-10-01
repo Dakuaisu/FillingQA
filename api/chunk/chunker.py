@@ -39,7 +39,10 @@ from api.parse.tables import Table
 
 CountTokens = Callable[[str], int]
 
-_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z(“\"])")
+# A sentence may start with a digit: TGT's exhibit index runs "...by reference).
+# 4.2 Description...", and without 0-9 here each entry list was one 992-token
+# "sentence" (F-56). Only paragraphs already over budget are split.
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9(“\"])")
 
 
 @dataclass
@@ -75,6 +78,7 @@ class ChunkStats:
     over_max_seq_length: int = 0
     headerless_tables: int = 0
     paragraphs_split: int = 0
+    paragraph_pieces: int = 0  # sentence groups the split paragraphs became
     furniture_samples: Counter = field(default_factory=Counter)
 
 
@@ -186,7 +190,9 @@ def chunk_document(
             # a sentence. Sentence pieces share the block's offsets: sub-block
             # offsets would need a second coordinate system.
             stats.paragraphs_split += 1
-            for n, piece in enumerate(_group(split_sentences(text), count_tokens, budget)):
+            pieces = _group(split_sentences(text), count_tokens, budget)
+            stats.paragraph_pieces += len(pieces)
+            for n, piece in enumerate(pieces):
                 run.append(
                     _Unit(i, n, piece, block.char_start, block.char_end, count_tokens(piece))
                 )
