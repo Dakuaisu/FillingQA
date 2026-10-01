@@ -4794,3 +4794,71 @@ and scoring claims refuses while it is. Still not built, judge- or
 model-dependent: answer correctness (needs the validated judge, F-105), context
 precision (judge), answer relevance (PRD 11.2's reconstructed-question cosine).
 `make test`: 411 passed.
+
+## 2026-10-01 — `make eval` (Phase 3 exit run): f2e616e0a7d7
+
+Run detached (`nohup bash -c 'source .venv/bin/activate && make eval'`) from
+21:18:41Z to about 22:06Z; `verify_freeze` passed first (96 accessions, 0
+mismatches; 22,354 chunks on 964f77f6f9cb); 283 results, no errors file, no
+traceback, not killed. Committed: `eval/runs/f2e616e0a7d7.{meta.json,results.jsonl,json}`
+(no email address, no "/Users/").
+
+Printed report, as printed:
+
+    run f2e616e0a7d7  backend: claude_cli  generation model requested: claude-haiku-4-5-20251001
+    DEVELOPMENT RUN (claude_cli): not a CI baseline, not publishable, not comparable with anthropic_api runs (F-59)
+    served models: {'claude-haiku-4-5-20251001': 283}  retrieval measured on: dense top-k (Phase 2 baseline; no fusion, no rerank) (F-13)
+    metric                                  xbrl_auto       llm_seeded      handwritten        aggregate
+    items                                         200               83                -              283
+    retrieval items                               200               83                -              283
+    Sufficiency@10                              0.285            0.675                -            0.399
+    Recall@10                                   0.295            0.675                -            0.406
+    Precision@10                                0.051            0.067                -            0.056
+    MRR                                         0.135            0.477                -            0.235
+    nDCG@10                                     0.172            0.524                -            0.275
+    Sufficiency@10 post-rerank                      -                -                -                -
+    Numeric accuracy (gated)                    0.390            0.757                -            0.447
+      numeric items scored                        200               37                -              237
+      excluded unit_scale_unknown                   0               10                -               10
+      strict first figure                       0.340            0.703                -            0.397
+      within 0.5% (reported)                    0.425            0.757                -            0.477
+      comparison values only                    0.250                -                -            0.250
+      sign agreement                            1.000            1.000                -            1.000
+      abstained (in denominator)                    0                0                -                0
+      free-text fallback used                     200               37                -              237
+      mean figures per answer                   4.020            5.486                -            4.249
+    Faithfulness (pre) [answer rate]   n/a: no claims   n/a: no claims                -   n/a: no claims
+    Faithfulness (post)                n/a: no claims   n/a: no claims                -   n/a: no claims
+    Verifier lift                      n/a: no claims   n/a: no claims                -   n/a: no claims
+    Claim retention                    n/a: no claims   n/a: no claims                -   n/a: no claims
+    Citation coverage                  n/a: no claims   n/a: no claims                -   n/a: no claims
+    Citation precision                 n/a: no claims   n/a: no claims                -   n/a: no claims
+    Unit-scale accuracy                n/a: no claims   n/a: no claims                -   n/a: no claims
+    Period accuracy                    n/a: no claims   n/a: no claims                -   n/a: no claims
+    XBRL contradiction rate            n/a: no claims   n/a: no claims                -   n/a: no claims
+    PARTIAL rate                                0.000            0.000                -            0.000
+    False-answer rate                               -                -                -                -
+    Over-abstention rate                        0.000            0.000                -            0.000
+    Abstention F1                                   -                -                -                -
+    figures per numeric answer (aggregate): {'0': 41, '1': 24, '2': 26, '3': 28, '4': 28, '5': 18, '6': 18, '7': 13, '8': 9, '9': 9, '10': 5, '11': 6, '12': 1, '13': 4, '14': 2, '15': 2, '16': 1, '17': 1, '22': 1}
+    excluded from numeric accuracy (aggregate): {'unit_scale_unknown': 10, 'not numeric': 36}
+    anomalies: {'empty_retrieval': [], 'empty_answer': [], 'latency_s': {'p50': 7.56, 'p95': 16.93, 'max': 76.66}, 'slow_items_over_3x_p50': [('cmp_0020', 58.06), ('cmp_0023', 27.5), ('cmp_0040', 38.54), ('seed_0026', 26.8), ('seed_0032', 37.23), ('seed_0047', 35.18), ('xbrl_0064', 76.63), ('xbrl_0125', 76.66), ('xbrl_0135', 26.55), ('xbrl_0141', 36.65)]}
+
+Run-to-run spread against 19693d4aa874 (F-60), `python -m scripts.run_spread
+19693d4aa874 f2e616e0a7d7`:
+
+    run A 19693d4aa874 vs run B f2e616e0a7d7; same config: {'backend': True, 'model_requested': True, 'datasets': True, 'parser_version': True, 'chunker_version': True, 'k': True}
+    served models A {'claude-haiku-4-5-20251001': 283} B {'claude-haiku-4-5-20251001': 283}
+    metric (B - A)                     xbrl_auto    llm_seeded   handwritten     aggregate
+    Sufficiency@10                        +0.000        +0.000             -        +0.000
+    Recall@10                             +0.000        +0.000             -        +0.000
+    MRR                                   +0.000        +0.000             -        +0.000
+    nDCG@10                               +0.000        +0.000             -        +0.000
+    Numeric accuracy (gated)              +0.015        +0.000             -        +0.013
+      strict first figure                 +0.010        +0.000             -        +0.008
+      within 0.5%                         +0.010        +0.000             -        +0.008
+      comparison values only              +0.025             -             -        +0.025
+    items in both runs: 283; identical retrieved list: 283
+    numeric correctness flips: correct in A only 1, in B only 4
+      A only: ['xbrl_0117']
+      B only: ['cmp_0033', 'xbrl_0052', 'xbrl_0131', 'xbrl_0140']
