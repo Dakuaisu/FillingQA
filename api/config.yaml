@@ -313,3 +313,11 @@ eval_run:
   k: 10
   retrieve_depth: 10
   runs_dir: eval/runs
+
+# Hand-written items (PRD 11.1, Stage 4; authored by the owner). Counts per PRD 11.1.
+eval_handwritten:
+  dataset_version: handwritten_candidates_v1
+  targets:
+    unanswerable: 50
+    adversarial: 20
+    natural_phrasing: 30

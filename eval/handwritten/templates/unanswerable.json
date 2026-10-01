@@ -1,0 +1,31 @@
+{
+ "note": "TEMPLATE, not an item. Copy `item` into eval/handwritten/<type>.jsonl, one JSON object per line, fill every blank, and run `python -m scripts.handwritten_validate`. A null expected_abstain or an empty field fails validation until decided.",
+ "type": "unanswerable",
+ "target_count": 50,
+ "prd": "PRD 11.1 Unanswerable subtypes; write by hand (Stage 4)",
+ "subtypes": {
+  "metric_not_disclosed": "a metric the company does not disclose (PRD: Apple's average customer acquisition cost)",
+  "company_not_in_corpus": "a company outside the eight (PRD: Netflix's FY2024 revenue)",
+  "year_outside_range": "a fiscal year outside the frozen filings' window",
+  "forward_looking": "a future figure (PRD: NVDA's FY2027 revenue)",
+  "wrong_form": "a form not in the corpus (PRD: what AAPL's proxy statement said about executive comp)"
+ },
+ "expected_abstain": true,
+ "item": {
+  "item_id": "hw_<type>_NNNN",
+  "question": "",
+  "question_type": "unanswerable",
+  "difficulty": "",
+  "reference_answer": null,
+  "gold_evidence_sets": [],
+  "gold_accessions": [],
+  "expected_abstain": true,
+  "tags": [
+   "subtype:<subtype>"
+  ],
+  "source": "handwritten",
+  "xbrl_fact_id": null,
+  "reviewed_by_human": false,
+  "dataset_version": "handwritten_candidates_v1"
+ }
+}

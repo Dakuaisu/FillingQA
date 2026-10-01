@@ -4709,3 +4709,24 @@ Target added: `python -m scripts.verify_freeze`, then `python -m scripts.eval_ru
 --run` (report stamped with the backend; dev banner on claude_cli). `make -n eval`
 prints exactly those two commands (`tests/unit/test_make_eval.py`). Not run here.
 `make eval-fast` is Phase 4.
+
+## 2026-10-01 — Hand-written authoring kit (no items)
+
+Templates per type under `eval/handwritten/templates/` (fields fixed by the
+schema pre-filled; `expected_abstain` true for unanswerable, false for
+natural_phrasing, and per adversarial subtype: true for entity_confusion and
+investment_advice as PRD 11.1 states, null for false_premise and prompt_injection
+so the author must decide); empty item files; config `eval_handwritten`;
+`eval/generate/handwritten.py` and `scripts/handwritten_validate.py`. Tests:
+`tests/unit/test_handwritten.py` (4). `make test`: 396 passed; `make lint` clean.
+
+`python -m scripts.handwritten_validate` on the empty files (exit 1):
+
+    files: ['eval/handwritten/adversarial.jsonl', 'eval/handwritten/natural_phrasing.jsonl', 'eval/handwritten/unanswerable.jsonl']; items 0
+      unanswerable: 0 of 50
+      adversarial: 0 of 20
+      natural_phrasing: 0 of 30
+    problems: 3
+      unanswerable: 0 items, PRD 11.1 asks for 50
+      adversarial: 0 items, PRD 11.1 asks for 20
+      natural_phrasing: 0 items, PRD 11.1 asks for 30
