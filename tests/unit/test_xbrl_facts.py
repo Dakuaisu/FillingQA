@@ -12,7 +12,7 @@ from decimal import Decimal
 
 import pytest
 
-from api.config import ConfigError, sectors
+from api.config import ConfigError, companies, corpus_filings, dev_slice
 from api.ingest.filings import sector_of
 from api.ingest.xbrl_facts import conflicts, flatten, is_comparative
 
@@ -111,9 +111,27 @@ def test_no_conflicts_in_real_rows():
 
 
 def test_sectors_come_from_config():
-    labels = sectors()
+    labels = {t: c["sector"] for t, c in companies().items()}
     assert labels["AAPL"] == "tech"
     assert labels["COST"] == labels["TGT"] == "retail"
+
+
+def test_every_company_pins_a_ten_digit_cik():
+    pinned = companies()
+    assert len(pinned) == 8
+    for company in pinned.values():
+        assert len(company["cik"]) == 10 and company["cik"].isdigit()
+        assert company["companyfacts_ciks"][0] == company["cik"]
+    # F-62: the predecessor files; the successor holds part of the facts.
+    assert pinned["XOM"]["companyfacts_ciks"] == ["0000034088", "0002115436"]
+
+
+def test_corpus_list_is_unique_and_contains_the_dev_slice():
+    filings = corpus_filings()
+    accessions = [f["accession"] for f in filings]
+    assert len(accessions) == len(set(accessions)) == 96
+    assert {f["ticker"] for f in filings} == set(companies())
+    assert {d["accession"] for d in dev_slice()} <= set(accessions)
 
 
 def test_unknown_ticker_has_no_sector():

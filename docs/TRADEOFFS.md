@@ -974,3 +974,47 @@ files (BAC: 21). `submissions_since` merges every paginated file whose `filingTo
 reaches the window, and the guard then counts only remaining files that could
 hold window filings. `ingest_accessions` merges pages the same way when an asked-
 for accession is not in `recent`, bounded by an optional earliest filing date.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-62, XOM's corpus source
+
+ExxonMobil reorganized in 2026: SEC's ticker map now sends XOM to the successor
+ExxonMobil Holdings Corp (CIK 0002115436, 8-K12B), whose first periodic filing is
+the 2026-08-03 10-Q. All 12 window filings were filed by the predecessor, Exxon
+Mobil Corp (CIK 0000034088) -- the shared 10-Q's accession prefix says so -- and
+the predecessor's record now carries `tickers: []`, so a live ticker lookup can
+never return it again.
+
+**(a) chosen:** XOM's `companies` row is cik 0000034088, ticker XOM. All 12
+filings come from it. The successor is a companyfacts source, not a filer of
+anything in the corpus: `companyfacts_ciks: ["0000034088", "0002115436"]`, each
+loaded with the pinned CIK as the stamp, linking by accession. No schema change;
+one row per ticker holds.
+
+*Rejected:*
+- *(b) the successor CIK only:* 1 filing, so energy loses its comparison coverage.
+- *(c) replace XOM:* changes PRD 4.4's company set. Both are larger deviations
+  than pinning a CIK.
+
+**CIK pinning, a deviation from PRD 6.1's ticker lookup**
+(`company_tickers.json`, `cik = resolve_cik(ticker)`). All 8 companies carry a
+pinned `cik` in `api/config.yaml`: the ticker-to-CIK mapping is SEC state at a
+point in time, so the result is committed, not the lookup -- the F-42 principle
+again. `resolve_cik` survives only in the materializer, which prints where SEC's
+current mapping differs (XOM) and does not fail.
+
+**Two ingest fixes the full corpus run forced:**
+- *Page metadata is not trusted.* JPM's paginated file 020 is listed with
+  `filingTo: 2023-10-31` but holds a 2023-11-01 10-Q, so bounding page reads by
+  the listing skipped a corpus filing (the run failed loudly on it). Pages are
+  now read newest first until the data itself passes the window start
+  (materializer) or every asked-for accession has been seen (ingest). The
+  `assert_recent_covers_window` guard became unread and was removed; the page
+  loop is now the guarantee, measured on the data rather than the listing. The
+  materialized list is identical either way (96).
+- *Staged facts are promoted.* Facts loaded into `xbrl_facts_unlinked` before
+  their filing joined the corpus stayed there after being inserted as linked
+  (COST 2,569, TGT 2,831, AAPL 2,273 double-stored). The loader now deletes
+  unlinked rows whose accession is in `filings`, in the same transaction, after
+  checking incoming linked values against those staged copies for drift.

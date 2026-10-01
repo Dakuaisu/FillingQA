@@ -11,13 +11,12 @@ from api.config import dev_slice
 from api.ingest.filings import (
     DiscoveredFiling,
     IngestError,
-    assert_recent_covers_window,
     discover,
     merge_pages,
     select_accessions,
     submissions_since,
-    window_start,
 )
+from scripts.materialize_corpus import window_start
 
 
 def submissions(rows, files=None):
@@ -88,30 +87,6 @@ def test_filings_without_a_report_date_are_skipped_not_defaulted():
 def test_results_are_ordered_by_filing_date():
     found, _ = discover(submissions(ROWS), "0000320193", date(2020, 1, 1))
     assert [f.filing_date for f in found] == sorted(f.filing_date for f in found)
-
-
-# --------------------------------------------------------------- cap check
-
-
-def test_window_fully_inside_recent_passes():
-    assert assert_recent_covers_window(submissions(ROWS), date(2024, 1, 1)) is None
-
-
-def test_window_reaching_past_recent_raises_when_older_files_exist():
-    payload = submissions(ROWS, files=[{"name": "CIK0000320193-submissions-001.json"}])
-    with pytest.raises(IngestError, match=r"filings\.files"):
-        assert_recent_covers_window(payload, date(2010, 1, 1))
-
-
-def test_no_older_files_means_recent_is_the_whole_history():
-    # An empty `files` list means nothing was paginated away, so a window that
-    # predates the oldest entry is simply a company with a short history.
-    assert assert_recent_covers_window(submissions(ROWS, files=[]), date(2010, 1, 1)) is None
-
-
-def test_empty_recent_is_an_error():
-    with pytest.raises(IngestError, match="no filings"):
-        assert_recent_covers_window(submissions([]), date(2025, 1, 1))
 
 
 # ------------------------------------------------------- accession lists
@@ -220,17 +195,26 @@ class PagedClient:
         return self.pages[name]
 
 
-def test_submissions_since_reads_only_pages_that_reach_the_window():
-    # JPM's shape: recent covers one year, older years sit in pages.
-    page = submissions(
-        [("0000019617-24-000225", "10-Q", "2024-05-03", "2024-03-31", "jpm-20240331.htm")]
+def test_submissions_since_reads_pages_by_their_data_not_their_label():
+    # JPM, verbatim shape: page 020's listing says filingTo 2023-10-31, yet it
+    # holds a 2023-11-01 filing. Reading stops on the data, so a mislabelled
+    # page can never hide a window filing.
+    p1 = submissions([("0000019617-24-000225", "10-Q", "2024-05-03", "2024-03-31", "jpm.htm")])[
+        "filings"
+    ]["recent"]
+    p2 = submissions(
+        [
+            ("0000019617-23-000524", "10-Q", "2023-11-01", "2023-09-30", "jpm.htm"),
+            ("0000019617-23-000400", "8-K", "2023-09-29", "2023-09-29", "x.htm"),
+        ]
     )["filings"]["recent"]
     files = [
         {"name": "p1.json", "filingTo": "2024-06-30"},
-        {"name": "old.json", "filingTo": "2019-12-31"},
+        {"name": "p2.json", "filingTo": "2023-10-31"},
+        {"name": "p3.json", "filingTo": "2023-08-22"},
     ]
     recent_rows = [("0000019617-26-000001", "10-Q", "2026-05-01", "2026-03-31", "jpm.htm")]
-    client = PagedClient(submissions(recent_rows, files=files), {"p1.json": page})
+    client = PagedClient(submissions(recent_rows, files=files), {"p1.json": p1, "p2.json": p2})
     merged = submissions_since(client, "0000019617", date(2023, 10, 1))
-    assert client.fetched == ["p1.json"]
-    assert "0000019617-24-000225" in merged["filings"]["recent"]["accessionNumber"]
+    assert client.fetched == ["p1.json", "p2.json"]  # p2 reaches before the window: stop
+    assert "0000019617-23-000524" in merged["filings"]["recent"]["accessionNumber"]

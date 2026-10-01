@@ -62,6 +62,7 @@ class FactsReport:
     unlinked_inserted: int = 0
     unlinked_present: int = 0
     linked_accessions: int = 0
+    promoted: int = 0  # staged unlinked rows removed because their filing joined the corpus
 
 
 def flatten(companyfacts: dict[str, Any], cik: str) -> list[Fact]:
@@ -164,7 +165,11 @@ def load_companyfacts(
 
     # A re-run must be a no-op. If companyfacts has since changed a value we
     # already stored, ON CONFLICT DO NOTHING would hide it, so check first.
-    for table, group in (("xbrl_facts", linked), ("xbrl_facts_unlinked", unlinked)):
+    # Linked facts are also checked against xbrl_facts_unlinked: a filing added
+    # to the corpus after its facts were staged there must not carry a changed
+    # value across the move.
+    checks = (("xbrl_facts", linked), ("xbrl_facts_unlinked", unlinked + linked))
+    for table, group in checks:
         stored = _existing(conn, table, cik)
         drift = [f for f in group if f.key in stored and stored[f.key] != f.value]
         if drift:
@@ -174,7 +179,7 @@ def load_companyfacts(
             )
 
     before = _counts(conn, cik)
-    with conn.cursor() as cur:
+    with conn.transaction(), conn.cursor() as cur:
         cur.executemany(
             _LINKED_INSERT,
             [
@@ -186,12 +191,23 @@ def load_companyfacts(
             ],
         )
         cur.executemany(_UNLINKED_INSERT, [_columns(f) for f in unlinked])
+        # Promote: facts staged as unlinked whose filing is now in `filings`
+        # live in xbrl_facts from here on, never in both tables.
+        cur.execute(
+            """
+            DELETE FROM xbrl_facts_unlinked u
+             USING filings f
+             WHERE u.accession = f.accession AND u.cik = %s
+            """,
+            (cik,),
+        )
+        report.promoted = cur.rowcount
     after = _counts(conn, cik)
     conn.commit()
 
     report.linked_inserted = after[0] - before[0]
     report.linked_present = len(linked) - report.linked_inserted
-    report.unlinked_inserted = after[1] - before[1]
+    report.unlinked_inserted = after[1] - before[1] + report.promoted
     report.unlinked_present = len(unlinked) - report.unlinked_inserted
     return report
 

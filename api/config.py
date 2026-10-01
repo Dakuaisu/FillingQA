@@ -87,10 +87,25 @@ def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]
 
 
-def sectors(path: Path = CORPUS_FILE) -> dict[str, str]:
-    """Ticker -> our corpus-design sector label (PRD 4.4), not SEC data."""
-    companies = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]["companies"]
-    return {c["ticker"].upper(): c["sector"] for c in companies}
+def companies(path: Path = CORPUS_FILE) -> dict[str, dict]:
+    """Ticker -> {cik, sector, companyfacts_ciks}, as pinned in api/config.yaml."""
+    out = {}
+    for c in yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]["companies"]:
+        cik = str(c["cik"])
+        if len(cik) != 10 or not cik.isdigit():
+            raise ConfigError(f"{c['ticker']}: cik {cik!r} is not a 10-digit string")
+        out[c["ticker"].upper()] = {
+            "cik": cik,
+            "sector": c["sector"],
+            "companyfacts_ciks": [str(x) for x in c.get("companyfacts_ciks", [cik])],
+        }
+    return out
+
+
+def corpus_filings(path: Path = CORPUS_FILE) -> list[dict[str, str]]:
+    """The frozen eval corpus: [{ticker, accession, form, period_end, filed}]."""
+    corpus = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]
+    return [{k: str(v) for k, v in entry.items()} for entry in corpus["filings"]]
 
 
 def dev_slice(path: Path = CORPUS_FILE) -> list[dict[str, str]]:

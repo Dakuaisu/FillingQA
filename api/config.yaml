@@ -9,23 +9,34 @@
 # alongside it, unmodified.
 
 corpus:
-  form_types: [10-K, 10-Q]
-  years_back: 3
-
+  # `cik` is pinned: SEC's ticker-to-CIK mapping is state at a point in time, so
+  # the result is committed, not the lookup (F-62). `companyfacts_ciks` defaults
+  # to [cik]; XOM's 2026 succession splits its facts across two CIKs.
   companies:
     - ticker: COST
+      cik: "0000909832"
       sector: retail        # retail pair #1 -- near-identical line items to TGT
     - ticker: TGT
+      cik: "0000027419"
       sector: retail        # retail pair #2 -- the entity-bleed test lives here
     - ticker: JPM
+      cik: "0000019617"
       sector: financials    # bank pair #1
     - ticker: BAC
+      cik: "0000070858"
       sector: financials    # bank pair #2
     - ticker: AAPL
+      cik: "0000320193"
       sector: tech          # clean, well-structured filing; parser baseline
     - ticker: NVDA
+      cik: "0001045810"
       sector: tech          # rapid YoY changes sharpen comparison questions
     - ticker: XOM
+      cik: "0000034088"
+      # Exxon Mobil Corp, the filer of all 12 window filings. The ticker now maps
+      # to the successor ExxonMobil Holdings Corp (0002115436), whose companyfacts
+      # hold the facts of the shared 2026-08-03 10-Q (F-62).
+      companyfacts_ciks: ["0000034088", "0002115436"]
       sector: energy        # segment tables and unusual units
     # PRD 4.4 says "Sectors | 4 (tech, retail, energy, financials)" but its own
     # company table describes PFE as "Pharma". Five labels, not four. Left as
@@ -34,7 +45,110 @@ corpus:
     # Nothing consumes `sector` yet, so this is cheap to change -- flag if you
     # want PFE bucketed into one of the four instead.
     - ticker: PFE
+      cik: "0000078003"
       sector: pharma        # dense footnotes and complex risk-factor prose
+
+  # The frozen eval corpus (F-42): PRD 4.4's 3-year filing-date window,
+  # evaluated once by scripts/materialize_corpus.py as of the date below.
+  # Ingest reads this list and nothing else; no window is evaluated at run time.
+  as_of: "2026-10-01"
+  filings:
+    - {ticker: COST, accession: 0000909832-23-000042, form: 10-K, period_end: "2023-09-03", filed: "2023-10-11"}
+    - {ticker: COST, accession: 0000909832-23-000065, form: 10-Q, period_end: "2023-11-26", filed: "2023-12-20"}
+    - {ticker: COST, accession: 0000909832-24-000017, form: 10-Q, period_end: "2024-02-18", filed: "2024-03-13"}
+    - {ticker: COST, accession: 0000909832-24-000029, form: 10-Q, period_end: "2024-05-12", filed: "2024-06-06"}
+    - {ticker: COST, accession: 0000909832-24-000049, form: 10-K, period_end: "2024-09-01", filed: "2024-10-09"}
+    - {ticker: COST, accession: 0000909832-24-000079, form: 10-Q, period_end: "2024-11-24", filed: "2024-12-19"}
+    - {ticker: COST, accession: 0000909832-25-000015, form: 10-Q, period_end: "2025-02-16", filed: "2025-03-13"}
+    - {ticker: COST, accession: 0000909832-25-000033, form: 10-Q, period_end: "2025-05-11", filed: "2025-06-05"}
+    - {ticker: COST, accession: 0000909832-25-000101, form: 10-K, period_end: "2025-08-31", filed: "2025-10-08"}
+    - {ticker: COST, accession: 0000909832-25-000169, form: 10-Q, period_end: "2025-11-23", filed: "2025-12-17"}
+    - {ticker: COST, accession: 0000909832-26-000029, form: 10-Q, period_end: "2026-02-15", filed: "2026-03-11"}
+    - {ticker: COST, accession: 0000909832-26-000051, form: 10-Q, period_end: "2026-05-10", filed: "2026-06-03"}
+    - {ticker: TGT, accession: 0000027419-23-000052, form: 10-Q, period_end: "2023-10-28", filed: "2023-11-22"}
+    - {ticker: TGT, accession: 0000027419-24-000032, form: 10-K, period_end: "2024-02-03", filed: "2024-03-13"}
+    - {ticker: TGT, accession: 0000027419-24-000129, form: 10-Q, period_end: "2024-05-04", filed: "2024-05-31"}
+    - {ticker: TGT, accession: 0000027419-24-000152, form: 10-Q, period_end: "2024-08-03", filed: "2024-08-30"}
+    - {ticker: TGT, accession: 0000027419-24-000179, form: 10-Q, period_end: "2024-11-02", filed: "2024-11-27"}
+    - {ticker: TGT, accession: 0000027419-25-000018, form: 10-K, period_end: "2025-02-01", filed: "2025-03-12"}
+    - {ticker: TGT, accession: 0000027419-25-000101, form: 10-Q, period_end: "2025-05-03", filed: "2025-05-30"}
+    - {ticker: TGT, accession: 0000027419-25-000118, form: 10-Q, period_end: "2025-08-02", filed: "2025-08-29"}
+    - {ticker: TGT, accession: 0000027419-25-000126, form: 10-Q, period_end: "2025-11-01", filed: "2025-11-26"}
+    - {ticker: TGT, accession: 0000027419-26-000016, form: 10-K, period_end: "2026-01-31", filed: "2026-03-11"}
+    - {ticker: TGT, accession: 0000027419-26-000022, form: 10-Q, period_end: "2026-05-02", filed: "2026-05-29"}
+    - {ticker: TGT, accession: 0000027419-26-000042, form: 10-Q, period_end: "2026-08-01", filed: "2026-08-28"}
+    - {ticker: JPM, accession: 0000019617-23-000524, form: 10-Q, period_end: "2023-09-30", filed: "2023-11-01"}
+    - {ticker: JPM, accession: 0000019617-24-000225, form: 10-K, period_end: "2023-12-31", filed: "2024-02-16"}
+    - {ticker: JPM, accession: 0000019617-24-000326, form: 10-Q, period_end: "2024-03-31", filed: "2024-05-01"}
+    - {ticker: JPM, accession: 0000019617-24-000453, form: 10-Q, period_end: "2024-06-30", filed: "2024-08-02"}
+    - {ticker: JPM, accession: 0000019617-24-000611, form: 10-Q, period_end: "2024-09-30", filed: "2024-10-30"}
+    - {ticker: JPM, accession: 0000019617-25-000270, form: 10-K, period_end: "2024-12-31", filed: "2025-02-14"}
+    - {ticker: JPM, accession: 0000019617-25-000421, form: 10-Q, period_end: "2025-03-31", filed: "2025-05-01"}
+    - {ticker: JPM, accession: 0000019617-25-000615, form: 10-Q, period_end: "2025-06-30", filed: "2025-08-05"}
+    - {ticker: JPM, accession: 0001628280-25-048859, form: 10-Q, period_end: "2025-09-30", filed: "2025-11-04"}
+    - {ticker: JPM, accession: 0001628280-26-008131, form: 10-K, period_end: "2025-12-31", filed: "2026-02-13"}
+    - {ticker: JPM, accession: 0001628280-26-029344, form: 10-Q, period_end: "2026-03-31", filed: "2026-05-01"}
+    - {ticker: JPM, accession: 0001628280-26-054343, form: 10-Q, period_end: "2026-06-30", filed: "2026-08-06"}
+    - {ticker: BAC, accession: 0000070858-23-000272, form: 10-Q, period_end: "2023-09-30", filed: "2023-10-31"}
+    - {ticker: BAC, accession: 0000070858-24-000122, form: 10-K, period_end: "2023-12-31", filed: "2024-02-20"}
+    - {ticker: BAC, accession: 0000070858-24-000156, form: 10-Q, period_end: "2024-03-31", filed: "2024-04-30"}
+    - {ticker: BAC, accession: 0000070858-24-000208, form: 10-Q, period_end: "2024-06-30", filed: "2024-07-30"}
+    - {ticker: BAC, accession: 0000070858-24-000280, form: 10-Q, period_end: "2024-09-30", filed: "2024-10-29"}
+    - {ticker: BAC, accession: 0000070858-25-000139, form: 10-K, period_end: "2024-12-31", filed: "2025-02-25"}
+    - {ticker: BAC, accession: 0000070858-25-000200, form: 10-Q, period_end: "2025-03-31", filed: "2025-04-30"}
+    - {ticker: BAC, accession: 0000070858-25-000268, form: 10-Q, period_end: "2025-06-30", filed: "2025-07-31"}
+    - {ticker: BAC, accession: 0000070858-25-000405, form: 10-Q, period_end: "2025-09-30", filed: "2025-10-31"}
+    - {ticker: BAC, accession: 0000070858-26-000157, form: 10-K, period_end: "2025-12-31", filed: "2026-02-25"}
+    - {ticker: BAC, accession: 0000070858-26-000249, form: 10-Q, period_end: "2026-03-31", filed: "2026-05-01"}
+    - {ticker: BAC, accession: 0000070858-26-000394, form: 10-Q, period_end: "2026-06-30", filed: "2026-07-31"}
+    - {ticker: AAPL, accession: 0000320193-23-000106, form: 10-K, period_end: "2023-09-30", filed: "2023-11-03"}
+    - {ticker: AAPL, accession: 0000320193-24-000006, form: 10-Q, period_end: "2023-12-30", filed: "2024-02-02"}
+    - {ticker: AAPL, accession: 0000320193-24-000069, form: 10-Q, period_end: "2024-03-30", filed: "2024-05-03"}
+    - {ticker: AAPL, accession: 0000320193-24-000081, form: 10-Q, period_end: "2024-06-29", filed: "2024-08-02"}
+    - {ticker: AAPL, accession: 0000320193-24-000123, form: 10-K, period_end: "2024-09-28", filed: "2024-11-01"}
+    - {ticker: AAPL, accession: 0000320193-25-000008, form: 10-Q, period_end: "2024-12-28", filed: "2025-01-31"}
+    - {ticker: AAPL, accession: 0000320193-25-000057, form: 10-Q, period_end: "2025-03-29", filed: "2025-05-02"}
+    - {ticker: AAPL, accession: 0000320193-25-000073, form: 10-Q, period_end: "2025-06-28", filed: "2025-08-01"}
+    - {ticker: AAPL, accession: 0000320193-25-000079, form: 10-K, period_end: "2025-09-27", filed: "2025-10-31"}
+    - {ticker: AAPL, accession: 0000320193-26-000006, form: 10-Q, period_end: "2025-12-27", filed: "2026-01-30"}
+    - {ticker: AAPL, accession: 0000320193-26-000013, form: 10-Q, period_end: "2026-03-28", filed: "2026-05-01"}
+    - {ticker: AAPL, accession: 0000320193-26-000020, form: 10-Q, period_end: "2026-06-27", filed: "2026-07-31"}
+    - {ticker: NVDA, accession: 0001045810-23-000227, form: 10-Q, period_end: "2023-10-29", filed: "2023-11-21"}
+    - {ticker: NVDA, accession: 0001045810-24-000029, form: 10-K, period_end: "2024-01-28", filed: "2024-02-21"}
+    - {ticker: NVDA, accession: 0001045810-24-000124, form: 10-Q, period_end: "2024-04-28", filed: "2024-05-29"}
+    - {ticker: NVDA, accession: 0001045810-24-000264, form: 10-Q, period_end: "2024-07-28", filed: "2024-08-28"}
+    - {ticker: NVDA, accession: 0001045810-24-000316, form: 10-Q, period_end: "2024-10-27", filed: "2024-11-20"}
+    - {ticker: NVDA, accession: 0001045810-25-000023, form: 10-K, period_end: "2025-01-26", filed: "2025-02-26"}
+    - {ticker: NVDA, accession: 0001045810-25-000116, form: 10-Q, period_end: "2025-04-27", filed: "2025-05-28"}
+    - {ticker: NVDA, accession: 0001045810-25-000209, form: 10-Q, period_end: "2025-07-27", filed: "2025-08-27"}
+    - {ticker: NVDA, accession: 0001045810-25-000230, form: 10-Q, period_end: "2025-10-26", filed: "2025-11-19"}
+    - {ticker: NVDA, accession: 0001045810-26-000021, form: 10-K, period_end: "2026-01-25", filed: "2026-02-25"}
+    - {ticker: NVDA, accession: 0001045810-26-000052, form: 10-Q, period_end: "2026-04-26", filed: "2026-05-20"}
+    - {ticker: NVDA, accession: 0001045810-26-000075, form: 10-Q, period_end: "2026-07-26", filed: "2026-08-26"}
+    - {ticker: XOM, accession: 0000034088-23-000056, form: 10-Q, period_end: "2023-09-30", filed: "2023-10-31"}
+    - {ticker: XOM, accession: 0000034088-24-000018, form: 10-K, period_end: "2023-12-31", filed: "2024-02-28"}
+    - {ticker: XOM, accession: 0000034088-24-000029, form: 10-Q, period_end: "2024-03-31", filed: "2024-04-29"}
+    - {ticker: XOM, accession: 0000034088-24-000050, form: 10-Q, period_end: "2024-06-30", filed: "2024-08-05"}
+    - {ticker: XOM, accession: 0000034088-24-000068, form: 10-Q, period_end: "2024-09-30", filed: "2024-11-04"}
+    - {ticker: XOM, accession: 0000034088-25-000010, form: 10-K, period_end: "2024-12-31", filed: "2025-02-19"}
+    - {ticker: XOM, accession: 0000034088-25-000024, form: 10-Q, period_end: "2025-03-31", filed: "2025-05-05"}
+    - {ticker: XOM, accession: 0000034088-25-000042, form: 10-Q, period_end: "2025-06-30", filed: "2025-08-04"}
+    - {ticker: XOM, accession: 0000034088-25-000061, form: 10-Q, period_end: "2025-09-30", filed: "2025-11-03"}
+    - {ticker: XOM, accession: 0000034088-26-000045, form: 10-K, period_end: "2025-12-31", filed: "2026-02-18"}
+    - {ticker: XOM, accession: 0000034088-26-000067, form: 10-Q, period_end: "2026-03-31", filed: "2026-05-04"}
+    - {ticker: XOM, accession: 0000034088-26-000093, form: 10-Q, period_end: "2026-06-30", filed: "2026-08-03"}
+    - {ticker: PFE, accession: 0000078003-23-000115, form: 10-Q, period_end: "2023-10-01", filed: "2023-11-08"}
+    - {ticker: PFE, accession: 0000078003-24-000039, form: 10-K, period_end: "2023-12-31", filed: "2024-02-22"}
+    - {ticker: PFE, accession: 0000078003-24-000107, form: 10-Q, period_end: "2024-03-31", filed: "2024-05-08"}
+    - {ticker: PFE, accession: 0000078003-24-000166, form: 10-Q, period_end: "2024-06-30", filed: "2024-08-05"}
+    - {ticker: PFE, accession: 0000078003-24-000191, form: 10-Q, period_end: "2024-09-29", filed: "2024-11-04"}
+    - {ticker: PFE, accession: 0000078003-25-000054, form: 10-K, period_end: "2024-12-31", filed: "2025-02-27"}
+    - {ticker: PFE, accession: 0000078003-25-000114, form: 10-Q, period_end: "2025-03-30", filed: "2025-05-05"}
+    - {ticker: PFE, accession: 0000078003-25-000138, form: 10-Q, period_end: "2025-06-29", filed: "2025-08-05"}
+    - {ticker: PFE, accession: 0000078003-25-000150, form: 10-Q, period_end: "2025-09-28", filed: "2025-11-04"}
+    - {ticker: PFE, accession: 0000078003-26-000026, form: 10-K, period_end: "2025-12-31", filed: "2026-02-26"}
+    - {ticker: PFE, accession: 0000078003-26-000054, form: 10-Q, period_end: "2026-03-29", filed: "2026-05-05"}
+    - {ticker: PFE, accession: 0000078003-26-000095, form: 10-Q, period_end: "2026-06-28", filed: "2026-08-04"}
 
   # The parser-development slice. NOT an eval corpus -- see docs/TRADEOFFS.md.
   #

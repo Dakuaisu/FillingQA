@@ -1407,3 +1407,65 @@ Guard refined: a remaining paginated file whose `filingTo` ends before the windo
 no longer counts as a gap; the list is byte-identical before and after.
 `tests/unit/test_filings.py` gains merge and page-selection tests. `make test`:
 227 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-62: pinned CIKs, XOM from its predecessor; full corpus ingested
+
+Paging support and materializer committed as `d68e1a5`.
+
+Config: `cik` pinned on all 8 companies (quoted -- unquoted, YAML reads
+`0000909832` as an integer); XOM `companyfacts_ciks: [0000034088, 0002115436]`.
+`corpus.as_of: 2026-10-01` and `corpus.filings` (96 entries); `years_back` and
+`form_types` gone. `ingest_company`, `window_start` (moved into the
+materializer), `sectors()`, the CLI's `--tickers/--years` and
+`assert_recent_covers_window` removed -- nothing read them after the switch. CLI
+modes: `--corpus`, `--dev-slice`.
+
+Materializer re-run: `# XOM: pinned cik 0000034088, SEC's ticker map now says
+0002115436`; 96 filings, 12 per company, uniqueness asserted.
+
+First corpus ingest stopped on JPM: `accession(s) ['0000019617-23-000524'] not
+found` -- page 020 is listed with `filingTo: 2023-10-31` and holds that
+2023-11-01 filing. Paging now follows the data (TRADEOFFS F-62); the list is
+unchanged. The same run showed COST/TGT facts double-stored across the linked
+and unlinked tables; promotion added.
+
+`python -m api.ingest.cli --corpus`:
+
+    COST  cik=0000909832 discovered=12 inserted=0 already_present=12 downloaded=0.0MB
+    COST  companyfacts=0000909832 facts=24426 linked_inserted=0 linked_present=3856 linked_accessions=12 unlinked_inserted=0 unlinked_present=20570 promoted=2569
+    TGT   cik=0000027419 discovered=12 inserted=0 already_present=12 downloaded=0.0MB
+    TGT   companyfacts=0000027419 facts=25319 linked_inserted=0 linked_present=4239 linked_accessions=12 unlinked_inserted=0 unlinked_present=21080 promoted=2831
+    JPM   cik=0000019617 discovered=12 inserted=12 already_present=0 downloaded=131.1MB
+    JPM   companyfacts=0000019617 facts=53931 linked_inserted=9490 linked_present=0 linked_accessions=12 unlinked_inserted=44441 unlinked_present=0 promoted=0
+    BAC   cik=0000070858 discovered=12 inserted=12 already_present=0 downloaded=126.3MB
+    BAC   companyfacts=0000070858 facts=45832 linked_inserted=7260 linked_present=0 linked_accessions=12 unlinked_inserted=38572 unlinked_present=0 promoted=0
+    AAPL  cik=0000320193 discovered=12 inserted=8 already_present=4 downloaded=7.7MB
+    AAPL  companyfacts=0000320193 facts=25135 linked_inserted=2273 linked_present=1186 linked_accessions=12 unlinked_inserted=0 unlinked_present=21676 promoted=2273
+    NVDA  cik=0001045810 discovered=12 inserted=12 already_present=0 downloaded=17.4MB
+    NVDA  companyfacts=0001045810 facts=27281 linked_inserted=5005 linked_present=0 linked_accessions=12 unlinked_inserted=22276 unlinked_present=0 promoted=0
+    XOM   cik=0000034088 discovered=12 inserted=12 already_present=0 downloaded=31.7MB
+    XOM   companyfacts=0000034088 facts=20629 linked_inserted=3402 linked_present=0 linked_accessions=11 unlinked_inserted=17227 unlinked_present=0 promoted=0
+    XOM   companyfacts=0002115436 facts=280 linked_inserted=269 linked_present=0 linked_accessions=1 unlinked_inserted=11 unlinked_present=0 promoted=0
+    PFE   cik=0000078003 discovered=12 inserted=12 already_present=0 downloaded=38.3MB
+    PFE   companyfacts=0000078003 facts=33186 linked_inserted=6142 linked_present=0 linked_accessions=12 unlinked_inserted=27044 unlinked_present=0 promoted=0
+
+Second run: no inserts, no promotions. Checks: 96 filings; companies
+AAPL..XOM with XOM = 0000034088; 0000034088-26-000093 FY2026 Q2, 269 facts in
+`xbrl_facts`, 0 in `_unlinked`; XOM 12 linked accessions; 0 unlinked rows for any
+registered filing. JPM and BAC primary documents run to ~130 MB each.
+
+Coverage, from the stored facts:
+
+    corpus: 96 filings, 96 unique; dev slice 12 of 12 in the list
+    ticker cik         fiscal years: 10-K + Q1 Q2 Q3 present (companyfacts fy/fp per accession)
+    COST   0000909832  FY2023:FY  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2+Q3
+    TGT    0000027419  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    JPM    0000019617  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    BAC    0000070858  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    AAPL   0000320193  FY2023:FY  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2+Q3
+    NVDA   0001045810  FY2024:FY+Q3  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:FY+Q1+Q2+Q3 COMPLETE  FY2027:Q1+Q2
+    XOM    0000034088  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    PFE    0000078003  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+
+`make test`: 225 passed (4 guard tests removed, pinned-CIK, list and mislabelled-
+page tests added), 3 snapshots passed.

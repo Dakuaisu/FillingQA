@@ -21,7 +21,7 @@ from typing import Any
 
 import psycopg
 
-from api.config import ConfigError, data_dir, sectors
+from api.config import ConfigError, companies, data_dir
 from api.ingest.edgar import EdgarClient
 
 FORM_TYPES = ("10-K", "10-Q")
@@ -75,58 +75,11 @@ class IngestReport:
     downloaded_bytes: int = 0
 
 
-def window_start(today: date, years_back: int) -> date:
-    """First filing_date included in the ingestion window."""
-    try:
-        return today.replace(year=today.year - years_back)
-    except ValueError:
-        # 29 February in a non-leap target year.
-        return today.replace(month=2, day=28, year=today.year - years_back)
-
-
-def assert_recent_covers_window(submissions: dict[str, Any], start: date) -> None:
-    """Fail if part of the requested window lives outside `filings.recent`.
-
-    `filings.recent` holds only the most recent slice of a company's history --
-    roughly the last thousand filings -- and anything older is paginated into the
-    files listed under `filings.files`. For eight large-cap companies over three
-    years this never overflows, but "never overflows" is an assumption about data
-    we do not control, and the failure mode is silent: filings simply go missing
-    from the corpus and every recall metric computed afterwards is quietly wrong.
-
-    So it is asserted, not assumed. If it ever fires, the fix is to also read the
-    files named in `filings.files`.
-    """
-    recent = submissions["filings"]["recent"]
-    dates = recent.get("filingDate") or []
-    # A file whose filingTo ends before the window cannot hold window filings.
-    # A file with no filingTo is counted: its range is unknown.
-    older_files = [
-        f
-        for f in submissions["filings"].get("files") or []
-        if f.get("filingTo", start.isoformat()) >= start.isoformat()
-    ]
-
-    if not dates:
-        raise IngestError("submissions.filings.recent contains no filings")
-
-    oldest = min(dates)
-    if oldest > start.isoformat() and older_files:
-        raise IngestError(
-            f"filings.recent only reaches back to {oldest}, but the requested "
-            f"window starts {start.isoformat()}, and {len(older_files)} older "
-            f"file(s) are listed in filings.files. Part of the window is not in "
-            f"`recent` and would be silently dropped. Read the paginated files: "
-            f"{[f.get('name') for f in older_files]}"
-        )
-
-
 def merge_pages(submissions: dict[str, Any], pages: dict[str, dict]) -> dict[str, Any]:
     """`submissions` with the named paginated files' rows appended to `recent`.
 
     `pages` maps a `filings.files` name to that file's columns. The merged
-    payload lists only the files NOT merged under `filings.files`, so
-    `assert_recent_covers_window` still sees exactly what remains elsewhere.
+    payload lists only the files NOT merged under `filings.files`.
     """
     recent = submissions["filings"]["recent"]
     merged = {key: list(values) for key, values in recent.items()}
@@ -138,20 +91,26 @@ def merge_pages(submissions: dict[str, Any], pages: dict[str, dict]) -> dict[str
 
 
 def submissions_since(client: EdgarClient, cik: str, start: date) -> dict[str, Any]:
-    """Submissions with every paginated file that reaches `start` merged in.
+    """Submissions with paginated files merged until the data reaches `start`.
 
     Large filers outgrow `filings.recent` within a year -- JPM's covers only
-    2025-10-01 onward, against 70 older files -- so a 3-year window needs the
-    pages. Only files whose `filingTo` reaches the window are fetched.
+    2025-10-01 onward, against 70 older files. Pages are listed newest first and
+    read in that order until a page's own earliest filingDate predates `start`.
+    The listing's `filingTo` is not used: it is not exact at the edges (JPM page
+    020 says 2023-10-31 and holds a 2023-11-01 filing).
     """
     submissions = client.fetch_submissions(cik)
-    needed = [
-        f["name"]
-        for f in submissions["filings"].get("files") or []
-        if f.get("filingTo", "") >= start.isoformat()
-    ]
-    merged = merge_pages(submissions, {n: client.fetch_submissions_page(n) for n in needed})
-    assert_recent_covers_window(merged, start)
+    pages: dict[str, dict] = {}
+    if min(submissions["filings"]["recent"]["filingDate"], default="") >= start.isoformat():
+        for f in submissions["filings"].get("files") or []:
+            page = client.fetch_submissions_page(f["name"])
+            pages[f["name"]] = page
+            if min(page["filingDate"], default="") < start.isoformat():
+                break
+    merged = merge_pages(submissions, pages)
+    # The loop above is the coverage guarantee: it stops only on data older than
+    # `start` or on the last page. Unread pages are older still.
+    merged["filings"]["files"] = []
     return merged
 
 
@@ -247,7 +206,7 @@ def select_accessions(
 def sector_of(ticker: str) -> str:
     """Fails rather than leaving NULL: an unlabelled company is a config error."""
     try:
-        return sectors()[ticker.upper()]
+        return companies()[ticker.upper()]["sector"]
     except KeyError:
         raise ConfigError(f"{ticker} has no sector in api/config.yaml") from None
 
@@ -312,64 +271,33 @@ def record_filing(
         return cur.fetchone() is not None
 
 
-def ingest_company(
-    conn: psycopg.Connection,
-    client: EdgarClient,
-    ticker: str,
-    *,
-    years_back: int = 3,
-    today: date | None = None,
-    root: Path | None = None,
-) -> IngestReport:
-    """Discover, download and register one company's filings."""
-    root = root if root is not None else data_dir()
-    start = window_start(today or date.today(), years_back)
-
-    cik = client.resolve_cik(ticker)
-    submissions = client.fetch_submissions(cik)
-    assert_recent_covers_window(submissions, start)
-
-    upsert_company(conn, cik, ticker, submissions, sector_of(ticker))
-    filings, skipped = discover(submissions, cik, start)
-
-    report = IngestReport(
-        ticker=ticker.upper(),
-        cik=cik,
-        discovered=len(filings),
-        skipped_no_period=skipped,
-    )
-    _store(conn, client, filings, root, report)
-    return report
-
-
 def ingest_accessions(
     conn: psycopg.Connection,
     client: EdgarClient,
     ticker: str,
     wanted: dict[str, str],
     *,
-    since: date | None = None,
     root: Path | None = None,
 ) -> IngestReport:
     """Download and register exactly the given accessions for one company."""
     root = root if root is not None else data_dir()
 
-    cik = client.resolve_cik(ticker)
+    # The pinned CIK, never a live ticker lookup: SEC's mapping moves (F-62).
+    cik = companies()[ticker.upper()]["cik"]
     submissions = client.fetch_submissions(cik)
     recent = set(submissions["filings"]["recent"]["accessionNumber"])
     if not set(wanted) <= recent:
-        # Older accessions live in paginated files. With `since` (the earliest
-        # filing date asked for) only pages reaching it are read; without it,
-        # every page. select_accessions still raises on any accession not found.
-        floor = since.isoformat() if since else ""
-        pages = [
-            f["name"]
-            for f in submissions["filings"].get("files") or []
-            if f.get("filingTo", "") >= floor
-        ]
-        submissions = merge_pages(
-            submissions, {name: client.fetch_submissions_page(name) for name in pages}
-        )
+        # Older accessions live in paginated files, newest first. Read them in
+        # order until every asked-for accession has been seen; select_accessions
+        # still raises on any that never appears. Page metadata is not trusted
+        # (see submissions_since).
+        pages: dict[str, dict] = {}
+        for f in submissions["filings"].get("files") or []:
+            pages[f["name"]] = page = client.fetch_submissions_page(f["name"])
+            recent |= set(page["accessionNumber"])
+            if set(wanted) <= recent:
+                break
+        submissions = merge_pages(submissions, pages)
     filings = select_accessions(submissions, cik, wanted)
 
     upsert_company(conn, cik, ticker, submissions, sector_of(ticker))

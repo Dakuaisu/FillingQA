@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 32 |
-| RESOLVED | 30 |
+| OPEN | 31 |
+| RESOLVED | 31 |
 | **Total** | **62** |
 
 ---
@@ -27,8 +27,7 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 (85 filings for 8 tickers, dev slice a subset); not yet committed to config because XOM's entries depend on F-62. When the freeze record is written it references F-58 | OPEN |
-| F-62 | XOM resolves (SEC `company_tickers.json`) to CIK 0002115436, ExxonMobil Holdings Corp, a new registrant whose submissions start 2026-07-01 (8-K12B succession): 1 10-Q in the window. The 3-year history -- 3 10-Ks, 9 10-Qs, two complete fiscal years -- is under the predecessor CIK 0000034088, Exxon Mobil Corp; the 2026-08-03 10-Q (0000034088-26-000093) is listed under both CIKs, and its companyfacts sit under the successor only. `companies` keys on `cik` with `ticker UNIQUE`, so one ticker cannot hold both CIKs as rows. Blocks the F-42 list and the freeze | OPEN |
+| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 and committed under `corpus.filings` (96 filings, 12 per company, all unique, dev slice a subset; XOM via F-62). Ingest reads the list and pinned CIKs only; `years_back`, `form_types`, `ingest_company`, `--tickers/--years` removed. Freeze record still to write. When the freeze record is written it references F-58 | OPEN |
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
 
 ## Blocking Phase 3
@@ -113,6 +112,7 @@ carries the state.
 | F-46 | Some `layout` tables carry prose (audit matters, cybersecurity oversight, executive officers), not scaffolding | Every layout table that is not page furniture chunks as prose; no length rule (cell lengths of TOCs, exhibit indexes and prose tables overlap). Verified: AAPL's uncertain-tax-positions audit matter is in a stored prose chunk (test). Furniture residual tracked as F-54 | 2026-10-01 |
 | F-56 | TGT's 10-K exhibit index produced two unsplittable units of 648 and 992 tokens, over `max_seq_length`: the sentence splitter never broke before a digit ("...reference). 4.2 Description...") | Digits added to the sentence-start lookahead. 12 filings before/after: >512 2 -> 0 (TGT 10-K max 992 -> 500); content_hash changes only in TGT's 10-K (214 -> 217 chunks: 4 changed, 1 removed, 4 added), 0 in the other 11; resolve table unchanged, 7,862 of 7,877 | 2026-10-01 |
 | F-54 | TGT's per-section running headers survived furniture filtering and left nav fragments in prose; blocked the Phase 2 exit (the freeze pins `parser_version`) | `Block.anchors` (in-document links, normalized-text coordinates; text unchanged on all 12, `parser_version` f1090fb5f594 -> 0e417d5495e4) plus a navigation rule keyed on repeated anchor-target sets with the furniture guard. `navres` 13/29/17/12 -> 0 on TGT; navigation blocks dropped 11/26/15/10; AAPL and COST 0 chunk changes; resolve 7,862/7,877 unchanged; 0 dropped blocks overlap an xbrl_span. 1 false positive (F-58). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-62 | XOM's ticker now resolves to the successor ExxonMobil Holdings Corp (CIK 0002115436, 1 window filing); the 3-year history is under the predecessor Exxon Mobil Corp (CIK 0000034088) | Option (a): XOM's company row is cik 0000034088, all 12 filings from it; `companyfacts_ciks` adds the successor as a facts source, stamped with the pinned CIK and linked by accession. All 8 CIKs pinned in config (deviation from PRD 6.1's ticker lookup). Verified: XOM 12 linked accessions; 0000034088-26-000093 FY2026 Q2, 269 facts in `xbrl_facts`, 0 unlinked. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 
