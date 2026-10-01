@@ -33,7 +33,15 @@ from eval.generate.schema import validate_item
 from eval.generate.xbrl_items import spot_check_ids
 from scripts.concept_coverage import classify_facts
 from scripts.write_freeze import FREEZE_FILE
-from scripts.xbrl_candidates import FACT_SQL, TEMPLATES_FILE, item_lines, natural_key, render
+from scripts.xbrl_candidates import (
+    FACT_SQL,
+    TEMPLATES_FILE,
+    f100_flags,
+    f100_lines,
+    item_lines,
+    natural_key,
+    render,
+)
 
 OUT_DIR = REPO_ROOT / "eval" / "candidates"
 ITEMS_FILE = OUT_DIR / "comparison_candidates.jsonl"
@@ -172,7 +180,12 @@ def main() -> None:
 
     by_id = {i["item_id"]: i for i in items}
     shown = spot + [i for i in flagged if i not in spot]
-    chunk_ids = sorted({c for i in shown for s in by_id[i]["gold_evidence_sets"] for c in s})
+    f100, f100_runs = f100_flags(set(by_id))
+    manifest["flagged_f100"] = {"runs": f100_runs, "item_ids": sorted(f100)}
+    MANIFEST_FILE.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    gold_ids = {c for i in shown + sorted(f100) for s in by_id[i]["gold_evidence_sets"] for c in s}
+    other_ids = {c for found in f100.values() for cs in found.values() for c in cs}
+    chunk_ids = sorted(gold_ids | other_ids)
     with connect() as conn:
         texts = dict(conn.execute(
             "SELECT chunk_id, text FROM chunks WHERE chunk_id = ANY(%s)", (chunk_ids,)
@@ -215,6 +228,7 @@ def main() -> None:
     for iid in flagged:
         if iid not in spot:
             lines += render_item(iid)
+    lines += f100_lines(f100, f100_runs, texts, render_item, set(spot) | set(flagged))
     SHEET_FILE.write_text("\n".join(lines), encoding="utf-8")
 
     print(f"eligible pairs (no shared gold chunk, no drawn xbrl_numeric key): {len(pairs)}")

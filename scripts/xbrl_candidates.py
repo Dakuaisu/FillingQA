@@ -16,6 +16,7 @@ import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
+from decimal import Decimal
 
 import yaml
 
@@ -51,6 +52,40 @@ def natural_key(accession, concept, start, end, unit, value) -> dict:
         "period_start": str(start) if start else None, "period_end": str(end),
         "unit": unit, "value": str(value),
     }  # fmt: skip
+
+
+def f100_flags(item_ids) -> tuple[dict[str, dict], list[str]]:
+    """Items whose reference figure a dev run found printed in a retrieved non-gold
+    chunk (F-100), from eval/candidates/f100_<run>.json: a gold-completeness
+    question for review. (item_id -> {figure: [chunk ids]}, run ids)."""
+    out, runs = {}, []
+    for path in sorted(OUT_DIR.glob("f100_*.json")):
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        runs.append(doc["run_id"])
+        for iid, found in doc["figure_in_retrieved_non_gold_chunk"].items():
+            if iid in item_ids:
+                out[iid] = found
+    return out, runs
+
+
+def f100_lines(flags: dict, runs: list[str], texts: dict[str, str], render, shown) -> list[str]:
+    lines = ["# Flagged: figure printed in a retrieved non-gold chunk (F-100)", "",
+             f"From dev run(s) {', '.join(runs) or 'none'} (`python -m scripts.f100_check`): the "
+             "item was numerically correct with no gold set in the top 10, and a retrieved chunk "
+             "outside gold prints the reference figure. Should that chunk be an alternative "
+             "evidence set? Gold is unchanged until the owner decides.", ""]  # fmt: skip
+    for iid in sorted(flags):
+        if iid not in shown:
+            lines += render(iid)
+        for fig, chunks in flags[iid].items():
+            for c in chunks:
+                header = texts.get(c, "").split("\n", 1)[0]
+                row = next(
+                    (x for x in texts.get(c, "").splitlines() if f"{Decimal(fig):,}" in x), ""
+                )
+                lines.append(f"- {iid}: {fig} in non-gold {c} {header} | {row.strip()[:160]}")
+        lines.append("")
+    return lines
 
 
 def item_lines(i: dict, texts: dict[str, str]) -> list[str]:
@@ -150,7 +185,12 @@ def main() -> None:
 
     by_id = {i["item_id"]: i for i in items}
     shown = spot + [i for i in flagged if i not in spot]
-    chunk_ids = sorted({c for i in shown for s in by_id[i]["gold_evidence_sets"] for c in s})
+    f100, f100_runs = f100_flags(set(by_id))
+    manifest["flagged_f100"] = {"runs": f100_runs, "item_ids": sorted(f100)}
+    MANIFEST_FILE.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    gold_ids = {c for i in shown + sorted(f100) for s in by_id[i]["gold_evidence_sets"] for c in s}
+    other_ids = {c for found in f100.values() for cs in found.values() for c in cs}
+    chunk_ids = sorted(gold_ids | other_ids)
     with connect() as conn:
         texts = dict(conn.execute(
             "SELECT chunk_id, text FROM chunks WHERE chunk_id = ANY(%s)", (chunk_ids,)
@@ -174,6 +214,8 @@ def main() -> None:
     for iid in flagged:
         if iid not in spot:
             lines += item_lines(by_id[iid], texts)
+    lines += f100_lines(f100, f100_runs, texts, lambda i: item_lines(by_id[i], texts),
+                        set(spot) | set(flagged))  # fmt: skip
     SHEET_FILE.write_text("\n".join(lines), encoding="utf-8")
 
     print(f"items: {len(items)} (drawn {len(draw)}); not generated: {len(problems)}")

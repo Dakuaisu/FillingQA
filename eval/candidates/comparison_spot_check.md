@@ -407,3 +407,883 @@ headed with the side it is gold for.
 
 Selected by rule (side <= 0, sign flip, or a chunk printing both values untagged),
 not by the seed: none. Already shown above: none.
+
+# Flagged: figure printed in a retrieved non-gold chunk (F-100)
+
+From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was numerically correct with no gold set in the top 10, and a retrieved chunk outside gold prints the reference figure. Should that chunk be an alternative evidence set? Gold is unchanged until the owner decides.
+
+## cmp_0006
+
+- Question: How did Bank of America's income before income taxes for the first quarter of fiscal 2026 compare with the first quarter of fiscal 2024?
+- Reference answer: $10,404 million for the first quarter of fiscal 2026, compared with $7,262 million for the first quarter of fiscal 2024: an increase of $3,142 million.
+- Accessions: 0000070858-24-000156, 0000070858-25-000200, 0000070858-26-000249
+- xbrl_fact_id: 36281
+- tags: BAC, pretax_income, FY2024, FY2026, quarter, gap2, template:cmp_dur_compare, unit_scale_millions
+
+- Earlier: 0000070858-24-000156 2024-01-01..2024-03-31
+- Later: 0000070858-26-000249 2026-01-01..2026-03-31
+- Evidence sets (2, each one earlier + one later chunk): 0000070858-24-000156:633.0:633.0 + 0000070858-26-000249:595.0:595.0; 0000070858-25-000200:611.0:611.0 + 0000070858-26-000249:595.0:595.0
+
+### earlier: 0000070858-24-000156:633.0:633.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q1 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q1 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended March 31 2024 | Three Months Ended March 31 2023 |
+|---|---|---|
+| Net interest income |  |  |
+| Interest income | $36,285 | $28,655 |
+| Interest expense | 22,253 | 14,207 |
+| Net interest income | 14,032 | 14,448 |
+| Noninterest income |  |  |
+| Fees and commissions | 8,660 | 7,894 |
+| Market making and similar activities | 3,888 | 4,712 |
+| Other income (loss) | (762) | (796) |
+| Total noninterest income | 11,786 | 11,810 |
+| Total revenue, net of interest expense | 25,818 | 26,258 |
+| Provision for credit losses | 1,319 | 931 |
+| Noninterest expense |  |  |
+| Compensation and benefits | 10,195 | 9,918 |
+| Occupancy and equipment | 1,811 | 1,799 |
+| Information processing and communications | 1,800 | 1,697 |
+| Product delivery and transaction related | 851 | 890 |
+| Professional fees | 548 | 537 |
+| Marketing | 455 | 458 |
+| Other general operating | 1,577 | 939 |
+| Total noninterest expense | 17,237 | 16,238 |
+| Income before income taxes | 7,262 | 9,089 |
+| Income tax expense | 588 | 928 |
+| Net income | $6,674 | $8,161 |
+| Preferred stock dividends | 532 | 505 |
+| Net income applicable to common shareholders | $6,142 | $7,656 |
+| Per common share information |  |  |
+| Earnings | $0.77 | $0.95 |
+| Diluted earnings | 0.76 | 0.94 |
+| Average common shares issued and outstanding | 7,968.2 | 8,065.9 |
+```
+
+### earlier: 0000070858-25-000200:611.0:611.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q1 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q1 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended March 31 2025 | Three Months Ended March 31 2024 |
+|---|---|---|
+| Net interest income |  |  |
+| Interest income | $34,066 | $36,285 |
+| Interest expense | 19,623 | 22,253 |
+| Net interest income | 14,443 | 14,032 |
+| Noninterest income |  |  |
+| Fees and commissions | 9,415 | 8,660 |
+| Market making and similar activities | 3,584 | 3,888 |
+| Other income (loss) | (76) | (762) |
+| Total noninterest income | 12,923 | 11,786 |
+| Total revenue, net of interest expense | 27,366 | 25,818 |
+| Provision for credit losses | 1,480 | 1,319 |
+| Noninterest expense |  |  |
+| Compensation and benefits | 10,889 | 10,195 |
+| Information processing and communications | 1,894 | 1,800 |
+| Occupancy and equipment | 1,856 | 1,811 |
+| Product delivery and transaction related | 914 | 851 |
+| Professional fees | 652 | 548 |
+| Marketing | 506 | 455 |
+| Other general operating | 1,059 | 1,577 |
+| Total noninterest expense | 17,770 | 17,237 |
+| Income before income taxes | 8,116 | 7,262 |
+| Income tax expense | 720 | 588 |
+| Net income | $7,396 | $6,674 |
+| Preferred stock dividends | 406 | 532 |
+| Net income applicable to common shareholders | $6,990 | $6,142 |
+| Per common share information |  |  |
+| Earnings | $0.91 | $0.77 |
+| Diluted earnings | 0.90 | 0.76 |
+| Average common shares issued and outstanding | 7,677.9 | 7,968.2 |
+```
+
+### later: 0000070858-26-000249:595.0:595.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q1 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q1 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended March 31 2026 | Three Months Ended March 31 2025 |
+|---|---|---|
+| Net interest income |  |  |
+| Interest income | $33,359 | $34,066 |
+| Interest expense | 17,614 | 19,623 |
+| Net interest income | 15,745 | 14,443 |
+| Noninterest income |  |  |
+| Fees and commissions | 10,549 | 9,415 |
+| Market making and similar activities | 3,637 | 3,584 |
+| Other income (loss) | 341 | 805 |
+| Total noninterest income | 14,527 | 13,804 |
+| Total revenue, net of interest expense | 30,272 | 28,247 |
+| Provision for credit losses | 1,337 | 1,480 |
+| Noninterest expense |  |  |
+| Compensation and benefits | 11,334 | 10,889 |
+| Information processing and communications | 2,018 | 1,894 |
+| Occupancy and equipment | 1,900 | 1,856 |
+| Product delivery and transaction related | 1,126 | 914 |
+| Professional fees | 583 | 652 |
+| Marketing | 533 | 506 |
+| Other general operating | 1,037 | 1,059 |
+| Total noninterest expense | 18,531 | 17,770 |
+| Income before income taxes | 10,404 | 8,997 |
+| Income tax expense | 1,820 | 1,637 |
+| Net income | $8,584 | $7,360 |
+| Preferred stock dividends and other | 429 | 406 |
+| Net income applicable to common shareholders | $8,155 | $6,954 |
+| Per common share information |  |  |
+| Earnings | $1.12 | $0.91 |
+| Diluted earnings | 1.11 | 0.89 |
+```
+
+- cmp_0006: 10404 in non-gold 0000070858-26-000249:92.0:92.0 [Bank of America Corporation (BAC) | 10-Q | Q1 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Income before income taxes | $10,404 | $8,997 |
+- cmp_0006: 10404 in non-gold 0000070858-26-000394:115.0:115.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Income before income taxes | 11,565 | 10,404 | 9,622 | 10,408 | 8,668 | 21,969 | 17,665 |
+- cmp_0006: 7262 in non-gold 0000070858-24-000156:96.0:96.0 [Bank of America Corporation (BAC) | 10-Q | Q1 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Income before income taxes | $7,262 | $9,089 |
+- cmp_0006: 7262 in non-gold 0000070858-24-000208:117.0:117.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Income before income taxes | 7,560 | 7,262 | 3,124 | 8,095 | 8,034 | 14,822 | 17,123 |
+- cmp_0006: 7262 in non-gold 0000070858-25-000200:90.0:90.0 [Bank of America Corporation (BAC) | 10-Q | Q1 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Income before income taxes | $8,116 | $7,262 |
+
+## cmp_0009
+
+- Question: What did Bank of America report as its total stockholders' equity at the end of the second quarter of fiscal 2024 and at the end of the second quarter of fiscal 2026, and what is the difference?
+- Reference answer: $301,094 million at the end of the second quarter of fiscal 2026, compared with $293,892 million at the end of the second quarter of fiscal 2024: an increase of $7,202 million.
+- Accessions: 0000070858-24-000208, 0000070858-24-000280, 0000070858-25-000268, 0000070858-25-000405, 0000070858-26-000394
+- xbrl_fact_id: 39546
+- tags: BAC, stockholders_equity, FY2024, FY2026, instant, gap2, template:cmp_ins_both, unit_scale_millions
+
+- Earlier: 0000070858-24-000208 None..2024-06-30
+- Later: 0000070858-26-000394 None..2026-06-30
+- Evidence sets (21, each one earlier + one later chunk): 0000070858-24-000208:708.2:708.2 + 0000070858-26-000394:653.2:653.2; 0000070858-24-000208:708.2:708.2 + 0000070858-26-000394:657.0:657.0; 0000070858-24-000208:708.2:708.2 + 0000070858-26-000394:657.1:657.1; 0000070858-24-000208:712.0:712.0 + 0000070858-26-000394:653.2:653.2; 0000070858-24-000208:712.0:712.0 + 0000070858-26-000394:657.0:657.0; 0000070858-24-000208:712.0:712.0 + 0000070858-26-000394:657.1:657.1; 0000070858-24-000208:712.1:712.1 + 0000070858-26-000394:653.2:653.2; 0000070858-24-000208:712.1:712.1 + 0000070858-26-000394:657.0:657.0; 0000070858-24-000208:712.1:712.1 + 0000070858-26-000394:657.1:657.1; 0000070858-24-000280:705.0:705.0 + 0000070858-26-000394:653.2:653.2; 0000070858-24-000280:705.0:705.0 + 0000070858-26-000394:657.0:657.0; 0000070858-24-000280:705.0:705.0 + 0000070858-26-000394:657.1:657.1; 0000070858-25-000268:687.2:687.2 + 0000070858-26-000394:653.2:653.2; 0000070858-25-000268:687.2:687.2 + 0000070858-26-000394:657.0:657.0; 0000070858-25-000268:687.2:687.2 + 0000070858-26-000394:657.1:657.1; 0000070858-25-000268:687.3:687.3 + 0000070858-26-000394:653.2:653.2; 0000070858-25-000268:687.3:687.3 + 0000070858-26-000394:657.0:657.0; 0000070858-25-000268:687.3:687.3 + 0000070858-26-000394:657.1:657.1; 0000070858-25-000405:676.2:676.2 + 0000070858-26-000394:653.2:653.2; 0000070858-25-000405:676.2:676.2 + 0000070858-26-000394:657.0:657.0; 0000070858-25-000405:676.2:676.2 + 0000070858-26-000394:657.1:657.1
+
+### earlier: 0000070858-24-000208:708.2:708.2
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Balance Sheet | Bank of America Corporation | Q2 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  |  | June 30 2024 | December 31 2023 |
+|---|---|---|---|
+|  | Accrued expenses and other liabilities (includes $15,064 and $11,473 measured at fair value and $1,104 and $1,209 of reserve for unfunded lending commitments) | 213,751 | 207,527 |
+|  | Long-term debt (includes $46,875 and $42,809 measured at fair value) | 290,474 | 302,204 |
+|  | Total liabilities | 2,964,104 | 2,888,505 |
+|  | Commitments and contingencies (Note 6 – Securitizations and Other Variable Interest Entities and Note 10 – Commitments and Contingencies) |  |  |
+|  | Shareholders’ equity |  |  |
+|  | Preferred stock, $0.01 par value; authorized – 100,000,000 shares; issued and outstanding – 4,013,928 and 4,088,099 Shares | 26,548 | 28,397 |
+|  | Common stock and additional paid-in capital, $0.01 par value; authorized – 12,800,000,000 shares; issued and outstanding – 7,774,753,442 and 7,895,457,665 shares | 51,376 | 56,365 |
+|  | Retained earnings | 233,597 | 224,672 |
+|  | Accumulated other comprehensive income (loss) | (17,629) | (17,788) |
+|  | Total shareholders’ equity | 293,892 | 291,646 |
+|  | Total liabilities and shareholders’ equity | $3,257,996 | $3,180,151 |
+|  | Assets of consolidated variable interest entities included in total assets above (isolated to settle the liabilities of the variable interest entities) |  |  |
+|  | Trading account assets | $5,647 | $6,054 |
+```
+
+### earlier: 0000070858-24-000208:712.0:712.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, March 31, 2024 | $28,397 | 7,866.9 | $54,310 | $228,902 | $(18,057) | $293,552 |
+| Net income |  |  |  | 6,897 |  | 6,897 |
+| Net change in debt securities |  |  |  |  | (305) | (305) |
+| Net change in debit valuation adjustments |  |  |  |  | 53 | 53 |
+| Net change in derivatives |  |  |  |  | 686 | 686 |
+| Employee benefit plan adjustments |  |  |  |  | 25 | 25 |
+| Net change in foreign currency translation adjustments |  |  |  |  | (31) | (31) |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (1,887) |  | (1,887) |
+| Preferred |  |  |  | (310) |  | (310) |
+| Redemption of preferred stock | (1,849) |  |  | (5) |  | (1,854) |
+| Common stock issued under employee plans, net, and other |  | 0.4 | 601 |  |  | 601 |
+| Common stock repurchased |  | (92.5) | (3,535) |  |  | (3,535) |
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+```
+
+### earlier: 0000070858-24-000208:712.1:712.1
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, December 31, 2023 | $28,397 | 7,895.5 | $56,365 | $224,672 | $(17,788) | $291,646 |
+| Net income |  |  |  | 13,571 |  | 13,571 |
+| Net change in debt securities |  |  |  |  | 27 | 27 |
+| Net change in debit valuation adjustments |  |  |  |  | (135) | (135) |
+| Net change in derivatives |  |  |  |  | 270 | 270 |
+| Employee benefit plan adjustments |  |  |  |  | 48 | 48 |
+| Net change in foreign currency translation adjustments |  |  |  |  | (51) | (51) |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (3,797) |  | (3,797) |
+| Preferred |  |  |  | (842) |  | (842) |
+| Redemption of preferred stock | (1,849) |  |  | (5) |  | (1,854) |
+| Common stock issued under employee plans, net, and other |  | 44.4 | 1,046 | (2) |  | 1,044 |
+| Common stock repurchased |  | (165.1) | (6,035) |  |  | (6,035) |
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+```
+
+### earlier: 0000070858-24-000280:705.0:705.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q3 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q3 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+| Net income |  |  |  | 6,896 |  | 6,896 |
+| Net change in debt securities |  |  |  |  | 417 | 417 |
+| Net change in derivatives |  |  |  |  | 2,830 | 2,830 |
+| Employee benefit plan adjustments |  |  |  |  | 27 | 27 |
+| Net change in foreign currency translation adjustments |  |  |  |  | 21 | 21 |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (2,021) |  | (2,021) |
+| Preferred |  |  |  | (510) |  | (510) |
+| Redemption of preferred stock | (1,994) |  |  | (6) |  | (2,000) |
+| Common stock issued under employee plans, net, and other |  | 2.2 | 496 | (2) |  | 494 |
+| Common stock repurchased |  | (88.2) | (3,534) |  |  | (3,534) |
+| Balance, September 30, 2024 | $24,554 | 7,688.8 | $48,338 | $237,954 | $(14,334) | $296,512 |
+| Balance, December 31, 2023 | $28,397 | 7,895.5 | $56,365 | $224,672 | $(17,788) | $291,646 |
+```
+
+### earlier: 0000070858-25-000268:687.2:687.2
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, March 31, 2024 | $28,397 | 7,866.9 | $54,310 | $228,902 | $(18,057) | $293,552 |
+| Net income |  |  |  | 6,897 |  | 6,897 |
+| Net change in debt securities |  |  |  |  | (305) | (305) |
+| Net change in debit valuation adjustments |  |  |  |  | 53 | 53 |
+| Net change in derivatives |  |  |  |  | 686 | 686 |
+| Employee benefit plan adjustments |  |  |  |  | 25 | 25 |
+| Net change in foreign currency translation adjustments |  |  |  |  | (31) | (31) |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (1,887) |  | (1,887) |
+| Preferred |  |  |  | (310) |  | (310) |
+| Redemption of preferred stock | (1,849) |  |  | (5) |  | (1,854) |
+| Common stock issued under employee plans, net, and other |  | 0.4 | 601 |  |  | 601 |
+| Common stock repurchased |  | (92.5) | (3,535) |  |  | (3,535) |
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+```
+
+### earlier: 0000070858-25-000268:687.3:687.3
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, December 31, 2023 | $28,397 | 7,895.5 | $56,365 | $224,672 | $(17,788) | $291,646 |
+| Net income |  |  |  | 13,571 |  | 13,571 |
+| Net change in debt securities |  |  |  |  | 27 | 27 |
+| Net change in debit valuation adjustments |  |  |  |  | (135) | (135) |
+| Net change in derivatives |  |  |  |  | 270 | 270 |
+| Employee benefit plan adjustments |  |  |  |  | 48 | 48 |
+| Net change in foreign currency translation adjustments |  |  |  |  | (51) | (51) |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (3,797) |  | (3,797) |
+| Preferred |  |  |  | (842) |  | (842) |
+| Redemption of preferred stock | (1,849) |  |  | (5) |  | (1,854) |
+| Common stock issued under employee plans, net, and other |  | 44.4 | 1,046 | (2) |  | 1,044 |
+| Common stock repurchased |  | (165.1) | (6,035) |  |  | (6,035) |
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+```
+
+### earlier: 0000070858-25-000405:676.2:676.2
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q3 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q3 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, June 30, 2024 | $26,548 | 7,774.8 | $51,376 | $233,597 | $(17,629) | $293,892 |
+| Net income |  |  |  | 6,896 |  | 6,896 |
+| Net change in debt securities |  |  |  |  | 417 | 417 |
+| Net change in derivatives |  |  |  |  | 2,830 | 2,830 |
+| Employee benefit plan adjustments |  |  |  |  | 27 | 27 |
+| Net change in foreign currency translation adjustments |  |  |  |  | 21 | 21 |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (2,021) |  | (2,021) |
+| Preferred |  |  |  | (510) |  | (510) |
+| Redemption of preferred stock | (1,994) |  |  | (6) |  | (2,000) |
+| Common stock issued under employee plans, net, and other |  | 2.2 | 496 | (2) |  | 494 |
+| Common stock repurchased |  | (88.2) | (3,534) |  |  | (3,534) |
+| Balance, September 30, 2024 | $24,554 | 7,688.8 | $48,338 | $237,954 | $(14,334) | $296,512 |
+| Balance, December 31, 2023 | $28,397 | 7,895.5 | $56,365 | $224,672 | $(17,788) | $291,646 |
+```
+
+### later: 0000070858-26-000394:653.2:653.2
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Balance Sheet | Bank of America Corporation | Q2 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  |  | June 30 2026 | December 31 2025 |
+|---|---|---|---|
+|  | Accrued expenses and other liabilities (includes $4,830 and $8,996 measured at fair value and $1,150 and $1,177 of reserve for unfunded lending commitments) | 275,174 | 231,074 |
+|  | Long-term debt (includes $84,797 and $72,591 measured at fair value) | 339,863 | 317,816 |
+|  | Total liabilities | 3,198,097 | 3,108,495 |
+|  | Commitments and contingencies (Note 6 – Securitizations and Other Variable Interest Entities and Note 10 – Commitments and Contingencies) |  |  |
+|  | Shareholders’ equity |  |  |
+|  | Preferred stock, $0.01 par value; authorized – 100,000,000 shares; issued and outstanding – 3,951,164 and 3,991,164 shares | 24,996 | 25,992 |
+|  | Common stock and additional paid-in capital, $0.01 par value; authorized – 12,800,000,000 shares; issued and outstanding – 7,017,967,460 and 7,212,464,345 shares | 13,611 | 26,084 |
+|  | Retained earnings | 274,520 | 261,693 |
+|  | Accumulated other comprehensive income (loss) | (12,033) | (10,526) |
+|  | Total shareholders’ equity | 301,094 | 303,243 |
+|  | Total liabilities and shareholders’ equity | $3,499,191 | $3,411,738 |
+|  | Assets of consolidated variable interest entities included in total assets above (isolated to settle the liabilities of the variable interest entities) |  |  |
+|  | Trading account assets | $7,703 | $7,139 |
+|  | Loans and leases | 17,905 | 17,875 |
+```
+
+### later: 0000070858-26-000394:657.0:657.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Balance, March 31, 2026 | $24,996 | 7,129.9 | $18,885 | $267,765 | $(10,978) | $300,668 |
+| Net income |  |  |  | 9,074 |  | 9,074 |
+| Net change in debt securities |  |  |  |  | 52 | 52 |
+| Net change in debit valuation adjustments |  |  |  |  | (401) | (401) |
+| Net change in derivatives |  |  |  |  | (751) | (751) |
+| Employee benefit plan adjustments |  |  |  |  | 36 | 36 |
+| Net change in foreign currency translation adjustments |  |  |  |  | 9 | 9 |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (1,993) |  | (1,993) |
+| Preferred |  |  |  | (326) |  | (326) |
+| Common stock issued under employee plans, net, and other |  | 0.3 | 732 |  |  | 732 |
+| Common stock repurchased |  | (112.2) | (6,006) |  |  | (6,006) |
+| Balance, June 30, 2026 | $24,996 | 7,018.0 | $13,611 | $274,520 | $(12,033) | $301,094 |
+| Balance, December 31, 2025 | $25,992 | 7,212.5 | $26,084 | $261,693 | $(10,526) | $303,243 |
+```
+
+### later: 0000070858-26-000394:657.1:657.1
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Changes in Shareholders’ Equity | Bank of America Corporation | Q2 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Preferred Stock | Common Stock and Additional Paid-in Capital Shares | Common Stock and Additional Paid-in Capital Amount | Retained Earnings | Accumulated Other Comprehensive Income (Loss) | Total Shareholders’ Equity |
+|---|---|---|---|---|---|---|
+| Net income |  |  |  | 17,658 |  | 17,658 |
+| Net change in debt securities |  |  |  |  | (477) | (477) |
+| Net change in debit valuation adjustments |  |  |  |  | 259 | 259 |
+| Net change in derivatives |  |  |  |  | (1,378) | (1,378) |
+| Employee benefit plan adjustments |  |  |  |  | 71 | 71 |
+| Net change in foreign currency translation adjustments |  |  |  |  | 18 | 18 |
+| Dividends declared: |  |  |  |  |  |  |
+| Common |  |  |  | (4,016) |  | (4,016) |
+| Preferred |  |  |  | (751) |  | (751) |
+| Redemption of preferred stock | (996) |  |  | (4) |  | (1,000) |
+| Common stock issued under employee plans, net, and other |  | 57.4 | 773 | (60) |  | 713 |
+| Common stock repurchased |  | (251.9) | (13,246) |  |  | (13,246) |
+| Balance, June 30, 2026 | $24,996 | 7,018.0 | $13,611 | $274,520 | $(12,033) | $301,094 |
+| Balance, March 31, 2025 | $20,499 | 7,560.1 | $41,038 | $245,683 | $(13,271) | $293,949 |
+| Net income |  |  |  | 7,170 |  | 7,170 |
+```
+
+- cmp_0009: 301094 in non-gold 0000070858-26-000394:635.1:635.1 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Shareholders’ equity | $301,094 | $300,668 | $303,243 | $302,437 | $298,021 |  |  |
+- cmp_0009: 293892 in non-gold 0000070858-24-000208:690.1:690.1 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Shareholders’ equity | $293,892 | $293,552 | $291,646 | $287,064 | $283,319 |  |  |
+- cmp_0009: 293892 in non-gold 0000070858-25-000268:665.1:665.1 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Shareholders’ equity | $299,599 | $295,581 | $295,559 | $296,512 | $293,892 |  |  |
+- cmp_0009: 293892 in non-gold 0000070858-24-000208:72.1:72.1 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Total shareholders’ equity |  |  | 293,892 | 291,646 |
+
+## cmp_0010
+
+- Question: Bank of America net interest income, the first two quarters of fiscal 2024 versus the first two quarters of fiscal 2026: what are the two figures and the difference?
+- Reference answer: $31,742 million for the first two quarters of fiscal 2026, compared with $27,734 million for the first two quarters of fiscal 2024: an increase of $4,008 million.
+- Accessions: 0000070858-24-000208, 0000070858-25-000268, 0000070858-26-000394
+- xbrl_fact_id: 36996
+- tags: BAC, net_interest_income, FY2024, FY2026, ytd, gap2, template:cmp_dur_versus, unit_scale_millions
+
+- Earlier: 0000070858-24-000208 2024-01-01..2024-06-30
+- Later: 0000070858-26-000394 2026-01-01..2026-06-30
+- Evidence sets (8, each one earlier + one later chunk): 0000070858-24-000208:703.0:703.0 + 0000070858-26-000394:648.0:648.0; 0000070858-24-000208:703.0:703.0 + 0000070858-26-000394:677.0:677.0; 0000070858-24-000208:732.0:732.0 + 0000070858-26-000394:648.0:648.0; 0000070858-24-000208:732.0:732.0 + 0000070858-26-000394:677.0:677.0; 0000070858-25-000268:678.0:678.0 + 0000070858-26-000394:648.0:648.0; 0000070858-25-000268:678.0:678.0 + 0000070858-26-000394:677.0:677.0; 0000070858-25-000268:707.0:707.0 + 0000070858-26-000394:648.0:648.0; 0000070858-25-000268:707.0:707.0 + 0000070858-26-000394:677.0:677.0
+
+### earlier: 0000070858-24-000208:703.0:703.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q2 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2024 | Three Months Ended June 30 2023 | Six Months Ended June 30 2024 | Six Months Ended June 30 2023 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income | $36,854 | $32,354 | $73,139 | $61,009 |
+| Interest expense | 23,152 | 18,196 | 45,405 | 32,403 |
+| Net interest income | 13,702 | 14,158 | 27,734 | 28,606 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions | 8,969 | 7,961 | 17,629 | 15,855 |
+| Market making and similar activities | 3,298 | 3,697 | 7,186 | 8,409 |
+| Other income (loss) | (592) | (619) | (1,354) | (1,415) |
+| Total noninterest income | 11,675 | 11,039 | 23,461 | 22,849 |
+| Total revenue, net of interest expense | 25,377 | 25,197 | 51,195 | 51,455 |
+| Provision for credit losses | 1,508 | 1,125 | 2,827 | 2,056 |
+| Noninterest expense |  |  |  |  |
+| Compensation and benefits | 9,826 | 9,401 | 20,021 | 19,319 |
+| Occupancy and equipment | 1,818 | 1,776 | 3,629 | 3,575 |
+| Information processing and communications | 1,763 | 1,644 | 3,563 | 3,341 |
+| Product delivery and transaction related | 891 | 956 | 1,742 | 1,846 |
+| Professional fees | 654 | 527 | 1,202 | 1,064 |
+```
+
+### earlier: 0000070858-24-000208:732.0:732.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
+[Table: NOTE 2 Net Interest Income and Noninterest Income | Bank of America Corporation | Q2 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2024 | Three Months Ended June 30 2023 | Six Months Ended June 30 2024 | Six Months Ended June 30 2023 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income |  |  |  |  |
+| Loans and leases | $15,338 | $13,970 | $30,578 | $27,067 |
+| Debt securities | 6,325 | 4,691 | 12,462 | 10,151 |
+| Federal funds sold and securities borrowed or purchased under agreements to resell | 5,159 | 4,955 | 10,334 | 8,667 |
+| Trading account assets | 2,516 | 2,076 | 4,971 | 4,104 |
+| Other interest income (1) | 7,516 | 6,662 | 14,794 | 11,020 |
+| Total interest income | 36,854 | 32,354 | 73,139 | 61,009 |
+| Interest expense |  |  |  |  |
+| Deposits | 9,655 | 5,785 | 18,793 | 10,099 |
+| Short-term borrowings | 9,070 | 8,355 | 17,605 | 14,535 |
+| Trading account liabilities | 540 | 472 | 1,086 | 976 |
+| Long-term debt | 3,887 | 3,584 | 7,921 | 6,793 |
+| Total interest expense | 23,152 | 18,196 | 45,405 | 32,403 |
+| Net interest income | $13,702 | $14,158 | $27,734 | $28,606 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions |  |  |  |  |
+| Card income |  |  |  |  |
+```
+
+### earlier: 0000070858-25-000268:678.0:678.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2025 | Three Months Ended June 30 2024 | Six Months Ended June 30 2025 | Six Months Ended June 30 2024 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income | $34,873 | $36,854 | $68,939 | $73,139 |
+| Interest expense | 20,203 | 23,152 | 39,826 | 45,405 |
+| Net interest income | 14,670 | 13,702 | 29,113 | 27,734 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions | 9,469 | 8,969 | 18,884 | 17,629 |
+| Market making and similar activities | 3,153 | 3,298 | 6,737 | 7,186 |
+| Other income (loss) | (829) | (592) | (905) | (1,354) |
+| Total noninterest income | 11,793 | 11,675 | 24,716 | 23,461 |
+| Total revenue, net of interest expense | 26,463 | 25,377 | 53,829 | 51,195 |
+| Provision for credit losses | 1,592 | 1,508 | 3,072 | 2,827 |
+| Noninterest expense |  |  |  |  |
+| Compensation and benefits | 10,332 | 9,826 | 21,221 | 20,021 |
+| Information processing and communications | 1,819 | 1,763 | 3,713 | 3,563 |
+| Occupancy and equipment | 1,836 | 1,818 | 3,692 | 3,629 |
+| Product delivery and transaction related | 974 | 891 | 1,888 | 1,742 |
+| Professional fees | 640 | 654 | 1,292 | 1,202 |
+```
+
+### earlier: 0000070858-25-000268:707.0:707.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
+[Table: NOTE 2 Net Interest Income and Noninterest Income | Bank of America Corporation | Q2 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2025 | Three Months Ended June 30 2024 | Six Months Ended June 30 2025 | Six Months Ended June 30 2024 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income |  |  |  |  |
+| Loans and leases | $15,651 | $15,338 | $30,874 | $30,578 |
+| Debt securities | 6,913 | 6,325 | 13,680 | 12,462 |
+| Federal funds sold and securities borrowed or purchased under agreements to resell | 4,094 | 5,159 | 7,868 | 10,334 |
+| Trading account assets | 3,057 | 2,516 | 6,065 | 4,971 |
+| Other interest income (1) | 5,158 | 7,516 | 10,452 | 14,794 |
+| Total interest income | 34,873 | 36,854 | 68,939 | 73,139 |
+| Interest expense |  |  |  |  |
+| Deposits | 8,681 | 9,655 | 17,313 | 18,793 |
+| Short-term borrowings | 7,435 | 9,070 | 14,398 | 17,605 |
+| Trading account liabilities | 676 | 540 | 1,383 | 1,086 |
+| Long-term debt | 3,411 | 3,887 | 6,732 | 7,921 |
+| Total interest expense | 20,203 | 23,152 | 39,826 | 45,405 |
+| Net interest income | $14,670 | $13,702 | $29,113 | $27,734 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions |  |  |  |  |
+| Card income |  |  |  |  |
+```
+
+### later: 0000070858-26-000394:648.0:648.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated Statement of Income | Bank of America Corporation | Q2 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2026 | Three Months Ended June 30 2025 | Six Months Ended June 30 2026 | Six Months Ended June 30 2025 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income | $33,832 | $34,873 | $67,191 | $68,939 |
+| Interest expense | 17,835 | 20,203 | 35,449 | 39,826 |
+| Net interest income | 15,997 | 14,670 | 31,742 | 29,113 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions | 11,080 | 9,469 | 21,629 | 18,884 |
+| Market making and similar activities | 4,177 | 3,153 | 7,814 | 6,737 |
+| Other income (loss) | 304 | 151 | 645 | 956 |
+| Total noninterest income | 15,561 | 12,773 | 30,088 | 26,577 |
+| Total revenue, net of interest expense | 31,558 | 27,443 | 61,830 | 55,690 |
+| Provision for credit losses | 1,366 | 1,592 | 2,703 | 3,072 |
+| Noninterest expense |  |  |  |  |
+| Compensation and benefits | 10,987 | 10,332 | 22,321 | 21,221 |
+| Information processing and communications | 1,924 | 1,819 | 3,942 | 3,713 |
+| Occupancy and equipment | 1,914 | 1,836 | 3,814 | 3,692 |
+| Product delivery and transaction related | 1,327 | 974 | 2,453 | 1,888 |
+| Professional fees | 573 | 640 | 1,156 | 1,292 |
+```
+
+### later: 0000070858-26-000394:677.0:677.0
+
+```
+[Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
+[Table: NOTE 2 Net Interest Income and Noninterest Income | Bank of America Corporation | Q2 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended June 30 2026 | Three Months Ended June 30 2025 | Six Months Ended June 30 2026 | Six Months Ended June 30 2025 |
+|---|---|---|---|---|
+| Net interest income |  |  |  |  |
+| Interest income |  |  |  |  |
+| Loans and leases | $15,863 | $15,651 | $31,346 | $30,874 |
+| Debt securities | 6,032 | 6,913 | 12,323 | 13,680 |
+| Federal funds sold and securities borrowed or purchased under agreements to resell | 4,185 | 4,094 | 8,042 | 7,868 |
+| Trading account assets | 3,063 | 3,057 | 6,261 | 6,065 |
+| Other interest income (1) | 4,689 | 5,158 | 9,219 | 10,452 |
+| Total interest income | 33,832 | 34,873 | 67,191 | 68,939 |
+| Interest expense |  |  |  |  |
+| Deposits | 7,372 | 8,681 | 14,673 | 17,313 |
+| Short-term borrowings | 6,607 | 7,435 | 13,117 | 14,398 |
+| Trading account liabilities | 756 | 676 | 1,501 | 1,383 |
+| Long-term debt | 3,100 | 3,411 | 6,158 | 6,732 |
+| Total interest expense | 17,835 | 20,203 | 35,449 | 39,826 |
+| Net interest income | $15,997 | $14,670 | $31,742 | $29,113 |
+| Noninterest income |  |  |  |  |
+| Fees and commissions |  |  |  |  |
+| Card income |  |  |  |  |
+```
+
+- cmp_0010: 31742 in non-gold 0000070858-26-000394:115.0:115.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Net interest income | $15,997 | $15,745 | $15,750 | $15,233 | $14,670 | $31,742 | $29,113 |
+- cmp_0010: 27734 in non-gold 0000070858-24-000208:117.0:117.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Net interest income | $13,702 | $14,032 | $13,946 | $14,379 | $14,158 | $27,734 | $28,606 |
+- cmp_0010: 27734 in non-gold 0000070858-25-000268:122.0:122.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Net interest income | $14,670 | $14,443 | $14,359 | $13,967 | $13,702 | $29,113 | $27,734 |
+
+## cmp_0016
+
+- Question: By how much did JPMorgan Chase's income tax expense change from the first quarter of fiscal 2024 to the first quarter of fiscal 2026?
+- Reference answer: $3,985 million for the first quarter of fiscal 2026, compared with $3,874 million for the first quarter of fiscal 2024: an increase of $111 million.
+- Accessions: 0000019617-24-000326, 0000019617-25-000421, 0001628280-26-029344
+- xbrl_fact_id: 27931
+- tags: JPM, income_tax, FY2024, FY2026, quarter, gap2, template:cmp_dur_change, unit_scale_millions
+
+- Earlier: 0000019617-24-000326 2024-01-01..2024-03-31
+- Later: 0001628280-26-029344 2026-01-01..2026-03-31
+- Evidence sets (8, each one earlier + one later chunk): 0000019617-24-000326:1120.0:1120.0 + 0001628280-26-029344:1021.0:1021.0; 0000019617-24-000326:1120.0:1120.0 + 0001628280-26-029344:1941.0:1941.0; 0000019617-24-000326:2054.0:2054.0 + 0001628280-26-029344:1021.0:1021.0; 0000019617-24-000326:2054.0:2054.0 + 0001628280-26-029344:1941.0:1941.0; 0000019617-25-000421:1023.0:1023.0 + 0001628280-26-029344:1021.0:1021.0; 0000019617-25-000421:1023.0:1023.0 + 0001628280-26-029344:1941.0:1941.0; 0000019617-25-000421:1959.0:1959.0 + 0001628280-26-029344:1021.0:1021.0; 0000019617-25-000421:1959.0:1959.0 + 0001628280-26-029344:1941.0:1941.0
+
+### earlier: 0000019617-24-000326:1120.0:1120.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2024 | Part I, Item 1: Financial Statements.]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q1 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended March 31, 2024 | Three months ended March 31, 2023 |
+|---|---|---|
+| Revenue |  |  |
+| Investment banking fees | $1,954 | $1,649 |
+| Principal transactions | 6,790 | 7,615 |
+| Lending- and deposit-related fees | 1,902 | 1,620 |
+| Asset management fees | 4,146 | 3,465 |
+| Commissions and other fees | 1,805 | 1,695 |
+| Investment securities losses | (366) | (868) |
+| Mortgage fees and related income | 275 | 221 |
+| Card income | 1,218 | 1,234 |
+| Other income | 1,128 | 1,007 |
+| Noninterest revenue | 18,852 | 17,638 |
+| Interest income | 47,438 | 37,004 |
+| Interest expense | 24,356 | 16,293 |
+| Net interest income | 23,082 | 20,711 |
+| Total net revenue | 41,934 | 38,349 |
+| Provision for credit losses | 1,884 | 2,275 |
+| Noninterest expense |  |  |
+| Compensation expense | 13,118 | 11,676 |
+| Occupancy expense | 1,211 | 1,115 |
+| Technology, communications and equipment expense | 2,421 | 2,184 |
+| Professional and outside services | 2,548 | 2,448 |
+| Marketing | 1,160 | 1,045 |
+| Other expense | 2,299 | 1,639 |
+| Total noninterest expense | 22,757 | 20,107 |
+| Income before income tax expense | 17,293 | 15,967 |
+| Income tax expense | 3,874 | 3,345 |
+| Net income | $13,419 | $12,622 |
+```
+
+### earlier: 0000019617-24-000326:2054.0:2054.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2024 | Part I, Item 1: Financial Statements.]
+[Table: As of or for the three months ended March 31, | JPMorgan Chase & Co | Q1 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended March 31, (in millions, except ratios) | Corporate 2024 | Corporate 2023 | Reconciling Items(a) 2024 | Reconciling Items(a) 2023 | Total 2024 | Total 2023 |
+|---|---|---|---|---|---|---|
+| Noninterest revenue | $(275) | $(755) | $(493) | $(867) | $18,852 | $17,638 |
+| Net interest income | 2,477 | 1,740 | (121) | (120) | 23,082 | 20,711 |
+| Total net revenue | 2,202 | 985 | (614) | (987) | 41,934 | 38,349 |
+| Provision for credit losses | 27 | 370 | — | — | 1,884 | 2,275 |
+| Noninterest expense | 1,276 | 160 | — | — | 22,757 | 20,107 |
+| Income/(loss) before income tax expense/(benefit) | 899 | 455 | (614) | (987) | 17,293 | 15,967 |
+| Income tax expense/(benefit) | 223 | 211 | (614) | (987) | 3,874 | 3,345 |
+| Net income/(loss) | $676 | $244 | $— | $— | $13,419 | $12,622 |
+| Average equity | $98,277 | $66,697 | $— | $— | $300,277 | $271,197 |
+| Total assets | 1,322,799 | 1,307,989 | NA | NA | 4,090,727 | 3,744,305 |
+```
+
+### earlier: 0000019617-25-000421:1023.0:1023.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q1 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended March 31, 2025 | Three months ended March 31, 2024 |
+|---|---|---|
+| Revenue |  |  |
+| Investment banking fees | $2,178 | $1,954 |
+| Principal transactions | 7,614 | 6,790 |
+| Lending- and deposit-related fees | 2,132 | 1,902 |
+| Asset management fees | 4,700 | 4,146 |
+| Commissions and other fees | 2,033 | 1,805 |
+| Investment securities losses | (37) | (366) |
+| Mortgage fees and related income | 278 | 275 |
+| Card income | 1,216 | 1,218 |
+| Other income | 1,923 | 1,128 |
+| Noninterest revenue | 22,037 | 18,852 |
+| Interest income | 46,853 | 47,438 |
+| Interest expense | 23,580 | 24,356 |
+| Net interest income | 23,273 | 23,082 |
+| Total net revenue | 45,310 | 41,934 |
+| Provision for credit losses | 3,305 | 1,884 |
+| Noninterest expense |  |  |
+| Compensation expense | 14,093 | 13,118 |
+| Occupancy expense | 1,302 | 1,211 |
+| Technology, communications and equipment expense | 2,578 | 2,421 |
+| Professional and outside services | 2,839 | 2,548 |
+| Marketing | 1,304 | 1,160 |
+| Other expense | 1,481 | 2,299 |
+| Total noninterest expense | 23,597 | 22,757 |
+| Income before income tax expense | 18,408 | 17,293 |
+| Income tax expense | 3,765 | 3,874 |
+| Net income | $14,643 | $13,419 |
+```
+
+### earlier: 0000019617-25-000421:1959.0:1959.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2025 | Part I, Item 1: Financial Statements]
+[Table: As of or for the three months ended March 31, | JPMorgan Chase & Co | Q1 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended March 31, (in millions, except ratios) | Corporate 2025 | Corporate 2024 | Reconciling Items(a) 2025 | Reconciling Items(a) 2024 | Total 2025 | Total 2024 |
+|---|---|---|---|---|---|---|
+| Noninterest revenue | $653 | $(275) | $(602) | $(493) | $22,037 | $18,852 |
+| Net interest income | 1,651 | 2,477 | (102) | (121) | 23,273 | 23,082 |
+| Total net revenue | 2,304 | 2,202 | (704) | (614) | 45,310 | 41,934 |
+| Provision for credit losses | (19) | 27 | — | — | 3,305 | 1,884 |
+| Total noninterest expense(d) | 185 | 1,276 | — | — | 23,597 | 22,757 |
+| Income/(loss) before income tax expense/(benefit) | 2,138 | 899 | (704) | (614) | 18,408 | 17,293 |
+| Income tax expense/(benefit) | 445 | 223 | (704) | (614) | 3,765 | 3,874 |
+| Net income/(loss) | $1,693 | $676 | $— | $— | $14,643 | $13,419 |
+| Average equity | $102,845 | $98,277 | $— | $— | $324,345 | $300,277 |
+```
+
+### later: 0001628280-26-029344:1021.0:1021.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2026 | Part I, Item 1: Financial Statements]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q1 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended March 31, 2026 | Three months ended March 31, 2025 |
+|---|---|---|
+| Revenue |  |  |
+| Investment banking fees | $2,858 | $2,178 |
+| Principal transactions | 7,987 | 7,614 |
+| Lending- and deposit-related fees | 2,394 | 2,132 |
+| Asset management fees | 5,515 | 4,700 |
+| Commissions and other fees | 2,482 | 2,033 |
+| Investment securities gains/(losses) | 64 | (37) |
+| Mortgage fees and related income | 309 | 278 |
+| Card income | 1,190 | 1,216 |
+| Other income | 1,671 | 1,923 |
+| Noninterest revenue | 24,470 | 22,037 |
+| Interest income | 49,191 | 46,853 |
+| Interest expense | 23,825 | 23,580 |
+| Net interest income | 25,366 | 23,273 |
+| Total net revenue | 49,836 | 45,310 |
+| Provision for credit losses | 2,507 | 3,305 |
+| Noninterest expense |  |  |
+| Compensation expense | 15,339 | 14,093 |
+| Occupancy expense | 1,447 | 1,302 |
+| Technology, communications and equipment expense | 3,021 | 2,578 |
+| Professional and outside services | 3,483 | 2,839 |
+| Marketing | 1,604 | 1,304 |
+| Other expense | 1,956 | 1,481 |
+| Total noninterest expense | 26,850 | 23,597 |
+| Income before income tax expense | 20,479 | 18,408 |
+| Income tax expense | 3,985 | 3,765 |
+| Net income | $16,494 | $14,643 |
+```
+
+### later: 0001628280-26-029344:1941.0:1941.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2026 | Part I, Item 1: Financial Statements]
+[Table: As of or for the three months ended March 31, | JPMorgan Chase & Co | Q1 FY2026 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended March 31, (in millions, except ratios) | Corporate 2026 | Corporate 2025 |  | Reconciling Items(a) 2026 | Reconciling Items(a) 2025 | Total 2026 | Total 2025 |
+|---|---|---|---|---|---|---|---|
+| Noninterest revenue | $189 | $653 |  | $(587) | $(602) | $24,470 | $22,037 |
+| Net interest income | 1,026 | 1,651 |  | (113) | (102) | 25,366 | 23,273 |
+| Total net revenue | 1,215 | 2,304 |  | (700) | (704) | 49,836 | 45,310 |
+| Provision for credit losses | (1) | (19) |  | — | — | 2,507 | 3,305 |
+| Total noninterest expense(d) | 568 | 185 | (e) | — | — | 26,850 | 23,597 |
+| Income/(loss) before income tax expense/(benefit) | 648 | 2,138 |  | (700) | (704) | 20,479 | 18,408 |
+| Income tax expense/(benefit) | (51) | 445 |  | (700) | (704) | 3,985 | 3,765 |
+| Net income | $699 | $1,693 |  | $— | $— | $16,494 | $14,643 |
+| Average equity | $97,050 | $102,845 |  | NA | NA | $341,050 | $324,345 |
+```
+
+- cmp_0016: 3985 in non-gold 0001628280-26-029344:162.0:162.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income tax expense | 3,985 | 3,765 | 6 |
+- cmp_0016: 3874 in non-gold 0000019617-25-000421:167.0:167.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income tax expense | 3,765 | 3,874 | (3) |
+- cmp_0016: 3874 in non-gold 0000019617-24-000326:171.0:171.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income tax expense | 3,874 | (a) | 3,345 | 16 |
+
+## cmp_0018
+
+- Question: By how much did JPMorgan Chase's income before income taxes change from the third quarter of fiscal 2023 to the third quarter of fiscal 2025?
+- Reference answer: $18,743 million for the third quarter of fiscal 2025, compared with $16,733 million for the third quarter of fiscal 2023: an increase of $2,010 million.
+- Accessions: 0000019617-23-000524, 0000019617-24-000611, 0001628280-25-048859
+- xbrl_fact_id: 27866
+- tags: JPM, pretax_income, FY2023, FY2025, quarter, gap2, template:cmp_dur_change, unit_scale_millions
+
+- Earlier: 0000019617-23-000524 2023-07-01..2023-09-30
+- Later: 0001628280-25-048859 2025-07-01..2025-09-30
+- Evidence sets (8, each one earlier + one later chunk): 0000019617-23-000524:1379.1:1379.1 + 0001628280-25-048859:1192.1:1192.1; 0000019617-23-000524:1379.1:1379.1 + 0001628280-25-048859:2170.0:2170.0; 0000019617-23-000524:2442.0:2442.0 + 0001628280-25-048859:1192.1:1192.1; 0000019617-23-000524:2442.0:2442.0 + 0001628280-25-048859:2170.0:2170.0; 0000019617-24-000611:1259.1:1259.1 + 0001628280-25-048859:1192.1:1192.1; 0000019617-24-000611:1259.1:1259.1 + 0001628280-25-048859:2170.0:2170.0; 0000019617-24-000611:2236.0:2236.0 + 0001628280-25-048859:1192.1:1192.1; 0000019617-24-000611:2236.0:2236.0 + 0001628280-25-048859:2170.0:2170.0
+
+### earlier: 0000019617-23-000524:1379.1:1379.1
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2023 | Part I, Item 1: Financial Statements.]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q3 FY2023 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended September 30, 2023 | Three months ended September 30, 2022 | Nine months ended September 30, 2023 | Nine months ended September 30, 2022 |
+|---|---|---|---|---|
+| Noninterest expense |  |  |  |  |
+| Compensation expense | 11,726 | 10,539 | 34,618 | 31,627 |
+| Occupancy expense | 1,197 | 1,162 | 3,382 | 3,425 |
+| Technology, communications and equipment expense | 2,386 | 2,366 | 6,837 | 7,102 |
+| Professional and outside services | 2,620 | 2,481 | 7,629 | 7,522 |
+| Marketing | 1,126 | 1,017 | 3,293 | 2,818 |
+| Other expense | 2,702 | 1,613 | 6,927 | 4,624 |
+| Total noninterest expense | 21,757 | 19,178 | 62,686 | 57,118 |
+| Income before income tax expense | 16,733 | 12,001 | 50,286 | 32,929 |
+| Income tax expense | 3,582 | 2,264 | 10,041 | 6,261 |
+| Net income | $13,151 | $9,737 | $40,245 | $26,668 |
+| Net income applicable to common stockholders | $12,685 | $9,255 | $38,889 | $25,295 |
+| Net income per common share data |  |  |  |  |
+| Basic earnings per share | $4.33 | $3.13 | $13.20 | $8.53 |
+| Diluted earnings per share | 4.33 | 3.12 | 13.18 | 8.51 |
+```
+
+### earlier: 0000019617-23-000524:2442.0:2442.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2023 | Part I, Item 1: Financial Statements.]
+[Table: As of or for the three months ended September 30, | JPMorgan Chase & Co | Q3 FY2023 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended September 30, (in millions, except ratios) | Corporate 2023 | Corporate 2022 | Reconciling Items(a) 2023 | Reconciling Items(a) 2022 | Total 2023 | Total 2022 |
+|---|---|---|---|---|---|---|
+| Noninterest revenue | $(425) | $(1,094) | $(682) | $(663) | $17,148 | $15,198 |
+| Net interest income | 1,983 | 792 | (130) | (112) | 22,726 | 17,518 |
+| Total net revenue | 1,558 | (302) | (812) | (775) | 39,874 | 32,716 |
+| Provision for credit losses | 46 | (21) | — | — | 1,384 | 1,537 |
+| Noninterest expense | 696 | 305 | — | — | 21,757 | 19,178 |
+| Income/(loss) before income tax expense/(benefit) | 816 | (586) | (812) | (775) | 16,733 | 12,001 |
+| Income tax expense/(benefit) | 4 | (292) | (812) | (775) | 3,582 | 2,264 |
+| Net income/(loss) | $812 | $(294) | $— | $— | $13,151 | $9,737 |
+| Average equity | $74,298 | $57,944 | $— | $— | $284,798 | $252,944 |
+```
+
+### earlier: 0000019617-24-000611:1259.1:1259.1
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2024 | Part I, Item 1: Financial Statements.]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q3 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended September 30, 2024 | Three months ended September 30, 2023 | Nine months ended September 30, 2024 | Nine months ended September 30, 2023 |
+|---|---|---|---|---|
+| Noninterest expense |  |  |  |  |
+| Compensation expense | 12,817 | 11,726 | 38,888 | 34,618 |
+| Occupancy expense | 1,258 | 1,197 | 3,717 | 3,382 |
+| Technology, communications and equipment expense | 2,447 | 2,386 | 7,315 | 6,837 |
+| Professional and outside services | 2,780 | 2,620 | 8,050 | 7,629 |
+| Marketing | 1,258 | 1,126 | 3,639 | 3,293 |
+| Other expense | 2,005 | 2,702 | 7,426 | 6,927 |
+| Total noninterest expense | 22,565 | 21,757 | 69,035 | 62,686 |
+| Income before income tax expense | 16,978 | 16,733 | 57,706 | 50,286 |
+| Income tax expense | 4,080 | 3,582 | 13,240 | 10,041 |
+| Net income | $12,898 | $13,151 | $44,466 | $40,245 |
+| Net income applicable to common stockholders | $12,537 | $12,685 | $43,199 | $38,889 |
+| Net income per common share data |  |  |  |  |
+| Basic earnings per share | $4.38 | $4.33 | $14.97 | $13.20 |
+| Diluted earnings per share | 4.37 | 4.33 | 14.94 | 13.18 |
+```
+
+### earlier: 0000019617-24-000611:2236.0:2236.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2024 | Part I, Item 1: Financial Statements.]
+[Table: As of or for the three months ended September 30, | JPMorgan Chase & Co | Q3 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended September 30, (in millions, except ratios) | Corporate 2024 | Corporate 2023 | Reconciling Items(a) 2024 | Reconciling Items(a) 2023 | Total 2024 | Total 2023 |
+|---|---|---|---|---|---|---|
+| Noninterest revenue | $155 | $(425) | $(541) | $(682) | $19,249 | $17,148 |
+| Net interest income | 2,915 | 1,983 | (120) | (130) | 23,405 | 22,726 |
+| Total net revenue | 3,070 | 1,558 | (661) | (812) | 42,654 | 39,874 |
+| Provision for credit losses | (4) | 46 | — | — | 3,111 | 1,384 |
+| Noninterest expense | 589 | 696 | — | — | 22,565 | 21,757 |
+| Income/(loss) before income tax expense/(benefit) | 2,485 | 816 | (661) | (812) | 16,978 | 16,733 |
+| Income tax expense/(benefit) | 675 | 4 | (661) | (812) | 4,080 | 3,582 |
+| Net income/(loss) | $1,810 | $812 | $— | $— | $12,898 | $13,151 |
+| Average equity | $119,894 | $74,298 | $— | $— | $321,894 | $284,798 |
+| Total assets | 1,276,238 | 1,275,673 | NA | NA | 4,210,048 | 3,898,333 |
+```
+
+### later: 0001628280-25-048859:1192.1:1192.1
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2025 | Part I, Item 1: Financial Statements]
+[Table: Consolidated statements of income (unaudited) | JPMorgan Chase & Co | Q3 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three months ended September 30, 2025 | Three months ended September 30, 2024 | Nine months ended September 30, 2025 | Nine months ended September 30, 2024 |
+|---|---|---|---|---|
+| Noninterest expense |  |  |  |  |
+| Compensation expense | 13,566 | 12,817 | 41,369 | 38,888 |
+| Occupancy expense | 1,420 | 1,258 | 3,986 | 3,717 |
+| Technology, communications and equipment expense | 2,839 | 2,447 | 8,121 | 7,315 |
+| Professional and outside services | 3,173 | 2,780 | 9,018 | 8,050 |
+| Marketing | 1,480 | 1,258 | 4,063 | 3,639 |
+| Other expense | 1,803 | 2,005 | 5,100 | 7,426 |
+| Total noninterest expense | 24,281 | 22,565 | 71,657 | 69,035 |
+| Income before income tax expense | 18,743 | 16,978 | 55,435 | 57,706 |
+| Income tax expense | 4,350 | 4,080 | 11,412 | 13,240 |
+| Net income | $14,393 | $12,898 | $44,023 | $44,466 |
+| Net income applicable to common stockholders | $14,043 | $12,537 | $42,991 | $43,199 |
+| Net income per common share data |  |  |  |  |
+| Basic earnings per share | $5.08 | $4.38 | $15.41 | $14.97 |
+| Diluted earnings per share | 5.07 | 4.37 | 15.38 | 14.94 |
+```
+
+### later: 0001628280-25-048859:2170.0:2170.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2025 | Part I, Item 1: Financial Statements]
+[Table: As of or for the three months ended September 30, | JPMorgan Chase & Co | Q3 FY2025 10-Q | Part I, Item 1 | in millions, USD]
+| As of or for the three months ended September 30, (in millions, except ratios) | Corporate 2025 | Corporate 2024 | Reconciling Items(a) 2025 | Reconciling Items(a) 2024 | Total 2025 | Total 2024 |
+|---|---|---|---|---|---|---|
+| Noninterest revenue | $297 | $155 | $(588) | $(541) | $22,461 | $19,249 |
+| Net interest income | 1,406 | 2,915 | (105) | (120) | 23,966 | 23,405 |
+| Total net revenue | 1,703 | 3,070 | (693) | (661) | 46,427 | 42,654 |
+| Provision for credit losses | (3) | (4) | — | — | 3,403 | 3,111 |
+| Total noninterest expense(d) | 445 | 589 | — | — | 24,281 | 22,565 |
+| Income/(loss) before income tax expense/(benefit) | 1,261 | 2,485 | (693) | (661) | 18,743 | 16,978 |
+| Income tax expense/(benefit) | 436 | 675 | (693) | (661) | 4,350 | 4,080 |
+| Net income | $825 | $1,810 | $— | $— | $14,393 | $12,898 |
+| Average equity | $114,835 | $119,894 | NA | NA | $336,335 | $321,894 |
+| Total assets | 1,297,608 | 1,276,238 | NA | NA | 4,560,205 | 4,210,048 |
+```
+
+- cmp_0018: 18743 in non-gold 0001628280-25-048859:222.0:222.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income before income tax expense | $18,743 | $16,978 | 10% | $55,435 | $57,706 | (4)% |
+- cmp_0018: 16733 in non-gold 0000019617-23-000524:238.0:238.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2023 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income before income tax expense | $16,733 | $12,001 | 39% | $50,286 | $32,929 | 53% |
+- cmp_0018: 16733 in non-gold 0000019617-24-000611:237.0:237.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income before income tax expense | $16,978 | $16,733 | 1% | $57,706 | $50,286 | 15% |

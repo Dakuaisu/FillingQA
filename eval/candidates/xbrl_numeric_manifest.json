@@ -1399,5 +1399,36 @@
    "unit": "USD",
    "value": "97787000000"
   }
+ },
+ "flagged_f100": {
+  "runs": [
+   "19693d4aa874"
+  ],
+  "item_ids": [
+   "xbrl_0008",
+   "xbrl_0017",
+   "xbrl_0029",
+   "xbrl_0038",
+   "xbrl_0039",
+   "xbrl_0048",
+   "xbrl_0063",
+   "xbrl_0066",
+   "xbrl_0069",
+   "xbrl_0072",
+   "xbrl_0075",
+   "xbrl_0079",
+   "xbrl_0084",
+   "xbrl_0090",
+   "xbrl_0096",
+   "xbrl_0100",
+   "xbrl_0102",
+   "xbrl_0104",
+   "xbrl_0111",
+   "xbrl_0123",
+   "xbrl_0124",
+   "xbrl_0137",
+   "xbrl_0138",
+   "xbrl_0145"
+  ]
  }
 }

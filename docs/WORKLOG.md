@@ -4686,3 +4686,19 @@ Findings logged: F-98 (xbrl_auto is the hard slice here), F-99 (the baseline
 cannot abstain; declines score as wrong answers), F-100 (numerically correct
 without sufficient retrieval), F-101 (gated vs strict numeric gap), F-102
 (latency outliers).
+
+## 2026-10-01 — F-100 split (read-only over run 19693d4aa874)
+
+`python -m scripts.f100_check 19693d4aa874`:
+
+    items correct without a sufficient gold set: 31
+      figure present in a retrieved non-gold chunk: 29 ['cmp_0006', 'cmp_0009', 'cmp_0010', 'cmp_0016', 'cmp_0018', 'xbrl_0008', 'xbrl_0017', 'xbrl_0029', 'xbrl_0038', 'xbrl_0039', 'xbrl_0048', 'xbrl_0063', 'xbrl_0066', 'xbrl_0069', 'xbrl_0072', 'xbrl_0075', 'xbrl_0079', 'xbrl_0084', 'xbrl_0090', 'xbrl_0096', 'xbrl_0100', 'xbrl_0102', 'xbrl_0104', 'xbrl_0111', 'xbrl_0123', 'xbrl_0124', 'xbrl_0137', 'xbrl_0138', 'xbrl_0145']
+      figure in no retrieved chunk: 2 ['xbrl_0049', 'xbrl_0116']
+    wrote eval/candidates/f100_19693d4aa874.json
+
+Hits checked by eye: xbrl_0008 (Apple SG&A $6,650) and xbrl_0100 (NVIDIA
+operating income $36,010) are printed in the 10-Q MD&A tables, untagged; cmp_0006's
+two BAC pre-tax figures likewise. The 29 are flagged in a new section of
+`xbrl_numeric_spot_check.md` / `comparison_spot_check.md` (and `flagged_f100` in
+both manifests), with the matching non-gold chunk and row. Both candidate files
+are byte-identical; both `--verify` runs 0 mismatches. `make test`: 391 passed.
