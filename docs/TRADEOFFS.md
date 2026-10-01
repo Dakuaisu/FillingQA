@@ -875,3 +875,32 @@ a third pre-write check that the model's dimension equals `dim` -- the columns a
 `VECTOR(768)`. The model weights are not vendored: they come from the Hugging Face
 cache at the pinned revision (the tokenizer, which decides chunk sizes, is
 vendored and sha-checked).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-54 navigation rule
+
+The furniture rule's repeat signal, moved from text to link targets. No phrase
+rule and no new number: it reuses `furniture_min_repeats` and the furniture
+guard. Same candidates as furniture (every non-data block).
+
+A block is navigation when (a) it has at least one in-document anchor
+(`<a href="#...">`, recorded by the walker as `Block.anchors`), (b) its residual
+-- the text with anchor spans removed, whitespace-normalized -- does not end in
+"." or ":", and (c) its anchor-target set, as a sorted tuple, occurs on at least
+`furniture_min_repeats` candidate blocks of the filing. Keying on targets, not
+text, is what stops TGT's per-section label ("RISK FACTORS", "BUSINESS", ...) from
+splitting the count; (b) is what keeps a hyperlinked cross-reference sentence
+("See accompanying Notes to Consolidated Financial Statements.").
+
+*Rejected:*
+- *Residual-is-a-section-label.* Needs a length cap or a heading match: a new
+  number or a phrase list.
+- *Anchor-text fraction of the block.* A new number.
+- *All-anchor blocks only.* Measured: 1 of 28-80 nav blocks per TGT filing.
+- *Literal match on "Table of Contents".* Filer-specific.
+
+Known false positive, measured, not tuned: TGT 10-K Item 15's list item
+"•Notes to Consolidated Financial Statements" links to the Notes, shares that
+target set with seven "See accompanying Notes..." sentences, and has no full stop
+(F-58).

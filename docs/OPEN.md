@@ -12,8 +12,8 @@ carries the state.
 | Status | Count |
 |---|---|
 | OPEN | 28 |
-| RESOLVED | 29 |
-| **Total** | **57** |
+| RESOLVED | 30 |
+| **Total** | **58** |
 
 ---
 
@@ -28,7 +28,6 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
-| F-54 | **Blocks the Phase 2 exit** (not Phase 5): the F-42 freeze pins `parser_version`, so a parser fix after the freeze invalidates it. TGT's per-section running headers survive furniture filtering and leave 12-29 nav fragments in TGT prose chunks per filing (`navres` in the chunk summary); 0 in AAPL and COST. Measured 2026-10-01: TGT's nav tables per filing are 30/80/28/28; only 1 per filing is made entirely of in-document `<a href="#...">` anchors -- the other 29/79/27/27 are *mixed*, a plain-text section label ("RISK FACTORS", "FINANCIAL STATEMENTS \| NOTES") beside the "Table of Contents" and "Index to Financial Statements" links. So the block-level rule (a leaf block entirely of anchors is navigation) would reclassify 1 block per filing and leave the residual. What a fix needs, a block-model change: (1) the walker records, per block, the char ranges of in-document anchor text (`Block.anchor_ranges`), in the normalized-text coordinates; (2) a rule for mixed blocks -- e.g. a layout table whose non-anchor text is only a section label; that rule is a decision. Text need not change (`text_sha256` stable), but `parser_version` will. Diff F-50-style on all 12 filings when done. No phrase rule | OPEN |
 
 ## Blocking Phase 3
 
@@ -73,6 +72,7 @@ carries the state.
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
+| F-58 | The F-54 navigation rule drops one content block: TGT 10-K Item 15's list item "•Notes to Consolidated Financial Statements" (block 826), whose only text is a link sharing its target with seven "See accompanying Notes..." sentences, and which has no full stop. No span overlaps it. Measured, not tuned | OPEN |
 | F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
 
 ## Resolved
@@ -108,6 +108,7 @@ carries the state.
 | F-53 | PRD 6.3's 500-800-token chunks (Appendix A: 700) exceed bge-base-en-v1.5's 512-token input and would be silently truncated; no tokenizer was installed | `target_tokens: 500` counted with the pinned model's own vendored tokenizer, header and special tokens included; `max_seq_length: 512` violations counted, never truncated. 12 filings: 0 over 512 except 2 in TGT's 10-K (F-56). Consequence: PRD 11.7's 800 and 1200-token chunk-size ablation points are impossible on bge-base (F-57). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-46 | Some `layout` tables carry prose (audit matters, cybersecurity oversight, executive officers), not scaffolding | Every layout table that is not page furniture chunks as prose; no length rule (cell lengths of TOCs, exhibit indexes and prose tables overlap). Verified: AAPL's uncertain-tax-positions audit matter is in a stored prose chunk (test). Furniture residual tracked as F-54 | 2026-10-01 |
 | F-56 | TGT's 10-K exhibit index produced two unsplittable units of 648 and 992 tokens, over `max_seq_length`: the sentence splitter never broke before a digit ("...reference). 4.2 Description...") | Digits added to the sentence-start lookahead. 12 filings before/after: >512 2 -> 0 (TGT 10-K max 992 -> 500); content_hash changes only in TGT's 10-K (214 -> 217 chunks: 4 changed, 1 removed, 4 added), 0 in the other 11; resolve table unchanged, 7,862 of 7,877 | 2026-10-01 |
+| F-54 | TGT's per-section running headers survived furniture filtering and left nav fragments in prose; blocked the Phase 2 exit (the freeze pins `parser_version`) | `Block.anchors` (in-document links, normalized-text coordinates; text unchanged on all 12, `parser_version` f1090fb5f594 -> 0e417d5495e4) plus a navigation rule keyed on repeated anchor-target sets with the furniture guard. `navres` 13/29/17/12 -> 0 on TGT; navigation blocks dropped 11/26/15/10; AAPL and COST 0 chunk changes; resolve 7,862/7,877 unchanged; 0 dropped blocks overlap an xbrl_span. 1 false positive (F-58). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 

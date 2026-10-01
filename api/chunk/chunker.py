@@ -14,7 +14,8 @@ Rules, in PRD priority order, and how each is held:
 
 Layout tables (F-35) are not data, but some carry prose -- audit matters, the
 cybersecurity oversight table (F-46) -- so they chunk as prose. Page furniture
-(running headers, footers, page numbers) is dropped (PRD 6.2 step 4).
+(running headers, footers, page numbers) is dropped (PRD 6.2 step 4), and so
+is navigation -- blocks of repeated in-document links (F-54).
 
 Blocks before the first Item -- cover page and table of contents -- belong to no
 Item and are not chunked; they are counted in ChunkStats.
@@ -33,7 +34,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from api.chunk.context import DocumentMeta, chunk_header, table_lines
-from api.parse.ixbrl import ExtractedDocument
+from api.parse.ixbrl import Block, ExtractedDocument
 from api.parse.sections import Section
 from api.parse.tables import Table
 
@@ -80,6 +81,8 @@ class ChunkStats:
     paragraphs_split: int = 0
     paragraph_pieces: int = 0  # sentence groups the split paragraphs became
     furniture_samples: Counter = field(default_factory=Counter)
+    navigation_dropped: int = 0
+    nav_samples: Counter = field(default_factory=Counter)
 
 
 @dataclass
@@ -113,6 +116,41 @@ def furniture_keys(texts: list[str], min_repeats: int) -> set[str]:
         key
         for key, n in counts.items()
         if n >= min_repeats and not key.rstrip().endswith((".", ":"))
+    }
+
+
+def anchor_residual(doc: ExtractedDocument, block: Block) -> str:
+    """The block's text with its in-document anchor text removed, whitespace-normalized."""
+    parts, pos = [], block.char_start
+    for anchor in sorted(block.anchors, key=lambda a: a.char_start):
+        parts.append(doc.text[pos : anchor.char_start])
+        pos = anchor.char_end
+    parts.append(doc.text[pos : block.char_end])
+    return " ".join("".join(parts).split())
+
+
+def navigation_blocks(doc: ExtractedDocument, candidates: list[int], min_repeats: int) -> set[int]:
+    """Blocks that are navigation (F-54): the furniture rule's repeat signal,
+    moved from the text to the link targets.
+
+    A block is navigation when (a) it has an in-document anchor, (b) its text
+    without the anchors does not end in "." or ":" -- the furniture guard, which
+    keeps a hyperlinked cross-reference sentence -- and (c) its set of anchor
+    targets occurs on at least `min_repeats` candidate blocks. Keying on targets,
+    not text, is what lets TGT's running headers count together although each
+    carries its own section label ("RISK FACTORS", "BUSINESS", ...).
+    """
+
+    def targets(i: int) -> tuple[str, ...]:
+        return tuple(sorted({a.target for a in doc.blocks[i].anchors}))
+
+    with_anchors = [i for i in candidates if doc.blocks[i].anchors]
+    counts = Counter(targets(i) for i in with_anchors)
+    return {
+        i
+        for i in with_anchors
+        if counts[targets(i)] >= min_repeats
+        and not anchor_residual(doc, doc.blocks[i]).endswith((".", ":"))
     }
 
 
@@ -150,6 +188,7 @@ def chunk_document(
         if not (b.kind == "table" and table_at[b.char_start].kind == "data")
     ]
     furniture = furniture_keys([text_of(i) for i in candidates], config["furniture_min_repeats"])
+    navigation = navigation_blocks(doc, candidates, config["furniture_min_repeats"])
 
     stats.blocks_before_first_item = sections[0].block_start if sections else len(doc.blocks)
     chunks: list[Chunk] = []
@@ -178,6 +217,10 @@ def chunk_document(
             if _normalize(text) in furniture:
                 stats.furniture_dropped += 1
                 stats.furniture_samples[_normalize(text)[:60]] += 1
+                continue
+            if i in navigation:
+                stats.navigation_dropped += 1
+                stats.nav_samples[anchor_residual(doc, block)[:60]] += 1
                 continue
             if table is not None:
                 stats.layout_as_prose += 1

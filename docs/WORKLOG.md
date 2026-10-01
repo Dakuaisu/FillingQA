@@ -1106,3 +1106,174 @@ encode on 5 chunks: cosine 1.000000 each. No HNSW or GIN index yet (step 4).
 
 Tests: `tests/unit/test_embed.py` (5; stand-in model on the vendored tokenizer,
 no network). `make test`: 218 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-54: navigation by repeated anchor targets
+
+Step 3 committed as `60227fe` (with `check_lengths` returning computed counts).
+
+**Parser.** The walker records each `<a href="#...">` as `Anchor(char_start,
+char_end, target)` and attaches it to its leaf block (`Block.anchors`). Text
+unchanged: `text_sha256` identical on all 12, all 404 tables identical, the 3
+syrupy snapshots unchanged -- `parse_summary` holds no block fields, so the new
+field does not appear in them either. `parser_version` f1090fb5f594 -> 0e417d5495e4;
+re-validated, `check_stored_spans` 7,877 rows, 0 mismatches.
+
+**Anchor-target sets** (blocks per set; the last 8 characters of each target;
+sets reaching `furniture_min_repeats` marked) -- TGT's running headers share one
+two-target set on 30/80/28/28 blocks, so the rule's assumption holds:
+
+    === AAPL 0000320193-25-000079: anchors attached 102, all inside their block True, blocks with anchors 3, distinct target sets 2
+         2 blocks  ['88eba90a_181', '88eba90a_184', '88eba90a_187', '88eba90a_190', '88eba90a_193', '88eba90a_196', '88eba90a_241']
+         1 blocks  ['d88eba90a_10', 'd88eba90a_13', '88eba90a_172', '88eba90a_175', '88eba90a_244', '88eba90a_247', '88eba90a_250', '88eba90a_259', '88eba90a_262', '88eba90a_265', '88eba90a_268', '88eba90a_271', '88eba90a_274', '88eba90a_277', '88eba90a_280', '88eba90a_283', '88eba90a_286', 'd88eba90a_52', 'd88eba90a_70', 'd88eba90a_73', 'd88eba90a_76', 'd88eba90a_79', 'd88eba90a_82', 'd88eba90a_85', 'd88eba90a_88', 'd88eba90a_91', 'd88eba90a_94']
+    === AAPL 0000320193-26-000006: anchors attached 35, all inside their block True, blocks with anchors 1, distinct target sets 1
+         1 blocks  ['3dde0a849_10', '3dde0a849_13', 'dde0a849_148', 'dde0a849_151', 'dde0a849_154', 'dde0a849_157', 'dde0a849_160', 'dde0a849_163', 'dde0a849_166', 'dde0a849_169', 'dde0a849_172', 'dde0a849_178', '3dde0a849_67']
+    === AAPL 0000320193-26-000013: anchors attached 35, all inside their block True, blocks with anchors 1, distinct target sets 1
+         1 blocks  ['9d5386f45_10', '9d5386f45_13', 'd5386f45_148', 'd5386f45_151', 'd5386f45_154', 'd5386f45_157', 'd5386f45_160', 'd5386f45_163', 'd5386f45_166', 'd5386f45_169', 'd5386f45_172', 'd5386f45_178', '9d5386f45_67']
+    === AAPL 0000320193-26-000020: anchors attached 35, all inside their block True, blocks with anchors 1, distinct target sets 1
+         1 blocks  ['a987f6c2a_10', 'a987f6c2a_13', '987f6c2a_148', '987f6c2a_151', '987f6c2a_154', '987f6c2a_157', '987f6c2a_160', '987f6c2a_163', '987f6c2a_166', '987f6c2a_169', '987f6c2a_172', '987f6c2a_181', 'a987f6c2a_67']
+    === COST 0000909832-25-000101: anchors attached 160, all inside their block True, blocks with anchors 90, distinct target sets 13
+        69 blocks  ['07ac97c984_7']   >= furniture_min_repeats
+         7 blocks  ['ac97c984_109']   >= furniture_min_repeats
+         3 blocks  ['ac97c984_142']
+         2 blocks  ['ac97c984_130']
+         1 blocks  ['7ac97c984_13', 'ac97c984_145', 'ac97c984_148', 'ac97c984_151', 'ac97c984_154', 'ac97c984_157', '7ac97c984_16', 'ac97c984_160', 'ac97c984_163', 'ac97c984_166', 'ac97c984_169', 'ac97c984_172', 'ac97c984_175', 'ac97c984_178', 'ac97c984_181', 'ac97c984_184', '7ac97c984_19', '7ac97c984_22', '7ac97c984_25', '7ac97c984_28', '7ac97c984_31', '7ac97c984_34', '7ac97c984_37', '7ac97c984_40', '7ac97c984_46', '7ac97c984_49', '7ac97c984_76', '7ac97c984_79']
+         1 blocks  ['ac97c984_139']
+    === COST 0000909832-25-000169: anchors attached 69, all inside their block True, blocks with anchors 32, distinct target sets 5
+        27 blocks  ['da66d10f26_7']   >= furniture_min_repeats
+         2 blocks  ['a66d10f26_37']
+         1 blocks  ['a66d10f26_10', '66d10f26_100', '66d10f26_103', '66d10f26_106', '66d10f26_109', '66d10f26_112', '66d10f26_115', '66d10f26_118', '66d10f26_121', '66d10f26_124', '66d10f26_127', 'a66d10f26_13', 'a66d10f26_16', 'a66d10f26_19', 'a66d10f26_22', 'a66d10f26_28', 'a66d10f26_31', 'a66d10f26_34', 'a66d10f26_67', 'a66d10f26_97']
+         1 blocks  ['a66d10f26_64']
+         1 blocks  ['a66d10f26_61']
+    === COST 0000909832-26-000029: anchors attached 72, all inside their block True, blocks with anchors 35, distinct target sets 5
+        30 blocks  ['849fd823e0_7']   >= furniture_min_repeats
+         2 blocks  ['49fd823e0_37']
+         1 blocks  ['49fd823e0_10', '9fd823e0_106', '9fd823e0_109', '9fd823e0_112', '9fd823e0_115', '9fd823e0_118', '9fd823e0_121', '9fd823e0_124', '9fd823e0_127', '49fd823e0_13', '9fd823e0_130', '9fd823e0_133', '9fd823e0_136', '49fd823e0_16', '49fd823e0_19', '49fd823e0_22', '49fd823e0_28', '49fd823e0_31', '49fd823e0_34', '49fd823e0_70']
+         1 blocks  ['49fd823e0_64']
+         1 blocks  ['49fd823e0_61']
+    === COST 0000909832-26-000051: anchors attached 72, all inside their block True, blocks with anchors 35, distinct target sets 5
+        30 blocks  ['b65bca5a26_7']   >= furniture_min_repeats
+         2 blocks  ['65bca5a26_37']
+         1 blocks  ['65bca5a26_10', '5bca5a26_106', '5bca5a26_109', '5bca5a26_112', '5bca5a26_115', '5bca5a26_118', '5bca5a26_121', '5bca5a26_124', '5bca5a26_127', '65bca5a26_13', '5bca5a26_130', '5bca5a26_133', '5bca5a26_136', '65bca5a26_16', '65bca5a26_19', '65bca5a26_22', '65bca5a26_28', '65bca5a26_31', '65bca5a26_34', '65bca5a26_70']
+         1 blocks  ['65bca5a26_64']
+         1 blocks  ['65bca5a26_61']
+    === TGT 0000027419-25-000126: anchors attached 180, all inside their block True, blocks with anchors 52, distinct target sets 15
+        30 blocks  ['1a1ce788d_31', '91a1ce788d_7']   >= furniture_min_repeats
+         5 blocks  ['1a1ce788d_31']   >= furniture_min_repeats
+         3 blocks  ['1ce788d_1331', '1a1ce788d_46']
+         2 blocks  ['1ce788d_1331']
+         2 blocks  ['1a1ce788d_58']
+         1 blocks  ['1a1ce788d_10', '1a1ce788d_13', 'a1ce788d_130', 'a1ce788d_133', 'a1ce788d_136', 'a1ce788d_139', 'a1ce788d_142', 'a1ce788d_145', 'a1ce788d_148', 'a1ce788d_151', 'a1ce788d_154', 'a1ce788d_157', '1a1ce788d_16', 'a1ce788d_160', '1a1ce788d_19', '1a1ce788d_22', '1a1ce788d_25', '1a1ce788d_28', '1a1ce788d_34', '1a1ce788d_82']
+    === TGT 0000027419-26-000016: anchors attached 405, all inside their block True, blocks with anchors 138, distinct target sets 41
+        80 blocks  ['f8f59e72_139', 'c0f8f59e72_7']   >= furniture_min_repeats
+         8 blocks  ['f8f59e72_181']   >= furniture_min_repeats
+         3 blocks  ['f8f59e72_190']
+         3 blocks  ['8f59e72_2598']
+         2 blocks  ['f8f59e72_178']
+         2 blocks  ['0f8f59e72_94']
+    === TGT 0000027419-26-000022: anchors attached 159, all inside their block True, blocks with anchors 47, distinct target sets 11
+        28 blocks  ['37a8dbd04_31', 'e37a8dbd04_7']   >= furniture_min_repeats
+         5 blocks  ['37a8dbd04_31']   >= furniture_min_repeats
+         4 blocks  ['37a8dbd04_46']
+         2 blocks  ['7a8dbd04_115']
+         2 blocks  ['37a8dbd04_61']
+         1 blocks  ['37a8dbd04_10', '37a8dbd04_13', '7a8dbd04_136', '7a8dbd04_139', '7a8dbd04_142', '7a8dbd04_145', '7a8dbd04_148', '7a8dbd04_151', '7a8dbd04_154', '7a8dbd04_157', '37a8dbd04_16', '7a8dbd04_160', '7a8dbd04_163', '7a8dbd04_166', '37a8dbd04_19', '37a8dbd04_22', '37a8dbd04_25', '37a8dbd04_28', '37a8dbd04_34', '37a8dbd04_85']
+    === TGT 0000027419-26-000042: anchors attached 172, all inside their block True, blocks with anchors 51, distinct target sets 15
+        28 blocks  ['137393f08_31', '9137393f08_7']   >= furniture_min_repeats
+         5 blocks  ['137393f08_31']   >= furniture_min_repeats
+         3 blocks  ['137393f08_46']
+         2 blocks  ['7393f08_1328']
+         2 blocks  ['37393f08_115']
+         2 blocks  ['137393f08_61']
+
+**Chunker.** `navigation_blocks` beside `furniture_keys`; `nav_samples` beside
+`furniture_samples`. `chunker_version` 2f9df055b70a -> abe01d8d9b7b.
+
+Before:
+
+    COUNTER = BAAI/bge-base-en-v1.5@a5beb1e3e68b tokenizer; target_tokens=500 max_seq_length=512 overlap=0.15
+    ticker accession              prose table tsplit parts furn navres layP nohdr psplit pieces preItem  p50  max >512 partOverlap
+    AAPL   0000320193-25-000079     118    56      9    22   58      0    7     3      1      2      47  308  499    0           0
+    AAPL   0000320193-26-000006      41    28      5    10   22      0    2     2      0      0      34  223  500    0           0
+    AAPL   0000320193-26-000013      54    33      8    16   26      0    2     2      1      2      34  292  500    0           0
+    AAPL   0000320193-26-000020      52    34      8    16   26      0    2     2      1      2      34  304  500    0           0
+    COST   0000909832-25-000101     129    50      5    11  146      0    6     1      1      2      45  293  500    0           0
+    COST   0000909832-25-000169      51    30      3     6   55      0    2     0      1      2      29  184  500    0           0
+    COST   0000909832-26-000029      55    34      6    12   62      0    2     0      2      4      29  240  490    0           0
+    COST   0000909832-26-000051      56    34      6    12   62      0    2     0      2      4      29  236  499    0           0
+    TGT    0000027419-25-000126      45    38      4     8   46     13   16     0      0      0      35  227  498    0           0
+    TGT    0000027419-26-000016     150    67      3     6  132     29   47     1      3      8      43  252  500    0           0
+    TGT    0000027419-26-000022      39    33      3     6   38     17   21     0      0      0      35  200  499    0           0
+    TGT    0000027419-26-000042      42    35      3     6   43     12   16     0      0      0      35  227  500    0           0
+
+After (`nav` = blocks dropped as navigation):
+
+    COUNTER = BAAI/bge-base-en-v1.5@a5beb1e3e68b tokenizer; target_tokens=500 max_seq_length=512 overlap=0.15
+    ticker accession              prose table tsplit parts furn  nav navres layP nohdr psplit pieces preItem  p50  max >512 partOverlap
+    AAPL   0000320193-25-000079     118    56      9    22   58    0      0    7     3      1      2      47  308  499    0           0
+    AAPL   0000320193-26-000006      41    28      5    10   22    0      0    2     2      0      0      34  223  500    0           0
+    AAPL   0000320193-26-000013      54    33      8    16   26    0      0    2     2      1      2      34  292  500    0           0
+    AAPL   0000320193-26-000020      52    34      8    16   26    0      0    2     2      1      2      34  304  500    0           0
+    COST   0000909832-25-000101     129    50      5    11  146    0      0    6     1      1      2      45  293  500    0           0
+    COST   0000909832-25-000169      51    30      3     6   55    0      0    2     0      1      2      29  184  500    0           0
+    COST   0000909832-26-000029      55    34      6    12   62    0      0    2     0      2      4      29  240  490    0           0
+    COST   0000909832-26-000051      56    34      6    12   62    0      0    2     0      2      4      29  236  499    0           0
+    TGT    0000027419-25-000126      45    38      4     8   46   11      0    5     0      0      0      35  227  498    0           0
+    TGT    0000027419-26-000016     150    67      3     6  132   26      0   22     1      3      8      43  252  500    0           0
+    TGT    0000027419-26-000022      39    33      3     6   38   15      0    6     0      0      0      35  200  499    0           0
+    TGT    0000027419-26-000042      41    35      3     6   43   10      0    6     0      0      0      35  225  500    0           0
+
+Chunk diff by `content_hash`, and dropped blocks (furniture + navigation)
+overlapping any stored xbrl_span:
+
+    ticker accession                 chunks hashChanged removed added droppedBlocks spanOverlaps
+    AAPL   0000320193-25-000079    174->174            0       0     0            58            0
+    AAPL   0000320193-26-000006     69->69             0       0     0            22            0
+    AAPL   0000320193-26-000013     87->87             0       0     0            26            0
+    AAPL   0000320193-26-000020     86->86             0       0     0            26            0
+    COST   0000909832-25-000101    179->179            0       0     0           151            0
+    COST   0000909832-25-000169     81->81             0       0     0            61            0
+    COST   0000909832-26-000029     89->89             0       0     0            68            0
+    COST   0000909832-26-000051     90->90             0       0     0            68            0
+    TGT    0000027419-25-000126     83->83             7       5     5            59            0
+    TGT    0000027419-26-000016    217->217           18      12    12           161            0
+    TGT    0000027419-26-000022     72->72            11       4     4            55            0
+    TGT    0000027419-26-000042     77->76             7       5     4            55            0
+
+Embed after re-chunk:
+
+    checks: {'dim': 768, 'max_seq_length': 512, 'chunks_checked': 1303, 'token_count_mismatches': 0, 'over_max_seq_length': 0}
+    ticker accession              embedded cache skipped seconds
+    AAPL   0000320193-25-000079          0   174       0     0.0
+    AAPL   0000320193-26-000006          0    69       0     0.0
+    AAPL   0000320193-26-000013          0    87       0     0.0
+    AAPL   0000320193-26-000020          0    86       0     0.0
+    COST   0000909832-25-000101          0   179       0     0.0
+    COST   0000909832-25-000169          0    81       0     0.0
+    COST   0000909832-26-000029          0    89       0     0.0
+    COST   0000909832-26-000051          0    90       0     0.0
+    TGT    0000027419-25-000126         12    71       0     1.0
+    TGT    0000027419-26-000016         30   187       0     1.4
+    TGT    0000027419-26-000022         15    57       0     0.6
+    TGT    0000027419-26-000042         11    65       0     0.5
+    chunks with embedding IS NULL: 0
+
+Resolve:
+
+    ticker accession              spans preItem unique overlap splitPara unresInItem   rate inItems
+    AAPL   0000320193-25-000079     962       2    960       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000006     554       1    553       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000013     750       1    749       0         0           0  0.999   1.000
+    AAPL   0000320193-26-000020     756       1    755       0         0           0  0.999   1.000
+    COST   0000909832-25-000101     818       2    814       2         0           0  0.998   1.000
+    COST   0000909832-25-000169     395       1    394       0         0           0  0.997   1.000
+    COST   0000909832-26-000029     571       1    570       0         0           0  0.998   1.000
+    COST   0000909832-26-000051     570       1    569       0         0           0  0.998   1.000
+    TGT    0000027419-25-000126     576       1    573       2         0           0  0.998   1.000
+    TGT    0000027419-26-000016     977       2    973       2         0           0  0.998   1.000
+    TGT    0000027419-26-000022     401       1    400       0         0           0  0.998   1.000
+    TGT    0000027419-26-000042     547       1    546       0         0           0  0.998   1.000
+    total spans 7877, resolved 7862 (0.998; 1.000 within Items), before first Item 15
+
+`navres` 0 everywhere; AAPL and COST unchanged; resolve unchanged; 0 overlaps.
+One content block dropped, TGT 10-K block 826 (F-58). `make test`: 222 passed, 3
+snapshots passed.

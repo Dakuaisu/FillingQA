@@ -118,6 +118,15 @@ class XbrlSpan:
 
 
 @dataclass
+class Anchor:
+    """An in-document link (`<a href="#...">`) and where its text sits."""
+
+    char_start: int
+    char_end: int
+    target: str  # the href fragment, without '#'
+
+
+@dataclass
 class Block:
     """One leaf block of the document: a paragraph, a heading, or a whole table.
 
@@ -142,6 +151,9 @@ class Block:
     # Tables only: where the unit scale came from, 'caption' | 'ixbrl' | None,
     # so unit-scale accuracy can be broken out by source in Phase 3.
     scale_source: str | None = None
+    # In-document links inside this block, in normalized-text coordinates. Used
+    # to recognise navigation (F-54); the text itself is unchanged.
+    anchors: list[Anchor] = field(default_factory=list)
 
     @property
     def length(self) -> int:
@@ -296,6 +308,7 @@ class _Walker:
         self.dei: dict[str, str] = {}
         self.unparsed = 0
         self._table_depth = 0
+        self.anchors: list[Anchor] = []
         # One entry per open <table>; a row or cell belongs to the innermost one.
         self._table_rows: list[list[list[tuple[int, int, int, int]]]] = []
 
@@ -411,6 +424,8 @@ class _Walker:
             self._table_rows[-1].append([])
 
         cell_start = len(self.out) if local in CELL_TAGS and not is_ix else None
+        href = (el.get("href") or "") if local == "a" and not is_ix else ""
+        anchor_start = len(self.out) if href.startswith("#") else None
 
         self.out.text(el.text or "")
         for child in el:
@@ -423,6 +438,13 @@ class _Walker:
 
         if is_ix and start is not None:
             self._record(el, start, len(self.out))
+
+        if anchor_start is not None:
+            raw = self.out.build()[anchor_start:]
+            lead, trail = len(raw) - len(raw.lstrip()), len(raw) - len(raw.rstrip())
+            a_start, a_end = anchor_start + lead, len(self.out) - trail
+            if a_end > a_start:
+                self.anchors.append(Anchor(a_start, a_end, href[1:]))
 
         if block:
             self.out.line_break()
@@ -563,6 +585,16 @@ def extract(raw: bytes) -> ExtractedDocument:
     walker = _Walker()
     walker.visit(root)
     text = walker.out.build()
+
+    # Attach each in-document anchor to the leaf block that contains it. Blocks
+    # are ordered and non-overlapping, so one forward pass suffices.
+    blocks = iter(walker.blocks)
+    block = next(blocks, None)
+    for anchor in walker.anchors:
+        while block is not None and block.char_end <= anchor.char_start:
+            block = next(blocks, None)
+        if block is not None and block.char_start <= anchor.char_start < block.char_end:
+            block.anchors.append(anchor)
 
     walker.dei = harvest_dei(root)
     # A dei fact can also be rendered rather than hidden; fill any gaps from the

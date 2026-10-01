@@ -236,3 +236,35 @@ def test_a_sentence_may_start_with_a_digit():
     pieces = split_sentences(text)
     assert [p.split()[0] for p in pieces] == ["(filed", "4.2", "10.1"]
     assert "Exhibit 4.1 to" in pieces[0]  # no split inside "4.1" -- no whitespace there
+
+
+# ------------------------------------------------------------- F-54 navigation
+
+
+def test_anchors_sit_inside_their_block():
+    doc = extract(fixture_bytes(TGT_10K))
+    anchors = [(b, a) for b in doc.blocks for a in b.anchors]
+    assert len(anchors) == 405  # every in-document link in TGT's 10-K, as measured
+    for block, anchor in anchors:
+        assert block.char_start <= anchor.char_start < anchor.char_end <= block.char_end
+        assert anchor.target and not anchor.target.startswith("#")
+
+
+def test_running_headers_are_navigation_and_cross_references_are_not(tokenized):
+    _, meta, _, chunks, stats = tokenized
+    prose = "\n".join(c.raw_text for c in chunks if c.chunk_type == "prose")
+    assert "Table of Contents" not in prose  # F-54: no nav residue left in prose
+    if meta.accession == TGT_10K:
+        # 26 blocks, keyed on the shared {Table of Contents, Index} link targets;
+        # includes Item 15's "•Notes to Consolidated Financial Statements" list
+        # item, which shares the Notes link target and has no full stop (F-58).
+        assert stats.navigation_dropped == 26
+        # The rarer running headers: those repeated 5+ times with identical text
+        # ("RISK FACTORS ...", 10x) are already furniture, which runs first.
+        assert stats.nav_samples["CYBERSECURITY"] == 2
+        assert stats.nav_samples["PROPERTIES"] == 1
+        assert stats.nav_samples["•"] == 1
+        # A hyperlinked sentence ends in "." and survives the furniture guard.
+        assert "See accompanying Notes to Consolidated Financial Statements." in prose
+    else:
+        assert stats.navigation_dropped == 0
