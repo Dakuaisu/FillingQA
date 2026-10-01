@@ -32,7 +32,7 @@ def test_missing_key_fails_at_the_call_site(monkeypatch, tmp_path):
     monkeypatch.setattr(config, "_loaded", False)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     with pytest.raises(ConfigError, match="ANTHROPIC_API_KEY is not set"):
-        generate("q", CHUNKS, generation(), "tier_small")
+        generate("q", CHUNKS, {**generation(), "backend": "anthropic_api"}, "tier_small")
 
 
 def test_generation_config_has_what_the_call_reads():
@@ -40,3 +40,13 @@ def test_generation_config_has_what_the_call_reads():
     assert cfg["tier_small"] and cfg["tier_large"]
     assert cfg["max_tokens"] > 0
     assert "temperature" not in cfg  # not sendable at the pinned SDK (F-60)
+
+
+def test_unknown_backend_is_refused():
+    with pytest.raises(ConfigError, match="not in"):
+        generate("q", CHUNKS, {**generation(), "backend": "other"}, "tier_small")
+
+
+def test_default_backend_is_the_dev_cli():
+    cfg = generation()
+    assert cfg["backend"] == "claude_cli" and cfg["cli_system_prompt"]

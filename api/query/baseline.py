@@ -33,6 +33,7 @@ def main() -> None:
     if args.retrieve_only:
         return
     answer = generate(args.question, chunks, generation(), "tier_small")
+    print(f"backend: {answer.backend}")
     print(f"model: {answer.model}")
     print(f"usage: input_tokens={answer.input_tokens} output_tokens={answer.output_tokens}")
     print("answer:")

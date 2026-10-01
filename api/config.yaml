@@ -230,6 +230,9 @@ generation:
   # parameters, so Appendix A's 0.0 cannot be applied (F-60). A key here that
   # is not sent would claim a setting the run does not have.
   max_tokens: 1024        # the Messages API requires a cap; not in Appendix A
+  # claude_cli answers are dev-only: never README, CI baseline, or compared with anthropic_api.
+  backend: claude_cli       # claude_cli | anthropic_api
+  cli_system_prompt: "You are a helpful assistant."
 
 # xbrl_auto sampler (PRD 11.1: 160 `xbrl_numeric` items). Equal allocation per
 # ticker, no backfill across tickers (TRADEOFFS, sampler design). The seed is

@@ -3906,3 +3906,48 @@ heading counts replace an ad hoc run that used a looser one-line rule.
       tickers with zero MD&A slots at x2: none
 
 `make test`: 297 passed; `make lint` clean.
+
+## 2026-10-01 — OWNER DECISION: claude_cli dev backend; Phase 2 exit met on it (dev run)
+
+`api/generate/claude_cli.py`, `generation.backend: claude_cli` (default) and
+`cli_system_prompt` in config; `generate` dispatches, `generate_api` is the
+unchanged `anthropic_api` path; `Answer.backend` is printed by the baseline.
+`tests/unit/test_claude_cli.py` checks the command, the child environment and
+parsing against `tests/fixtures/claude_cli_response.json`, one real response
+(prompt "Reply with the single word: ready", `claude-haiku-4-5-20251001`,
+`usage` 465 in / 41 out, 34 of them thinking tokens; no email in it). No live
+call in pytest. `make test`: 303 passed.
+
+Live smoke run, the Phase 2 exit question
+(`python -m api.query.baseline "What were Apple's total net sales in fiscal 2025?"`,
+14.8 s wall):
+
+    question: What were Apple's total net sales in fiscal 2025?
+    plan: ->  Index Scan using chunks_hnsw on chunks  (cost=1181.91..81867.08 rows=22354 width=407)
+      0.1714  0000320193-25-000057:176.0:188.0  [Apple Inc. (AAPL) | 10-Q | Q2 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.1794  0000320193-25-000008:174.0:186.0  [Apple Inc. (AAPL) | 10-Q | Q1 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.1934  0000320193-25-000079:305.0:318.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 7: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.1970  0000320193-25-000079:456.0:456.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 8: Financial Statements and Supplementary Data]
+      0.1974  0000320193-26-000013:181.0:193.0  [Apple Inc. (AAPL) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+    backend: claude_cli
+    model: claude-haiku-4-5-20251001
+    usage: input_tokens=2124 output_tokens=328
+    answer:
+    # Apple's Total Net Sales in Fiscal 2025
+    
+    According to Apple's 10-K filing for fiscal 2025, **Apple's total net sales in fiscal 2025 were $416,161 million ($416.161 billion)**.
+    
+    This represents an increase from fiscal 2024's total net sales of $391,035 million.
+    
+    The breakdown by product category was:
+    - **iPhone**: $209,586 million
+    - **Services**: $109,158 million
+    - **Wearables, Home and Accessories**: $35,686 million
+    - **Mac**: $33,708 million
+    - **iPad**: $28,023 million
+
+The headline figure matches `xbrl_facts` (AAPL
+`RevenueFromContractWithCustomerExcludingAssessedTax`, 2024-09-29..2025-09-27,
+0000320193-25-000079: 416161000000); the product breakdown was not checked. This
+is a development run on `claude_cli`: not a baseline, not publishable (F-59 stays
+open for `anthropic_api`).

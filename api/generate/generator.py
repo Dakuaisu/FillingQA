@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from api.config import ConfigError, load_env
 from api.query.retrieve import Retrieved
 
+BACKENDS = ("claude_cli", "anthropic_api")
+
 
 @dataclass
 class Answer:
@@ -20,6 +22,7 @@ class Answer:
     model: str
     input_tokens: int
     output_tokens: int
+    backend: str = "anthropic_api"
 
 
 def build_prompt(question: str, chunks: list[Retrieved]) -> str:
@@ -28,6 +31,20 @@ def build_prompt(question: str, chunks: list[Retrieved]) -> str:
 
 
 def generate(question: str, chunks: list[Retrieved], cfg: dict, tier: str) -> Answer:
+    """Dispatch on `generation.backend`. `claude_cli` answers are development
+    numbers only (TRADEOFFS, OWNER DECISION - Max subscription as dev generator)."""
+    backend = cfg["backend"]
+    if backend == "claude_cli":
+        from api.generate import claude_cli
+
+        r = claude_cli.run(build_prompt(question, chunks), cfg[tier], cfg["cli_system_prompt"])
+        return Answer(r.text, r.model, r.input_tokens, r.output_tokens, backend)
+    if backend == "anthropic_api":
+        return generate_api(question, chunks, cfg, tier)
+    raise ConfigError(f"generation.backend {backend!r} not in {BACKENDS}")
+
+
+def generate_api(question: str, chunks: list[Retrieved], cfg: dict, tier: str) -> Answer:
     load_env()
     if not os.environ.get("ANTHROPIC_API_KEY", "").strip():
         raise ConfigError(

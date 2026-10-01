@@ -1706,3 +1706,49 @@ question becomes the item:* a table chunk gives its factual question, a prose
 chunk its interpretive one; the other stays in the raw responses file and never
 fills a slot. *Alternatives:* magnitude matching (hides sign errors); letting the
 model normalize figures (the filter could no longer check them).
+
+---
+
+## 2026-10-01 — OWNER DECISION - Max subscription as dev generator
+
+Decided by the developer (owner), not the builder or the supervisor. Until an
+API key exists, generation runs on the developer's Claude Max subscription
+through the `claude` CLI. This partly unblocks F-59.
+
+- **Switch:** `generation.backend: claude_cli | anthropic_api` in
+  `api/config.yaml`, default `claude_cli`. The `anthropic_api` path is
+  unchanged (`generate_api`); CI and every published number use it later.
+- **The call** (`api/generate/claude_cli.py`, subprocess only, no new
+  dependency): `claude -p <prompt> --model <tier model id> --system-prompt
+  <generation.cli_system_prompt> --tools "" --strict-mcp-config
+  --disable-slash-commands --setting-sources "" --no-session-persistence
+  --output-format json`.
+  - Run with cwd a fresh empty temp directory, never the repo, or Claude Code
+    loads CLAUDE.md/AGENTS.md into the generator's context.
+  - `ANTHROPIC_API_KEY` removed from the child environment: the invalid shell key
+    would override the Max login (401).
+  - Never `--bare`: it accepts only an API key, never the Max login.
+  - JSON: `result` is the text; `is_error` true raises; `modelUsage` keys give
+    the model actually served; `usage` gives tokens.
+- **Limits:**
+  - *Known contamination:* Claude Code still injects an agent identity line, the
+    working directory, today's date and the account email into the context.
+  - No temperature control (F-60 unchanged) and no max-tokens flag: the
+    recorded response reports `maxOutputTokens: 32000`, and `max_tokens: 1024`
+    applies to `anthropic_api` only. The CLI enabled extended thinking on its own
+    (34 thinking tokens in the recorded response), counted in `output_tokens`.
+  - The system prompt (`cli_system_prompt`, "You are a helpful assistant.")
+    replaces Claude Code's own; the `anthropic_api` path sends none, so the two
+    backends do not send identical requests.
+  - Latency about 8 s per call (observed by the owner; the smoke run below took
+    14.8 s end to end, model load and retrieval included).
+- **Dev-only labelling:** every answer records its backend (`Answer.backend`,
+  printed by the baseline), and every eval run must record it in its config
+  snapshot. `claude_cli` results are development numbers: never in the README,
+  never a CI baseline (`eval/baselines/*`), never compared against
+  `anthropic_api` runs. Final and published runs are re-run on `anthropic_api`.
+- **Seeding** (`eval/generate/seeding.py`) may use the same backend. Seeding and
+  generating with one model family is the bias F-14 describes.
+- *Alternatives (owner's):* wait for an API key (Phase 2 exit and all model-based
+  Phase 3 work stay blocked); `--bare` with the shell key (rejected: 401, and
+  `--bare` cannot use the Max login).
