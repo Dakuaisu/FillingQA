@@ -27,6 +27,7 @@ from api.parse.tables import (
     document_labels,
     extract_tables,
     is_nil,
+    is_value,
     item_label,
     section_of,
 )
@@ -173,3 +174,51 @@ def test_every_tagged_figure_survives_extraction_in_order(parsed, accession):
         tagged = [abs(parse_number(raw)) for raw in positions.values()]
         cells = iter(n for row in table.body for cell in row for n in _figures(cell))
         assert all(any(t == c for c in cells) for t in tagged), table.title
+
+
+@pytest.mark.parametrize("accession", [AAPL_10K, AAPL_10Q, TGT_10K])
+def test_no_value_cell_holds_several_figures(parsed, accession):
+    """Catches columns collapsing into one, which the order check above cannot:
+    the figures stay in order, they just all land in the same cell."""
+    for table in parsed[accession][3]:
+        for row in table.body:
+            for cell in row[1:]:
+                parts = cell.split()
+                assert not (len(parts) > 1 and all(is_value(p) for p in parts)), (table.title, cell)
+
+
+def test_stacked_period_blocks_keep_their_columns(parsed):
+    """Regression: the mid-table "Six Months Ended March 29, 2025" header spans
+    every region column and used to merge all seven into one. Totals checked by
+    hand: 92,963 + 58,315 + 34,515 + 16,285 + 17,581 = 219,659."""
+    table = next(
+        t
+        for t in parsed[AAPL_10Q][3]
+        if t.kind == "data" and t.body and t.body[0][0] == "Net sales" and t.scale_source == "ixbrl"
+    )
+    net_sales = [row[1:] for row in table.body if row[0] == "Net sales"]
+    assert net_sales == [
+        ["$103,622", "$66,201", "$46,023", "$17,814", "$21,280", "$—", "$254,940"],
+        ["$92,963", "$58,315", "$34,515", "$16,285", "$17,581", "$—", "$219,659"],
+    ]
+
+
+@pytest.mark.parametrize(
+    ("accession", "caption", "ixbrl"),
+    [(AAPL_10K, 35, 3), (AAPL_10Q, 22, 2), (TGT_10K, 48, 2)],
+)
+def test_scale_source_breakdown(parsed, accession, caption, ixbrl):
+    """Fallback tables hand-checked: AAPL's are continuations of "(in millions)"
+    tables; TGT's are RSU/PSU unit counts in thousands, per-share fair values
+    tagged at scale 0."""
+    data = [t for t in parsed[accession][3] if t.kind == "data"]
+    assert sum(t.scale_source == "caption" for t in data) == caption
+    assert sum(t.scale_source == "ixbrl" for t in data) == ixbrl
+    assert all(t.block.scale_source == t.scale_source for t in data)
+
+
+def test_mixed_magnitudes_stay_unscaled(parsed):
+    # AAPL Note 3: net income in millions, shares in thousands, and no "except".
+    table = next(t for t in parsed[AAPL_10K][3] if t.title == "Note 3 – Earnings Per Share")  # noqa: RUF001
+    assert table.ix_scales == {"millions", "thousands"}
+    assert table.unit_scale is None and table.scale_source is None

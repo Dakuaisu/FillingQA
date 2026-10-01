@@ -270,3 +270,45 @@ dash; the committed test handles it). Committed as
 `tests/snapshot/test_table_extraction.py` (13, expected values written out and
 hand-verified by arithmetic, see its docstring). `parse_summary` unchanged, so
 no snapshot was re-blessed. `make test`: 103 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-45: iXBRL scale fallback; scale_source
+
+Step 4c committed as `c2c9f51`. Six departures accepted by the supervisor; the
+TRADEOFFS heading now carries "AUTONOMOUS DECISION - owner to review".
+
+`ixbrl_scale(scales)` (pure, 10 tests from real scale combinations) returns the
+table's scale when its tagged figures carry exactly one magnitude (3/6/9);
+0 and -2 do not count. `extract_table` takes the caption first, then that, else
+None, and sets `scale_source` on both `Table` and `Block`.
+
+Bug found while hand-checking the fallback tables: AAPL 10-Q segment tables stack
+two period blocks, and the mid-table "Six Months Ended March 29, 2025" header
+spans every region column, so column grouping merged all seven into one cell.
+The iXBRL order check could not see it -- the figures were in order, just in the
+same cell. Columns now form from figures and dashes first; a text cell joins
+only if it does not bridge two figure columns. Term Debt unaffected. New
+invariant test: no value cell holds several figures (0 of 404 data tables in the
+slice after the fix). Known limitation: in a stacked table, column labels come
+from the first block; the second block's header renders as body rows.
+
+**12-filing table, post-fallback.** `caption`/`ixbrl` = scale source; `miss` =
+tagged with a magnitude but no scale (all mixed-magnitude); `noscale` = data
+tables with no scale = `mixed` + `untagd` (no caption and no tagged magnitude).
+
+    ticker accession              form  tables  data layout caption ixbrl  ixsc disagr  miss noscale mixed untagd
+    AAPL   0000320193-25-000079   10-K      54    43     11      35     3    31      0     1       5     1      4
+    AAPL   0000320193-26-000006   10-Q      29    23      6      21     1    16      0     1       1     1      0
+    AAPL   0000320193-26-000013   10-Q      31    25      6      22     2    18      0     1       1     1      0
+    AAPL   0000320193-26-000020   10-Q      32    26      6      23     2    19      0     1       1     1      0
+    COST   0000909832-25-000101   10-K      56    44     12       8    22    29      0     2      14     2     12
+    COST   0000909832-25-000169   10-Q      35    27      8       6    11    18      0     2      10     2      8
+    COST   0000909832-26-000029   10-Q      36    28      8       7    11    19      0     2      10     2      8
+    COST   0000909832-26-000051   10-Q      36    28      8       7    11    19      0     2      10     2      8
+    TGT    0000027419-25-000126   10-Q     102    34     68      25     0    18      0     0       9     0      9
+    TGT    0000027419-26-000016   10-K     250    64    186      48     2    41      0     0      14     0     14
+    TGT    0000027419-26-000022   10-Q      95    30     65      22     0    16      0     0       8     0      8
+    TGT    0000027419-26-000042   10-Q      97    32     65      23     0    16      0     0       9     0      9
+
+COST `miss` fell from 24/13/13/13 to 2/2/2/2. Caption vs iXBRL: still 0
+disagreements. `parse_summary` unchanged; no snapshot re-blessed. `make test`:
+121 passed, 3 snapshots passed.

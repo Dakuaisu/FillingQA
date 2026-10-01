@@ -503,10 +503,10 @@ files, so `.omo/` session state would keep showing up in every diff.
 
 ---
 
-## 2026-10-01 — Step 4c: where real tables departed from PRD 6.2 step 3
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 4c, where real tables departed from PRD 6.2 step 3
 
-Each of these is a place the data contradicted the PRD's wording. Taken to keep
-moving, recorded so the owner can overturn them.
+Each of these is a place the data contradicted the PRD's wording. Accepted by
+the supervisor on the owner's behalf; recorded so the owner can overturn them.
 
 1. **A bare year is not a numeric cell for header detection.** PRD: header rows
    are "first row(s) with no numeric cells". `2025 | 2024 | 2023` is the most
@@ -530,3 +530,44 @@ moving, recorded so the owner can overturn them.
    When none is found the context line reads `[Table | ...]`, never a guess.
 6. **Currency is "USD" only when a cell prints `$`.** No currency is inferred
    from the company.
+7. **`Block` gains `scale_source`** (`"caption" | "ixbrl" | None`), alongside
+   the same field on `Table`. Not in PRD 6.2's `Block`. Additive, so the Phase 3
+   unit-scale accuracy metric can be broken out by where the scale came from.
+
+On item 4: if Phase 3's fiscal-period checks need per-column FY labels, that is a
+separate tested function written then, driven by a measured miss -- not a guess
+now. The document's fiscal label already comes from dei and is in the context
+line.
+
+### F-45 — a table with no caption takes its scale from iXBRL, never from its section
+
+COST states units once per section ("(amounts in millions, ...)" under the Item 7
+and notes headings), so the 500-character window finds no caption for 11-22
+scaled tables per COST filing.
+
+**Decision.** In order: (1) a caption in the window or the table's own header
+rows; (2) else, if the table's tagged figures carry exactly one magnitude
+`scale`, that scale; (3) else None. A caption wins when present.
+`test_caption_scale_never_contradicts_ixbrl_scale` is the guard: if it fires on a
+wider corpus, the answer is None plus a logged conflict, not a pick.
+
+"Exactly one magnitude" counts only scales 3, 6 and 9. Measured on the slice:
+of 266 tagged data tables, 187 are tagged at 6 alone, 17 at {0, 6}, 14 at
+{-2, 6}, 20 at {0, 3, 6}, 10 at {3, 6}, 10 at {0, 3}. Scale 0 (per-share
+amounts, counts) and -2 (percentages) sit inside a millions table the way
+"except per share" sits inside a caption, so {0, 6} is millions. {3, 6} --
+dollars in millions, share counts in thousands -- is None, the same rule as a
+caption naming two scales with no "except".
+
+**Rejected:**
+- *Inherit the nearest caption in the same section.* A stray "(in thousands)"
+  earlier in a section would silently scale every later table. A wrong scale is
+  the 10^6 error and is invisible downstream; a missing one is detectable.
+- *Leave None.* Throws away the issuer's own tagged assertion of the scale, which
+  in 12 filings never once disagreed with a printed caption.
+
+The residual -- data tables with no caption and no single tagged magnitude, 0-14
+per filing -- is a number for the parse-quality score in the validation step, not
+something to paper over. Much of it is genuinely unscaled (store counts,
+percentages). Phase 3's unit-scale accuracy by `scale_source` is what says
+whether the rest matters.

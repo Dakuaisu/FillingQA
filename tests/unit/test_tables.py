@@ -8,7 +8,14 @@ from decimal import Decimal
 import pytest
 
 from api.numbers import parse_number
-from api.parse.tables import Cell, _merge_fragments, classify, detect_unit_scale, is_value
+from api.parse.tables import (
+    Cell,
+    _merge_fragments,
+    classify,
+    detect_unit_scale,
+    is_value,
+    ixbrl_scale,
+)
 
 # ------------------------------------------------------------ unit scale
 
@@ -48,6 +55,40 @@ def test_the_caption_nearest_the_table_wins():
 
 def test_no_caption_returns_none():
     assert detect_unit_scale("The components of lease expense were as follows:") is None
+
+
+# ------------------------------------------------------- iXBRL scale fallback
+
+# Each case is a set of raw `scale` attributes observed on the tagged figures of
+# one real dev-slice table, with the count of tables showing that combination.
+
+
+@pytest.mark.parametrize(
+    ("scales", "expected"),
+    [
+        ({6}, "millions"),  # 187 tables, e.g. AAPL comprehensive income
+        ({0, 6}, "millions"),  # 17, e.g. AAPL shareholders' equity: per-share at 0
+        ({-2, 6}, "millions"),  # 14, millions with percentages tagged at -2
+        ({6, None}, "millions"),  # TGT statement of operations: one untagged scale
+        ({0, 3}, "thousands"),  # 10, e.g. AAPL restricted stock units
+        ({3}, "thousands"),  # AAPL shares of common stock
+    ],
+)
+def test_one_magnitude_gives_the_scale(scales, expected):
+    assert ixbrl_scale(scales) == expected
+
+
+@pytest.mark.parametrize(
+    "scales",
+    [
+        {0, 3, 6},  # 20, e.g. AAPL statement of operations: dollars and share counts
+        {3, 6},  # 10, e.g. COST statement of equity
+        {-2},  # 6, percentages only
+        set(),
+    ],
+)
+def test_mixed_or_absent_magnitude_gives_none(scales):
+    assert ixbrl_scale(scales) is None
 
 
 # ----------------------------------------------------------------- values

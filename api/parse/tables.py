@@ -46,6 +46,18 @@ _PAGE_ARTIFACT = re.compile(r"form 10-[kq]|table of contents|^\d+$", re.I)
 IX_SCALE_WORDS = {3: "thousands", 6: "millions", 9: "billions"}
 
 
+def ixbrl_scale(scales: set[int | None]) -> str | None:
+    """The table's scale from the `scale` attributes of its tagged figures.
+
+    Only magnitude scales count. `0` (per-share amounts, counts) and `-2`
+    (percentages) sit inside "in millions" tables the way "except per share"
+    sits inside a caption, so they do not make a table mixed. Two magnitudes --
+    AAPL's statements tag dollars at 6 and share counts at 3 -- return None.
+    """
+    words = {IX_SCALE_WORDS[s] for s in scales if s in IX_SCALE_WORDS}
+    return words.pop() if len(words) == 1 else None
+
+
 def detect_unit_scale(text: str) -> str | None:
     """The scale stated by the caption closest to the END of `text`.
 
@@ -98,6 +110,7 @@ class Table:
     body: list[list[str]] = field(default_factory=list)
     unit_scale: str | None = None
     ix_scales: set[str] = field(default_factory=set)
+    scale_source: str | None = None  # 'caption' | 'ixbrl' | None
     currency: str | None = None
     fiscal_periods: list[str] = field(default_factory=list)
 
@@ -169,10 +182,30 @@ def _value_groups(body: list[list[Cell]]) -> list[tuple[int, int]]:
     Not only figures: AAPL's Term Debt table prints maturities ("2028 - 2035")
     and rate ranges in their own columns, and grouping on figures alone folded
     them into the row label and shifted every column header onto the wrong values.
+
+    But a text cell that bridges two figure columns is a period header repeated
+    mid-table (AAPL 10-Q segment tables stack "Six Months Ended March 28, 2026"
+    and "...March 29, 2025" blocks), not a column, and would merge them all.
     """
-    spans = sorted((c.col_start, c.col_end) for row in body for c in row if c.col_start > 0)
+    cells = [c for row in body for c in row if c.col_start > 0]
+    figure_groups = _merge_ranges(
+        [(c.col_start, c.col_end) for c in cells if is_value(c.text) or is_nil(c.text)]
+    )
+
+    def bridges(c: Cell) -> bool:
+        return sum(1 for s, e in figure_groups if c.col_start < e and c.col_end > s) > 1
+
+    columns = [
+        (c.col_start, c.col_end)
+        for c in cells
+        if not is_value(c.text) and not is_nil(c.text) and not bridges(c)
+    ]
+    return _merge_ranges(figure_groups + columns)
+
+
+def _merge_ranges(ranges: list[tuple[int, int]]) -> list[tuple[int, int]]:
     groups: list[list[int]] = []
-    for start, end in spans:
+    for start, end in sorted(ranges):
         if groups and start < groups[-1][1]:
             groups[-1][1] = max(groups[-1][1], end)
         else:
@@ -285,17 +318,24 @@ def extract_table(doc: ExtractedDocument, index: int) -> Table:
 
     header_text = "\n".join(c.text for row in pre for c in row)
     preceding = doc.text[max(0, block.char_start - CAPTION_WINDOW) : block.char_start]
+    tagged_scales = {
+        span.scale
+        for span in doc.spans
+        if span.is_numeric and block.char_start <= span.char_start < block.char_end
+    }
+    table.ix_scales = {IX_SCALE_WORDS[s] for s in tagged_scales if s in IX_SCALE_WORDS}
+
+    # Caption first, then iXBRL, never section inheritance (TRADEOFFS F-45): a
+    # wrong scale is an invisible 10^6 error, a missing one is detectable.
     table.unit_scale = detect_unit_scale(preceding + "\n" + header_text)
+    if table.unit_scale:
+        table.scale_source = "caption"
+    elif (fallback := ixbrl_scale(tagged_scales)) is not None:
+        table.unit_scale, table.scale_source = fallback, "ixbrl"
+    block.scale_source = table.scale_source
+
     table.currency = "USD" if any(c.text.startswith("$") for r in body for c in r) else None
     table.fiscal_periods = [c for c in table.columns[1:] if _PERIOD_LABEL.search(c)]
-
-    for span in doc.spans:
-        if (
-            span.is_numeric
-            and span.scale in IX_SCALE_WORDS
-            and block.char_start <= span.char_start < block.char_end
-        ):
-            table.ix_scales.add(IX_SCALE_WORDS[span.scale])
     return table
 
 

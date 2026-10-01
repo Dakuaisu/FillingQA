@@ -138,6 +138,9 @@ class Block:
     # The offsets index the same normalized text, so cell contents never get a
     # second coordinate system of their own.
     rows: list[list[tuple[int, int, int, int]]] | None = None
+    # Tables only: where the unit scale came from, 'caption' | 'ixbrl' | None,
+    # so unit-scale accuracy can be broken out by source in Phase 3.
+    scale_source: str | None = None
 
     @property
     def length(self) -> int:

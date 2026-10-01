@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 24 |
-| RESOLVED | 22 |
+| OPEN | 23 |
+| RESOLVED | 23 |
 | **Total** | **46** |
 
 ---
@@ -23,7 +23,6 @@ carries the state.
 |---|---|---|---|
 | F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures | Phase 3 | OPEN |
 | F-39 | `api/config.yaml` sector labels exist but nothing reads them; `companies.sector` is still NULL | Phase 1 step 5 | OPEN |
-| F-45 | COST states units once per section ("(amounts in millions, ...)" under the Item 7 and notes headings), so PRD 6.2's 500-char caption window finds none for 13-24 iXBRL-scaled tables per COST filing; AAPL continuation tables miss 2-4. Those tables get no scale in their context line -- the error the context line exists to prevent | Phase 1 step 4c | OPEN |
 
 ## Blocking Phase 2
 
@@ -92,6 +91,7 @@ carries the state.
 | F-43 | Re-downloaded raw bytes differ from `tests/fixtures/manifest.json` for all 3 fixtures: SEC's edge injects a 114-byte `<script>` before `</body>`. Parser output unaffected | Accession is the identity; `content_hash` stays raw sha256 as provenance; freeze compares `text_sha256` under a fixed `parser_version` (F-42). Manifest unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-44 | `make lint` failed: `ruff format --check` would reformat `tools/bridge.py` | `[tool.ruff.format] exclude = ["tools"]`; `ruff check` still covers it; file untouched. Verified: `23 files already formatted`. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | `classify()`: data iff some row holds two or more figures. TGT 10-K: 64 data / 186 layout, layout inspected by text (80 page footers, ~70 running headers, cover/signature/TOC). Split for all 12 filings in WORKLOG | 2026-10-01 |
+| F-45 | COST states units once per section, so the 500-char caption window found no scale for 13-24 iXBRL-scaled tables per COST filing | Caption, else the single magnitude `scale` on the table's tagged figures, else None; never section inheritance. `scale_source` on Table and Block. Mixed-magnitude tables stay None (AAPL 1, COST 2 per filing). Residual with no caption and no tagged magnitude, per filing: AAPL 10-K 4, 10-Qs 0/0/0; COST 10-K 12, 10-Qs 8/8/8; TGT 10-K 14, 10-Qs 9/8/9 (mostly genuinely unscaled: counts, percentages). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 
@@ -112,12 +112,6 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 **F-42 — eval corpus as accession list.** Run the 3-year window once to list
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
-
-**F-45 — section-level captions.** Options: inherit the nearest caption in the
-same section (risk: a stray "(in thousands)" in Item 1 leaks into later
-tables); fall back to the iXBRL `scale` of tagged cells (authoritative, but only
-for tagged tables -- MD&A tables are often untagged); or leave None. Caption and
-iXBRL never disagreed in 12 filings, which favours using iXBRL as the fallback.
 
 **F-39 — sector labels.** Wire `api/config.yaml` into `upsert_company` so
 `companies.sector` is populated. Currently the file exists and nothing reads it,
