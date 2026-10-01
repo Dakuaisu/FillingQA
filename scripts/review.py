@@ -21,7 +21,7 @@ from pathlib import Path
 import yaml
 
 from api.config import REPO_ROOT
-from eval.review import effective, records, sheet_item_ids, worksheet
+from eval.review_decisions import effective, records, sheet_item_ids, worksheet
 from scripts.write_freeze import FREEZE_FILE
 
 CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))

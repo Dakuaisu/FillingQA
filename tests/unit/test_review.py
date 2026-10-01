@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 
-from eval.review import effective, records, sheet_item_ids, worksheet
+from eval.review_decisions import effective, records, sheet_item_ids, worksheet
 
 CHUNK, OTHER = "0000909832-25-000015:68.1:68.1", "0000909832-25-000015:61.1:61.1"
 ACC = "0000909832-25-000015"

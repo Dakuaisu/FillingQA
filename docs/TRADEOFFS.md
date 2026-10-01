@@ -2165,7 +2165,7 @@ false-answer rate stops counting partial answers).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: review decisions are an overlay
 
-`eval/review.py` and `scripts/review.py`. The owner fills a YAML worksheet made
+`eval/review_decisions.py` and `scripts/review.py`. The owner fills a YAML worksheet made
 from a review sheet (accept / reject / edit_evidence, with every alternative
 evidence set for an edit); `import` validates every entry (decision value,
 chunks in the frozen corpus, a reviewer name) and appends all or nothing to

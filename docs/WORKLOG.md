@@ -4754,7 +4754,7 @@ Tests: `test_comparison_rules` and the good-item case. `make test`: 397 passed.
 
 ## 2026-10-01 — Review CLI (no decisions)
 
-`eval/review.py`, `scripts/review.py` (worksheet / import / status),
+`eval/review_decisions.py`, `scripts/review.py` (worksheet / import / status),
 `eval/review/decisions_v1.jsonl` (empty), worksheets for the three sheets (44, 9
 and 83 items). Tests: `tests/unit/test_review.py` (4). `make test`: 401 passed;
 `make lint`: 112 files already formatted.
