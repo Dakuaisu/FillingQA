@@ -88,6 +88,26 @@ def text_without_anchors(doc: ExtractedDocument, block: Block) -> str:
     return " ".join("".join(parts).split())
 
 
+def _heading_rows(doc: ExtractedDocument, block: Block) -> list[str]:
+    rows = []
+    for row in block.rows or []:
+        text = " ".join(" ".join(doc.text[s:e].split()) for s, e, *_ in row).strip()
+        if text:
+            rows.append(" ".join(text.split()))
+    return rows
+
+
+def _introduces_index(doc: ExtractedDocument, idx: int) -> bool:
+    """A Part heading followed directly by a table listing several Items heads a
+    table-of-contents entry, not the Part itself (F-64). BAC's 10-Q index has
+    "Part II. Other Information" over its Part II rows; read as a section opener
+    it tagged the MD&A that follows the index as Part II."""
+    nxt = doc.blocks[idx + 1] if idx + 1 < len(doc.blocks) else None
+    if nxt is None or nxt.kind != "table":
+        return False
+    return sum(1 for text in _heading_rows(doc, nxt) if _ITEM.match(text)) >= 2
+
+
 def is_heading_table(doc: ExtractedDocument, block: Block) -> bool:
     """A layout table that is a heading, not a table of contents (F-63).
 
@@ -97,11 +117,7 @@ def is_heading_table(doc: ExtractedDocument, block: Block) -> bool:
     cross-reference index lists many headings, one per row. So: the first
     non-empty row matches a heading, and no other row does.
     """
-    rows = []
-    for row in block.rows or []:
-        text = " ".join(" ".join(doc.text[s:e].split()) for s, e, *_ in row).strip()
-        if text:
-            rows.append(" ".join(text.split()))
+    rows = _heading_rows(doc, block)
     matches = [i for i, text in enumerate(rows) if _ITEM.match(text) or _PART.match(text)]
     return matches == [0]
 
@@ -133,12 +149,15 @@ def detect_sections(doc: ExtractedDocument, form_type: str) -> list[Section]:
 
         part_match = _PART.match(text)
         if part_match and not _ITEM.match(part_match.group("rest")):
-            current_part = part_match.group("part").upper()
+            if not _introduces_index(doc, idx):
+                current_part = part_match.group("part").upper()
             continue
 
         found = _heading_match(text)
         if found:
-            headings.append((idx, found[0], found[1], current_part))
+            # Both forms open with Part I, so an Item before any effective Part
+            # heading is in Part I -- whatever order the Items come in (F-64).
+            headings.append((idx, found[0], found[1], current_part or "I"))
 
     sections: list[Section] = []
     for order, (block_idx, code, title, part) in enumerate(headings):
