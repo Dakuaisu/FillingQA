@@ -34,7 +34,6 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | OPEN |
-| F-47 | `restatements.sql` cannot yet give the README's restatement count: companyfacts drops iXBRL `decimals`, so a figure printed exactly in one place and rounded in another (AAPL LongTermDebt 90,678M vs 90,700M) counts like a real restatement (TGT 2016 equity 12,957M -> 12,965M). 1,390 groups on the slice | OPEN |
 | F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
@@ -52,6 +51,12 @@ carries the state.
 | F-12 | `eval.compare` compares a fast/CI-corpus run against a full-corpus baseline | OPEN |
 | F-16 | Chunk-size and context-header ablations need a full re-embed; budget is ~10× short | OPEN |
 | F-21 | `PARTIAL` verdict has no place in the abstention 2×2 or the API examples | OPEN |
+
+## Blocking Phase 5
+
+| ID | Finding | Status |
+|---|---|---|
+| F-47 | No restatement count can be published yet: companyfacts drops iXBRL `decimals`, so a figure printed exactly in one place and rounded in another (AAPL LongTermDebt 90,678M vs 90,700M) diverges like a real restatement (TGT 2016 equity 12,957M -> 12,965M). Phase 1's exit only needs the query to return rows, which it does. No restatement number appears anywhere until this is resolved | OPEN |
 
 ## Non-blocking
 
@@ -93,7 +98,7 @@ carries the state.
 | F-43 | Re-downloaded raw bytes differ from `tests/fixtures/manifest.json` for all 3 fixtures: SEC's edge injects a 114-byte `<script>` before `</body>`. Parser output unaffected | Accession is the identity; `content_hash` stays raw sha256 as provenance; freeze compares `text_sha256` under a fixed `parser_version` (F-42). Manifest unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-44 | `make lint` failed: `ruff format --check` would reformat `tools/bridge.py` | `[tool.ruff.format] exclude = ["tools"]`; `ruff check` still covers it; file untouched. Verified: `23 files already formatted`. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | `classify()`: data iff some row holds two or more figures. TGT 10-K: 64 data / 186 layout, layout inspected by text (80 page footers, ~70 running headers, cover/signature/TOC). Split for all 12 filings in WORKLOG | 2026-10-01 |
-| F-45 | COST states units once per section, so the 500-char caption window found no scale for 13-24 iXBRL-scaled tables per COST filing | Caption, else the single magnitude `scale` on the table's tagged figures, else None; never section inheritance. `scale_source` on Table and Block. Mixed-magnitude tables stay None (AAPL 1, COST 2 per filing). Residual with no caption and no tagged magnitude, per filing: AAPL 10-K 4, 10-Qs 0/0/0; COST 10-K 12, 10-Qs 8/8/8; TGT 10-K 14, 10-Qs 9/8/9 (mostly genuinely unscaled: counts, percentages). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-45 | COST states units once per section, so the 500-char caption window found no scale for 13-24 iXBRL-scaled tables per COST filing | Caption, else the single magnitude `scale` on the table's tagged figures, else None; never section inheritance. `scale_source` on Table and Block. Monetary veto: a currency figure off the chosen magnitude gives None plus `scale_conflict`; fired 0 times on the slice, now a fixture invariant. Mixed-magnitude tables stay None (AAPL 1, COST 2 per filing). Residual with no caption and no tagged magnitude, per filing: AAPL 10-K 4, 10-Qs 0/0/0; COST 10-K 12, 10-Qs 8/8/8; TGT 10-K 14, 10-Qs 9/8/9 (mostly genuinely unscaled: counts, percentages). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-39 | `api/config.yaml` sector labels existed but nothing read them; `companies.sector` was NULL | `upsert_company` writes the label via `sector_of`, which raises on an unlabelled ticker. Verified: AAPL tech, COST retail, TGT retail | 2026-10-01 |
 
 ---
@@ -116,9 +121,9 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
 
-**F-47 — restatement count.** Separate rounding from restatement before the
-number is published: use the `decimals` on the filing's own ix spans for linked
-facts, or compare within a tolerance that lives in config, not code.
+**F-47 — restatement count.** Phase 5: the README count and the "later
+restated" annotation. Separate rounding from restatement first; `decimals` is not
+captured now, by decision.
 
 **F-48 — hidden-only facts.** Exclude them from `xbrl_auto` generation or
 accept them into the human-labeling queue; at 2.6% either is affordable.

@@ -572,6 +572,31 @@ something to paper over. Much of it is genuinely unscaled (store counts,
 percentages). Phase 3's unit-scale accuracy by `scale_source` is what says
 whether the rest matters.
 
+**Monetary veto (supervisor, 2026-10-01).** "Exactly one magnitude, ignoring 0
+and -2" is accepted only with a veto: if any figure whose unit is a currency
+carries a scale other than the chosen magnitude, the table gets None and a
+logged conflict (`Table.scale_conflict`). Per-share amounts, share counts and
+percentages are the "except" set; dollars are not, because a dollar figure at
+units under a header reading "in millions" is the invisible 10^6 error this
+fallback must never create.
+
+Monetary means a resolved `xbrli:unit` with a single measure in the iso4217
+namespace and no denominator. `usdPerShare` is a divide with USD on top, so it is
+not monetary -- TGT's EPS figures carry no `scale` attribute at all, and a rule
+that treated any iso4217 measure as money would have vetoed its income statement.
+
+Measured on all 12 filings after the veto: **0 fallback tables flip** -- the
+per-filing caption/ixbrl counts are unchanged. Fallback tables by scale set: {6}
+54, {-2, 6} 5 (all COST), {0, 3} 6. The interpretation affects only caption-less
+{0, 6} and {-2, 6} tables: **0 and 5**. (Correcting an earlier report that said
+"31 more tables fall back to None": captioned tables keep their caption scale, so
+only caption-less ones were ever in play.) Captioned tables with an off-scale
+currency figure: also 0, though the veto does not apply to them.
+
+So the reading is now a tested invariant rather than an interpretation:
+`test_every_currency_figure_carries_its_tables_scale` asserts, on the three
+fixtures, that no dollar figure in a scaled table is tagged at another scale.
+
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 5, companyfacts decisions taken while building

@@ -14,8 +14,9 @@
 --
 -- Groups on period_start and unit as well as period_end. Without period_start, a
 -- quarter and the year-to-date figure ending the same day count as two "values"
--- of one fact -- finding #1's collision again -- and the dev slice reported 5,146
--- restatements instead of 1,390 (2026-10-01).
+-- of one fact -- finding #1's collision again -- and the query returned 5,146 rows
+-- on the dev slice instead of 1,390 (2026-10-01). Rows are divergent groups, not
+-- restatements; no restatement count is published until F-47 is resolved.
 --
 -- Not yet a restatement count fit for the README: companyfacts drops the iXBRL
 -- `decimals` attribute, so one figure tagged exactly in a statement and rounded

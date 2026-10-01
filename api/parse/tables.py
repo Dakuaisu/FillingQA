@@ -13,12 +13,15 @@ gaps are where columns end.
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 
 from api.numbers import NumberFormatError, parse_number
 from api.parse.ixbrl import Block, ExtractedDocument
 from api.parse.sections import Section
+
+log = logging.getLogger(__name__)
 
 CAPTION_WINDOW = 500
 
@@ -46,16 +49,26 @@ _PAGE_ARTIFACT = re.compile(r"form 10-[kq]|table of contents|^\d+$", re.I)
 IX_SCALE_WORDS = {3: "thousands", 6: "millions", 9: "billions"}
 
 
-def ixbrl_scale(scales: set[int | None]) -> str | None:
-    """The table's scale from the `scale` attributes of its tagged figures.
+def ixbrl_scale(tagged: set[tuple[int | None, bool]]) -> tuple[str | None, bool]:
+    """The table's scale from its tagged figures, as (scale, conflict).
 
-    Only magnitude scales count. `0` (per-share amounts, counts) and `-2`
+    `tagged` holds (scale attribute, is_monetary) per figure. Only magnitude
+    scales count toward the choice. `0` (per-share amounts, counts) and `-2`
     (percentages) sit inside "in millions" tables the way "except per share"
     sits inside a caption, so they do not make a table mixed. Two magnitudes --
-    AAPL's statements tag dollars at 6 and share counts at 3 -- return None.
+    AAPL's statements tag dollars at 6 and share counts at 3 -- give None.
+
+    Monetary veto: dollars are not in the "except" set. A currency figure at any
+    scale other than the chosen magnitude means the header would mis-scale it by
+    10^6 -- invisibly -- so the answer is None and a reported conflict.
     """
-    words = {IX_SCALE_WORDS[s] for s in scales if s in IX_SCALE_WORDS}
-    return words.pop() if len(words) == 1 else None
+    words = {IX_SCALE_WORDS[s] for s, _ in tagged if s in IX_SCALE_WORDS}
+    if len(words) != 1:
+        return None, False
+    chosen = words.pop()
+    if any(monetary and IX_SCALE_WORDS.get(s) != chosen for s, monetary in tagged):
+        return None, True
+    return chosen, False
 
 
 def detect_unit_scale(text: str) -> str | None:
@@ -111,6 +124,7 @@ class Table:
     unit_scale: str | None = None
     ix_scales: set[str] = field(default_factory=set)
     scale_source: str | None = None  # 'caption' | 'ixbrl' | None
+    scale_conflict: bool = False  # iXBRL fallback vetoed by a monetary figure
     currency: str | None = None
     fiscal_periods: list[str] = field(default_factory=list)
 
@@ -318,20 +332,28 @@ def extract_table(doc: ExtractedDocument, index: int) -> Table:
 
     header_text = "\n".join(c.text for row in pre for c in row)
     preceding = doc.text[max(0, block.char_start - CAPTION_WINDOW) : block.char_start]
-    tagged_scales = {
-        span.scale
+    tagged = {
+        (span.scale, unit.is_monetary if (unit := doc.units.get(span.unit_ref or "")) else False)
         for span in doc.spans
         if span.is_numeric and block.char_start <= span.char_start < block.char_end
     }
-    table.ix_scales = {IX_SCALE_WORDS[s] for s in tagged_scales if s in IX_SCALE_WORDS}
+    table.ix_scales = {IX_SCALE_WORDS[s] for s, _ in tagged if s in IX_SCALE_WORDS}
 
     # Caption first, then iXBRL, never section inheritance (TRADEOFFS F-45): a
     # wrong scale is an invisible 10^6 error, a missing one is detectable.
     table.unit_scale = detect_unit_scale(preceding + "\n" + header_text)
     if table.unit_scale:
         table.scale_source = "caption"
-    elif (fallback := ixbrl_scale(tagged_scales)) is not None:
-        table.unit_scale, table.scale_source = fallback, "ixbrl"
+    else:
+        fallback, table.scale_conflict = ixbrl_scale(tagged)
+        if fallback is not None:
+            table.unit_scale, table.scale_source = fallback, "ixbrl"
+        elif table.scale_conflict:
+            log.warning(
+                "table %r at %d: iXBRL scale vetoed, a currency figure is off-scale",
+                table.title,
+                block.char_start,
+            )
     block.scale_source = table.scale_source
 
     table.currency = "USD" if any(c.text.startswith("$") for r in body for c in r) else None

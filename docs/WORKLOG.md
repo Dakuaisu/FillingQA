@@ -375,3 +375,36 @@ value, segment counts), which has no rendered position (F-48).
 
 Tests: `tests/unit/test_xbrl_facts.py` (11, real AAPL rows), one Decimal test in
 `test_edgar.py`. `make test`: 133 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-45 monetary veto
+
+Step 5 committed as `368f781` (F-49 filed Non-blocking: 0 linked facts have null
+or Q4 `fp`; all 618 null and 601 Q4 are unlinked).
+
+`parse_units` resolves each `xbrli:unit`'s measures through the element's nsmap,
+like contexts. `Unit.is_monetary`: one iso4217 measure, no denominator.
+`ixbrl_scale` takes (scale, is_monetary) pairs and returns (scale, conflict); a
+currency figure off the chosen magnitude gives (None, True), logged and stored as
+`Table.scale_conflict`.
+
+Re-measured (`ix{..}` = iXBRL-fallback tables by raw scale set; `capt_offscale$`
+= captioned tables holding a currency figure at another scale, for information):
+
+    ticker accession              form  data capt ixbrl ix{6} ix{0,6} ix{-2,6} ixother veto miss noscl capt_offscale$
+    AAPL   0000320193-25-000079   10-K    43   35     3     3       0        0       0    0    1     5              0
+    AAPL   0000320193-26-000006   10-Q    23   21     1     1       0        0       0    0    1     1              0
+    AAPL   0000320193-26-000013   10-Q    25   22     2     2       0        0       0    0    1     1              0
+    AAPL   0000320193-26-000020   10-Q    26   23     2     2       0        0       0    0    1     1              0
+    COST   0000909832-25-000101   10-K    44    8    22    19       0        2       1    0    2    14              0
+    COST   0000909832-25-000169   10-Q    27    6    11     9       0        1       1    0    2    10              0
+    COST   0000909832-26-000029   10-Q    28    7    11     9       0        1       1    0    2    10              0
+    COST   0000909832-26-000051   10-Q    28    7    11     9       0        1       1    0    2    10              0
+    TGT    0000027419-25-000126   10-Q    34   25     0     0       0        0       0    0    0     9              0
+    TGT    0000027419-26-000016   10-K    64   48     2     0       0        0       2    0    0    14              0
+    TGT    0000027419-26-000022   10-Q    30   22     0     0       0        0       0    0    0     8              0
+    TGT    0000027419-26-000042   10-Q    32   23     0     0       0        0       0    0    0     9              0
+
+Veto fired 0 times; no fallback table flipped. Caption-less {0,6}: 0, {-2,6}: 5.
+`ixother` is {0,3} (RSU/PSU unit tables). F-47 moved to Blocking Phase 5; the
+`restatements.sql` header now speaks of rows, not restatements. `make test`: 139
+passed, 3 snapshots passed.

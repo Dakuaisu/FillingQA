@@ -42,6 +42,7 @@ IX_NAMESPACES = (
     "http://www.xbrl.org/2008/inlineXBRL",  # 1.0
 )
 XBRLI_NS = "http://www.xbrl.org/2003/instance"
+ISO4217_NS = "http://www.xbrl.org/2003/iso4217"
 XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"
 
 # Never rendered, so never emitted: no visible text means no meaningful offset.
@@ -163,6 +164,23 @@ class Context:
 
 
 @dataclass
+class Unit:
+    """A resolved xbrli:unit: measures as (namespace, local name) pairs."""
+
+    unit_id: str
+    numerator: list[tuple[str, str]] = field(default_factory=list)
+    denominator: list[tuple[str, str]] = field(default_factory=list)
+
+    @property
+    def is_monetary(self) -> bool:
+        """A bare currency amount. USD-per-share is a divide, so it is not: it
+        belongs with the per-share figures a caption's "except" covers."""
+        return (
+            not self.denominator and len(self.numerator) == 1 and self.numerator[0][0] == ISO4217_NS
+        )
+
+
+@dataclass
 class ExtractedDocument:
     """Everything the single pass produced."""
 
@@ -170,6 +188,7 @@ class ExtractedDocument:
     spans: list[XbrlSpan] = field(default_factory=list)
     blocks: list[Block] = field(default_factory=list)
     contexts: dict[str, Context] = field(default_factory=dict)
+    units: dict[str, Unit] = field(default_factory=dict)
     dei: dict[str, str] = field(default_factory=dict)
     unparsed_values: int = 0
 
@@ -501,6 +520,36 @@ def parse_contexts(root: etree._Element) -> dict[str, Context]:
     return contexts
 
 
+def _measure(el: etree._Element) -> tuple[str, str]:
+    """Resolve a measure's QName ("iso4217:USD") through the element's own nsmap."""
+    prefix, _, local = (el.text or "").strip().rpartition(":")
+    return (el.nsmap.get(prefix or None, ""), local)
+
+
+def parse_units(root: etree._Element) -> dict[str, Unit]:
+    units: dict[str, Unit] = {}
+    for el in root.iter(f"{{{XBRLI_NS}}}unit"):
+        uid = el.get("id")
+        if not uid:
+            continue
+        unit = Unit(unit_id=uid)
+        divide = el.find(f"{{{XBRLI_NS}}}divide")
+        if divide is None:
+            unit.numerator = [_measure(m) for m in el.findall(f"{{{XBRLI_NS}}}measure")]
+        else:
+            for side, target in (
+                ("unitNumerator", unit.numerator),
+                ("unitDenominator", unit.denominator),
+            ):
+                target.extend(
+                    _measure(m)
+                    for m in divide.iter(f"{{{XBRLI_NS}}}measure")
+                    if m.getparent().tag == f"{{{XBRLI_NS}}}{side}"
+                )
+        units[uid] = unit
+    return units
+
+
 def extract(raw: bytes) -> ExtractedDocument:
     """Run the single pass over one filing's bytes."""
     parser = etree.XMLParser(recover=True, huge_tree=True, resolve_entities=False)
@@ -509,6 +558,7 @@ def extract(raw: bytes) -> ExtractedDocument:
         raise ValueError("document did not parse")
 
     contexts = parse_contexts(root)
+    units = parse_units(root)
 
     walker = _Walker()
     walker.visit(root)
@@ -526,6 +576,7 @@ def extract(raw: bytes) -> ExtractedDocument:
         spans=walker.spans,
         blocks=walker.blocks,
         contexts=contexts,
+        units=units,
         dei=walker.dei,
         unparsed_values=walker.unparsed,
     )

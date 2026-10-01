@@ -59,36 +59,50 @@ def test_no_caption_returns_none():
 
 # ------------------------------------------------------- iXBRL scale fallback
 
-# Each case is a set of raw `scale` attributes observed on the tagged figures of
-# one real dev-slice table, with the count of tables showing that combination.
+# Each set is (scale attribute, is_monetary) per tagged figure, as observed on a
+# real dev-slice table, with the count of fallback tables showing it.
+USD, NOT_USD = True, False
 
 
 @pytest.mark.parametrize(
-    ("scales", "expected"),
+    ("tagged", "expected"),
     [
-        ({6}, "millions"),  # 187 tables, e.g. AAPL comprehensive income
-        ({0, 6}, "millions"),  # 17, e.g. AAPL shareholders' equity: per-share at 0
-        ({-2, 6}, "millions"),  # 14, millions with percentages tagged at -2
-        ({6, None}, "millions"),  # TGT statement of operations: one untagged scale
-        ({0, 3}, "thousands"),  # 10, e.g. AAPL restricted stock units
-        ({3}, "thousands"),  # AAPL shares of common stock
+        ({(6, USD)}, "millions"),  # 54 fallback tables, e.g. AAPL segment continuations
+        ({(6, USD), (-2, NOT_USD)}, "millions"),  # 5, COST: percentages tagged at -2
+        ({(3, NOT_USD), (0, NOT_USD)}, "thousands"),  # 6, TGT RSUs: units, per-share at 0
+        ({(6, USD), (None, NOT_USD)}, "millions"),  # TGT EPS: usdPerShare, no scale attr
+        ({(6, USD), (0, NOT_USD)}, "millions"),  # per-share at 0 is the "except" set
     ],
 )
-def test_one_magnitude_gives_the_scale(scales, expected):
-    assert ixbrl_scale(scales) == expected
+def test_one_magnitude_gives_the_scale(tagged, expected):
+    assert ixbrl_scale(tagged) == (expected, False)
 
 
 @pytest.mark.parametrize(
-    "scales",
+    "tagged",
     [
-        {0, 3, 6},  # 20, e.g. AAPL statement of operations: dollars and share counts
-        {3, 6},  # 10, e.g. COST statement of equity
-        {-2},  # 6, percentages only
+        {(6, USD), (3, NOT_USD), (0, NOT_USD)},  # AAPL statements: dollars and shares
+        {(6, USD), (3, USD)},  # two magnitudes
+        {(-2, NOT_USD)},  # percentages only
         set(),
     ],
 )
-def test_mixed_or_absent_magnitude_gives_none(scales):
-    assert ixbrl_scale(scales) is None
+def test_mixed_or_absent_magnitude_gives_none_without_conflict(tagged):
+    assert ixbrl_scale(tagged) == (None, False)
+
+
+@pytest.mark.parametrize(
+    "tagged",
+    [
+        {(6, USD), (None, USD)},  # a dollar figure at units under "in millions"
+        {(6, USD), (0, USD)},
+        {(3, NOT_USD), (None, USD)},  # dollars at units in a thousands-of-shares table
+    ],
+)
+def test_off_scale_currency_figure_vetoes_the_fallback(tagged):
+    # Not observed on the slice -- the veto never fired -- so these pairs are
+    # constructed. They are what the rule exists to stop.
+    assert ixbrl_scale(tagged) == (None, True)
 
 
 # ----------------------------------------------------------------- values

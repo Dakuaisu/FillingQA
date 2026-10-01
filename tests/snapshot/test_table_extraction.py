@@ -222,3 +222,22 @@ def test_mixed_magnitudes_stay_unscaled(parsed):
     table = next(t for t in parsed[AAPL_10K][3] if t.title == "Note 3 – Earnings Per Share")  # noqa: RUF001
     assert table.ix_scales == {"millions", "thousands"}
     assert table.unit_scale is None and table.scale_source is None
+
+
+@pytest.mark.parametrize("accession", [AAPL_10K, AAPL_10Q, TGT_10K])
+def test_every_currency_figure_carries_its_tables_scale(parsed, accession):
+    """The invariant behind the monetary veto: in a table given a scale, from a
+    caption or from iXBRL, no dollar figure is tagged at a different scale. Held
+    on all 12 dev-slice filings (2026-10-01), so the veto never fired there."""
+    doc, _, _, tables = parsed[accession]
+    words = {3: "thousands", 6: "millions", 9: "billions"}
+    for table in tables:
+        if table.kind != "data" or not table.unit_scale:
+            continue
+        assert not table.scale_conflict
+        block = table.block
+        inside = (s for s in doc.spans if block.char_start <= s.char_start < block.char_end)
+        for span in inside:
+            unit = doc.units.get(span.unit_ref or "")
+            if span.is_numeric and unit and unit.is_monetary:
+                assert words.get(span.scale) == table.unit_scale, (table.title, span.raw_text)
