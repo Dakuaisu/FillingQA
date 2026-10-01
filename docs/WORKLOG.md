@@ -5090,3 +5090,70 @@ positional arguments but 6 were given`. bf0accd changed `answer_one` but not its
 call in `main`; the stubbed smoke test called `answer_one` directly, so it did not
 reach the call. Nothing recorded; `eval/runs/b400b99f7086.meta.json` is kept as
 the artefact. Fixed in 17a803d; relaunched 22:56Z as run 63cf35c328e2.
+
+## 2026-10-01 — Config 4 dev run 63cf35c328e2 (supervisor decision 2; F-13 resolved)
+
+`make eval`, launched 22:56Z, finished 23:49Z: 283 items, 0 errors, served
+`claude-haiku-4-5-20251001` on all 283. Report as printed by the run (excerpt):
+
+    pipeline: config_4_rerank  served models: {'claude-haiku-4-5-20251001': 283}
+    rerank: cross-encoder/ms-marco-MiniLM-L-6-v2@233902d25c44 on mps; top-n 8 (10 synthesis); floor 0.3 (pending); timeout 800 ms; fell back to RRF order: 5
+    metric                                  xbrl_auto       llm_seeded      handwritten        aggregate
+    Sufficiency@10                              0.365            0.892                -            0.519
+    Recall@10                                   0.375            0.892                -            0.527
+    MRR                                         0.178            0.639                -            0.313
+    nDCG@10                                     0.213            0.697                -            0.355
+    Sufficiency post-rerank (top-n)             0.270            0.831                -            0.435
+    Numeric accuracy (gated)                    0.365            0.757                -            0.426
+      comparison values only                    0.150                -                -            0.150
+
+`eval/runs/63cf35c328e2.json` was then rebuilt with `python -m scripts.eval_run
+--report 63cf35c328e2` from the same meta and results, adding only the per-source
+floor and fallback counts and `meta_disagreements` (checked key by key):
+
+      floor_empties (abstain, score_floor; F-112)                0                0                -                0
+      rerank fell back to RRF order                 4                1                -                5
+    meta: retrieve_depth 10, generator_top_k 5; items whose stored lists disagree: 283
+
+**Meta discrepancy (F-115).** The meta of this run (and of b400b99f7086) says
+`retrieve_depth: 10`, `generator_top_k: 5`. True values, read from the results:
+`retrieved` has 50 chunks for all 283 items; `generator_input` has 8 chunks for
+246 items, 10 for 35 (synthesis), 7 for xbrl_0015 and 9 for seed_0075 (the floor
+shortened both). The meta files are left as written; fixed for later runs in
+12ba055.
+
+**Consistency** (`python -m scripts.run_consistency 63cf35c328e2 01019ff395ec 46523deda1c0`):
+
+    list / class                         xbrl_auto  llm_seeded handwritten       total
+    pre identical                              200          83           0         283
+    post eval_fell_back_to_rrf                   4           1           0           5
+    post identical                             196          82           0         278
+
+The five differing post-rerank lists are exactly the items whose rerank went over
+800 ms in this run (cmp_0010 0.800 s, cmp_0037 0.830 s, seed_0033 1.517 s,
+xbrl_0010 0.856 s, xbrl_0062 0.841 s); the pipeline used RRF order for them, as
+PRD 7.3 says. In-run rerank latency p50 0.608 s, p95 0.742 s, max 1.517 s, against
+p95 0.272 s in 46523deda1c0 (F-114). seed_0033's fallback list is sufficient at
+top-n and its reranked list is not, which is the whole of 0.435 vs 0.431.
+
+**Direction only against f2e616e0a7d7** (`python -m scripts.run_spread
+f2e616e0a7d7 63cf35c328e2`). Config differs: Config 1 dense at ef_search 40
+(not recorded in its meta; pgvector default, F-109), generator given 5 chunks;
+against Config 4 at 100, generator given 8 or 10. Nothing is attributed:
+
+    metric: A / B (B - A)                        xbrl_auto              llm_seeded             handwritten               aggregate
+    Sufficiency@10                  0.285 / 0.365 (+0.080)  0.675 / 0.892 (+0.217)                       -  0.399 / 0.519 (+0.120)
+    MRR                             0.135 / 0.178 (+0.043)  0.477 / 0.639 (+0.163)                       -  0.235 / 0.313 (+0.078)
+    Numeric accuracy (gated)        0.390 / 0.365 (-0.025)  0.757 / 0.757 (+0.000)                       -  0.447 / 0.426 (-0.021)
+      comparison values only        0.250 / 0.150 (-0.100)                       -                       -  0.250 / 0.150 (-0.100)
+    numeric correctness flips: correct in A only 36, in B only 31
+
+Findings: F-114 (in-run rerank latency, 5 fallbacks), F-115 (meta, resolved),
+F-116 (retrieval direction), F-117 (numeric direction: down while sufficiency
+rose). F-113 is carried to the PRD 11.7 ablation on reviewed items; no model
+switch. F-112: the floor emptied nothing, shortened two lists.
+
+Process notes: polls were briefly sent several to a message, so they ran in
+parallel and returned at once; one poll per message after that. The privacy grep
+for 90c689d ran after its commit (false alarms only: WORKLOG sentences quoting
+"/Users/"); since then it runs before each commit.
