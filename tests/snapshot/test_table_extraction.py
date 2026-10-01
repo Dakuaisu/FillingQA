@@ -205,7 +205,11 @@ def test_stacked_period_blocks_keep_their_columns(parsed):
 
 @pytest.mark.parametrize(
     ("accession", "caption", "ixbrl"),
-    [(AAPL_10K, 35, 3), (AAPL_10Q, 22, 2), (TGT_10K, 48, 2)],
+    # After F-50 the caption window stops at a preceding table. AAPL 10-K: one
+    # percentage table to None, two continuations to iXBRL (still millions).
+    # AAPL 10-Q: one to None, one to iXBRL. TGT 10-K: three to None ("Rate
+    # Analysis", "Assumptions": percentages; ROIC "Denominator": untagged).
+    [(AAPL_10K, 32, 5), (AAPL_10Q, 20, 3), (TGT_10K, 45, 2)],
 )
 def test_scale_source_breakdown(parsed, accession, caption, ixbrl):
     """Fallback tables hand-checked: AAPL's are continuations of "(in millions)"

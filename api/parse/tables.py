@@ -182,9 +182,17 @@ def _first_body_row(rows: list[list[Cell]]) -> int:
     PRD 6.2 says "first row(s) with no numeric cells". Taken literally that makes
     `2025 | 2024 | 2023` a data row, and it is the most common header in the
     corpus, so a bare year does not count as a figure here.
+
+    A row whose cells right of the label column are all dashes is also a body
+    row (F-51): AAPL's share-repurchase table opens with a period in which
+    nothing was bought, and reading that row as a header put "$—" into the
+    column labels.
     """
     for i, row in enumerate(rows):
         if any(is_value(c.text) and not _YEAR.match(c.text) for c in row):
+            return i
+        values = [c for c in row if c.col_start > 0]
+        if values and all(is_nil(c.text.strip("$%")) for c in values):
             return i
     return len(rows)
 
@@ -277,6 +285,24 @@ def _in_value_area(cell: Cell, groups: list[tuple[int, int]]) -> bool:
     return bool(groups) and cell.col_start >= groups[0][0]
 
 
+def _caption_window_start(doc: ExtractedDocument, index: int) -> int:
+    """Where the caption search begins: 500 characters back, but never past the
+    end of a preceding table (F-50).
+
+    A continuation table sits right after the table it continues, so an unclipped
+    window reads that table's caption -- AAPL's percentage-only gross margin
+    table got "in millions" this way. Never inherit a scale from a neighbour, for
+    the same reason F-45 never inherits one from a section.
+    """
+    start = max(0, doc.blocks[index].char_start - CAPTION_WINDOW)
+    for block in reversed(doc.blocks[:index]):
+        if block.char_end <= start:
+            break
+        if block.kind == "table":
+            return block.char_end
+    return start
+
+
 def extract_table(doc: ExtractedDocument, index: int) -> Table:
     block = doc.blocks[index]
     rows = _cell_rows(doc, block)
@@ -331,7 +357,7 @@ def extract_table(doc: ExtractedDocument, index: int) -> Table:
         table.body.append(out)
 
     header_text = "\n".join(c.text for row in pre for c in row)
-    preceding = doc.text[max(0, block.char_start - CAPTION_WINDOW) : block.char_start]
+    preceding = doc.text[_caption_window_start(doc, index) : block.char_start]
     tagged = {
         (span.scale, unit.is_monetary if (unit := doc.units.get(span.unit_ref or "")) else False)
         for span in doc.spans

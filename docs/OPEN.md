@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 28 |
-| RESOLVED | 24 |
+| OPEN | 26 |
+| RESOLVED | 26 |
 | **Total** | **52** |
 
 ---
@@ -28,8 +28,6 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
-| F-50 | 11 of 404 data tables are continuations with no header row of their own (the period labels sit in the preceding table), and 4 of them -- AAPL's gross-margin-percentage tables, one per filing -- hold only percentages yet get "in millions" because the 500-char window reaches the preceding table's caption. The chunker would emit a wrong unit in the context line | OPEN |
-| F-51 | A first data row holding only dashes is taken as a header row: AAPL 10-Q 0000320193-26-000020 share-repurchase table gets column labels like "Total Number of Shares Purchased —" and a period ("March 29, 2026 to May 2, 2026:") as its title. 1 of 404 tables | OPEN |
 
 ## Blocking Phase 3
 
@@ -103,6 +101,8 @@ carries the state.
 | F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | `classify()`: data iff some row holds two or more figures. TGT 10-K: 64 data / 186 layout, layout inspected by text (80 page footers, ~70 running headers, cover/signature/TOC). Split for all 12 filings in WORKLOG | 2026-10-01 |
 | F-45 | COST states units once per section, so the 500-char caption window found no scale for 13-24 iXBRL-scaled tables per COST filing | Caption, else the single magnitude `scale` on the table's tagged figures, else None; never section inheritance. `scale_source` on Table and Block. Monetary veto: a currency figure off the chosen magnitude gives None plus `scale_conflict`; fired 0 times on the slice, now a fixture invariant. Mixed-magnitude tables stay None (AAPL 1, COST 2 per filing). Residual with no caption and no tagged magnitude, per filing: AAPL 10-K 4, 10-Qs 0/0/0; COST 10-K 12, 10-Qs 8/8/8; TGT 10-K 14, 10-Qs 9/8/9 (mostly genuinely unscaled: counts, percentages). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-39 | `api/config.yaml` sector labels existed but nothing read them; `companies.sector` was NULL | `upsert_company` writes the label via `sector_of`, which raises on an unlabelled ticker. Verified: AAPL tech, COST retail, TGT retail | 2026-10-01 |
+| F-50 | Continuation tables with no header row of their own got the preceding table's caption scale: percentage-only tables read "in millions" | Caption window stops at the end of a preceding table; never inherit labels or scale from a neighbour. 8 percentage tables now unscaled, 4 untagged TGT ROIC tables lose a borrowed scale. Residual: 11 header-less data tables on the slice stay header-less -- the chunker must emit no column-label line for them, not an empty one. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-51 | A dash-only first data row was taken as a header row | A row whose cells right of the label column are all dashes is a body row. Header rows changed on exactly 1 of 404 data tables (AAPL 0000320193-26-000020 share repurchases) | 2026-10-01 |
 
 ---
 
@@ -123,13 +123,6 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 **F-42 — eval corpus as accession list.** Run the 3-year window once to list
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
-
-**F-50 — continuation tables.** Before the chunker: stop the caption search at a
-preceding table boundary, and decide whether a header-less continuation borrows
-the column labels of the table it continues.
-
-**F-51 — nil-only first row.** Count a dash in the value area as a body cell when
-finding the first body row; re-run the table checks.
 
 **F-47 — restatement count.** Phase 5: the README count and the "later
 restated" annotation. Separate rounding from restatement first; `decimals` is not

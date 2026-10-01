@@ -36,9 +36,9 @@ AAPL_10K_MEASURED = Measurements(
     required_items=5,
     has_item_1a=True,
     data_tables=43,
-    scaled_caption=35,
-    scaled_ixbrl=3,
-    scale_eligible=39,
+    scaled_caption=32,
+    scaled_ixbrl=5,
+    scale_eligible=38,  # F-50: the percentage table no longer has a borrowed scale
     collapsed_tables=0,
     numeric_spans=967,
     resolved_spans=962,
@@ -85,9 +85,9 @@ def test_item_1a_is_required_of_a_10k_only():
 
 def test_score_is_the_mean_of_defined_components():
     components = score_components(AAPL_10K_MEASURED, BOUNDS)
-    assert components["scale_coverage"] == pytest.approx(38 / 39)
+    assert components["scale_coverage"] == pytest.approx(37 / 38)
     assert components["span_resolution"] == pytest.approx(962 / 967)
-    assert score(AAPL_10K_MEASURED, BOUNDS) == pytest.approx((38 / 39 + 1 + 962 / 967 + 1 + 1) / 5)
+    assert score(AAPL_10K_MEASURED, BOUNDS) == pytest.approx((37 / 38 + 1 + 962 / 967 + 1 + 1) / 5)
 
 
 def test_undefined_components_are_left_out_not_scored():

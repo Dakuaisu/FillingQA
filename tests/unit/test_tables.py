@@ -8,14 +8,20 @@ from decimal import Decimal
 import pytest
 
 from api.numbers import parse_number
+from api.parse.ixbrl import extract
 from api.parse.tables import (
     Cell,
+    _caption_window_start,
+    _first_body_row,
     _merge_fragments,
     classify,
     detect_unit_scale,
+    extract_tables,
+    is_nil,
     is_value,
     ixbrl_scale,
 )
+from tests.conftest import AAPL_10K, AAPL_10Q, TGT_10K, fixture_bytes
 
 # ------------------------------------------------------------ unit scale
 
@@ -161,3 +167,75 @@ def test_table_of_contents_is_layout():
 def test_two_figures_in_a_row_is_data():
     assert classify([row((0, 3, "SG&A expenses"), (3, 4, "$"), (4, 5, "24,966"), (9, 10, "$"),
                          (10, 11, "22,810"))]) == "data"  # fmt: skip
+
+
+# ------------------------------------------------- F-50: caption window boundary
+
+
+@pytest.fixture(scope="module")
+def aapl_10k():
+    return extract(fixture_bytes(AAPL_10K))
+
+
+def test_caption_search_stops_at_the_preceding_table(aapl_10k):
+    # AAPL 10-K: the percentage-only "Gross margin percentage:" table continues
+    # the gross margin table directly above it, whose caption is "(dollars in
+    # millions)". The window must end at that table, not reach its caption.
+    tables = extract_tables(aapl_10k)
+    pct = next(t for t in tables if t.body and t.body[0][0] == "Gross margin percentage:")
+    index = aapl_10k.blocks.index(pct.block)
+    previous = max(
+        (b for b in aapl_10k.blocks[:index] if b.kind == "table"), key=lambda b: b.char_end
+    )
+    assert _caption_window_start(aapl_10k, index) == previous.char_end
+    assert pct.unit_scale is None and pct.scale_source is None
+
+
+def test_header_less_continuation_stays_header_less(aapl_10k):
+    # Never borrow the preceding table's column labels (TRADEOFFS, F-50).
+    pct = next(
+        t for t in extract_tables(aapl_10k) if t.body and t.body[0][0] == "Gross margin percentage:"
+    )
+    assert pct.header_rows == 0
+    assert not any(pct.columns)
+
+
+# --------------------------------------------- F-51: dash-only rows are body rows
+
+# Cells and column positions copied verbatim from AAPL 10-Q 0000320193-26-000020,
+# "Purchases of Equity Securities by the Issuer and Affiliated Purchasers" -- the
+# only table on the slice with this shape, and not one of the committed fixtures.
+REPURCHASES = [
+    row(
+        (0, 3, "Periods"),
+        (6, 9, "Total Number of Shares Purchased"),
+        (12, 15, "Average Price Paid Per Share"),
+        (
+            18,
+            21,
+            "Total Number of Shares Purchased as Part of Publicly Announced Plans or Programs",
+        ),
+    ),
+    row((0, 3, "March 29, 2026 to May 2, 2026:")),
+    row(
+        (0, 3, "Open market and privately negotiated purchases"),
+        (6, 8, "—"),
+        (12, 14, "$—"),
+        (18, 20, "—"),
+    ),
+]
+
+
+def test_a_dash_only_row_is_a_body_row():
+    assert _first_body_row(REPURCHASES) == 2
+
+
+def test_a_label_only_row_is_not_made_a_body_row():
+    assert _first_body_row(REPURCHASES[:2]) == 2  # nothing in it is a figure or a dash
+
+
+@pytest.mark.parametrize("accession", [AAPL_10K, AAPL_10Q, TGT_10K])
+def test_no_column_label_carries_a_dash(accession):
+    for table in extract_tables(extract(fixture_bytes(accession))):
+        for label in table.columns:
+            assert not any(is_nil(word.strip("$%")) for word in label.split()), label

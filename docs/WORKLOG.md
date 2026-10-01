@@ -704,3 +704,107 @@ residual.
     All checks passed!
     ruff format --check .
     32 files already formatted
+
+## 2026-10-01 — F-50, F-51 fixed before chunking
+
+Phase 1 exit accepted at `8f9faed`.
+
+`_caption_window_start`: the caption window begins no earlier than the end of the
+nearest preceding table. `_first_body_row`: a row whose cells right of the label
+column are all dashes (`—`, `$—`, `—%`) is a body row.
+
+Before/after over all 404 data tables on the 12 filings:
+- `text_sha256`: unchanged on all 12.
+- `parser_version`: bfe5929c604b -> 671106d02317.
+- Header rows changed: **1** (AAPL 0000320193-26-000020 share repurchases).
+- Scale changed: 17 -- 8 percentage tables millions -> None (AAPL gross margin
+  percentage x4, TGT Rate Analysis x3, TGT Assumptions), 5 AAPL continuations
+  caption -> iXBRL (still millions), 4 TGT ROIC "Denominator" tables
+  millions -> None. My F-50 prevalence count had found only the 4 AAPL tables.
+
+Re-validated: all 12 `parsed`, 7,877 spans, every row on 671106d02317.
+`python -m scripts.check_stored_spans`:
+
+    ticker accession               rows mismatch out_of_range
+    AAPL   0000320193-25-000079     962        0            0
+    AAPL   0000320193-26-000006     554        0            0
+    AAPL   0000320193-26-000013     750        0            0
+    AAPL   0000320193-26-000020     756        0            0
+    COST   0000909832-25-000101     818        0            0
+    COST   0000909832-25-000169     395        0            0
+    COST   0000909832-26-000029     571        0            0
+    COST   0000909832-26-000051     570        0            0
+    TGT    0000027419-25-000126     576        0            0
+    TGT    0000027419-26-000016     977        0            0
+    TGT    0000027419-26-000022     401        0            0
+    TGT    0000027419-26-000042     547        0            0
+    total rows 7877, mismatches 0
+
+The 8 tables now unscaled, as the chunker will see them:
+
+    0000320193-25-000079 scale=None source=None
+        [Table | Apple Inc. | FY2025 10-K | Item 7]
+        |  |  |  |  |
+        |---|---|---|---|
+        | Gross margin percentage: |  |  |  |
+        | Products | 36.8% | 37.2% | 36.5% |
+    0000320193-26-000006 scale=None source=None
+        [Table | Apple Inc. | Q1 FY2026 10-Q | Part I, Item 2]
+        |  |  |  |
+        |---|---|---|
+        | Gross margin percentage: |  |  |
+        | Products | 40.7% | 39.3% |
+    0000320193-26-000013 scale=None source=None
+        [Table | Apple Inc. | Q2 FY2026 10-Q | Part I, Item 2]
+        |  |  |  |  |  |
+        |---|---|---|---|---|
+        | Gross margin percentage: |  |  |  |  |
+        | Products | 38.7% | 35.9% | 39.9% | 37.9% |
+    0000320193-26-000020 scale=None source=None
+        [Table | Apple Inc. | Q3 FY2026 10-Q | Part I, Item 2]
+        |  |  |  |  |  |
+        |---|---|---|---|---|
+        | Gross margin percentage: |  |  |  |  |
+        | Products | 40.1% | 34.5% | 39.9% | 36.9% |
+    0000027419-25-000126 scale=None source=None
+        [Table: Rate Analysis | TARGET CORPORATION | Q3 FY2025 10-Q | Part I, Item 2]
+        | Rate Analysis | Three Months Ended November 1, 2025 | Three Months Ended November 2, 2024 | Nine Months Ended November 1, 2025 | Nine Months Ended November 2, 2024 |
+        |---|---|---|---|---|
+        | Gross margin rate (a) | 28.2% | 28.3% | 28.5% | 29.0% |
+        | SG&A expense rate (a)(b) | 21.9 | 21.3 | 20.8 | 21.1 |
+    0000027419-26-000016 scale=None source=None
+        [Table: Rate Analysis | TARGET CORPORATION | FY2025 10-K | Item 7]
+        | Rate Analysis | 2025 | 2024 | 2023(a) |
+        |---|---|---|---|
+        | Gross margin rate | 27.9% | 28.2% | 27.5% |
+        | SG&A expense rate | 20.6 | 20.6 | 20.0 |
+    0000027419-26-000016 scale=None source=None
+        [Table: Assumptions | TARGET CORPORATION | FY2025 10-K | Item 8]
+        | Benefit Obligation Weighted Average Assumptions | 2025 | 2024 |
+        |---|---|---|
+        | Discount rate | 5.56% | 5.68% |
+        | Average assumed rate of compensation increase | 3.00 | 3.00 |
+    0000027419-26-000022 scale=None source=None
+        [Table: Rate Analysis | TARGET CORPORATION | Q1 FY2026 10-Q | Part I, Item 2]
+        | Rate Analysis | Three Months Ended May 2, 2026 | Three Months Ended May 3, 2025 |
+        |---|---|---|
+        | Gross margin rate | 29.0% | 28.2% |
+        | SG&A expense rate | 21.9 | 19.3 |
+    0000027419-26-000042 scale=None source=None
+        [Table: Rate Analysis | TARGET CORPORATION | Q2 FY2026 10-Q | Part I, Item 2]
+        | Rate Analysis | Three Months Ended August 1, 2026 | Three Months Ended August 2, 2025 | Six Months Ended August 1, 2026 | Six Months Ended August 2, 2025 |
+        |---|---|---|---|---|
+        | Gross margin rate (a) | 33.7% | 29.0% | 31.4% | 28.6% |
+        | SG&A expense rate | 21.6 | 21.3 | 21.7 | 20.3 |
+
+The header-less AAPL tables still serialize an empty column-label line; the
+chunker drops it (F-50 residual).
+
+Snapshots: the 3 syrupy snapshots pass unchanged -- `parse_summary` holds no
+table fields -- so nothing was re-blessed. Four hand-written expectations moved,
+each traced to a row of the diff: scale-source counts AAPL 10-K 35/3 -> 32/5,
+AAPL 10-Q 22/2 -> 20/3, TGT 10-K 48/2 -> 45/2; the validation baseline's
+scale counts 35/3/39 -> 32/5/38. New tests: F-50 on the AAPL 10-K fixture's
+percentage table; F-51 on cells copied from 0000320193-26-000020 (not a fixture,
+and no fixture has the shape), plus a fixture invariant that no column label
+carries a dash. `make test`: 173 passed, 3 snapshots passed.

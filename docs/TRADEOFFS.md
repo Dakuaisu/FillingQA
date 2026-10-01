@@ -703,3 +703,41 @@ two data tables and three stored spans per filing, all 12, in WORKLOG. The owner
 should repeat it on those WORKLOG samples against the printed filings before
 treating Phase 1 as signed off. The builder's pass found three implausible
 table extractions, filed as F-50, F-51 and F-52; no stored span was implausible.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-50 and F-51, the last table fixes before chunking
+
+Fixed before the chunker because a parser change after embedding means a
+re-embed, and F-16 already says that budget is short. Scope is exactly two rules.
+
+**F-50 -- the caption search stops at a preceding table boundary.** The window is
+still 500 characters, but it begins no earlier than the end of the nearest
+preceding table. A header-less continuation stays header-less. Same principle as
+F-45: a scale or a label is never inherited, from a section or from a neighbour.
+An inferred label in a cited chunk is a false grounding -- the chunk would assert
+something the filing does not print at that location.
+
+*Rejected:*
+- *Inherit the preceding table's column labels* for a header-less continuation.
+  Usually right, invisibly wrong when the continuation changes periods or
+  measures, and the citation would point at text that never says it.
+- *Merge the continuation into its predecessor.* Makes one table out of two
+  printed ones, breaks PRD 6.3's "a table is never split" in reverse, and puts
+  the merged chunk's offsets across text that is not one table.
+
+Measured effect (all 12 filings, 404 data tables): 17 tables change scale. 8 were
+percentage-only tables wrongly given "in millions" -- 4 AAPL gross-margin
+percentage tables and 4 TGT ("Rate Analysis" x3, "Assumptions") -- now None. 5
+AAPL continuations keep millions, now from iXBRL instead of a borrowed caption.
+4 TGT ROIC "Denominator" tables, untagged non-GAAP dollar figures whose only
+caption is in the preceding "Numerator" table, lose their scale: the cost of not
+inheriting, and a missing scale rather than a borrowed one.
+
+**F-51 -- a row whose cells right of the label column are all dashes is a body
+row.** Header rows changed across 404 tables: exactly 1, AAPL 10-Q
+0000320193-26-000020's share-repurchase table, whose labels lose the "—" and
+"$—" and whose title becomes its real heading.
+
+`text_sha256` unchanged on all 12 filings; `parser_version` bfe5929c604b ->
+671106d02317.
