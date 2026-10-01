@@ -4109,3 +4109,31 @@ record on disk predates the cache-token fix (no re-call). Rebuilt offline:
 
 `eval/seeding/verify_v1.jsonl` checked before commit: no email address, no home
 path, no "/Users/".
+
+## 2026-10-01 — Seeding: halt path, in-place redaction, offline rebuild (before the run)
+
+`scripts/seed_run.py`: `call` returns a record with a response or raises
+`CallFailed` with every attempt; `run_pending` writes one record per halt to
+`call_errors_v1.jsonl`, leaves the chunk pending and exits 1, and refuses (exit
+2) a chunk that halted 3 runs. Records carry `called_at` (UTC). `scrub` redacts
+in place. `eval/generate/seed_build.py` (key-free stage, no-context gate,
+near-duplicate, slot fill, F-92 flag) and `scripts/seed_build.py`. Tests:
+`test_seed_run.py` (4, patched `complete`, no model call), `test_seed_build.py`
+(5), the redaction test in `test_seed_runner.py`. `make test`: 319 passed; `make
+lint`: 88 files already formatted.
+
+`python -m scripts.seed_run` (status; exit 0):
+
+    backend claude_cli, model claude-sonnet-5-5 (tier_large); prompt 0dac2295c1cd2a20, draw 1c23e9f6511a554e
+    drawn chunks 180; recorded 0; pending 180
+
+`python -m scripts.seed_build` on an empty raw file (exit 0; the empty
+`dropped_v1.jsonl` it wrote was removed, it is rebuilt after the run):
+
+    raw records 0; {'pending': 180}
+    wrote eval/seeding/dropped_v1.jsonl: 0 drops
+    key-free survivors per stratum, in draw order:
+      none
+    no survivors: no candidates or reserve to write
+
+No drawn chunk has been called.

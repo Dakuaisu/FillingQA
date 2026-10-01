@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 from eval.generate.seed_runner import drawn_order, outcome, pending, scrub
+from eval.generate.seeding import parse_response
 
 DOC = json.loads(
     (Path(__file__).resolve().parent.parent / "fixtures" / "seed_chunks.json").read_text(
@@ -45,12 +46,19 @@ def test_order_and_resume():
     assert [d["chunk_id"] for d in pending(order, {"a"})] == ["b"]
 
 
-def test_scrub_drops_fields_with_an_email_or_the_home_path():
-    rec = {"chunk_id": "x", "response": "ok", "error": "at /Users/someone/tmp",
-           "note": "mail a.b@example.com"}  # fmt: skip
-    clean, dropped = scrub(rec, "/Users/someone")
-    assert dropped == ["error", "note"] and clean["response"] == "ok"
-    assert clean["scrubbed_fields"] == ["error", "note"]
+def test_scrub_redacts_in_place_and_keeps_the_response_parseable():
+    good = json.loads(response(
+        {"question": "q1", "answer": "a1", "supporting_quote": "s1"},
+        {"question": "q2", "answer": "a2", "supporting_quote": "s2"},
+    ))  # fmt: skip
+    good["questions"][1]["answer"] = "Contact a.b@example.com, see /Users/someone/x."
+    rec = {"chunk_id": "x", "response": json.dumps(good), "usage": {"note": "/Users/someone"}}
+    clean, fields = scrub(rec, "/Users/someone")
+    assert fields == ["response", "usage"] and clean["scrubbed_fields"] == fields
+    parsed, why = parse_response(clean["response"])
+    assert why is None
+    assert parsed[1]["answer"] == "Contact [redacted email], see [redacted home]/x."
+    assert parsed[0]["answer"] == "a1" and clean["usage"] == {"note": "[redacted home]"}
 
 
 def test_table_outcome_keeps_the_factual_question_with_scale():

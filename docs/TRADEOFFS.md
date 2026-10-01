@@ -1805,7 +1805,9 @@ Implements item 4 of "LLM seeding" (as amended for draw_v2).
 - One call per chunk on `tier_large`. Each record is appended and fsynced as it
   arrives; a chunk with any recorded response, an error included, is never
   called again. Only transport errors (timeout, exit without output) are retried,
-  3 attempts; an `is_error` result is recorded and becomes a drop.
+  3 attempts; an `is_error` result is recorded and becomes a drop (superseded:
+  a call with no response halts the run and leaves the chunk pending, see "seeding
+  runner halts on a call with no response" below).
 - Each raw record carries backend, requested and served model, prompt sha, draw
   sha, usage (including the CLI's cache-read and cache-creation tokens, which its
   `input_tokens` excludes) and CLI version. Before writing, any field holding an
@@ -1818,3 +1820,50 @@ Implements item 4 of "LLM seeding" (as amended for draw_v2).
 *Alternatives:* write records at the end of the run (a crash loses them); retry
 `is_error` results (a re-generation); record only `input_tokens` (understates
 input on the CLI, which reported 2 for the verification call).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding runner halts on a call with no response; rebuild before the run
+
+Decided by the supervisor before any drawn chunk was called; recorded for the
+owner. Amends "the seeding runner".
+
+1. **A call that returns no model output does not consume the chunk.** An
+   `is_error` result, non-JSON output, a missing `modelUsage`, or a transport
+   failure after 3 attempts goes to `eval/seeding/call_errors_v1.jsonl` (one
+   record per halt, with every attempt's error and UTC time); the chunk stays
+   pending and the run exits 1. `raw_v1.jsonl` holds only records with a
+   response. A chunk that has halted 3 runs stops the run (exit 2) without a
+   call: it is reported, not skipped. Not a re-generation: nothing is selected
+   on model output, and every failed attempt stays on file. Why: a Max usage
+   limit, a 429/529 or an expired login at call N would otherwise turn every
+   remaining chunk into a `call_error` drop within seconds, and there is no
+   third draw. Tested with a patched `complete` (`tests/unit/test_seed_run.py`).
+2. **Scrub redacts in place.** An email address or the home path is replaced
+   (`[redacted email]`, `[redacted home]`) and the field named in
+   `scrubbed_fields`; the field is kept, so a response still parses. Every record
+   carries `called_at` (UTC).
+3. **The offline rebuild is built before the run** (`eval/generate/seed_build.py`,
+   `scripts/seed_build.py`), a pure function of the raw file, the draw and the
+   chunks, so parse, filter and slot code cannot be fitted to the output. Stage 2
+   order: key-free filters, no-context, near-duplicate, slot fill per stratum in
+   draw order, reserve. It writes the dropped file (filter, reason, `sign_only`)
+   and prints key-free survivors per stratum with counts per filter, and refuses
+   to write candidates or the reserve while any survivor lacks a no-context
+   record; no provisional candidates file. The verification record never enters
+   it. After the run, any change to parse, filter or slot code gets an entry here
+   with counts before and after; a low yield is a finding, not a reason to loosen
+   a filter. The no-context runner comes after the run under the same one-call
+   rule; its numeric match rule is proposed before any no-context call.
+4. **Quarter label on a multi-period span (F-92), rule fixed before the run.** A
+   kept question is flagged when it carries a quarter label (Q1-Q4, "first ...
+   fourth quarter") and also states a span longer than one quarter (6/9/12
+   months, 16 to 53 weeks, first half, year to date). The rebuild counts the
+   flags; the review sheet prints the chunk header beside each question. No drop
+   and no prompt change on one observation: the prompt stays frozen.
+
+*Alternatives:*
+- *An `is_error` becomes a drop* (as first built): one outage drains the draw.
+- *A circuit breaker that still spends one chunk per incident:* each incident
+  costs a chunk with no third draw to replace it.
+- *Rebuild after the run:* the code could be fitted to the output.

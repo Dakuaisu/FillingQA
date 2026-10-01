@@ -6,10 +6,12 @@ python -m scripts.seed_run --show-verify    # outcome of the verify records, off
 python -m scripts.seed_run --run            # every pending drawn chunk, in draw order
 
 Each response is appended to eval/seeding/raw_v1.jsonl as it arrives, so a crash
-resumes; a chunk with a recorded response is never called again, an error
-included. Only transport errors (timeout, exit without output) are retried. A
-`--verify` record goes to eval/seeding/verify_v1.jsonl and never into the raw
-file or the candidates.
+resumes; a chunk with a recorded response is never called again. A call that
+returns no model output (an is_error result, non-JSON output, no modelUsage, or
+a transport failure after 3 attempts) is written to call_errors_v1.jsonl with
+every attempt, the chunk stays pending and the run halts non-zero. A chunk that
+halted 3 runs stops the run. A `--verify` record goes to verify_v1.jsonl and
+never into the raw file or the candidates.
 """
 
 from __future__ import annotations
@@ -18,6 +20,7 @@ import hashlib
 import json
 import os
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -26,18 +29,20 @@ from api.config import REPO_ROOT, generation
 from api.db import connect
 from api.generate import claude_cli
 from api.generate.generator import complete
-from eval.generate.seed_runner import drawn_order, outcome, pending, scrub
+from eval.generate.seed_runner import drawn_order, halts, outcome, pending, scrub
 from eval.generate.seeding import prompt_sha, render_prompt
 
 SEEDING = REPO_ROOT / "eval" / "seeding"
 DRAW = SEEDING / "draw_v2.json"
 RAW = SEEDING / "raw_v1.jsonl"
+ERRORS = SEEDING / "call_errors_v1.jsonl"
 VERIFY = SEEDING / "verify_v1.jsonl"
 PROMPT = REPO_ROOT / "eval" / "generate" / "prompts" / "seed_v1.txt"
 TEMPLATES = REPO_ROOT / "eval" / "templates.yaml"
 CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
 TIER = "tier_large"
 TRANSPORT_RETRIES = 3
+MAX_HALTS = 3
 
 
 def load_chunk(conn, chunk_id: str) -> dict:
@@ -57,27 +62,73 @@ def load_chunk(conn, chunk_id: str) -> dict:
     return {**dict(zip(keys, row, strict=True)), "span_scales": scales}
 
 
+class CallFailed(Exception):
+    """A call that returned no model output; the chunk stays pending."""
+
+    def __init__(self, attempts: list[dict]):
+        self.attempts = attempts
+        super().__init__(attempts[-1]["error"])
+
+
+def now() -> str:
+    return datetime.now(UTC).isoformat(timespec="seconds")
+
+
 def call(chunk: dict, meta: dict, cfg: dict, template: str, shas: dict, cli_version) -> dict:
+    """A record with the model's response, or CallFailed with every failed attempt.
+
+    Transport errors are retried up to TRANSPORT_RETRIES; any other CLI error
+    (is_error, non-JSON output, no modelUsage) fails at once.
+    """
     prompt = render_prompt(template, chunk["text"])
-    record = {**meta, "backend": cfg["backend"], "model_requested": cfg[TIER], **shas,
-              "cli_version": cli_version}  # fmt: skip
-    for attempt in range(1, TRANSPORT_RETRIES + 1):
+    attempts = []
+    for _ in range(TRANSPORT_RETRIES):
+        called_at = now()
         try:
             a = complete(prompt, cfg, TIER)
         except claude_cli.TransportError as e:
-            if attempt == TRANSPORT_RETRIES:
-                return {**record, "model_served": None, "usage": None, "response": None,
-                        "error": f"transport, {attempt} attempts: {e}"}  # fmt: skip
+            attempts.append({"called_at": called_at, "kind": "transport", "error": str(e)})
             continue
         except claude_cli.CliError as e:
-            return {**record, "model_served": None, "usage": None, "response": None,
-                    "error": str(e)}  # fmt: skip
-        return {**record, "model_served": a.model,
+            attempts.append({"called_at": called_at, "kind": "cli", "error": str(e)})
+            raise CallFailed(attempts) from e
+        return {**meta, "called_at": called_at, "backend": cfg["backend"],
+                "model_requested": cfg[TIER], "model_served": a.model, **shas,
+                "cli_version": cli_version,
                 "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                           "cache_read_tokens": a.cache_read_tokens,
                           "cache_creation_tokens": a.cache_creation_tokens},
-                "response": a.text, "error": None}  # fmt: skip
-    raise AssertionError("unreachable")
+                "response": a.text}  # fmt: skip
+    raise CallFailed(attempts)
+
+
+def run_pending(todo: list[dict], chunk_of, call_one, raw: Path, errors: Path) -> int:
+    """Call each pending chunk in order. Exit status: 0 done, 1 halted on a failed
+    call (chunk left pending, error on file), 2 refused a chunk that halted
+    MAX_HALTS runs already."""
+    past = read_jsonl(errors)
+    for i, d in enumerate(todo, start=1):
+        n = halts(past, d["chunk_id"])
+        if n >= MAX_HALTS:
+            print(f"STOP: {d['chunk_id']} halted {n} runs; not called, not skipped")
+            return 2
+        try:
+            record = call_one(chunk_of(d["chunk_id"]), d)
+        except CallFailed as e:
+            append(errors, {"chunk_id": d["chunk_id"], "kind": d["kind"],
+                            "halted_at": now(), "attempts": e.attempts})  # fmt: skip
+            print(f"HALT at [{i}/{len(todo)}] {d['chunk_id']}: {e}; chunk stays pending")
+            return 1
+        scrubbed = append(raw, record)
+        print(f"[{i}/{len(todo)}] {d['kind']} {d['chunk_id']}: ok"
+              f"{'; redacted ' + str(scrubbed) if scrubbed else ''}", flush=True)  # fmt: skip
+    return 0
+
+
+def read_jsonl(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
 def append(path: Path, record: dict) -> list[str]:
@@ -90,9 +141,7 @@ def append(path: Path, record: dict) -> list[str]:
 
 
 def recorded(path: Path) -> set[str]:
-    if not path.exists():
-        return set()
-    return {json.loads(line)["chunk_id"] for line in path.read_text(encoding="utf-8").splitlines()}
+    return {r["chunk_id"] for r in read_jsonl(path)}
 
 
 def main() -> None:
@@ -126,7 +175,13 @@ def main() -> None:
             chunk = load_chunk(conn, cid)
         kind = "table" if chunk["chunk_type"] == "table" else "synthesis"
         meta = {"chunk_id": cid, "kind": kind, "ticker": chunk["ticker"], "verification": True}
-        record = call(chunk, meta, cfg, template, shas, cli_version)
+        try:
+            record = call(chunk, meta, cfg, template, shas, cli_version)
+        except CallFailed as e:
+            append(ERRORS, {"chunk_id": cid, "kind": kind, "verification": True,
+                            "halted_at": now(), "attempts": e.attempts})  # fmt: skip
+            print(f"HALT on verification {cid}: {e}")
+            sys.exit(1)
         dropped = append(VERIFY, record)
         print(f"verify {cid}: in draw_v2 False, gold False; scrubbed fields {dropped}")
         print(json.dumps(scrub(record, os.path.expanduser("~"))[0], indent=1, ensure_ascii=False))
@@ -147,13 +202,14 @@ def main() -> None:
     if "--run" not in sys.argv:
         return
     with connect() as conn:
-        for i, d in enumerate(todo, start=1):
-            chunk = load_chunk(conn, d["chunk_id"])
-            record = call(chunk, d, cfg, template, shas, cli_version)
-            dropped = append(RAW, record)
-            print(f"[{i}/{len(todo)}] {d['kind']} {d['chunk_id']}: "
-                  f"{'error ' + record['error'] if record['error'] else 'ok'}"
-                  f"{'; scrubbed ' + str(dropped) if dropped else ''}", flush=True)  # fmt: skip
+        code = run_pending(
+            todo,
+            lambda cid: load_chunk(conn, cid),
+            lambda chunk, d: call(chunk, d, cfg, template, shas, cli_version),
+            RAW,
+            ERRORS,
+        )
+    sys.exit(code)
 
 
 if __name__ == "__main__":

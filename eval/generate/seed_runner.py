@@ -7,7 +7,6 @@ the raw file with `outcome`.
 
 from __future__ import annotations
 
-import json
 import re
 
 from eval.generate.seeding import (
@@ -40,18 +39,40 @@ def pending(order: list[dict], recorded: set[str]) -> list[dict]:
     return [d for d in order if d["chunk_id"] not in recorded]
 
 
+def _redact(value, home: str, hit: list[bool]):
+    if isinstance(value, str):
+        out = EMAIL.sub("[redacted email]", value)
+        if home:
+            out = out.replace(home, "[redacted home]")
+        if out != value:
+            hit[0] = True
+        return out
+    if isinstance(value, dict):
+        return {k: _redact(v, home, hit) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_redact(v, home, hit) for v in value]
+    return value
+
+
 def scrub(record: dict, home: str) -> tuple[dict, list[str]]:
-    """Drop every field whose value holds an email address or the home path."""
-    dropped = []
-    out = {}
+    """Redact email addresses and the home path in place; name the fields touched.
+
+    The field is kept: dropping a `response` would lose the only output for that
+    chunk.
+    """
+    out, fields = {}, []
     for k, v in record.items():
-        text = v if isinstance(v, str) else json.dumps(v)
-        if EMAIL.search(text) or (home and home in text):
-            dropped.append(k)
-            continue
-        out[k] = v
-    out["scrubbed_fields"] = dropped
-    return out, dropped
+        hit = [False]
+        out[k] = _redact(v, home, hit)
+        if hit[0]:
+            fields.append(k)
+    out["scrubbed_fields"] = fields
+    return out, fields
+
+
+def halts(error_records: list[dict], chunk_id: str) -> int:
+    """How many runs have halted on this chunk (one error record per halt)."""
+    return sum(1 for r in error_records if r["chunk_id"] == chunk_id)
 
 
 def outcome(record: dict, chunk: dict, kind: str, company_names: list[str]) -> dict:
