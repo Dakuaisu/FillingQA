@@ -4501,3 +4501,26 @@ diluted EPS, $2.01). The answer was "Unknown. I don't have a reliable figure
 date and labels (`['28,', '2026,', '10', '2', '2026']`); "2" is within 0.5% of
 2.01. The rule and extractor are frozen from the first no-context call; the drop
 stands. The other 17 drops match a figure the answer states.
+
+## 2026-10-01 — Near-duplicate stage and slot fill (no candidates file)
+
+`scripts/seed_build.py` now runs the near-duplicate stage (`drop_near_duplicates`
+and `near_duplicates`, written before the run, unchanged): question embeddings
+from the local retrieval model, cosine > `near_duplicate_cosine` (0.92) against
+the 200 existing candidates' questions and earlier seeded questions in draw
+order; then `fill_slots`. It writes no candidates or reserve file. Two runs left
+`dropped_v1.jsonl` byte-identical (44 lines). `make test`: 346 passed; `make
+lint` clean.
+
+`python -m scripts.seed_build` (near-duplicate part):
+
+    near-duplicate stage (cosine > 0.92, question embeddings, against 200 existing candidates and earlier seeded questions): 4 dropped, appended to eval/seeding/dropped_v1.jsonl
+      0001628280-26-054343:1228.0:1228.0 ~ 0000019617-25-000615:1270.0:1270.0 (cosine 0.935): For JPMorgan Chase & Co in the six months ended June 30, 2026 (Q2 FY2026), what was the fa
+      0000034088-24-000050:122.0:122.0 ~ 0000034088-25-000042:83.0:83.0 (cosine 0.962): What was Exxon Mobil Corporation's total sales and other operating revenue, in millions of
+      0000034088-24-000068:242.0:242.0 ~ 0000034088-24-000068:224.0:224.0 (cosine 0.956): What were Exxon Mobil Corporation's total Specialty Products earnings (U.S. GAAP), in mill
+      0001045810-24-000316:197.0:198.0 ~ 0001045810-25-000230:188.0:191.0 (cosine 0.927): In NVIDIA Corp's 10-Q for the third quarter of fiscal year 2025, what types of arrangement
+      highest cosine of a seeded question to an existing candidate: max 0.909, median 0.772
+    
+    slot fill (first survivors in draw order): candidates 83 ({'table': 47, 'synthesis': 36} of slots {'table': 50, 'synthesis': 40}); reserve 53
+      short strata (7): synthesis AAPL 10-K I.1A 0/1, synthesis COST 10-K I.1A 0/1, synthesis NVDA 10-K I.1A 0/1, synthesis TGT 10-K I.1A 0/1, table AAPL 10-K II.8 1/2, table AAPL 10-K IV.15 0/1, table AAPL 10-Q I.2 0/1
+    no candidates or reserve file written: the llm_seeded item fields are not decided
