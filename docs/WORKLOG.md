@@ -3283,3 +3283,87 @@ The same check against a copy of the manifest with xbrl_0001's value set to 1
     tampered manifest (xbrl_0001 value -> 1): verify returns 1
 
 `make test`: 272 passed (zero cases added to `test_format_value`); `make lint` clean.
+
+## 2026-10-01 — Comparison supply measured (no comparison item generated)
+
+`python -m scripts.comparison_supply` (every number below is its output; the
+earlier ad hoc figures are folded in):
+
+    eligible keys: 1713; slots holding more than one key: 0
+    
+    pairs by (kind, gap): total / one chunk holds both exact values
+      annual   gap 1:  103 /  103
+      annual   gap 2:   49 /   49
+      instant  gap 1:  363 /  129
+      instant  gap 2:  185 /    3
+      quarter  gap 1:  345 /  345
+      quarter  gap 2:  178 /    0
+      ytd      gap 1:  287 /  287
+      ytd      gap 2:  146 /    0
+      instant gap 1 by (year-end or quarter-end, shared chunk): {('quarter-end', False): 234, ('quarter-end', True): 56, ('year-end', True): 73}
+      consecutive-year duration pairs: 735; with a shared chunk: 735
+    
+    pairs needing two chunks (no shared gold chunk): 740 {'instant/gap1': 234, 'instant/gap2': 182, 'quarter/gap2': 178, 'ytd/gap2': 146}
+      of which neither side is a drawn xbrl_numeric key: 622
+      per ticker, no drawn key (quarter / ytd / instant / total / line items):
+        COST    19   14   63    96   16
+        TGT     18   18   14    50   15
+        JPM     17   12   17    46   13
+        BAC     17   14   23    54   12
+        AAPL    29   23   62   114   21
+        NVDA    22   16   64   102   18
+        XOM     15   14   32    61   14
+        PFE     20   12   67    99   16
+      evidence sets per pair, every (a, b) combination: {1: 219, 2: 191, 3: 8, 4: 69, 6: 6, 8: 61, 9: 2, 12: 4, 14: 1, 15: 26, 16: 1, 18: 13, 20: 4, 21: 3, 24: 2, 25: 4, 27: 1, 28: 2, 35: 1, 60: 1, 80: 2, 136: 1}
+      edge values: zero side 1; negative side 10; sign flip 5
+      equal values: 0
+      sides printing at different (or several) scales, USD: 1
+        NVDA income_tax 2024-07-28 (6,) / 2026-07-26 (6, 9)
+    
+    untagged co-occurrence: pairs with a chunk printing both sides' values: 29 of 622; by group {'instant/gap1': 15, 'instant/gap2': 6, 'quarter/gap2': 5, 'ytd/gap2': 3}
+      chunks per such pair: {1: 22, 2: 5, 3: 1, 12: 1}
+        TGT income_tax ytd/gap2 2024-08-03 (['630']) / 2026-08-01 (['835']): ['0000027419-24-000152:191.0:191.0', '0000027419-24-000152:36.0:36.0']
+        TGT share_repurchases ytd/gap2 2024-08-03 (['155']) / 2026-08-01 (['3']): ['0000027419-24-000032:664.0:670.0', '0000027419-24-000152:119.0:119.0', '0000027419-24-000152:214.0:224.0']
+        TGT stockholders_equity instant/gap2 2024-05-04 (['13,840']) / 2026-05-02 (['16,395']): ['0000027419-26-000022:210.0:210.0']
+        TGT stockholders_equity instant/gap2 2024-08-03 (['14,429']) / 2026-08-01 (['17,843']): ['0000027419-26-000042:222.0:222.0']
+        TGT stockholders_equity instant/gap2 2023-10-28 (['12,514']) / 2025-11-01 (['15,501']): ['0000027419-25-000126:235.0:235.0']
+        TGT stockholders_equity instant/gap2 2024-02-03 (['13,432']) / 2026-01-31 (['16,165']): ['0000027419-26-000016:370.0:370.0']
+        XOM income_tax quarter/gap2 2024-03-31 (['3,803']) / 2026-03-31 (['2,495']): ['0000034088-24-000029:39.0:39.0', '0000034088-25-000024:40.0:40.0']
+        BAC credit_loss_allowance instant/gap1 2023-09-30 (['13,287']) / 2024-09-30 (['13,251']): ['0000070858-24-000280:605.1:605.1']
+        BAC eps_diluted quarter/gap2 2023-09-30 (['0.90']) / 2025-09-30 (['1.06']): ['0000070858-25-000405:121.2:121.2', '0000070858-26-000157:469.3:469.3', '0000070858-26-000394:115.2:115.2']
+        BAC stockholders_equity instant/gap1 2023-09-30 (['287,064']) / 2024-09-30 (['296,512']): ['0000070858-24-000280:683.1:683.1', '0000070858-25-000139:1183.1:1183.1']
+        BAC stockholders_equity instant/gap1 2024-09-30 (['296,512']) / 2025-09-30 (['304,152']): ['0000070858-25-000405:655.1:655.1']
+        PFE income_tax quarter/gap2 2023-10-01 (['964']) / 2025-09-28 (['216']): ['0000078003-25-000150:180.2:180.2']
+        PFE income_tax ytd/gap2 2024-06-30 (['159']) / 2026-06-28 (['54']): ['0000078003-23-000115:499.0:499.0', '0000078003-24-000166:58.0:58.0']
+        PFE net_income quarter/gap2 2024-06-30 (['41']) / 2026-06-28 (['248']): ['0000078003-26-000054:462.2:462.2', '0000078003-26-000095:504.5:504.5']
+        AAPL cash_and_equivalents instant/gap1 2025-03-29 (['28,162']) / 2026-03-28 (['45,572']): ['0000320193-26-000013:62.1:62.1']
+        AAPL cash_and_equivalents instant/gap1 2025-06-28 (['36,269']) / 2026-06-27 (['39,544']): ['0000320193-26-000020:62.1:62.1']
+        COST cash_and_equivalents instant/gap1 2023-11-26 (['17,011']) / 2024-11-24 (['10,907']): ['0000909832-24-000079:61.1:61.1']
+        COST cash_and_equivalents instant/gap1 2024-11-24 (['10,907']) / 2025-11-23 (['16,217']): ['0000909832-25-000169:61.1:61.1']
+        COST cash_and_equivalents instant/gap1 2024-02-18 (['9,095']) / 2025-02-16 (['12,356']): ['0000909832-25-000015:68.1:68.1']
+        COST cash_and_equivalents instant/gap1 2025-02-16 (['12,356']) / 2026-02-15 (['17,383']): ['0000909832-26-000029:68.1:68.1']
+        COST cash_and_equivalents instant/gap1 2024-05-12 (['10,404']) / 2025-05-11 (['13,836']): ['0000909832-25-000033:68.1:68.1']
+        COST cash_and_equivalents instant/gap1 2025-05-11 (['13,836']) / 2026-05-10 (['18,946']): ['0000909832-26-000051:68.1:68.1']
+        COST cash_and_equivalents instant/gap2 2023-09-03 (['13,700']) / 2025-08-31 (['14,161']): ['0000909832-25-000101:467.1:467.1']
+        COST share_repurchases quarter/gap2 2023-11-26 (['162']) / 2025-11-23 (['210']): ['0000909832-25-000033:126.0:126.0']
+        NVDA cash_and_equivalents instant/gap1 2024-04-28 (['7,587']) / 2025-04-27 (['15,234']): ['0001045810-25-000116:70.1:70.1']
+        NVDA cash_and_equivalents instant/gap1 2025-04-27 (['15,234']) / 2026-04-26 (['13,237']): ['0001045810-26-000052:71.1:71.1']
+        NVDA cash_and_equivalents instant/gap1 2025-07-27 (['11,639']) / 2026-07-26 (['22,443']): ['0001045810-26-000075:78.1:78.1']
+        NVDA cash_and_equivalents instant/gap1 2023-10-29 (['5,519']) / 2024-10-27 (['9,107']): ['0001045810-24-000316:78.1:78.1']
+        NVDA cash_and_equivalents instant/gap2 2024-01-28 (['7,280']) / 2026-01-25 (['10,605']): ['0001045810-26-000021:778.2:778.2']
+
+Every consecutive-year duration pair (735) has one chunk holding both exact
+values: a later filing prints the prior-year column. So PRD Stage 3's "gold set
+= both chunk_ids" holds for none of them. The pairs with no shared gold chunk
+are 740 in four groups: instant one year apart 234, instant two years 182,
+quarter two years 178, year-to-date two years 146. 622 of them have neither
+side among the 160 drawn keys; JPM has the fewest (46).
+
+Untagged co-occurrence matches the sides' printed tokens anywhere in the filer's
+chunks, so it is an upper bound. Small values ("3", "41") can match by
+coincidence. Real cases include 10-Q cash-flow statements, which print the
+year-ago quarter-end cash under another tag.
+
+(Correction to the report of this measurement: it summed the two-chunk pool as
+324 + 234 = 558 and left out the 182 instant pairs two years apart, and it gave
+the per-ticker minimum as 41; it is 46, JPM.)
