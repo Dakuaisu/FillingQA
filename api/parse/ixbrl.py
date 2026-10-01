@@ -134,6 +134,10 @@ class Block:
     char_start: int
     char_end: int
     kind: str = "paragraph"  # 'paragraph' | 'heading' | 'table'
+    # Tables only: rows of cells, each (char_start, char_end, colspan, rowspan).
+    # The offsets index the same normalized text, so cell contents never get a
+    # second coordinate system of their own.
+    rows: list[list[tuple[int, int, int, int]]] | None = None
 
     @property
     def length(self) -> int:
@@ -193,6 +197,13 @@ def _namespace(el: etree._Element) -> str:
     if isinstance(tag, str) and tag.startswith("{"):
         return tag[1 : tag.index("}")]
     return ""
+
+
+def _span(el: etree._Element, attr: str) -> int:
+    try:
+        return max(1, int(el.get(attr, "1")))
+    except ValueError:
+        return 1
 
 
 class _Emitter:
@@ -263,6 +274,8 @@ class _Walker:
         self.dei: dict[str, str] = {}
         self.unparsed = 0
         self._table_depth = 0
+        # One entry per open <table>; a row or cell belongs to the innermost one.
+        self._table_rows: list[list[list[tuple[int, int, int, int]]]] = []
 
     # -- ix element handling ------------------------------------------------
 
@@ -371,10 +384,20 @@ class _Walker:
 
         if is_table:
             self._table_depth += 1
+            self._table_rows.append([])
+        elif local == "tr" and not is_ix and self._table_rows:
+            self._table_rows[-1].append([])
+
+        cell_start = len(self.out) if local in CELL_TAGS and not is_ix else None
 
         self.out.text(el.text or "")
         for child in el:
             self.visit(child)
+
+        if cell_start is not None and self._table_rows and self._table_rows[-1]:
+            self._table_rows[-1][-1].append(
+                (cell_start, len(self.out), _span(el, "colspan"), _span(el, "rowspan"))
+            )
 
         if is_ix and start is not None:
             self._record(el, start, len(self.out))
@@ -384,9 +407,10 @@ class _Walker:
 
         if is_table:
             self._table_depth -= 1
+            rows = self._table_rows.pop()
             # Discard any blocks recorded inside: a table is one block, always.
             del self.blocks[blocks_before:]
-            self._add_block(local, block_start, len(self.out), kind="table")
+            self._add_block(local, block_start, len(self.out), kind="table", rows=rows)
         elif block and self._table_depth == 0 and len(self.blocks) == blocks_before:
             # A leaf block: nothing inside it recorded a block of its own.
             kind = "heading" if local in HEADING_TAGS else "paragraph"
@@ -394,7 +418,14 @@ class _Walker:
 
         self._tail_text(el)
 
-    def _add_block(self, tag: str, start: int | None, end: int, kind: str) -> None:
+    def _add_block(
+        self,
+        tag: str,
+        start: int | None,
+        end: int,
+        kind: str,
+        rows: list[list[tuple[int, int, int, int]]] | None = None,
+    ) -> None:
         if start is None:
             return
         raw = self.out.build()[start:end]
@@ -403,7 +434,7 @@ class _Walker:
         start, end = start + lead, end - trail
         if end <= start:
             return  # a layout-only element with no text of its own
-        self.blocks.append(Block(tag=tag, char_start=start, char_end=end, kind=kind))
+        self.blocks.append(Block(tag=tag, char_start=start, char_end=end, kind=kind, rows=rows))
 
     def _tail_text(self, el: etree._Element) -> None:
         self.out.text(el.tail or "")

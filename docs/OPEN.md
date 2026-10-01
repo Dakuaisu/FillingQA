@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 23 |
-| RESOLVED | 21 |
-| **Total** | **44** |
+| OPEN | 24 |
+| RESOLVED | 22 |
+| **Total** | **46** |
 
 ---
 
@@ -22,8 +22,8 @@ carries the state.
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
 | F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures | Phase 3 | OPEN |
-| F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | Phase 1 step 4 | OPEN |
 | F-39 | `api/config.yaml` sector labels exist but nothing reads them; `companies.sector` is still NULL | Phase 1 step 5 | OPEN |
+| F-45 | COST states units once per section ("(amounts in millions, ...)" under the Item 7 and notes headings), so PRD 6.2's 500-char caption window finds none for 13-24 iXBRL-scaled tables per COST filing; AAPL continuation tables miss 2-4. Those tables get no scale in their context line -- the error the context line exists to prevent | Phase 1 step 4c | OPEN |
 
 ## Blocking Phase 2
 
@@ -64,6 +64,7 @@ carries the state.
 | F-24 | §15's prompt-injection fixture is synthetic corpus data, which CLAUDE.md rule 2 forbids | OPEN |
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
+| F-46 | Some `layout` tables carry prose content, not scaffolding: TGT's critical audit matters and cybersecurity-oversight tables, AAPL's audit-matter tables. Phase 2 must chunk layout tables as prose rather than drop them | OPEN |
 
 ## Resolved
 
@@ -90,6 +91,7 @@ carries the state.
 | F-41 | `make test` and CI run bare `pytest`, which does not put the repo root on `sys.path`, so `from tests.conftest import ...` fails collection. Only `python -m pytest` worked | `pythonpath = ["."]` in `[tool.pytest.ini_options]`. Verified: `make test` 59 passed, 3 snapshots passed | 2026-10-01 |
 | F-43 | Re-downloaded raw bytes differ from `tests/fixtures/manifest.json` for all 3 fixtures: SEC's edge injects a 114-byte `<script>` before `</body>`. Parser output unaffected | Accession is the identity; `content_hash` stays raw sha256 as provenance; freeze compares `text_sha256` under a fixed `parser_version` (F-42). Manifest unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-44 | `make lint` failed: `ruff format --check` would reformat `tools/bridge.py` | `[tool.ruff.format] exclude = ["tools"]`; `ruff check` still covers it; file untouched. Verified: `23 files already formatted`. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | `classify()`: data iff some row holds two or more figures. TGT 10-K: 64 data / 186 layout, layout inspected by text (80 page footers, ~70 running headers, cover/signature/TOC). Split for all 12 filings in WORKLOG | 2026-10-01 |
 
 ---
 
@@ -102,10 +104,6 @@ and require Phase 3's auto-generation to filter on it. A segment revenue line is
 not "revenue"; templating a question from one produces a wrong answer with a
 correct-looking citation.
 
-**F-35 — layout tables.** Classify table blocks before serializing: a data table
-has numeric cells and a header row, a layout table does not. Report the split per
-filing rather than assuming a heuristic works.
-
 **F-37 — parser tests.** Commit 2–3 real filings gzipped under
 `tests/fixtures/filings/` with a manifest recording accession, CIK, form,
 `period_end`, source URL and sha256 (CLAUDE.md rule 2: fixtures must be real
@@ -114,6 +112,12 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 **F-42 — eval corpus as accession list.** Run the 3-year window once to list
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
+
+**F-45 — section-level captions.** Options: inherit the nearest caption in the
+same section (risk: a stray "(in thousands)" in Item 1 leaks into later
+tables); fall back to the iXBRL `scale` of tagged cells (authoritative, but only
+for tagged tables -- MD&A tables are often untagged); or leave None. Caption and
+iXBRL never disagreed in 12 filings, which favours using iXBRL as the fallback.
 
 **F-39 — sector labels.** Wire `api/config.yaml` into `upsert_company` so
 `companies.sector` is populated. Currently the file exists and nothing reads it,

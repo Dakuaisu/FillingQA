@@ -197,3 +197,76 @@ F-43 and F-44 resolved by supervisor decision (TRADEOFFS 2026-10-01, AUTONOMOUS
 DECISION). `[tool.ruff.format] exclude = ["tools"]` added; `make lint` now
 `23 files already formatted`. `git rm -r --cached .omo .serena` removed 4 files
 from the index; they remain on disk.
+
+## 2026-10-01 — Step 4c: table extraction
+
+Committed F-43/F-44/untracking as `e725d13` first; only ` M tools/bridge.py`
+remained.
+
+**Walker.** `Block.rows` added: per table, rows of `(char_start, char_end,
+colspan, rowspan)` cell ranges into the normalized text. Purely additive -- the
+emitted text is unchanged, and the 3 existing snapshots (`text_sha256`, span
+counts, sections) pass unmodified. Never ran `--snapshot-update`.
+
+**`api/parse/tables.py`.** Cells placed on the column grid with colspan and
+rowspan; `$` / `%` / `)` fragment cells merged into their figure; logical columns
+recovered by merging the column ranges of body cells (spacer columns are the
+gaps). Classification: `data` if some row holds two or more figures, else
+`layout` (F-35). Header rows end at the last row labelling a value column;
+label-only rows after it ("ASSETS:", "Net sales:") are body. Column labels join
+every header cell above a column, so AAPL's "2025" super-header labels all seven
+region columns.
+
+Bugs found against real data, each fixed and covered by a test:
+- `$` + `(861)` merged to `$(861)`, which `parse_number` rejected; the cell fell
+  into the label column. `parse_number` now strips a leading `$` first.
+- Grouping columns on figures only folded AAPL Term Debt's maturity and rate
+  columns into the row label and shifted every header. Columns now form from all
+  body cells right of the label column.
+- AAPL Term Debt's header was still one column left: the HTML uses `rowspan=2`.
+  The walker now records rowspan and the grid honours occupied slots.
+- Title fallback picked up the previous table's last row; now walks preceding
+  *blocks* and stops at a table.
+
+**Unit-scale caption.** `detect_unit_scale` (pure, 10 tests) takes the caption
+nearest the table, and the scale before "except". Searches the 500 characters
+before the table *plus the table's own header rows*, because TGT prints
+"(millions)" inside the table, without "in". Captions naming two scales with no
+"except" return None (AAPL "(net income in millions and shares in thousands)").
+
+**12-filing split** (`miss` = iXBRL says the table is scaled, no caption found;
+`noscale` also counts legitimately unscaled tables such as store counts):
+
+    ticker accession              form  tables  data layout scale  ixsc agree disagr  miss title noscale
+    AAPL   0000320193-25-000079   10-K      54    43     11    35    31    27      0     4    28       8
+    AAPL   0000320193-26-000006   10-Q      29    23      6    21    16    14      0     2    19       2
+    AAPL   0000320193-26-000013   10-Q      31    25      6    22    18    15      0     3    20       3
+    AAPL   0000320193-26-000020   10-Q      32    26      6    23    19    16      0     3    21       3
+    COST   0000909832-25-000101   10-K      56    44     12     8    29     5      0    24    27      36
+    COST   0000909832-25-000169   10-Q      35    27      8     6    18     5      0    13    15      21
+    COST   0000909832-26-000029   10-Q      36    28      8     7    19     6      0    13    16      21
+    COST   0000909832-26-000051   10-Q      36    28      8     7    19     6      0    13    16      21
+    TGT    0000027419-25-000126   10-Q     102    34     68    25    18    18      0     0    34       9
+    TGT    0000027419-26-000016   10-K     250    64    186    48    41    39      0     2    62      16
+    TGT    0000027419-26-000022   10-Q      95    30     65    22    16    16      0     0    30       8
+    TGT    0000027419-26-000042   10-Q      97    32     65    23    16    16      0     0    32       9
+
+TGT 10-K layout (186) inspected by text: 80 page footers ("TARGET CORPORATION |
+2025 Form 10-K | 8"), ~70 running headers ("BUSINESS | Table of Contents"),
+cover, signature and TOC tables, and 4 prose-in-table blocks (F-46). No data
+table in the slice is scaffolding.
+
+Caption scale vs iXBRL `scale`: **0 disagreements** across all 12 filings. COST
+misses 13-24 per filing because it states units once per section (F-45).
+
+**Independent cross-check.** iXBRL tags each figure where it prints, so the
+tagged figures inside a table, in document order, must be an ordered subsequence
+of the extracted cells. 266 tagged data tables across the 12 filings: all pass
+(the one scratch-script miss was a `—%` nil cell the script did not read as a
+dash; the committed test handles it). Committed as
+`test_every_tagged_figure_survives_extraction_in_order` for the 3 fixtures.
+
+**Tests.** `tests/unit/test_tables.py` (26) and
+`tests/snapshot/test_table_extraction.py` (13, expected values written out and
+hand-verified by arithmetic, see its docstring). `parse_summary` unchanged, so
+no snapshot was re-blessed. `make test`: 103 passed, 3 snapshots passed.

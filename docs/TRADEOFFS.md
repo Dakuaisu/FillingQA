@@ -500,3 +500,33 @@ stay on disk.
 
 **Rejected:** *leave them tracked.* The ignore rule does not apply to tracked
 files, so `.omo/` session state would keep showing up in every diff.
+
+---
+
+## 2026-10-01 — Step 4c: where real tables departed from PRD 6.2 step 3
+
+Each of these is a place the data contradicted the PRD's wording. Taken to keep
+moving, recorded so the owner can overturn them.
+
+1. **A bare year is not a numeric cell for header detection.** PRD: header rows
+   are "first row(s) with no numeric cells". `2025 | 2024 | 2023` is the most
+   common header in the slice and is numeric under that rule.
+2. **The caption search includes the table's own header rows.** PRD: "the
+   preceding 500 characters". TGT prints "(millions)" inside the table, and
+   without "in", so PRD's `in millions` pattern would miss it twice over.
+3. **The scale before "except" is the table's scale.** AAPL's statements read
+   "(In millions, except number of shares, which are reflected in thousands, and
+   per-share amounts)". Two scales with no "except" returns None, never a guess.
+4. **`fiscal_periods` holds the printed column labels**, e.g. "Years ended
+   September 27, 2025", "Three Months Ended March 28, 2026", TGT's "2025". PRD
+   6.2's example is `["FY2024", "FY2023"]`. Converting a printed date to an FY
+   label is the calendar derivation finding #5 rejected (TGT fiscal 2025 ends
+   2026-01-31). The issuer's fiscal label for the *document* is in the context
+   line, from dei; per-column labels stay as printed.
+5. **Table titles are heuristic and PRD does not define them.** Order: a
+   label-only header row inside the table, else the nearest short heading in the
+   preceding blocks (skipping captions, page furniture and "...as follows:"
+   lead-ins, stopping at prose or another table), else the label-column header.
+   When none is found the context line reads `[Table | ...]`, never a guess.
+6. **Currency is "USD" only when a cell prints `$`.** No currency is inferred
+   from the company.

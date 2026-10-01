@@ -57,6 +57,11 @@ def parse_number(text: str) -> Decimal:
         raise NumberFormatError("cannot parse an empty string as a number")
 
     # Accounting convention: parentheses mean negative.
+    # "$ (861)" is how a negative dollar figure prints when the `$` sits in its
+    # own cell; the parentheses are only visible once the `$` is gone.
+    if s.startswith("$"):
+        s = s[1:].strip()
+
     negative = False
     if s.startswith("(") and s.endswith(")"):
         negative = True
