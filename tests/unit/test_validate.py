@@ -24,6 +24,7 @@ from api.parse.validate import (
     score,
     score_components,
     span_rows,
+    stub_items,
 )
 from tests.conftest import AAPL_10K, AAPL_10Q, TGT_10K, fixture_bytes
 
@@ -79,20 +80,38 @@ def test_each_assertion_quarantines(change, message):
     assert message in failures[0]
 
 
-def test_a_cross_reference_stub_is_too_short():
-    # JPM's 10-K, as measured: Item 7 and 7A are "refer to the Annual Report" stubs.
-    jpm = replace(
-        AAPL_10K_MEASURED, item_chars={**AAPL_10K_MEASURED.item_chars, "7": 395, "7A": 269}
-    )
+def test_an_item_7_stub_quarantines():
+    # JPM's 10-K, as measured: Item 7 points to Annual Report pages (F-66).
+    jpm = replace(AAPL_10K_MEASURED, item_chars={**AAPL_10K_MEASURED.item_chars, "7": 395})
     failures = check(jpm, BOUNDS)
-    assert len(failures) == 1
-    assert "Item 7 is 395 chars" in failures[0] and "Item 7A is 269 chars" in failures[0]
+    assert len(failures) == 1 and "Item 7 is 395 chars <= 1000" in failures[0]
 
 
-def test_item_floors_come_from_config():
-    floors = BOUNDS["min_required_item_chars"]
-    assert set(floors["10-K"]) == {"1", "1A", "7", "7A", "8"}
-    assert set(floors["10-Q"]) == {"I.1", "I.2"}
+@pytest.mark.parametrize("code, chars", [("7A", 217), ("8", 206)])
+def test_7a_and_8_may_be_stubs(code, chars):
+    # BAC's Item 7A points into Item 7; NVDA's Item 8 points to Item 15 (F-68, F-69).
+    filing = replace(AAPL_10K_MEASURED, item_chars={**AAPL_10K_MEASURED.item_chars, code: chars})
+    assert check(filing, BOUNDS) == []
+    assert stub_items(filing.item_chars, BOUNDS["stub_max_chars"]) == [code]
+
+
+@pytest.mark.parametrize("code", ["1", "1A"])
+def test_items_1_and_1a_must_not_be_stubs(code):
+    filing = replace(AAPL_10K_MEASURED, item_chars={**AAPL_10K_MEASURED.item_chars, code: 400})
+    assert "cross-reference stub" in check(filing, BOUNDS)[0]
+
+
+def test_10q_items_must_not_be_stubs():
+    tenq = replace(
+        AAPL_10K_MEASURED, form_type="10-Q", has_item_1a=False, required_items=2,
+        item_chars={"I.1": 30000, "I.2": 900},
+    )  # fmt: skip
+    assert "Item I.2 is 900 chars" in check(tenq, BOUNDS)[0]
+
+
+def test_stub_bound_is_one_config_value():
+    assert BOUNDS["stub_max_chars"] == 1000
+    assert "min_required_item_chars" not in BOUNDS
 
 
 def test_item_1a_is_required_of_a_10k_only():

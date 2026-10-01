@@ -1088,3 +1088,29 @@ tokens of "; "-separated clauses; XOM's "These include ..." risk sentence).
 Whitespace windows used across the 84 parsed filings: 0. *Rejected:* raising
 `max_seq_length` (the model's input), truncation, and leaving the 12 for a later
 fix (embedding cannot run until every chunk fits).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the stub check replaces the content floors (F-69); freeze at the resulting set
+
+**The check, redefined by what it is for** -- F-66: content sitting outside the
+Item whose label it should carry. One parameter, `parser.stub_max_chars`; an
+Item at or below it is a cross-reference stub. 10-K Items 1, 1A, 7 and 10-Q
+Items I.1, I.2 must not be stubs: every Item 7 stub in the corpus (JPM, XOM) has
+its content outside the Item structure, and no data argues for relaxing 1 or 1A.
+10-K Items 7A and 8 may be stubs but must exist (PRD 6.2): BAC's and PFE's 7A
+point to "Market Risk Management" inside Item 7, NVDA's 8 to Item 15, so the
+content keeps the label the filer gave it. Validation lists each filing's stub
+Items, which makes F-68 visible per filing.
+
+The value was set only after measuring: every required Item on all 96, each
+under 5,000 chars quoted in WORKLOG. No Item 1, 1A, 7, I.1 or I.2 lies between
+500 and 5,000 chars, so `stub_max_chars: 1000` was set as specified; the Items
+at or below it are exactly JPM's and XOM's Item 7.
+
+*Rejected:*
+- *Keep the floors and freeze 84.* Excludes six faithful parses on a verdict
+  known to be false.
+- *A minimum over 8 filers.* The same defect -- a minimum over a sample rejects
+  the next legitimately shorter filer by construction -- and choosing which new
+  filings count as clean would fit the check to pass.

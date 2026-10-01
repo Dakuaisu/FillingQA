@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 34 |
-| RESOLVED | 35 |
+| OPEN | 33 |
+| RESOLVED | 36 |
 | **Total** | **69** |
 
 ---
@@ -31,7 +31,6 @@ carries the state.
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
 | F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Since the content check: all three quarantine (Item 7 395 < 15352, Item 7A 269 < 2746). Their chunks carry Item 15 / Part I labels for MD&A and statement text After F-65: Parts now right (II.5..IV.16 via the index's Part links; shape check passes). Items 7 and 8 stay stubs: the index links them to the stubs, and the stubs give the Annual Report pages with no link -- the stop condition (no page mechanism, F-55). All three stay quarantined | OPEN |
 | F-68 | NVDA's 10-K Item 8 is a cross-reference stub (206 chars: the statements are "set forth in Item 15"), a legal SEC layout faithfully parsed: NVDA's financial-statement chunks carry "Item 15" headers. It sets the measured Item 8 floor at 206, so the content check cannot catch Item 8 stubs; JPM is caught on Items 7 and 7A instead. Item-based filtering (PRD 7.1) for "Item 8" would miss NVDA's statements | OPEN |
-| F-69 | The required-Item content floors, measured on four filers, quarantine legal layouts in the new ones: Item 7A cross-references to MD&A (BAC 217, PFE 289, XOM 409-456 chars, against a 2746 floor) and XOM's genuinely shorter Items 1 (6,636-7,380 vs 15,096) and 1A (29,659-32,305 vs 33,805). XOM's Item 7 (264 chars) is a real stub -- its MD&A is in an appended Financial Section, JPM's pattern. Reported, not tuned | OPEN |
 
 ## Blocking Phase 3
 
@@ -120,6 +119,7 @@ carries the state.
 | F-64 | BAC 10-Qs print MD&A before Item 1; the index's "Part II" heading tagged it Part II, so `I.2` was missing (9 quarantined) | Part tracking reads no Item order: a Part heading followed directly by a table listing several Items heads an index entry and does not set the Part; an Item before any effective Part heading is Part I (both forms open with it). 96 filings: 78 section lists identical, all 48 clean among them; BAC 10-Qs I.2/I.3/I.4, JPM 10-Qs I.3/I.4. Parsed 66 -> 75; no previously chunked filing's chunks changed; resolve 0.999 (1.000 within Items). `parser_version` c04582d899a9 -> 2b3d5591e4c0 | 2026-10-01 |
 | F-65 | JPM 10-Qs carry no Part I Item 1/2 headings; their index links stand in for them (9 quarantined) | PRD 6.2 step 2's table-of-contents-anchor fallback: link targets recorded by the walker (`text_sha256` identical on all 96); linked index rows fill only Items primary detection missed; index Part links join the Part markers, earliest position wins. 96 filings: 84 section lists identical, all 48 clean among them; all 9 JPM 10-Qs gain I.1 and I.2. Parsed 75 -> 84; no previously chunked filing changed; resolve 0.999 (1.000 within Items). 10-K code shape: no company detects a code AAPL's set lacks. `parser_version` 2b3d5591e4c0 -> d58d26e08e5a | 2026-10-01 |
 | F-67 | Chunks over `max_seq_length`, so the embedder refused the run (4 at first; 28 after F-63..F-65: 16 layout tables chunked as prose, 12 single over-budget sentences) | Layout tables over budget split at row boundaries with the first row repeated; over-budget sentences split at "; " clauses, whitespace windows only as a last resort (0 used). 84 parsed filings: >512 28 -> 0, max 500, part overlaps 0; chunk changes in 33 filings, all 244 traced to a split unit or its prose run; embed check passed on 18,788 chunks, 0 without an embedding; resolve unchanged 177,144 of 177,240. `chunker_version` -> 964f77f6f9cb. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-69 | Content floors measured on four filers quarantined faithful parses: BAC's and PFE's Item 7A point into Item 7 (217 / 289 chars) | The check is redefined by what it is for: `parser.stub_max_chars: 1000`; 10-K Items 1, 1A, 7 and 10-Q I.1, I.2 must not be stubs; 7A and 8 may be, and are listed per filing. Set after measuring all 96: no must-not-be-stub Item between 500 and 5,000 chars. Result: 90 parsed, BAC x3 and PFE x3 admitted, JPM x3 and XOM x3 quarantined on Item 7 alone; the 84 previously chunked filings unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 

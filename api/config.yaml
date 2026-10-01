@@ -176,13 +176,14 @@ corpus:
 parser:
   min_sections: 5
   min_data_tables: 10       # data tables, not layout scaffolding (F-35)
-  # Minimum text length (chars) of each required Item. Each value is the measured
-  # minimum across the 48 filings of AAPL, COST, NVDA and TGT that parsed cleanly
-  # on 2026-10-01 (distribution in WORKLOG). An Item shorter than every one of
-  # those is a cross-reference stub or a mis-detected section, not content.
-  min_required_item_chars:
-    10-K: {"1": 15096, "1A": 33805, "7": 15352, "7A": 2746, "8": 206}
-    10-Q: {"I.1": 18054, "I.2": 15310}
+  # A required Item at or below this length is a cross-reference stub: it points
+  # elsewhere instead of holding content. 10-K Items 1, 1A, 7 and 10-Q Items I.1,
+  # I.2 must not be stubs -- every Item 7 stub in the corpus (JPM, XOM) has its
+  # content outside the Item structure. 10-K Items 7A and 8 may be: a 7A pointing
+  # into Item 7, or an 8 pointing to Item 15, leaves the content under the label
+  # the filer gave it (F-69). Set after measuring all 96 filings on 2026-10-01:
+  # no Item that must not be a stub lies between 500 and 5,000 chars (WORKLOG).
+  stub_max_chars: 1000
   alpha_ratio:              # letters / all characters of the normalized text
     min: 0.4
     max: 0.95

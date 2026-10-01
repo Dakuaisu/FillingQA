@@ -62,7 +62,7 @@ class Measurements:
     missing_items: list[str] = field(default_factory=list)
     required_items: int = 0
     has_item_1a: bool = False
-    # Text length of each required Item found, keyed as in `min_required_item_chars`.
+    # Text length of each required Item found: 10-K by item code, 10-Q qualified.
     item_chars: dict[str, int] = field(default_factory=dict)
     data_tables: int = 0
     scaled_caption: int = 0
@@ -80,6 +80,19 @@ class Measurements:
 def _collapsed(cell: str) -> bool:
     parts = cell.split()
     return len(parts) > 1 and all(is_value(p) for p in parts)
+
+
+# Required Items whose content must sit under their own label. 10-K Items 7A and
+# 8 are required to exist (PRD 6.2) but may be stubs: 7A commonly points into
+# Item 7, and 8 into Item 15, which keeps the content under a label the filer
+# chose (F-68, F-69).
+MUST_NOT_BE_STUBS = {"10-K": {"1", "1A", "7"}, "10-Q": {"I.1", "I.2"}}
+
+
+def stub_items(item_chars: dict[str, int], stub_max: int) -> list[str]:
+    """Required Items at or below the stub length -- listed per filing, so a 7A
+    or 8 that points elsewhere is visible even when it is allowed."""
+    return sorted(code for code, n in item_chars.items() if n <= stub_max)
 
 
 def required_item_chars(sections: list, form_type: str) -> dict[str, int]:
@@ -126,16 +139,15 @@ def check(m: Measurements, bounds: dict) -> list[str]:
         failures.append(f"{m.sections} sections < {bounds['min_sections']}")
     if m.missing_items:
         failures.append(f"required Items missing: {m.missing_items}")
-    floors = bounds["min_required_item_chars"].get(m.form_type, {})
-    short = [
-        f"Item {code} is {n} chars < {floors[code]}"
+    stubs = [
+        f"Item {code} is {n} chars <= {bounds['stub_max_chars']}"
         for code, n in sorted(m.item_chars.items())
-        if code in floors and n < floors[code]
+        if code in MUST_NOT_BE_STUBS[m.form_type] and n <= bounds["stub_max_chars"]
     ]
-    if short:
-        # Existence is not content: a cross-reference stub or a mis-detected
-        # section passes the required-Items check (F-66).
-        failures.append("required Item too short: " + "; ".join(short))
+    if stubs:
+        # The Item exists but points elsewhere: its content sits outside the
+        # Item structure, under some other label (F-66). Existence is not content.
+        failures.append("required Item is a cross-reference stub: " + "; ".join(stubs))
     if m.form_type == "10-K" and not m.has_item_1a:
         failures.append("10-K has no Item 1A")
     if m.data_tables < bounds["min_data_tables"]:
@@ -292,6 +304,11 @@ def main() -> None:
                 f"{f(c['required_items'])} {value:5.3f} {written:5} "
                 f"{m.numeric_spans - m.resolved_spans:4}  "
                 + ("quarantined: " + "; ".join(failures) if failures else "parsed")
+                + (
+                    f"  stubs: {','.join(stubs)}"
+                    if (stubs := stub_items(m.item_chars, bounds["stub_max_chars"]))
+                    else ""
+                )
             )
 
 
