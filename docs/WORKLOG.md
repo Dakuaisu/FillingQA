@@ -1277,3 +1277,54 @@ Resolve:
 `navres` 0 everywhere; AAPL and COST unchanged; resolve unchanged; 0 overlaps.
 One content block dropped, TGT 10-K block 826 (F-58). `make test`: 222 passed, 3
 snapshots passed.
+
+## 2026-10-01 — Phase 2 step 4: HNSW and full-text indexes
+
+F-54 committed as `2244ebf`.
+
+`0007_chunk_indexes.sql`: `chunks_hnsw` (hnsw, `embedding vector_cosine_ops`,
+`m = 16, ef_construction = 64`) and `chunks_tsv` (gin on `tsv`), exactly as PRD 8
+writes them, built after the load. Applied; second `make migrate` printed `no
+pending migrations`. `pg_indexes` on chunks: chunks_hnsw, chunks_meta,
+chunks_pkey, chunks_tsv.
+
+`python -m scripts.check_indexes` (session `enable_seqscan = off`: 1,303 rows
+would not otherwise push the planner off a sequential scan; the 768-float query
+vector is elided in the plan):
+
+    EXPLAIN <=> ORDER BY LIMIT:
+        Limit  (cost=840.74..858.42 rows=5 width=40)
+          ->  Index Scan using chunks_hnsw on chunks  (cost=840.74..5450.06 rows=1303 width=40)
+                Order By: (embedding <=> '[...]'::vector)
+    EXPLAIN @@:
+        Bitmap Heap Scan on chunks  (cost=21.52..29.24 rows=2 width=32)
+          Recheck Cond: (tsv @@ '''inventori'' & ''valuat'''::tsquery)
+          ->  Bitmap Index Scan on chunks_tsv  (cost=0.00..21.52 rows=2 width=0)
+                Index Cond: (tsv @@ '''inventori'' & ''valuat'''::tsquery)
+        rows matching 'inventory valuation': 6
+    self-retrieval through chunks_hnsw (20 chunks):
+        0000027419-25-000126:102.0:102.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-25-000126:40.0:40.0           top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-26-000016:272.0:272.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-26-000016:548.0:554.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-26-000016:724.0:724.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-26-000022:179.0:179.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000027419-26-000042:164.0:164.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-25-000079:122.0:126.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-25-000079:396.0:396.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-25-000079:594.0:594.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-26-000006:222.0:226.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-26-000013:181.0:193.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-26-000020:110.0:110.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000320193-26-000020:51.0:55.0           top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-25-000101:308.0:313.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-25-000101:597.0:599.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-25-000101:89.0:89.0           top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-25-000169:40.0:40.0           top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-26-000029:247.0:247.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+        0000909832-26-000051:173.0:173.0         top-1 distance 0.00e+00  distance-0 results 1  self found
+    self found at distance 0: 20 of 20
+
+Both query shapes are served by their index; 20 of 20 sampled chunks return
+themselves at cosine distance 0 through chunks_hnsw, and none of the 20 has an
+identical-text twin.
