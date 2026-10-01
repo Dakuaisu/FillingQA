@@ -4382,3 +4382,122 @@ output (`diff` empty) and `dropped_v1.jsonl` is unchanged.
 
       table XOM 10-Q I.2: ['0000034088-24-000050:154.0:154.0 [flags]', '0000034088-25-000061:180.1:180.1 [flags]', '0000034088-25-000061:266.0:266.0', '0000034088-24-000029:190.0:190.0', '0000034088-24-000068:224.0:224.0', '0000034088-24-000068:242.0:242.0']
     stopped after the key-free stage: 158 key-free survivors lack a no-context record; no candidates or reserve written
+
+## 2026-10-01 — No-context run complete: 158 calls; no-context stage applied
+
+Batches (`--limit 5`, then 20s, last 13), 19:28:24Z to 19:45Z UTC, one process at
+a time, `no_context_v1.jsonl` committed after each; no halts (no errors file), all
+158 served by `claude-sonnet-5-5`, no CLI/API error text, no email or "/Users/".
+`python -m scripts.no_context_run`: `key-free survivors 158; recorded 158; pending 0`.
+
+`python -m scripts.seed_build` (no-context part; the key-free part is unchanged):
+
+    raw records 180; {'dropped:names_company': 5, 'dropped:sign_only': 0, 'dropped:unanchored_pronoun': 17, 'flagged:quarter_label_on_span': 13, 'kept': 158}
+    ...
+    no-context stage: 18 dropped, appended to eval/seeding/dropped_v1.jsonl
+    slotted strata: survivors / slots_1x / no-context dropped / near-matches / digits-only / sign-only
+      table AAPL 10-K II.8                1 / 2 / 3 / 1 / 2 / 1
+      table AAPL 10-K IV.15               0 / 1 / 2 / 0 / 0 / 0
+      table AAPL 10-Q I.1                 3 / 3 / 3 / 0 / 1 / 0
+      table AAPL 10-Q I.2                 0 / 1 / 2 / 0 / 0 / 0
+      table BAC 10-K II.7                 2 / 1 / 0 / 0 / 0 / 0
+      table BAC 10-K II.8                 2 / 1 / 0 / 0 / 0 / 0
+      table BAC 10-Q I.1                  4 / 2 / 0 / 0 / 0 / 0
+      table BAC 10-Q I.2                  4 / 2 / 0 / 1 / 0 / 0
+      table COST 10-K II.8                3 / 2 / 1 / 0 / 1 / 0
+      table COST 10-Q I.1                 5 / 3 / 1 / 0 / 1 / 0
+      table COST 10-Q I.2                 2 / 1 / 0 / 0 / 0 / 0
+      table JPM 10-Q I.1                  8 / 4 / 0 / 0 / 0 / 0
+      table JPM 10-Q I.2                  3 / 2 / 1 / 0 / 0 / 0
+      table NVDA 10-K IV.15               4 / 2 / 0 / 0 / 0 / 0
+      table NVDA 10-Q I.1                 5 / 3 / 1 / 0 / 1 / 0
+      table NVDA 10-Q I.2                 2 / 1 / 0 / 0 / 0 / 0
+      table PFE 10-K II.8                 4 / 2 / 0 / 0 / 0 / 0
+      table PFE 10-Q I.1                  6 / 3 / 0 / 1 / 0 / 0
+      table PFE 10-Q I.2                  1 / 1 / 1 / 0 / 0 / 0
+      table TGT 10-K II.8                 3 / 2 / 1 / 0 / 0 / 0
+      table TGT 10-Q I.1                  3 / 2 / 1 / 0 / 0 / 0
+      table TGT 10-Q I.2                  3 / 2 / 1 / 2 / 0 / 0
+      table XOM 10-Q I.1                  5 / 4 / 0 / 2 / 0 / 0
+      table XOM 10-Q I.2                  6 / 3 / 0 / 0 / 0 / 0
+      synthesis AAPL 10-K I.1A            0 / 1 / 0 / 0 / 0 / 0
+      synthesis AAPL 10-K II.8            1 / 1 / 0 / 0 / 0 / 0
+      synthesis AAPL 10-Q I.1             2 / 1 / 0 / 0 / 0 / 0
+      synthesis AAPL 10-Q I.2             1 / 1 / 0 / 0 / 0 / 0
+      synthesis AAPL 10-Q II.1A           1 / 1 / 0 / 0 / 0 / 0
+      synthesis BAC 10-K II.7             2 / 1 / 0 / 0 / 0 / 0
+      synthesis BAC 10-K II.8             2 / 1 / 0 / 0 / 0 / 0
+      synthesis BAC 10-Q I.1              2 / 1 / 0 / 0 / 0 / 0
+      synthesis BAC 10-Q I.2              4 / 2 / 0 / 0 / 0 / 0
+      synthesis COST 10-K I.1A            0 / 1 / 0 / 0 / 0 / 0
+      synthesis COST 10-K II.7            2 / 1 / 0 / 0 / 0 / 0
+      synthesis COST 10-K II.8            2 / 1 / 0 / 0 / 0 / 0
+      synthesis COST 10-Q I.1             2 / 1 / 0 / 0 / 0 / 0
+      synthesis COST 10-Q I.2             2 / 1 / 0 / 0 / 0 / 0
+      synthesis JPM 10-Q I.1              6 / 3 / 0 / 0 / 0 / 0
+      synthesis JPM 10-Q I.2              4 / 2 / 0 / 0 / 0 / 0
+      synthesis NVDA 10-K I.1A            0 / 1 / 0 / 0 / 0 / 0
+      synthesis NVDA 10-K IV.15           2 / 1 / 0 / 0 / 0 / 0
+      synthesis NVDA 10-Q I.1             2 / 1 / 0 / 0 / 0 / 0
+      synthesis NVDA 10-Q I.2             1 / 1 / 0 / 0 / 0 / 0
+      synthesis NVDA 10-Q II.1A           1 / 1 / 0 / 0 / 0 / 0
+      synthesis PFE 10-K I.1              2 / 1 / 0 / 0 / 0 / 0
+      synthesis PFE 10-K II.7             1 / 1 / 0 / 0 / 0 / 0
+      synthesis PFE 10-K II.8             2 / 1 / 0 / 0 / 0 / 0
+      synthesis PFE 10-Q I.1              2 / 1 / 0 / 0 / 0 / 0
+      synthesis PFE 10-Q I.2              2 / 1 / 0 / 0 / 0 / 0
+      synthesis TGT 10-K I.1A             0 / 1 / 0 / 0 / 0 / 0
+      synthesis TGT 10-K II.7             1 / 1 / 0 / 0 / 0 / 0
+      synthesis TGT 10-K II.8             2 / 1 / 0 / 0 / 0 / 0
+      synthesis TGT 10-Q I.1              2 / 1 / 0 / 0 / 0 / 0
+      synthesis TGT 10-Q I.2              2 / 1 / 0 / 0 / 0 / 0
+      synthesis XOM 10-Q I.1              2 / 2 / 0 / 0 / 0 / 0
+      synthesis XOM 10-Q I.2              4 / 3 / 0 / 0 / 0 / 0
+      totals: kept 140; {'near': 7, 'sign_only': 1, 'dropped': 18, 'digits_only': 6}
+    next: near-duplicate stage (not run here); no candidates or reserve written
+
+The 18 no-context drops (ad hoc over `dropped_v1.jsonl` and the no-context raw):
+
+    - table AAPL 10-K II.8 [no_context] no-context answer '$74,834 million' within 0.5% of '$74,834'
+        Q: What was Apple Inc.'s total other non-current assets in fiscal year 2024 (FY2024), in millions of USD?
+    - table AAPL 10-K II.8 [no_context:digits_only, sign_only] no-context answer '$19,154 million' within 0.5% of '(19,154)'
+        Q: What was Apple Inc.'s accumulated deficit as of September 28, 2024, the end of fiscal year 2024?
+    - table AAPL 10-K II.8 [no_context:digits_only] no-context answer '$7.46' within 0.5% of '$7.46'
+        Q: What was Apple Inc.'s diluted earnings per share for fiscal year 2025?
+    - table AAPL 10-K IV.15 [no_context] no-context answer '3.000%' within 0.5% of '3.000%'
+        Q: In Apple Inc.'s FY2023 10-K (Item 15 exhibit list), what interest rate applies to the global note due 2027 described in the Officer's Certif
+    - table AAPL 10-K IV.15 [no_context] no-context answer '4.750%' within 0.5% of '4.750%'
+        Q: In Apple Inc.'s FY2025 10-K (Item 15 exhibit list), what interest rate is stated for the Notes due 2035 in the Officer's Certificate dated a
+    - table AAPL 10-Q I.1 [no_context] no-context answer '$39,895 million' within 0.5% of '39,895'
+        Q: What was Apple Inc.'s cash generated by operating activities for the three months ended December 30, 2023 (Q1 FY2024)?
+    - table AAPL 10-Q I.1 [no_context:digits_only] no-context answer '2' within 0.5% of '$2.01'
+        Q: What was Apple Inc.'s diluted earnings per share for the three months ended March 28, 2026 (Q2 FY2026)?
+    - table AAPL 10-Q I.1 [no_context] no-context answer '$26.340 billion' within 0.5% of '26,340'
+        Q: What was Apple Inc.'s Services net sales for the three months ended December 28, 2024 (Q1 FY2025)?
+    - table AAPL 10-Q I.2 [no_context] no-context answer '$39,678 million' within 0.5% of '$39,678'
+        Q: What was Apple Inc.'s total gross margin, in millions of USD, for the three months ended June 29, 2024 (Q3 FY2024)?
+    - table AAPL 10-Q I.2 [no_context] no-context answer '$26.645 billion' within 0.5% of '$26,645'
+        Q: What were Apple Inc.'s Services net sales for the three months ended March 29, 2025 (Q2 FY2025)?
+    - table COST 10-K II.8 [no_context:digits_only] no-context answer '$14.16' within 0.5% of '$14.16'
+        Q: What was Costco Wholesale Corp's diluted net income per common share attributable to Costco for the 53 weeks ended September 3, 2023 (fiscal
+    - table COST 10-Q I.1 [no_context:digits_only] no-context answer '$5,008 million' within 0.5% of '5,013'
+        Q: What was Costco Wholesale Corp's net income in the 36 weeks ended May 12, 2024 (Q3 FY2024), as shown in its condensed consolidated statement
+    - table JPM 10-Q I.2 [no_context] no-context answer '$8.9 billion' within 0.5% of '$8,944'
+        Q: What was JPMorgan Chase & Co's Total Markets total net revenue for the three months ended September 30, 2025 (Q3 FY2025)?
+    - table NVDA 10-Q I.1 [no_context:digits_only] no-context answer '$0.78' within 0.5% of '$0.78'
+        Q: What was NVIDIA Corp's diluted net income per share for the three months ended Oct 27, 2024 (Q3 FY2025)?
+    - table PFE 10-Q I.2 [no_context] no-context answer '$251 million' within 0.5% of '$251'
+        Q: What were Pfizer Inc's worldwide Paxlovid revenues for the second quarter of fiscal year 2024 (quarter ended June 30, 2024)?
+    - table TGT 10-K II.8 [no_context] no-context answer '$11,886 million' within 0.5% of '11,886'
+        Q: What was Target Corporation's inventory balance as of February 3, 2024, the end of fiscal year 2023?
+    - table TGT 10-Q I.1 [no_context] no-context answer '$24.5 billion' within 0.5% of '$24,531'
+        Q: What was Target Corporation's total revenue for the three months ended May 4, 2024 (Q1 FY2024)?
+    - table TGT 10-Q I.2 [no_context] no-context answer '$1,317 million' within 0.5% of '$1,317'
+        Q: What was Target Corporation's operating income for the three months ended August 2, 2025 (Q2 FY2025)?
+
+One drop is spurious (F-97): 0000320193-26-000013:38.1:38.1 (AAPL Q2 FY2026
+diluted EPS, $2.01). The answer was "Unknown. I don't have a reliable figure
+... its Q2 FY2026 earnings release ...", and the extractor read figures from a
+date and labels (`['28,', '2026,', '10', '2', '2026']`); "2" is within 0.5% of
+2.01. The rule and extractor are frozen from the first no-context call; the drop
+stands. The other 17 drops match a figure the answer states.
