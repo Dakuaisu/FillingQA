@@ -1997,3 +1997,82 @@ scripts.seed_build` from the committed raw files.
 reference answers normalized to base units (rewords gold, F-81 settles scoring);
 candidate alternatives added to gold automatically (unreviewed evidence
 inflates recall).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: nDCG over alternative evidence sets (F-77) -- PROPOSED, not applied
+
+Status: proposed to the supervisor; no metric code exists and nothing has been
+computed against the candidates.
+
+**Definition.** nDCG@k is computed per evidence set and the item takes the best:
+
+    nDCG@k(item) = max over es in gold_evidence_sets of DCG_es@k / IDCG_es@k
+    DCG_es@k  = sum over ranks i <= k of rel_i / log2(i + 1),
+                rel_i = 1 if retrieved[i] is in es and not already counted, else 0
+    IDCG_es@k = sum over i = 1 .. min(|es|, k) of 1 / log2(i + 1)
+
+This is the reading PRD 11.2 already uses for its neighbours: retrieval
+"succeeds if any one [set] is fully covered" (Sufficiency@k) and Recall@k is
+`max_es` per-set coverage. A single-chunk set found at rank r scores
+1/log2(r+1) whatever the number of alternatives: the 8-alternative item of F-77
+with one gold chunk at rank 1 scores 1.0, not 0.25. A two-chunk comparison set
+with one chunk at rank 1 and the other missing scores 1/(1 + 1/log2 3) = 0.61;
+both at ranks 1 and 2 score 1.0. MRR, Precision@k and context precision stay as
+PRD 11.2 writes them (first chunk of any set; union for precision).
+
+*Alternatives:*
+- *Union as relevant* (rel_i = 1 for any gold chunk, IDCG over the union): an
+  item scores worse the more alternative sets its gold lists -- 0.25 for the F-77
+  example -- so the metric falls with the completeness of gold, which review is
+  meant to raise. Rejected.
+- *Graded relevance by set size* (rel = 1/|es|): ad hoc weights with no PRD
+  basis.
+- *Best set by rank of completion* (score only fully covered sets): duplicates
+  Sufficiency@k and gives two-chunk sets no partial credit.
+
+Gold is not shaped around the metric: the evidence-set counts in F-77 stand.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: numeric accuracy normalization (F-81) -- PROPOSED, not applied
+
+Status: proposed to the supervisor; no metric code; nothing computed.
+
+**Scope.** Items whose reference answer is a figure: `xbrl_numeric` (160),
+`comparison` (40), `llm_seeded` table items (47, `kind:factual`). Synthesis and
+abstain items are outside it.
+
+**Extraction and normalization** (one extractor, shared with the no-context
+filter's figure reader once F-97 is fixed in a new version): every figure in the
+answer, scaled by its own scale word ("$7,286 million", "$7.286 billion"),
+percentages and per-share figures as plain values. Zero words ("none", "nil",
+"zero", a dash) read as 0, so "none" or "-" matches a "$0 million" reference.
+
+**Match: exact at the reference's printed precision, magnitude only.**
+- Exact, as PRD 11.2 writes it: "$7.286 billion" matches 7,286 million; "$7.3
+  billion" does not. A 0.5%-tolerant accuracy is reported beside it, not gated.
+  The asymmetry with the no-context filter is deliberate: there 0.5% drops
+  items, here exactness withholds credit; both err against inflating the score.
+- Magnitude only: "a benefit of $28 million", "(28)" and "-$28 million" all
+  match a "-$28 million" reference; "net cash used of $691 million" matches
+  "-$691 million". Sign presentation differs by filing (F-87) and is carried in
+  words code cannot read reliably. Sign is reported separately as sign
+  agreement over answers that state a sign explicitly (minus or parentheses);
+  sign errors in words fall to answer correctness (the LLM judge).
+- An item is correct if any extracted figure matches. The count of figures per
+  answer is reported, to watch for answers that list many numbers.
+- **Comparison items:** correct only if the difference and both values match
+  (all three figures in the reference). Values-only accuracy is reported
+  separately. A percent change earns nothing: the reference has none.
+- **Scale unknown or mixed** (`unit_scale_unknown`, 10 seeded items): left out
+  of the denominator until review records the scale, and counted in the report.
+  Parenthesized seeded answers ("(1,434)") match by magnitude.
+
+*Alternatives:*
+- *0.5% tolerance as the gated number* (consistent with 6.5.4/7.5 and the
+  no-context filter): credits rounded answers PRD 11.2 calls wrong.
+- *Signed match:* scores a correct magnitude as wrong over presentation (F-87).
+- *First figure only:* brittle to answers that restate the question's period
+  or context before the figure.
+- *Comparison: difference only:* credits a right difference from wrong values.
