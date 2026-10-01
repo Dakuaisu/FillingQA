@@ -3019,3 +3019,85 @@ line item takes one tag per filer. The variant captions are the evidence each
 variant is that filer's line: AAPL "Total net sales" / "Total cost of sales",
 TGT "Net sales" / "Cost of sales", COST "Merchandise costs", PFE "Cost of
 sales".
+
+## 2026-10-01 — Item schema and sampler: measurements (no item generated)
+
+`python -m scripts.item_supply` (reads the same facts as `concept_coverage`
+through the shared `classify_facts`; `concept_coverage` output re-run and
+byte-identical after the refactor):
+
+    listed facts: 4335; buckets {'1-3': 4051, '>3': 284}
+    
+    cross-filing duplication:
+      distinct (cik, concept, period_start, period_end) keys: 2553
+      in more than one parsed accession: 1234 (accessions per such key: {2: 973, 3: 123, 4: 41, 5: 74, 6: 7, 7: 8, 8: 3, 9: 5})
+      of those, value differs across accessions: 61
+        TGT   CostOfGoodsAndServicesSold 2022-01-30..2023-01-28: [('0000027419-24-000032', Decimal('82229000000')), ('0000027419-25-000018', Decimal('82306000000'))]
+        TGT   CostOfGoodsAndServicesSold 2023-01-29..2024-02-03: [('0000027419-24-000032', Decimal('77736000000')), ('0000027419-25-000018', Decimal('77828000000')), ('0000027419-26-000016', Decimal('77828000000'))]
+        TGT   CostOfGoodsAndServicesSold 2024-02-04..2024-05-04: [('0000027419-24-000129', Decimal('17449000000')), ('0000027419-25-000101', Decimal('17471000000'))]
+        TGT   CostOfGoodsAndServicesSold 2024-02-04..2024-08-03: [('0000027419-24-000152', Decimal('35248000000')), ('0000027419-25-000118', Decimal('35297000000'))]
+        TGT   CostOfGoodsAndServicesSold 2024-02-04..2024-11-02: [('0000027419-24-000179', Decimal('53623000000')), ('0000027419-25-000126', Decimal('53700000000'))]
+        TGT   CostOfGoodsAndServicesSold 2024-05-05..2024-08-03: [('0000027419-24-000152', Decimal('17799000000')), ('0000027419-25-000118', Decimal('17826000000'))]
+        TGT   CostOfGoodsAndServicesSold 2024-08-04..2024-11-02: [('0000027419-24-000179', Decimal('18375000000')), ('0000027419-25-000126', Decimal('18402000000'))]
+        TGT   SellingGeneralAndAdministrativeExpense 2022-01-30..2023-01-28: [('0000027419-24-000032', Decimal('20658000000')), ('0000027419-25-000018', Decimal('20581000000'))]
+        TGT   SellingGeneralAndAdministrativeExpense 2023-01-29..2024-02-03: [('0000027419-24-000032', Decimal('21554000000')), ('0000027419-25-000018', Decimal('21462000000')), ('0000027419-26-000016', Decimal('21462000000'))]
+        TGT   SellingGeneralAndAdministrativeExpense 2024-02-04..2024-05-04: [('0000027419-24-000129', Decimal('5168000000')), ('0000027419-25-000101', Decimal('5146000000'))]
+        TGT   SellingGeneralAndAdministrativeExpense 2024-02-04..2024-08-03: [('0000027419-24-000152', Decimal('10560000000')), ('0000027419-25-000118', Decimal('10511000000'))]
+        TGT   SellingGeneralAndAdministrativeExpense 2024-02-04..2024-11-02: [('0000027419-24-000179', Decimal('16046000000')), ('0000027419-25-000126', Decimal('15969000000'))]
+      keys reported by a filing whose own period it is: 1898; only as a later filing's comparative: 655
+      keys by their facts' buckets: {'all 1-3': 2362, 'all >3': 167, 'mixed': 24}
+    
+    sampler strata (ticker x line item x form, 1-3 bucket only):
+      non-empty strata: 231; facts per stratum min 2, median 18, max 63
+      distinct keys per stratum: min 2, max 26
+      strata per ticker: {'AAPL': 41, 'COST': 36, 'TGT': 29, 'JPM': 13, 'BAC': 26, 'NVDA': 38, 'XOM': 14, 'PFE': 34}
+      strata per form: {'10-K': 101, '10-Q': 130}
+    
+    line items entirely in the >3 bucket for a filer (all its facts, both forms):
+      BAC   net_income: 39 facts, all >3
+      BAC   noninterest_income: 39 facts, all >3
+      JPM   net_income: 30 facts, all >3
+      NVDA  net_income: 39 facts, all >3
+      PFE   revenue: 39 facts, all >3
+    
+    review queue (eval/review_queue.csv): 284 facts
+
+The 61 value-differing keys by ticker and concept, and whether any differ
+between two filings that each report the period as their own (ad hoc query over
+`classify_facts`):
+
+    Counter({('TGT', 'CostOfGoodsAndServicesSold'): 7, ('TGT', 'SellingGeneralAndAdministrativeExpense'): 7, ('BAC', 'Revenues'): 5, ('BAC', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest'): 5, ('BAC', 'IncomeTaxExpenseBenefit'): 5, ('BAC', 'NetIncomeLoss'): 5, ('BAC', 'NoninterestIncome'): 5, ('NVDA', 'EarningsPerShareDiluted'): 5, ('BAC', 'EarningsPerShareDiluted'): 4, ('BAC', 'StockholdersEquity'): 4, ('PFE', 'Revenues'): 4, ('BAC', 'Assets'): 3, ('BAC', 'Liabilities'): 1, ('PFE', 'AccountsReceivableNetCurrent'): 1})
+    differing keys with >1 distinct value among non-comparative facts: 0
+
+Every disagreement is a later filing's comparative against the original, never
+two originals. Cause not established here. `eval/review_queue.csv` holds the 284
+>3 facts (F-73). Line items entirely in >3 for a filer (F-74): JPM, BAC and NVDA
+net income, PFE revenue -- as expected -- plus BAC noninterest income.
+
+## 2026-10-01 — One fact loader; period labels checked (F-75)
+
+`scripts/concept_coverage.main()` now consumes `classify_facts` (its rows carry
+the PRD-key gold count, the exact-value spans with `raw_text`, and the reporting
+filing's dei labels; unresolved facts come back separately for the two-tag
+check). Re-run: `concept_coverage` and `item_supply` output both
+byte-identical to the previous runs (`diff` empty), `eval/human_label_queue.csv`
+unchanged.
+
+`xbrl_facts.fiscal_year` / `fiscal_period` against the reporting filing's dei
+labels (`filings.fiscal_year`, `'Q' || fiscal_quarter` or `FY`), parsed filings:
+
+     is_comparative | rows  | fy_equals_filing_fy | fp_equals_filing_fp | both_equal
+    ----------------+-------+---------------------+---------------------+------------
+     f              | 18522 |               18522 |               18522 |      18522
+     t              | 20187 |               20187 |               20187 |      20187
+
+    TGT FY2023 cost of sales (2023-01-29..2024-02-03) in each filing:
+          accession       | form_type | filing_fy | filing_q | fact_fy | fact_fp | is_comparative |    value
+     0000027419-24-000032 | 10-K      |      2023 |          |    2023 | FY      | f              | 77736000000
+     0000027419-25-000018 | 10-K      |      2024 |          |    2024 | FY      | t              | 77828000000
+     0000027419-26-000016 | 10-K      |      2025 |          |    2025 | FY      | t              | 77828000000
+
+So a comparative row carries the later filing's label; the period label must
+come from the own-period filing. Over `classify_facts` rows: keys by number of
+own-period accessions `{0: 655, 1: 1898}`; own-period facts with a NULL filing
+fiscal year: 0.

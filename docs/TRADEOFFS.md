@@ -87,6 +87,9 @@ slice (`sufficiency_at_10: 0.72`) — a slice they are designed to score low on 
 while §11.1 also requires reporting them separately. The `source` enum cannot
 express both roles.
 
+**Settled 2026-10-01 (AUTONOMOUS DECISION, F-11 entry below):** controls stay inside the
+handwritten gate and also get their own row; carve-out recorded as the rejected alternative.
+
 **Recommendation:** settle the source taxonomy before generating a single item.
 Carve `natural_phrasing` out via `tags` and decide explicitly whether it sits
 inside or outside the handwritten gate. Recompute the §11.2 share from the actual
@@ -1223,3 +1226,103 @@ Measured on the final list (`python -m scripts.concept_coverage`): 4,335 facts;
 68 have a smaller gold set under exact value; no bucket changes; none left
 without gold. *Alternative:* PRD 6.5.3's literal key `(accession, concept,
 context)`. F-72 stays OPEN until the generator enforces it under test.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-11, the `source` enum and natural_phrasing
+
+1. `source` keeps PRD 11.2's three values: `xbrl_auto`, `llm_seeded`,
+   `handwritten`. The per-source breakout is `filter(source=src)`.
+2. natural_phrasing is a `question_type` (a row of PRD 11.1's Type column) with
+   `source = handwritten`.
+3. **The handwritten gate is all of `source = handwritten`, controls included.**
+   The 30 controls also get their own reported row (PRD 11.1) and feed
+   `natural_phrasing_gap` (F-20). No threshold changes.
+4. The xbrl_auto share is computed from the frozen dataset's counts and printed
+   in every report, not argued from the plan (on the plan: 160 `xbrl_numeric` +
+   40 auto comparisons = 200/410 = 49%).
+
+*Alternatives:*
+- *Carve natural_phrasing out of the handwritten gate* (the builder's first
+  proposal, and the question finding #11 left open). Rejected: "they pull the
+  slice down" is a reason about the score, not about what is measured. By PRD
+  11.1's counts the carve-out leaves the 20 hand-written comparisons as the only
+  handwritten items with gold evidence (unanswerable 50 and adversarial 20 have
+  none), so the handwritten retrieval gate would rest on 20 items.
+- *A fourth `source` value `natural_phrasing`.* Breaks PRD 11.2's three-column
+  breakout and makes `source` mean something other than provenance.
+- *A `natural_phrasing` tag.* A second place to encode what `question_type`
+  already says.
+
+F-11 stays OPEN until the share is printed from a real dataset.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-75, one item per period key
+
+The sampling unit is the key (cik, concept, period_start, period_end), not the
+fact: 1,234 of 2,553 keys appear in more than one parsed accession, so a
+per-fact draw would ask the same question several times.
+
+- **Eligible key:** all three hold.
+  - (a) One distinct value across all parsed accessions carrying it.
+  - (b) Every fact of the key, in every accession, is in the 1-3 bucket ("all
+    1-3", not "mixed").
+  - (c) At least one non-comparative fact, i.e. a parsed filing reports the
+    period as its own. Measured: every key has exactly one such filing or none
+    (1,898 vs 655).
+- **The 61 value-differing keys are not auto items.** They go to
+  `eval/review_queue.csv` with a reason, OWNER-BLOCKED. The cause of the
+  difference is not established, and a question with two defensible answers is
+  what PRD 6.5.3 routes to review.
+- **Gold:** every exact-value chunk in every parsed accession carrying the key,
+  each chunk its own alternative evidence set. `gold_accessions` lists every one
+  of those accessions; `xbrl_fact_id` is the own-period filing's fact.
+  Own-filing-only gold would score a retrieved comparative column that prints
+  the exact figure as a miss, which is the noise PRD 11.1's evidence sets exist
+  to remove.
+- **Filing-scoped wording:** a template that names the filing ("According to
+  its {year} 10-K") takes gold from that filing only. The pool keeps evidence per
+  accession so both are derivable. This applies at templating.
+- **Period label:** from the own-period filing's dei labels
+  (`filings.fiscal_year`, `filings.fiscal_quarter`), never from
+  `xbrl_facts.fiscal_year` / `fiscal_period`. Those are companyfacts `fy`/`fp`
+  and describe the reporting filing. Verified: on all 20,187 comparative rows
+  of the parsed filings they equal the reporting filing's labels (WORKLOG).
+- **Why (c):** the 655 comparative-only keys have no issuer-stated label in the
+  corpus. Deriving one from dates (TGT's FY2025 ends 2026-01-31) is how a wrong
+  reference answer gets in silently.
+- **QTD vs YTD:** a Q2/Q3 10-Q holds both under one dei label. The pool carries
+  `period_start`/`period_end` so templating can word them apart.
+
+*Alternatives:*
+- *Original wins* for the 61 (the builder's proposal): picks an answer whose
+  disagreement is unexplained.
+- *Latest wins*: the same, in the other direction.
+- *Filing-scoped templates only*: one answer per filing, but every question
+  must name a filing and the cross-filing gold above is lost.
+- *Own-filing-only gold*: scores an exact comparative-column hit as a miss.
+- *Date-derived labels for comparative-only keys*: wrong when the fiscal year
+  is named for the calendar year it ends in or not.
+
+F-75 stays OPEN until the generator enforces this under test.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_auto sampler design
+
+- Pure function, seeded RNG; the seed goes in the dataset manifest with the
+  freeze versions.
+- Pool: eligible keys only (F-75 (a)-(c)). The rest are accounted for: review
+  (>3, mixed key, value differs) in `eval/review_queue.csv`, or not sampled
+  (comparative-only). 0-gold facts go to `eval/human_label_queue.csv`
+  (currently empty).
+- Strata: ticker x line item x form **of the own-period filing**. Equal
+  allocation, 20 per ticker for 160 `xbrl_numeric` items, round-robin over the
+  ticker's strata, no key drawn twice. Seed, total and allocation are config.
+- If a ticker has fewer than 20 eligible keys, there is no backfill from
+  another ticker; the shortfall is reported.
+
+*Alternatives:* proportional to supply (over-weights AAPL and NVDA, starves
+JPM and XOM); stratifying by line item first (bank supplements have only two
+tickers); per-fact sampling (repeats keys, F-75).

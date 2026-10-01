@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 34 |
+| OPEN | 37 |
 | RESOLVED | 38 |
-| **Total** | **72** |
+| **Total** | **75** |
 
 ---
 
@@ -40,10 +40,13 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | OPEN |
+| F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
+| F-73 | 284 facts in the >3 bucket need PRD 6.5.3 review before any can be an item; listed in `eval/review_queue.csv`. OWNER-BLOCKED | OPEN |
+| F-74 | Some line items have no 1-3 fact for a filer, so the sampler cannot draw them: JPM, BAC, NVDA net income; PFE revenue; BAC noninterest income (`python -m scripts.item_supply`) | OPEN |
+| F-75 | Of 2,553 (cik, concept, period) keys, 1,234 appear in more than one parsed accession and 61 differ in value -- always a later filing's comparative vs the original (TGT, BAC, NVDA EPS, PFE) | Decided 2026-10-01 (TRADEOFFS): one item per key; eligible = one value, all facts 1-3, an own-period filing; gold = every exact-value chunk in every accession; label from the own-period filing's dei labels. The 61 go to review, OWNER-BLOCKED. Stays OPEN until the generator enforces it under test | OPEN |
 | F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Decided 2026-10-01: gold is exact-value spans only; buckets on exact-value gold. On the final list, 68 of 4,335 facts have a smaller gold set, no bucket changes, none left without gold. Stays OPEN until the generator enforces it under test (TRADEOFFS) | OPEN |
 | F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
-| F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 33 coverage candidates. Queue built: `eval/human_label_queue.csv` (0 entries for the candidates). Labeling OWNER-BLOCKED | OPEN |
+| F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 28 listed tags (`python -m scripts.concept_coverage`: human-label queue 0). Queue: `eval/human_label_queue.csv`. Labeling OWNER-BLOCKED | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
 | F-08 | `faithfulness_pre` is undefined for Configs 1–4, yet §11.6 plots it there | OPEN |

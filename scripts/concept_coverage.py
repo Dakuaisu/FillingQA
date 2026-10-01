@@ -56,7 +56,13 @@ def resolve_tags(line_items: list[dict], tagged: set[tuple[str, str]], tickers: 
     return out
 
 
-def main() -> None:
+def classify_facts():
+    """Every listed fact with its resolved line item and gold chunks; the one loader.
+
+    Returns (line_items, tickers, resolved, rows, unresolved). `rows` are the facts
+    under the tag their filer resolves to; `unresolved` the facts under a listed
+    tag the filer does not resolve to (kept for the two-revenue-tag check).
+    """
     line_items = load_line_items()
     record = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
     parsed = {e["accession"]: e for e in record["filings"] if e["status"] == "parsed"}
@@ -64,20 +70,16 @@ def main() -> None:
     all_tags = {i["tag"] for i in line_items} | {
         i["variant"] for i in line_items if i.get("variant")
     }
-
     spans: dict[tuple, list[tuple]] = defaultdict(list)  # key -> [(chunk_id, value, raw_text)]
     with connect() as conn:
-        paths = dict(
-            conn.execute(
-                "SELECT accession, raw_path FROM filings WHERE accession = ANY(%s)",
-                (list(parsed),),
-            ).fetchall()
-        )
-        for accession, raw_path in paths.items():
-            root = etree.fromstring(
-                Path(raw_path).read_bytes(), etree.XMLParser(recover=True, huge_tree=True)
+        for accession, raw_path in conn.execute(
+            "SELECT accession, raw_path FROM filings WHERE accession = ANY(%s)", (list(parsed),)
+        ).fetchall():
+            contexts = parse_contexts(
+                etree.fromstring(
+                    Path(raw_path).read_bytes(), etree.XMLParser(recover=True, huge_tree=True)
+                )
             )
-            contexts = parse_contexts(root)
             for concept, ref, chunk_id, value, raw_text in conn.execute(
                 "SELECT concept, context_ref, chunk_id, value, raw_text FROM xbrl_spans "
                 "WHERE accession = %s AND concept = ANY(%s)",
@@ -90,57 +92,87 @@ def main() -> None:
                     (None, ctx.instant) if ctx.instant else (ctx.period_start, ctx.period_end)
                 )
                 spans[(accession, concept, start, end)].append((chunk_id, value, raw_text))
-
         facts = conn.execute(
             """
-            SELECT x.accession, c.ticker, f.form_type, x.concept, x.period_start, x.period_end,
-                   x.value, x.unit
+            SELECT x.fact_id, x.cik, x.accession, c.ticker, f.form_type, x.concept,
+                   x.period_start, x.period_end, x.value, x.unit, x.is_comparative,
+                   f.fiscal_year, f.fiscal_quarter
               FROM xbrl_facts x JOIN filings f USING (accession) JOIN companies c ON c.cik = f.cik
              WHERE x.accession = ANY(%s) AND x.concept = ANY(%s)
             """,
             (list(parsed), list(all_tags)),
         ).fetchall()
-        tagged = {(f[1], f[3]) for f in facts}
-        resolved = resolve_tags(line_items, tagged, tickers)
-        by_tag = {(t, tag): item_id for (item_id, t), (tag, _) in resolved.items()}
+    resolved = resolve_tags(line_items, {(f[3], f[5]) for f in facts}, tickers)
+    by_tag = {(t, tag): item_id for (item_id, t), (tag, _) in resolved.items()}
+    rows, unresolved = [], []
+    for fid, cik, acc, ticker, form, concept, start, end, value, unit, comp, fy, fp in facts:
+        period = (start.isoformat() if start else None, end.isoformat())
+        found = spans.get((acc, concept, *period), [])
+        exact = [(cid, raw) for cid, v, raw in found if cid and v == value]
+        gold = sorted({cid for cid, _ in exact})
+        row = {
+            "fact_id": fid, "cik": cik, "accession": acc, "ticker": ticker, "form": form,
+            "line_item": by_tag.get((ticker, concept)), "concept": concept, "period": period,
+            "value": value, "unit": unit, "is_comparative": comp,
+            "filing_fiscal_year": fy, "filing_fiscal_quarter": fp,
+            "gold": gold, "bucket": bucket(len(gold)), "exact_spans": exact,
+            "prd_gold_count": len({cid for cid, _, _ in found if cid}), "has_span": bool(found),
+        }  # fmt: skip
+        (rows if row["line_item"] else unresolved).append(row)
+    return line_items, tickers, resolved, rows, unresolved
 
-        table: dict[tuple, Counter] = defaultdict(Counter)
-        supply: dict[str, Counter] = defaultdict(Counter)
-        totals: Counter = Counter()
-        f72: Counter = Counter()
-        queue, captions = [], {}
-        revenue_pairs: dict[tuple, dict] = defaultdict(dict)
-        revenue = next(i for i in line_items if i["id"] == "revenue")
-        for accession, ticker, form, concept, start, end, value, unit in facts:
-            period = (start.isoformat() if start else None, end.isoformat())
-            if concept in (revenue["tag"], revenue["variant"]):
-                revenue_pairs[(ticker, accession, period)][concept] = value
-            item_id = by_tag.get((ticker, concept))
-            if item_id is None:
-                continue  # a tag this filer does not resolve to
-            found = spans.get((accession, concept, *period), [])
-            prd_gold = {cid for cid, _, _ in found if cid}
-            gold = {cid for cid, v, _ in found if cid and v == value}
-            b = bucket(len(gold))
+
+def main() -> None:
+    line_items, tickers, resolved, rows, unresolved = classify_facts()
+    all_tags = {i["tag"] for i in line_items} | {
+        i["variant"] for i in line_items if i.get("variant")
+    }
+    accessions = {r["accession"] for r in rows + unresolved}
+
+    table: dict[tuple, Counter] = defaultdict(Counter)
+    supply: dict[str, Counter] = defaultdict(Counter)
+    totals: Counter = Counter()
+    f72: Counter = Counter()
+    queue, captions = [], {}
+    revenue_pairs: dict[tuple, dict] = defaultdict(dict)
+    revenue = next(i for i in line_items if i["id"] == "revenue")
+    for r in sorted(rows + unresolved, key=lambda r: r["fact_id"]):
+        ticker, accession, concept, period = r["ticker"], r["accession"], r["concept"], r["period"]
+        if concept in (revenue["tag"], revenue["variant"]):
+            revenue_pairs[(ticker, accession, period)][concept] = r["value"]
+    with connect() as conn:
+        for r in rows:
+            item_id, ticker, form, b = r["line_item"], r["ticker"], r["form"], r["bucket"]
             table[(item_id, ticker, form)][b] += 1
             supply[ticker][(form, b)] += 1
             totals[b] += 1
             f72["facts"] += 1
-            f72["gold smaller under exact value"] += len(gold) < len(prd_gold)
-            if bucket(len(prd_gold)) != b:
-                f72[f"bucket {bucket(len(prd_gold))} -> {b}"] += 1
-            if not gold:
-                reason = "no visible span (F-48)" if not found else "no exact-value span in a chunk"
-                queue.append([accession, ticker, form, concept, start, end, value, unit, reason])
-            if resolved[(item_id, ticker)][1] == "variant" and (ticker, item_id) not in captions:
-                hit = next(((cid, raw) for cid, v, raw in found if cid and v == value), None)
-                if hit:
-                    text = conn.execute(
-                        "SELECT raw_text FROM chunks WHERE chunk_id = %s", (hit[0],)
-                    ).fetchone()[0]
-                    row = next((ln for ln in text.splitlines() if hit[1] in ln), "")
-                    caption = row.strip("| ").split(" | ")[0] if row.startswith("|") else row[:80]
-                    captions[(ticker, item_id)] = (concept, accession, period, hit[1], caption)
+            f72["gold smaller under exact value"] += len(r["gold"]) < r["prd_gold_count"]
+            if bucket(r["prd_gold_count"]) != b:
+                f72[f"bucket {bucket(r['prd_gold_count'])} -> {b}"] += 1
+            if not r["gold"]:
+                reason = (
+                    "no visible span (F-48)"
+                    if not r["has_span"]
+                    else "no exact-value span in a chunk"
+                )
+                start, end = r["period"]
+                queue.append([r["accession"], ticker, form, r["concept"], start, end,
+                              r["value"], r["unit"], reason])  # fmt: skip
+            if (
+                resolved[(item_id, ticker)][1] == "variant"
+                and (ticker, item_id) not in captions
+                and r["exact_spans"]
+            ):
+                cid, raw = r["exact_spans"][0]
+                text = conn.execute(
+                    "SELECT raw_text FROM chunks WHERE chunk_id = %s", (cid,)
+                ).fetchone()[0]
+                line = next((ln for ln in text.splitlines() if raw in ln), "")
+                caption = line.strip("| ").split(" | ")[0] if line.startswith("|") else line[:80]
+                captions[(ticker, item_id)] = (
+                    r["concept"], r["accession"], r["period"], raw, caption,
+                )  # fmt: skip
 
     QUEUE_FILE.parent.mkdir(parents=True, exist_ok=True)
     with QUEUE_FILE.open("w", newline="", encoding="utf-8") as fh:
@@ -151,7 +183,7 @@ def main() -> None:
 
     print(f"list: {len(line_items)} line items, {len(all_tags)} tags "
           f"({CONCEPTS_FILE.relative_to(REPO_ROOT)})")  # fmt: skip
-    print(f"frozen parsed accessions: {len(parsed)}; listed facts: {f72['facts']}")
+    print(f"frozen parsed accessions: {len(accessions)}; listed facts: {f72['facts']}")
     print(f"buckets on exact-value gold: 0 {totals['0']}, 1-3 {totals['1-3']}, >3 {totals['>3']}")
     print(f"human-label queue ({QUEUE_FILE.relative_to(REPO_ROOT)}): {len(queue)}")
     print(f"F-72, exact-value gold vs PRD 6.5.3 context key: "
