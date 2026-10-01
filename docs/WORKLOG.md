@@ -4610,3 +4610,79 @@ Report shape, rendered from the synthetic items and results of `test_runner.py`
     False-answer rate                            -             -             -             -
     Over-abstention rate                     0.000         0.000             -         0.000
     Abstention F1                                -             -             -             -
+
+## 2026-10-01 — First dev eval run: process killed once (logged per protocol)
+
+Run 19693d4aa874 (`python -m scripts.eval_run --run`) started 20:10:28Z. I ran it in
+the foreground by mistake; the tool's 2-minute timeout killed it at about
+20:12:36Z with 10 items recorded in `19693d4aa874.results.jsonl` and the 11th call
+(cmp_0011) in flight, lost unrecorded. No errors file. Resumed with `--resume
+19693d4aa874` in the background; cmp_0011 is asked again.
+Second kill, same cause (resumed in the foreground, not backgrounded): started
+20:12:46Z, killed at about 20:14:54Z with 19 items recorded (all distinct) and the
+20th call (cmp_0020) in flight, lost unrecorded. Resumed again, backgrounded.
+Third kill, same cause: started 20:15:00Z, killed at about 20:17:10Z with 25 items
+recorded (all distinct), the 26th (cmp_0026) in flight, lost unrecorded. Resumed
+detached (`nohup ... &`) so the tool timeout cannot reach it.
+
+## 2026-10-01 — First dev eval run 19693d4aa874: complete
+
+`python -m scripts.verify_freeze` passed first (96 accessions, 0 mismatches;
+22,354 chunks on chunker_version 964f77f6f9cb). The detached resume ran from
+20:17:18Z to about 20:59Z; in all 283 results, 283 distinct, no errors file, no
+traceback. Three in-flight calls were lost to the three kills above and asked
+again on resume. Files committed: `eval/runs/19693d4aa874.meta.json`,
+`.results.jsonl`, `.json` (report).
+
+Printed report, as printed:
+
+    run 19693d4aa874  backend: claude_cli  generation model requested: claude-haiku-4-5-20251001
+    DEVELOPMENT RUN (claude_cli): not a CI baseline, not publishable, not comparable with anthropic_api runs (F-59)
+    served models: {'claude-haiku-4-5-20251001': 283}  retrieval measured on: dense top-k (Phase 2 baseline; no fusion, no rerank) (F-13)
+    metric                               xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                      200            83             -           283
+    retrieval items                            200            83             -           283
+    Sufficiency@10                           0.285         0.675             -         0.399
+    Recall@10                                0.295         0.675             -         0.406
+    Precision@10                             0.051         0.067             -         0.056
+    MRR                                      0.135         0.477             -         0.235
+    nDCG@10                                  0.172         0.524             -         0.275
+    Sufficiency@10 post-rerank                   -             -             -             -
+    Numeric accuracy (gated)                 0.375         0.757             -         0.435
+      numeric items scored                     200            37             -           237
+      excluded unit_scale_unknown                0            10             -            10
+      strict first figure                    0.330         0.703             -         0.388
+      within 0.5% (reported)                 0.415         0.757             -         0.468
+      comparison values only                 0.225             -             -         0.225
+      sign agreement                         1.000         1.000             -         1.000
+      abstained (in denominator)                 0             0             -             0
+      free-text fallback used                  200            37             -           237
+      mean figures per answer                4.120         4.541             -         4.186
+    PARTIAL rate                             0.000         0.000             -         0.000
+    False-answer rate                            -             -             -             -
+    Over-abstention rate                     0.000         0.000             -         0.000
+    Abstention F1                                -             -             -             -
+    figures per numeric answer (aggregate): {'0': 32, '1': 28, '2': 26, '3': 34, '4': 27, '5': 20, '6': 15, '7': 21, '8': 8, '9': 9, '10': 4, '11': 2, '12': 3, '13': 1, '14': 4, '16': 1, '17': 1, '20': 1}
+    excluded from numeric accuracy (aggregate): {'unit_scale_unknown': 10, 'not numeric': 36}
+    anomalies: {'empty_retrieval': [], 'empty_answer': [], 'latency_s': {'p50': 7.88, 'p95': 16.39, 'max': 98.75}, 'slow_items_over_3x_p50': [('cmp_0023', 43.52), ('cmp_0040', 68.95), ('seed_0026', 37.05), ('seed_0047', 24.62), ('xbrl_0064', 98.75), ('xbrl_0135', 60.29), ('xbrl_0136', 25.88), ('xbrl_0141', 50.66)]}
+
+Read-only diagnosis of what looks off (ad hoc over the results; nothing
+re-scored or changed):
+
+    numeric answers with no extracted figure: 32 by source {'xbrl_auto': 30, 'llm_seeded': 2}
+        cmp_0001 '# Unable to Answer with Provided Excerpts\n\nI cannot provide the specific net income figures for Q3 FY2024 and Q3 FY2026 based on the SEC fil'
+        cmp_0012 "I appreciate your question, but I notice there's a mismatch between what you're asking and the documents provided.\n\n**You asked about:** Cos"
+        cmp_0013 "# Unable to Answer\n\nI cannot find Costco income tax expense information in the SEC filing excerpts provided. The excerpts you've shared cont"
+    answers with decline wording (regex, all items): 106
+    xbrl_numeric: 160 items; top-10 holds a chunk from a gold accession: 148
+    comparison: 40 items; top-10 holds a chunk from a gold accession: 37
+    xbrl_numeric: top-10 holds a chunk of the item's own company (among accessions known from gold): 152
+    comparison: top-10 holds a chunk of the item's own company (among accessions known from gold): 37
+    numeric accuracy split inside xbrl_auto: xbrl_numeric 66/160; comparison 9/40
+    xbrl_auto (sufficient@10, numerically correct): {(False, False): 112, (True, True): 44, (True, False): 13, (False, True): 31}
+    correct under any-figure but not strict-first-figure: 11
+
+Findings logged: F-98 (xbrl_auto is the hard slice here), F-99 (the baseline
+cannot abstain; declines score as wrong answers), F-100 (numerically correct
+without sufficient retrieval), F-101 (gated vs strict numeric gap), F-102
+(latency outliers).
