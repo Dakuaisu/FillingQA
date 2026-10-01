@@ -112,6 +112,11 @@ def eval_handwritten(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_handwritten"]
 
 
+def eval_judge(path: Path = CORPUS_FILE) -> dict:
+    """The `eval_judge:` block of api/config.yaml: judge tier, label draw."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_judge"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

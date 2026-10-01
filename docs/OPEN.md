@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 63 |
+| OPEN | 64 |
 | RESOLVED | 41 |
-| **Total** | **104** |
+| **Total** | **105** |
 
 ---
 
@@ -56,6 +56,7 @@ carries the state.
 | F-102 | Dev run latency: p50 7.88 s, p95 16.39 s, max 98.75 s (xbrl_0064); 8 items over 3x p50. claude_cli wall time, model load and retrieval included; not comparable with anthropic_api latency | OPEN |
 | F-103 | Hand-written items (PRD 11.1: 50 `unanswerable` by subtype, 20 `adversarial`, 30 `natural_phrasing`, 20 `comparison`, F-84) are the owner's to write. Templates: `eval/handwritten/templates/{unanswerable,adversarial,natural_phrasing,comparison}.json`; item files (empty): `eval/handwritten/{unanswerable,adversarial,natural_phrasing,comparison}.jsonl`; check: `python -m scripts.handwritten_validate` (schema, source, per-type `expected_abstain`, subtype tags, cited chunks in the frozen corpus, `gold_accessions` = cited accessions, near-duplicates > 0.92 against all candidates, counts 50 / 20 / 30 / 20). Owner decision point, not a bug: the adversarial template leaves `expected_abstain` null for `false_premise` and `prompt_injection` (the PRD gives no rule; refute or decline is the author's call), and validation fails until it is set. OWNER-BLOCKED | OPEN |
 | F-104 | Human review (PRD 11.1 Stage 5) of the candidates: the xbrl 10% spot-check plus flagged (F-79, F-100), the comparison spot-check (F-86), and all 83 seeded items (F-88). Worksheets: `eval/review/worksheets/{xbrl_numeric_spot_check,comparison_spot_check,llm_seeded_review}.yaml` (44 / 9 / 83 items, decisions null); `python -m scripts.review import <worksheet> --reviewer <name>` appends to `eval/review/decisions_v1.jsonl` (empty), the only thing that sets `reviewed_by_human = true`; `python -m scripts.review status` shows the effect; candidates files are never edited. OWNER-BLOCKED | OPEN |
+| F-105 | Judge validation (PRD 11.3): 50 (item, answer) pairs drawn by seed 20261005 from dev run 19693d4aa874, proportional by source (35 xbrl_auto, 15 llm_seeded): sheet `eval/judge/label_sheet_v1.md`, labels to fill in `eval/judge/labels_v1.yaml` (all null), before seeing any judge score. `python -m scripts.judge run --run` and `kappa` refuse until all 50 are labelled; no judge run and no kappa until then. OWNER-BLOCKED | OPEN |
 | F-89 | PRD 7.1's `synthesis` intent (summaries, top-10 lists, answers drawn from several chunks) has no eval item behind it: PRD 11.1 Stage 1 seeds `synthesis` items from one chunk each (TRADEOFFS, LLM seeding). No report may call the `synthesis` slice multi-chunk | OPEN |
 | F-90 | A table's caption scale does not apply to every figure in it. A caption's exception ("in millions, except per share data") survives in neither `unit_scale` nor the chunk header line; in filings it sits in a column header cell. Measured (`python -m scripts.seed_supply`, 9,221 scaled table chunks): "except ... per share" 153, any scale-exception clause 400, a tagged span at another ix scale 1,135, union 1,386. PRD 6.2 step 3's pattern names "except per share", and `detect_unit_scale` discards the clause at the split. The same defect bites Phase 4: the header scale in PRD 7.4 rule 4, the 7.5 unit-scale check stripping a correct per-share claim, and 11.2 unit-scale accuracy. A parser fix means a new `parser_version` and a new freeze, so it is not taken now. Seeding: `attach_scale` flags and does not scale a mixed table (TRADEOFFS); no signal covers an untagged per-share, percent or count row, so scale is confirmed at review for all 50 table items. The 200 existing candidates are untouched: `xbrl_items` scales from the span's ix scale, not `chunks.unit_scale` | OPEN |
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
@@ -74,7 +75,7 @@ carries the state.
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
 | F-08 | `faithfulness_pre` is undefined for Configs 1–4, yet §11.6 plots it there | OPEN |
 | F-09 | Abstained items in generation-metric denominators — a third circularity | OPEN |
-| F-14 | Judge must be a different model family, but CI carries one provider key. Also: seeding (`eval/generate/seeding.py`) and generation may both run on the `claude_cli` dev backend, i.e. the same model family seeds the questions and answers them, which is this bias (TRADEOFFS, OWNER DECISION - Max subscription as dev generator) | OPEN |
+| F-14 | Judge must be a different model family, but CI carries one provider key. Also: seeding (`eval/generate/seeding.py`) and generation may both run on the `claude_cli` dev backend, i.e. the same model family seeds the questions and answers them, which is this bias (TRADEOFFS, OWNER DECISION - Max subscription as dev generator) Judge (2026-10-01): `eval/judge/` stamps every verdict with judge backend, model, family and `same_family_as_generator`, and `python -m scripts.judge kappa` prints SAME FAMILY when it is; a `claude_cli` judge (tier_large, claude-sonnet-5-5) judging `claude_cli` answers (claude-haiku-4-5) is same-family judging, which PRD 11.3 forbids for published numbers, and any report using it must say so | OPEN |
 | F-20 | `natural_phrasing_gap` is gated in `thresholds.yaml` but never defined as a metric | OPEN |
 
 ## Blocking Phase 4

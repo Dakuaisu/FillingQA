@@ -322,3 +322,10 @@ eval_handwritten:
     adversarial: 20
     natural_phrasing: 30
     comparison: 20          # F-84: the only plain year-over-year comparisons
+
+# LLM judge (PRD 11.3). The label set is drawn by seed from a dev run's answers.
+eval_judge:
+  tier: tier_large
+  label_seed: 20261005
+  label_n: 50
+  label_run: 19693d4aa874

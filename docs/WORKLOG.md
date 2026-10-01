@@ -4765,3 +4765,14 @@ and 83 items). Tests: `tests/unit/test_review.py` (4). `make test`: 401 passed;
       comparison_candidates.jsonl: 40 items; {'undecided': 40}
       llm_seeded_candidates.jsonl: 83 items; {'undecided': 83}
       xbrl_numeric_candidates.jsonl: 160 items; {'undecided': 160}
+
+## 2026-10-01 — LLM judge tooling (no judge run, no kappa)
+
+`eval/judge/{rubrics,judge,agreement}.py`, `scripts/judge.py`, config
+`eval_judge`. `python -m scripts.judge labels` wrote `eval/judge/label_sheet_v1.md`
+and `eval/judge/labels_v1.yaml`: "50 pairs {'llm_seeded': 15, 'xbrl_auto': 35}";
+`eval/judge/verdicts_v1.jsonl` empty. `python -m scripts.judge run --run`: "labels
+0 of 50: the judge runs only on a fully labelled set, with --run"; `python -m
+scripts.judge kappa`: "labels 0 of 50, verdicts 0: kappa needs both complete".
+Tests: `tests/unit/test_judge.py` (5). `make test`: 406 passed; `make lint`: 119
+files already formatted.
