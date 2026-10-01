@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 64 |
-| RESOLVED | 41 |
+| OPEN | 62 |
+| RESOLVED | 43 |
 | **Total** | **105** |
 
 ---
@@ -74,7 +74,6 @@ carries the state.
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion Decided 2026-10-01 (TRADEOFFS): post-fusion, pre-rerank list stored as `retrieved`; `sufficiency@k_post_rerank` reported separately | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
 | F-08 | `faithfulness_pre` is undefined for Configs 1–4, yet §11.6 plots it there | OPEN |
-| F-09 | Abstained items in generation-metric denominators — a third circularity | OPEN |
 | F-14 | Judge must be a different model family, but CI carries one provider key. Also: seeding (`eval/generate/seeding.py`) and generation may both run on the `claude_cli` dev backend, i.e. the same model family seeds the questions and answers them, which is this bias (TRADEOFFS, OWNER DECISION - Max subscription as dev generator) Judge (2026-10-01): `eval/judge/` stamps every verdict with judge backend, model, family and `same_family_as_generator`, and `python -m scripts.judge kappa` prints SAME FAMILY when it is; a `claude_cli` judge (tier_large, claude-sonnet-5-5) judging `claude_cli` answers (claude-haiku-4-5) is same-family judging, which PRD 11.3 forbids for published numbers, and any report using it must say so | OPEN |
 | F-20 | `natural_phrasing_gap` is gated in `thresholds.yaml` but never defined as a metric | OPEN |
 
@@ -85,7 +84,6 @@ carries the state.
 | F-87 | Gold spans print the sign differently from the fact (`python -m scripts.sign_display`): of the eligible keys' exact-value gold spans, 296 positive facts print in parentheses (share repurchases 127, capex 99, credit-loss allowance 31, R&D 26 in reconciliation tables, cost of revenue 13) and 3 negative facts print plain ("tax benefit of $28 million"). PRD 7.5 normalizes "(7,286)" as negative, so a sign-sensitive grounding check would strip a correct claim. Candidates with such a gold span: 25 xbrl_numeric, 5 comparison. Measured only; gold and reference answers unchanged | OPEN |
 | F-85 | A comparison item's difference is printed in no chunk, so PRD 7.5's numeric grounding ("every number in the claim appears in a cited chunk") would strip a correct difference claim | OPEN |
 | F-82 | Numeric grounding of a zero claim: the correct figure is $0, but the cited chunk prints "—" (PFE share repurchases, xbrl_0116/0117: `raw_text='—'`, value 0, scale 6), so matching the claim's number against the chunk text finds no "0" | OPEN |
-| F-10 | `supported()` omits `citation_valid` for figure claims, contradicting §7.5's own table | OPEN |
 | F-12 | `eval.compare` compares a fast/CI-corpus run against a full-corpus baseline | OPEN |
 | F-16 | Chunk-size and context-header ablations need a full re-embed; budget is ~10× short | OPEN |
 | F-61 | PRD 14 calls the Phase 2 baseline "Config 1", but PRD 11.6's Config 1 is fixed 512-char chunks and Config 2 is the structure-aware chunking built in Phase 2 step 1. The baseline runs on the only chunk set that exists. Either the 11.6 chart needs a separate fixed-512-char chunk set and its embeddings, or Configs 1 and 2 collapse | OPEN |
@@ -158,6 +156,8 @@ carries the state.
 | F-69 | Content floors measured on four filers quarantined faithful parses: BAC's and PFE's Item 7A point into Item 7 (217 / 289 chars) | The check is redefined by what it is for: `parser.stub_max_chars: 1000`; 10-K Items 1, 1A, 7 and 10-Q I.1, I.2 must not be stubs; 7A and 8 may be, and are listed per filing. Set after measuring all 96: no must-not-be-stub Item between 500 and 5,000 chars. Result: 90 parsed, BAC x3 and PFE x3 admitted, JPM x3 and XOM x3 quarantined on Item 7 alone; the 84 previously chunked filings unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-42 | The eval corpus was a window relative to the run date; a raw-byte hash is not a filing's identity | Accession list committed as of 2026-10-01 (96 filings, pinned CIKs, F-62); frozen in `api/corpus_freeze.yaml`: 90 parsed with `(accession, text_sha256, parser_version)`, 6 quarantined with reason and finding (F-66, F-70), per-ticker 10-K/10-Q counts, F-58 referenced. `python -m scripts.verify_freeze`: 96 verified, 0 mismatches; exits 1 on any difference (tested by altering one hash) | 2026-10-01 |
 | F-15 | `CURATED_CONCEPTS` named in PRD 6.5.3 yields near-zero items for JPM and BAC | `eval/concepts.yaml`: 26 line items, 28 tags -- all 19 named concepts, 7 bank supplements chosen by PRD 6.5.3's analyst-relevance criterion, and two variants used only by filers with no fact under the named tag. On the frozen 90 (`python -m scripts.concept_coverage`): 4,335 facts, 4,051 in the 1-3 bucket, 284 in >3, 0 in 0; every ticker supplied, JPM and XOM by 10-Qs only. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-10 | `supported()` omits `citation_valid` for figure claims, contradicting §7.5's own table | `eval/metrics/generation.supported` requires `citation_valid` (and `entity_ok`) on both branches; tested (`test_supported_requires_citation_validity_for_figure_claims_f10`) | 2026-10-01 |
+| F-09 | Abstained items in generation-metric denominators — a third circularity | `faithfulness_pre`/`post`, retention and the claim rates are computed over answered items only, and the report never prints `faithfulness_pre` without `answer_rate` beside it (`eval/metrics/generation.py`, `eval/runner.py`); tested. Numeric accuracy keeps abstained items as incorrect (F-81 entry): an item-level accuracy, not a claim rate | 2026-10-01 |
 | F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts, segment/product breakdowns, not company-level figures | Gold excludes dimensional spans in `eval/generate/gold.select_gold`, which the candidate generator goes through; tested on a real AAPL net-income span at the same value on an equity-statement context (`tests/unit/test_gold.py`). 479 facts have such a same-value dimensional span in a chunk | 2026-10-01 |
 | F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Gold is exact-value spans only, in `select_gold`, which the candidate generator goes through; tested on the real PFE spans (`tests/unit/test_gold.py`) | 2026-10-01 |
 | F-75 | Of 2,553 (cik, concept, period) keys, 1,234 appear in more than one parsed accession and 61 differ in value | One item per key, eligibility (a)-(c), gold over every accession, label from the own-period filing's dei labels: enforced by `build_pool` / `build_items` under test (`test_pool.py`, `test_xbrl_items.py`). The 61 stay in review (F-73) | 2026-10-01 |

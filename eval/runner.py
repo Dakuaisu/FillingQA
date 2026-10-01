@@ -11,6 +11,7 @@ from collections import Counter
 
 from api.generate.generator import DEV_BACKENDS
 from eval.metrics.abstention import rates, two_by_two
+from eval.metrics.generation import NA, generation_metrics
 from eval.metrics.numeric import aggregate, score_item
 from eval.metrics.retrieval import mrr, ndcg_at_k, precision_at_k, recall_at_k, sufficiency_at_k
 
@@ -25,7 +26,14 @@ def _mean(xs: list) -> float | None:
     return sum(xs) / len(xs) if xs else None
 
 
-def _slice(items: dict, results: list[dict], k: int) -> dict:
+def _generation(results: list[dict], nli_threshold) -> dict:
+    has_claims = any(r.get("claims_pre") or r.get("claims_post") for r in results)
+    if has_claims and nli_threshold is None:
+        raise ValueError("claims present but eval_run.nli_threshold is not set (PRD 7.5)")
+    return generation_metrics(results, nli_threshold if nli_threshold is not None else 0.0)
+
+
+def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict:
     ret = {"sufficiency": [], "recall": [], "precision": [], "mrr": [], "ndcg": [],
            "sufficiency_post_rerank": []}  # fmt: skip
     scores, abst = [], []
@@ -55,10 +63,11 @@ def _slice(items: dict, results: list[dict], k: int) -> dict:
         f"sufficiency@{k}_post_rerank": _mean(ret["sufficiency_post_rerank"]),
         "numeric": aggregate(scores),
         "abstention": rates(two_by_two(abst)),
+        "generation": _generation(results, nli_threshold),
     }
 
 
-def build_report(items: dict, results: list[dict], meta: dict, k: int) -> dict:
+def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_threshold=None) -> dict:
     """`items`: item_id -> item; `results`: one per answered item, with retrieved,
     retrieved_post_rerank (or None), answer {text, claims, abstained}, verdict and
     served model; `meta`: backend, run_id, dataset files, retrieval stage."""
@@ -70,8 +79,11 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int) -> dict:
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
         "columns": {
-            **{s: _slice(items, rs, k) if rs else None for s, rs in by_source.items()},
-            "aggregate": _slice(items, results, k),
+            **{
+                s: _slice(items, rs, k, nli_threshold) if rs else None
+                for s, rs in by_source.items()
+            },
+            "aggregate": _slice(items, results, k, nli_threshold),
         },
     }
 
@@ -94,6 +106,17 @@ def anomalies(results: list[dict]) -> dict:
             if p50 and r.get("latency_s") is not None and r["latency_s"] > 3 * p50
         ],
     }
+
+
+def _gen(g: dict, key: str):
+    return NA if g["status"] == NA else g[key]
+
+
+def _faith(g: dict):
+    """faithfulness_pre is never printed without the answer rate (F-09)."""
+    if g["status"] == NA:
+        return NA
+    return f"{_fmt(g['faithfulness_pre'])} [{_fmt(g['answer_rate'])}]"
 
 
 def _fmt(v) -> str:
@@ -125,15 +148,24 @@ def format_report(report: dict) -> str:
             ("  abstained (in denominator)", lambda c: c["numeric"]["abstained"]),
             ("  free-text fallback used", lambda c: c["numeric"]["fallback_used"]),
             ("  mean figures per answer", lambda c: c["numeric"]["mean_figure_count"]),
+            ("Faithfulness (pre) [answer rate]", lambda c: _faith(c["generation"])),
+            ("Faithfulness (post)", lambda c: _gen(c["generation"], "faithfulness_post")),
+            ("Verifier lift", lambda c: _gen(c["generation"], "verifier_lift")),
+            ("Claim retention", lambda c: _gen(c["generation"], "claim_retention")),
+            ("Citation coverage", lambda c: _gen(c["generation"], "citation_coverage")),
+            ("Citation precision", lambda c: _gen(c["generation"], "citation_precision")),
+            ("Unit-scale accuracy", lambda c: _gen(c["generation"], "unit_scale_accuracy")),
+            ("Period accuracy", lambda c: _gen(c["generation"], "period_accuracy")),
+            ("XBRL contradiction rate", lambda c: _gen(c["generation"], "xbrl_contradiction_rate")),
             ("PARTIAL rate", lambda c: c["abstention"]["partial_rate"]),
             ("False-answer rate", lambda c: c["abstention"]["false_answer_rate"]),
             ("Over-abstention rate", lambda c: c["abstention"]["over_abstention_rate"]),
             ("Abstention F1", lambda c: c["abstention"]["abstention_f1"])]  # fmt: skip
     cols = report["columns"]
-    lines.append(f"{'metric':32}" + "".join(f"{c:>14}" for c in COLUMNS))
+    lines.append(f"{'metric':32}" + "".join(f"{c:>17}" for c in COLUMNS))
     for name, get in rows:
         cells = [_fmt(get(cols[c])) if cols[c] else "-" for c in COLUMNS]
-        lines.append(f"{name:32}" + "".join(f"{x:>14}" for x in cells))
+        lines.append(f"{name:32}" + "".join(f"{x:>17}" for x in cells))
     agg = cols["aggregate"]["numeric"]
     lines.append(f"figures per numeric answer (aggregate): {agg['figure_count_distribution']}")
     lines.append(f"excluded from numeric accuracy (aggregate): {agg['excluded']}")

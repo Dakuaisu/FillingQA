@@ -4776,3 +4776,21 @@ and `eval/judge/labels_v1.yaml`: "50 pairs {'llm_seeded': 15, 'xbrl_auto': 35}";
 scripts.judge kappa`: "labels 0 of 50, verdicts 0: kappa needs both complete".
 Tests: `tests/unit/test_judge.py` (5). `make test`: 406 passed; `make lint`: 119
 files already formatted.
+
+## 2026-10-01 — Phase 3 exit, step 1: claim-level metrics (F-10, F-09 resolved)
+
+Inventory of PRD 14's Phase 3 metrics and PRD 11.2's generation metrics in
+`eval/metrics/` before this step: present and tested -- Sufficiency@k, Recall@k,
+Precision@k, MRR, nDCG@k (`retrieval.py`), numeric accuracy (`numeric.py`), the
+abstention 2x2 (`abstention.py`). Missing -- faithfulness_pre/post, verifier
+lift, claim retention, citation coverage, citation precision, unit-scale
+accuracy, period accuracy, XBRL contradiction rate. Added as pure functions over
+`claims_pre`/`claims_post` (PRD 7.4 claim shape plus the verifier's `checks`) in
+`eval/metrics/generation.py`, tested on inline claims (`test_metrics_generation.py`,
+4); the runner prints them as "n/a: no claims" until Phase 4's structured output
+lands, and faithfulness_pre always with the answer rate in brackets.
+`eval_run.nli_threshold` is null (PRD 7.5 gives no value; calibrated in Phase 4)
+and scoring claims refuses while it is. Still not built, judge- or
+model-dependent: answer correctness (needs the validated judge, F-105), context
+precision (judge), answer relevance (PRD 11.2's reconstructed-question cosine).
+`make test`: 411 passed.

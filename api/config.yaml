@@ -313,6 +313,7 @@ eval_run:
   k: 10
   retrieve_depth: 10
   runs_dir: eval/runs
+  nli_threshold: null        # PRD 7.5: calibrated in Phase 4; scoring claims refuses while null
 
 # Hand-written items (PRD 11.1, Stage 4; authored by the owner). Counts per PRD 11.1.
 eval_handwritten:

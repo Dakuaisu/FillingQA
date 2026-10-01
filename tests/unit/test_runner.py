@@ -80,3 +80,18 @@ def test_results_are_appended_per_item_and_a_failed_call_halts(tmp_path):
     todo = [i for i in ["x1", "x2", "x3", "x4"] if i not in done]
     assert run_items(todo, lambda iid: {"item_id": iid, "latency_s": 1.0}, results, errors) == 0
     assert [r["item_id"] for r in read_jsonl(results)] == ["x1", "x2", "x3", "x4"]
+
+
+def test_generation_metrics_print_na_without_claims_and_faithfulness_carries_answer_rate():
+    out = format_report(build_report(ITEMS, RESULTS, meta("claude_cli"), 10))
+    assert "n/a: no claims" in out
+    claim = {"claim_id": "c1", "text": "t", "citations": ["b"], "figure": {"value": 7286},
+             "checks": {"citation_valid": True, "numbers_grounded": True, "unit_ok": True,
+                        "period_stated": True, "period_ok": True, "entity_ok": True,
+                        "xbrl_contradiction": False, "entail": 0.0,
+                        "citations_supporting": ["b"]}}  # fmt: skip
+    with_claims = [{**RESULTS[0], "claims_pre": [claim], "claims_post": [claim]}]
+    with pytest.raises(ValueError, match="nli_threshold"):
+        build_report(ITEMS, with_claims, meta("claude_cli"), 10)
+    out = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10, 0.5))
+    assert "1.000 [1.000]" in out

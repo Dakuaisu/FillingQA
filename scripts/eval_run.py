@@ -88,6 +88,7 @@ def answer_one(conn, model, emb, it: dict, gen: dict, depth: int) -> dict:
         "item_id": it["item_id"], "retrieved": [c.chunk_id for c in chunks],
         "retrieved_post_rerank": None,
         "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
+        "claims_pre": [], "claims_post": [],
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,
@@ -169,7 +170,8 @@ def main() -> None:
             print(f"resume with --resume {run_id}")
             sys.exit(code)
     results = read_jsonl(results_path)
-    report = build_report(items, results, {**meta, "run_id": run_id}, run_cfg["k"])
+    report = build_report(items, results, {**meta, "run_id": run_id}, run_cfg["k"],
+                          run_cfg["nli_threshold"])  # fmt: skip
     (runs / f"{run_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
     print(format_report(report))
     if baseline_out:
