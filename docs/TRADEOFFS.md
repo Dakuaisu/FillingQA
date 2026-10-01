@@ -2103,3 +2103,31 @@ otherwise show up as a retrieval regression, and one that only reorders would
 hide recall lost at fusion; measuring at one fixed point keeps the two apart.
 *Alternatives:* post-rerank only (mixes reranker and retriever errors);
 whatever list the generator receives (moves with `top_k` and the score floor).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the eval runner (built, not run)
+
+`eval/runner.py` (pure scoring and report) and `scripts/eval_run.py`.
+
+- No retrieval or model call without `--run`; the default prints the plan.
+- `--baseline-out` calls `refuse_dev_baseline` before any work: a `claude_cli`
+  run cannot write `eval/baselines/*` (F-59).
+- Every report starts with the backend and the requested model; a `claude_cli`
+  run carries a "DEVELOPMENT RUN" banner. The models actually served are counted
+  per run and stored per item (`model_served`).
+- Metrics per `source` column (`xbrl_auto`, `llm_seeded`, `handwritten`) and
+  aggregate (PRD 11.2). Retrieval metrics at `eval_run.k` (10) on the stored
+  pre-rerank list (F-13; today the dense top-k, depth `retrieve_depth`); the
+  generator gets `baseline.top_k` of it. Numeric accuracy prints its excluded
+  `unit_scale_unknown` count and the reported variants on every report.
+- The Phase 2 generator returns free text, no claims and no verdict: every
+  result is `PASS` with `claims: []`, so numeric accuracy uses the counted
+  free-text fallback until PRD 7.4's structured output exists.
+- Run output: `eval/runs/<run_id>.json` (report and per-item results). Not
+  git-ignored; whether dev runs are committed is open.
+- PARTIAL raises in the 2x2 until F-21 is placed.
+
+*Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
+migration exists yet; JSON keeps the run reproducible without one); one column
+for all sources (PRD 11.2 forbids it).

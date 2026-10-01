@@ -307,3 +307,9 @@ eval_seeding:
 # llm_seeded items written by scripts/seed_build.py (TRADEOFFS: seeded item fields).
 eval_seeded_items:
   dataset_version: llm_seeded_candidates_v1
+
+# Eval runner (PRD 11.4). Retrieval metrics at k on the stored pre-rerank list (F-13).
+eval_run:
+  k: 10
+  retrieve_depth: 10
+  runs_dir: eval/runs

@@ -4567,3 +4567,46 @@ The reference reader alone, run over the candidates' reference answers (ad hoc;
 no answer was scored):
 
     reference figures parsed: {'xbrl': 160, 'comparison': 40, 'seeded:scored': 37, 'seeded:unit_scale_unknown': 10, 'seeded:not numeric': 36}; disagreements with the manifests: 0
+
+## 2026-10-01 — Eval runner built (not run)
+
+`eval/runner.py`, `scripts/eval_run.py`, config `eval_run` (k 10, retrieve_depth
+10, runs_dir). Tests: `tests/unit/test_runner.py` (3). `make test`: 390 passed;
+`make lint`: 104 files already formatted.
+
+`python -m scripts.eval_run` (plan only):
+
+    backend claude_cli (claude-haiku-4-5-20251001, tier_small); items 283 {'xbrl_auto': 200, 'llm_seeded': 83}; k 10
+    plan only: pass --run to retrieve and generate
+
+`python -m scripts.eval_run --baseline-out eval/baselines/main.json`:
+
+    api.config.ConfigError: refusing to write eval/baselines/main.json: backend claude_cli is development-only (TRADEOFFS, OWNER DECISION - Max subscription as dev generator)
+
+Report shape, rendered from the synthetic items and results of `test_runner.py`
+(no candidate was retrieved or answered):
+
+    run r1  backend: claude_cli  generation model requested: m
+    DEVELOPMENT RUN (claude_cli): not a CI baseline, not publishable, not comparable with anthropic_api runs (F-59)
+    served models: {'claude-haiku-4-5-20251001': 3}  retrieval measured on: dense top-k (F-13)
+    metric                               xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                        1             2             -             3
+    retrieval items                              1             2             -             3
+    Sufficiency@10                           1.000         0.500             -         0.667
+    Recall@10                                1.000         0.500             -         0.667
+    Precision@10                             0.100         0.050             -         0.067
+    MRR                                      0.500         0.500             -         0.500
+    nDCG@10                                  0.631         0.500             -         0.544
+    Sufficiency@10 post-rerank                   -             -             -             -
+    Numeric accuracy (gated)                 1.000             -             -         1.000
+      numeric items scored                       1             0             -             1
+      excluded unit_scale_unknown                0             1             -             1
+      strict first figure                    1.000             -             -         1.000
+      within 0.5% (reported)                 1.000             -             -         1.000
+      comparison values only                     -             -             -             -
+      sign agreement                             -             -             -             -
+      free-text fallback used                    1             0             -             1
+      mean figures per answer                1.000             -             -         1.000
+    False-answer rate                            -             -             -             -
+    Over-abstention rate                     0.000         0.000             -         0.000
+    Abstention F1                                -             -             -             -
