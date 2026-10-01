@@ -2,6 +2,10 @@
 
 python -m scripts.retrieval_run [--compare RUN_ID]
 
+Output convention: retrieval-only runs are written to
+eval/runs/<run_id>.retrieval.json (report and per-item lists in one file), beside
+the eval runs' <run_id>.json / .meta.json / .results.jsonl.
+
 No model call. Per item: dense top-k_dense, sparse top-k_sparse, and their RRF
 fusion (the pre-rerank list). Prints retrieval metrics at eval_run.k per source
 column for each list, and, with --compare, how many items' dense top-k equal the
@@ -20,7 +24,7 @@ import yaml
 from api.config import REPO_ROOT, eval_run, retrieval
 from api.db import connect
 from api.index.embed import load_model
-from api.query.retrieve import dense_top_k, embed_question, rrf_fuse, sparse_top_k
+from api.query.retrieve import dense_top_k, embed_question, load_bm25, rrf_fuse, sparse
 from eval.runner import COLUMNS, SOURCES, retrieval_slice
 from scripts.write_freeze import FREEZE_FILE
 
@@ -39,17 +43,25 @@ def main() -> None:
     model, emb = load_model()
     results = []
     with connect() as conn:
+        index, rebuilt, key = None, None, None
+        if cfg["sparse"]["backend"] == "bm25":
+            index, rebuilt = load_bm25(conn, cfg["sparse"])
+            key = index.key
         for iid, it in items.items():
             vec = embed_question(model, emb, it["question"])
-            dense = [r.chunk_id for r in dense_top_k(conn, vec, cfg["k_dense"])[0]]
-            sparse = [r.chunk_id for r in sparse_top_k(conn, it["question"], cfg["k_sparse"])]
+            dense = [
+                r.chunk_id for r in dense_top_k(conn, vec, cfg["k_dense"], cfg["hnsw_ef_search"])[0]
+            ]
+            sp = sparse(conn, it["question"], cfg["k_sparse"], cfg["sparse"], index)
             w = cfg["weights"]
-            hybrid = rrf_fuse([dense, sparse], [w["dense"], w["sparse"]], cfg["rrf_k"])
-            results.append({"item_id": iid, "dense": dense, "sparse": sparse,
+            hybrid = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], cfg["rrf_k"])
+            results.append({"item_id": iid, "dense": dense, "sparse": sp,
                             "hybrid": hybrid[: max(cfg["k_dense"], cfg["k_sparse"])]})  # fmt: skip
     freeze = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
     run_id = uuid.uuid4().hex[:12]
     report = {"run_id": run_id, "kind": "retrieval-only, no model call", "retrieval": cfg, "k": k,
+              "sparse_backend": cfg["sparse"]["backend"], "bm25_index_key": key,
+              "bm25_index_rebuilt": rebuilt,
               "parser_version": freeze["parser_version"],
               "chunker_version": freeze["chunker_version"],
               "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
@@ -69,6 +81,8 @@ def main() -> None:
         json.dumps({"report": report, "results": results}, indent=1) + "\n", encoding="utf-8"
     )
     print(f"retrieval run {run_id}: {len(results)} items; k {k}; {cfg}")
+    if key:
+        print(f"bm25 index key {key[:16]} ({'rebuilt' if rebuilt else 'from cache'})")
     if "dense_top_k_equal_to" in report:
         print(f"dense top-{k} identical to the stored list of: {report['dense_top_k_equal_to']}")
     metrics = (f"sufficiency@{k}", f"recall@{k}", "mrr", f"ndcg@{k}", f"precision@{k}")

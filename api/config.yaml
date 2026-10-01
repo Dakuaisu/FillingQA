@@ -219,6 +219,15 @@ retrieval:
   k_sparse: 50
   rrf_k: 60
   weights: { dense: 1.0, sparse: 1.0 }
+  # Set before every dense query (F-109). At least k_dense; 100 chosen for recall,
+  # not tuned on any metric.
+  hnsw_ef_search: 100
+  # Okapi BM25 over the chunk's stored text, header included (TRADEOFFS: BM25).
+  # Standard parameters, not tuned on the candidates (PRD 11.7 ablation, later).
+  sparse:
+    backend: bm25           # bm25 | postgres_fts (the Phase 2 artifact, F-108)
+    k1: 1.2
+    b: 0.75
 
 span_resolution:
   min_rate: 0.80

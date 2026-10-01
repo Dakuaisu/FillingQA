@@ -4944,3 +4944,44 @@ call; run file `eval/runs/188304ccaf94.retrieval.json`):
 
 Findings F-108 (the `ts_rank_cd` sparse branch is weak and fusion lowers dense)
 and F-109 (dense top-10 depends on `ef_search`). Nothing tuned in response.
+
+## 2026-10-01 — BM25 sparse branch; `ef_search` pinned (F-108, F-109 resolved)
+
+`api/query/bm25.py` (tokenizer, Okapi BM25, cached index), `load_bm25` and
+`sparse` in `api/query/retrieve.py`; `dense_top_k` takes `ef_search`; config
+`retrieval.hnsw_ef_search: 100`, `retrieval.sparse` (bm25, k1 1.2, b 0.75); eval
+run meta records `hnsw_ef_search` and `k_dense`. Tests: `tests/unit/test_bm25.py`
+(4). `make test`: 419 passed.
+
+`python -m scripts.exact_nn_check`:
+
+    vectors 22354; questions 283; k 10; hnsw.ef_search 100
+    top-10 lists differing from exact search: 0 (order or membership); membership overlap among them: []
+      []
+
+`python -m scripts.retrieval_run --compare f2e616e0a7d7` (index built, 37 s;
+`eval/runs/01019ff395ec.retrieval.json`):
+
+    retrieval run 01019ff395ec: 283 items; k 10; {'k_dense': 50, 'k_sparse': 50, 'rrf_k': 60, 'weights': {'dense': 1.0, 'sparse': 1.0}, 'hnsw_ef_search': 100, 'sparse': {'backend': 'bm25', 'k1': 1.2, 'b': 0.75}}
+    bm25 index key 5a33c360a77f5bdf (rebuilt)
+    dense top-10 identical to the stored list of: {'f2e616e0a7d7': 243}
+    list / metric                    xbrl_auto    llm_seeded   handwritten     aggregate
+    dense sufficiency@10                 0.290         0.699             -         0.410
+    dense recall@10                      0.300         0.699             -         0.417
+    dense mrr                            0.156         0.511             -         0.260
+    dense ndcg@10                        0.174         0.548             -         0.284
+    dense precision@10                   0.052         0.070             -         0.058
+    sparse sufficiency@10                0.175         0.892             -         0.385
+    sparse recall@10                     0.182         0.892             -         0.390
+    sparse mrr                           0.071         0.707             -         0.257
+    sparse ndcg@10                       0.090         0.746             -         0.282
+    sparse precision@10                  0.029         0.089             -         0.046
+    hybrid sufficiency@10                0.365         0.892             -         0.519
+    hybrid recall@10                     0.375         0.892             -         0.527
+    hybrid mrr                           0.178         0.639             -         0.313
+    hybrid ndcg@10                       0.213         0.697             -         0.355
+    hybrid precision@10                  0.062         0.089             -         0.070
+
+Rerun from the cached index (key 5a33c360...): metrics identical (`diff` empty);
+its duplicate run file was deleted. F-110 logged: the llm_seeded gain is BM25's
+lexical overlap with seeded questions.

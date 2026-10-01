@@ -29,7 +29,7 @@ from datetime import UTC, datetime
 
 import yaml
 
-from api.config import REPO_ROOT, baseline, eval_run, generation
+from api.config import REPO_ROOT, baseline, eval_run, generation, retrieval
 from api.generate import claude_cli
 from api.generate.generator import generate, refuse_dev_baseline
 from eval.runner import build_report, format_report
@@ -63,6 +63,7 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
         "backend": gen["backend"], "model_requested": gen[TIER], "tier": TIER,
         "retrieval_stage": "dense top-k (Phase 2 baseline; no fusion, no rerank)",
         "retrieve_depth": run_cfg["retrieve_depth"], "generator_top_k": baseline()["top_k"],
+        "hnsw_ef_search": retrieval()["hnsw_ef_search"], "k_dense": retrieval()["k_dense"],
         "parser_version": freeze["parser_version"], "chunker_version": freeze["chunker_version"],
         "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
     }  # fmt: skip
@@ -72,7 +73,8 @@ def answer_one(conn, model, emb, it: dict, gen: dict, depth: int) -> dict:
     from api.query.retrieve import dense_top_k, embed_question
 
     t0 = time.monotonic()
-    chunks, _ = dense_top_k(conn, embed_question(model, emb, it["question"]), depth)
+    ef = retrieval()["hnsw_ef_search"]
+    chunks, _ = dense_top_k(conn, embed_question(model, emb, it["question"]), depth, ef)
     last = None
     for _ in range(TRANSPORT_RETRIES):
         try:

@@ -2140,6 +2140,11 @@ whatever list the generator receives (moves with `top_k` and the score floor).
   committed, not git-ignored; the code refuses to promote a dev run to a
   baseline.
 - PARTIAL counts as answered in the 2x2 (F-21, entry below).
+- Retrieval-only runs (`python -m scripts.retrieval_run`, no model call) are
+  written to `eval/runs/<run_id>.retrieval.json`, report and per-item lists in
+  one file, beside the eval runs' `<run_id>.json` / `.meta.json` /
+  `.results.jsonl`. Both kinds are committed; every number in a finding comes
+  from a committed run file.
 
 *Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
 migration exists yet; JSON keeps the run reproducible without one); one column
@@ -2230,3 +2235,54 @@ owner's labels could be anchored on the judge's scores).
 *Alternatives:* `websearch_to_tsquery` (AND semantics; most questions match
 nothing); a Python BM25 over all chunks (a new dependency, not asked for yet);
 OpenSearch BM25 (PRD 6.4's other option; a second service).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Okapi BM25 for the sparse branch (F-108)
+
+Decided by the supervisor on the F-108 measurement. PRD 6.4 calls Postgres FTS
+"adequate" and PRD 14 says "BM25"; the data decided.
+
+- `api/query/bm25.py`: self-written Okapi BM25, no new dependency. k1 = 1.2, b =
+  0.75 (`retrieval.sparse`), standard values, not tuned on the candidates; any
+  tuning is PRD 11.7's ablation, later, and only on reviewed items. IDF
+  `ln(1 + (N - df + 0.5) / (df + 0.5))`, never negative.
+- Tokenizer (one tested pure function): lowercase; a figure with thousands
+  separators is one token without commas ("7,286" -> "7286"); hyphen-joined
+  alphanumeric runs stay whole ("10-q", "8-k", "non-gaap"); otherwise
+  alphanumeric runs ("7a", "fy2025", "aapl"). No stemming: financial line items
+  are matched literally, and a stemmer would be a dependency to pin.
+- Indexed text: the chunk's stored `text`, context header included, so tickers,
+  Item codes and period labels match.
+- Index cached under `data/cache/`, keyed on `chunker_version` plus a hash of
+  every chunk's text; rebuilt when either (or k1, b) changes; `Index.check`
+  refuses an index used against another key. The run report records the sparse
+  backend and the index key.
+- Postgres FTS (`ts_rank_cd`) stays as the Phase 2 artifact, selectable as
+  `retrieval.sparse.backend: postgres_fts`.
+
+Measured (retrieval-only, Sufficiency@10, xbrl_auto / llm_seeded / aggregate):
+dense 0.290 / 0.699 / 0.410 (at `ef_search` 100); BM25 0.175 / 0.892 / 0.385;
+hybrid 0.365 / 0.892 / 0.519 (run 01019ff395ec).
+
+*Alternatives:*
+- *Postgres FTS, `ts_rank_cd` over OR-ed lexemes* (rejected; run 188304ccaf94):
+  sparse 0.025 / 0.241 / 0.088, and fusion lowered dense, hybrid 0.215 / 0.687 /
+  0.353 against dense 0.290 / 0.675 / 0.403. No inverse document frequency.
+- *A Postgres BM25 extension* (rejected): new infrastructure and a Docker image
+  change, and nothing in the PRD asks for it.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: `hnsw.ef_search` pinned at 100 (F-109)
+
+Decided by the supervisor. `retrieval.hnsw_ef_search: 100`, at least `k_dense`
+(50), chosen for recall, not for any score; `dense_top_k` sets it before every
+dense query and refuses an `ef_search` below k; eval runs record it in their
+meta beside `retrieve_depth` and `k_dense`, retrieval-only runs in their
+report. Measured once (`python -m scripts.exact_nn_check`): exact nearest
+neighbours by sequential scan over all 22,354 chunk embeddings against HNSW at
+100 for the 283 candidate questions: 0 top-10 lists differ. Not changed in
+response to any metric. *Alternatives:* pgvector's default 40 (HNSW returned a
+different top-10 on 10 of 283 items between 40 and 50, F-109); exact search
+always (fine at this size; the PRD specifies HNSW).

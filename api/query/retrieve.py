@@ -43,17 +43,22 @@ _QUERY = """
 """
 
 
-def dense_top_k(conn: psycopg.Connection, query_vector: str, k: int) -> tuple[list[Retrieved], str]:
+def dense_top_k(
+    conn: psycopg.Connection, query_vector: str, k: int, ef_search: int
+) -> tuple[list[Retrieved], str]:
     """Top-k chunks by cosine distance, and the plan node that served them.
 
     On a corpus this small the planner prefers an exact sequential scan; the
     baseline is specified "through chunks_hnsw", so seqscan is switched off for
-    this transaction only.
+    this transaction only. `ef_search` is set on every query (config
+    `retrieval.hnsw_ef_search`, F-109): HNSW is approximate and its result
+    depends on it.
     """
+    if ef_search < k:
+        raise ValueError(f"hnsw.ef_search {ef_search} < k {k}: HNSW returns at most ef_search rows")
     with conn.transaction():
         conn.execute("SET LOCAL enable_seqscan = off")
-        if k > 40:  # HNSW returns at most hnsw.ef_search rows (default 40)
-            conn.execute(f"SET LOCAL hnsw.ef_search = {int(k)}")
+        conn.execute(f"SET LOCAL hnsw.ef_search = {int(ef_search)}")  # pinned (F-109)
         plan = conn.execute("EXPLAIN " + _QUERY, {"q": query_vector, "k": k}).fetchall()
         rows = conn.execute(_QUERY, {"q": query_vector, "k": k}).fetchall()
     node = next((line for (line,) in plan if "Scan" in line), "").strip()
@@ -99,13 +104,40 @@ def rrf_fuse(rankings: list[list[str]], weights: list[float], k_const: int) -> l
     return sorted(score, key=lambda c: (-score[c], best[c], c))
 
 
+def load_bm25(conn: psycopg.Connection, sparse_cfg: dict):
+    """The BM25 index over every stored chunk's text (header included), from the
+    cache when its key (chunker_version + chunk texts) and parameters match.
+    Returns (index, rebuilt)."""
+    from api.chunk.store import chunker_version
+    from api.config import data_dir
+    from api.query import bm25
+
+    rows = conn.execute("SELECT chunk_id, text FROM chunks ORDER BY chunk_id").fetchall()
+    path = data_dir() / "cache" / f"bm25_k1{sparse_cfg['k1']}_b{sparse_cfg['b']}.pkl"
+    return bm25.load_or_build(path, rows, chunker_version(), sparse_cfg["k1"], sparse_cfg["b"])
+
+
+def sparse(
+    conn: psycopg.Connection, question: str, k: int, sparse_cfg: dict, index=None
+) -> list[str]:
+    """Sparse top-k chunk ids by the configured backend: `bm25` (needs `index`) or
+    `postgres_fts` (the Phase 2 `ts_rank_cd` artifact, F-108)."""
+    backend = sparse_cfg["backend"]
+    if backend == "bm25":
+        if index is None:
+            raise ValueError("the bm25 backend needs a loaded index")
+        return [cid for cid, _ in index.search(question, k)]
+    if backend == "postgres_fts":
+        return [r.chunk_id for r in sparse_top_k(conn, question, k)]
+    raise ValueError(f"unknown sparse backend {backend!r}")
+
+
 def hybrid_top_k(
-    conn: psycopg.Connection, query_vector: str, question: str, cfg: dict
+    conn: psycopg.Connection, query_vector: str, question: str, cfg: dict, index=None
 ) -> list[str]:
     """The fused pre-rerank list (chunk ids), length up to max(k_dense, k_sparse)."""
-    dense, _ = dense_top_k(conn, query_vector, cfg["k_dense"])
-    sparse = sparse_top_k(conn, question, cfg["k_sparse"])
+    dense, _ = dense_top_k(conn, query_vector, cfg["k_dense"], cfg["hnsw_ef_search"])
+    sp = sparse(conn, question, cfg["k_sparse"], cfg["sparse"], index)
     w = cfg["weights"]
-    fused = rrf_fuse([[r.chunk_id for r in dense], [r.chunk_id for r in sparse]],
-                     [w["dense"], w["sparse"]], cfg["rrf_k"])  # fmt: skip
+    fused = rrf_fuse([[r.chunk_id for r in dense], sp], [w["dense"], w["sparse"]], cfg["rrf_k"])
     return fused[: max(cfg["k_dense"], cfg["k_sparse"])]

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import argparse
 
-from api.config import baseline, generation
+from api.config import baseline, generation, retrieval
 from api.db import connect
 from api.generate.generator import generate
 from api.index.embed import load_model
@@ -24,7 +24,10 @@ def main() -> None:
     model, emb = load_model()
     with connect() as conn:
         chunks, plan = dense_top_k(
-            conn, embed_question(model, emb, args.question), baseline()["top_k"]
+            conn,
+            embed_question(model, emb, args.question),
+            baseline()["top_k"],
+            retrieval()["hnsw_ef_search"],
         )
     print(f"question: {args.question}")
     print(f"plan: {plan}")
