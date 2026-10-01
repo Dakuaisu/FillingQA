@@ -229,15 +229,12 @@ def main() -> None:
           f"pending {len(todo)}", flush=True)  # fmt: skip
     if todo:
         from api.db import connect
-        from api.index.embed import load_model
 
-        model, emb = load_model()
         with connect() as conn:
+            ctx = Context(conn, run_cfg["pipeline"])
             code = run_items(
                 todo,
-                lambda iid: answer_one(
-                    conn, model, emb, items[iid], gen, run_cfg["retrieve_depth"]
-                ),
+                lambda iid: answer_one(conn, ctx, items[iid], gen, run_cfg),
                 results_path,
                 runs / f"{run_id}.errors.jsonl",
             )
