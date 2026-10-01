@@ -61,8 +61,13 @@ def check(
             problems.append(f"{iid}: needs a tag subtype:<one of {sorted(SUBTYPES[qt])}>")
         if qt == "unanswerable" and it.get("expected_abstain") is not True:
             problems.append(f"{iid}: unanswerable items expect abstention")
-        if qt == "natural_phrasing" and it.get("expected_abstain") is not False:
-            problems.append(f"{iid}: natural_phrasing items are answerable")
+        if qt in ("natural_phrasing", "comparison") and it.get("expected_abstain") is not False:
+            problems.append(f"{iid}: {qt} items are answerable")
+        if qt == "comparison":
+            if not it.get("gold_evidence_sets"):
+                problems.append(f"{iid}: a comparison needs at least one evidence set")
+            if it.get("xbrl_fact_id") is not None:
+                problems.append(f"{iid}: a hand-written comparison has xbrl_fact_id null")
         if st in MUST_ABSTAIN and it.get("expected_abstain") is not True:
             problems.append(f"{iid}: {st} must expect abstention (PRD 11.1)")
         for es in it.get("gold_evidence_sets") or []:

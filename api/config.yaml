@@ -321,3 +321,4 @@ eval_handwritten:
     unanswerable: 50
     adversarial: 20
     natural_phrasing: 30
+    comparison: 20          # F-84: the only plain year-over-year comparisons

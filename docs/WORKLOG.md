@@ -4730,3 +4730,24 @@ so the author must decide); empty item files; config `eval_handwritten`;
       unanswerable: 0 items, PRD 11.1 asks for 50
       adversarial: 0 items, PRD 11.1 asks for 20
       natural_phrasing: 0 items, PRD 11.1 asks for 30
+
+## 2026-10-01 — Hand-written comparisons added to the kit (F-84)
+
+`templates/comparison.json`, empty `comparison.jsonl`, `comparison: 20` in
+`eval_handwritten.targets`; comparison checks in `eval/generate/handwritten.py`
+(answerable, at least one evidence set, `xbrl_fact_id` null; chunks, accessions
+and near-duplicates as for the rest). One-chunk sets are allowed (F-83, F-84).
+Tests: `test_comparison_rules` and the good-item case. `make test`: 397 passed.
+
+`python -m scripts.handwritten_validate` on the empty files (exit 1):
+
+    files: ['eval/handwritten/adversarial.jsonl', 'eval/handwritten/comparison.jsonl', 'eval/handwritten/natural_phrasing.jsonl', 'eval/handwritten/unanswerable.jsonl']; items 0
+      unanswerable: 0 of 50
+      adversarial: 0 of 20
+      natural_phrasing: 0 of 30
+      comparison: 0 of 20
+    problems: 4
+      unanswerable: 0 items, PRD 11.1 asks for 50
+      adversarial: 0 items, PRD 11.1 asks for 20
+      natural_phrasing: 0 items, PRD 11.1 asks for 30
+      comparison: 0 items, PRD 11.1 asks for 20

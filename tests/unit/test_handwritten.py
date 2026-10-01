@@ -9,7 +9,7 @@ from eval.generate.handwritten import check
 from eval.generate.schema import FIELDS
 
 CHUNK = "0000909832-25-000015:68.1:68.1"  # a real chunk (tests/fixtures/seed_chunks.json)
-TARGETS = {"unanswerable": 1, "adversarial": 1, "natural_phrasing": 1}
+TARGETS = {"unanswerable": 1, "adversarial": 1, "natural_phrasing": 1, "comparison": 1}
 V = "handwritten_candidates_v1"
 
 
@@ -27,6 +27,8 @@ GOOD = [
     item("hw_u_0001", "unanswerable", True, tags=["subtype:company_not_in_corpus"]),
     item("hw_a_0001", "adversarial", True, tags=["subtype:investment_advice"]),
     item("hw_n_0001", "natural_phrasing", False),
+    # One chunk is a sufficient set when a later filing prints both periods (F-83, F-84).
+    item("hw_c_0001", "comparison", False, tags=["kind:ytd"]),
 ]
 
 
@@ -38,8 +40,24 @@ def run(items, vectors=None, existing=None, ids=frozenset()):
 
 
 def test_good_items_pass():
-    problems, counts = run(GOOD, vectors=[[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    assert problems == [] and counts == {"unanswerable": 1, "adversarial": 1, "natural_phrasing": 1}
+    problems, counts = run(GOOD, vectors=[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+    assert problems == []
+    assert counts == {"unanswerable": 1, "adversarial": 1, "natural_phrasing": 1, "comparison": 1}
+
+
+def test_comparison_rules():
+    bad = [
+        item("hw_c_0002", "comparison", False, gold_evidence_sets=[], gold_accessions=[]),
+        item("hw_c_0003", "comparison", True, reference_answer=None),
+        item("hw_c_0004", "comparison", False, xbrl_fact_id=7),
+        item("hw_c_0005", "comparison", False, gold_accessions=["0000909832-24-000017"]),
+    ]
+    vecs = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+    text = "\n".join(run(bad, vectors=vecs)[0])
+    assert "hw_c_0002: a comparison needs at least one evidence set" in text
+    assert "hw_c_0003: comparison items are answerable" in text
+    assert "hw_c_0004: a hand-written comparison has xbrl_fact_id null" in text
+    assert "hw_c_0005: gold_accessions ['0000909832-24-000017'] != cited" in text
 
 
 def test_each_rule_reports():
@@ -71,9 +89,8 @@ def test_each_rule_reports():
 
 
 def test_near_duplicates_of_candidates_and_within_the_file():
-    problems, _ = run(
-        GOOD, vectors=[[1, 0, 0], [0.99, 0.05, 0], [0, 0, 1]], existing=[[0, 0, 0.999]]
-    )
+    vecs = [[1, 0, 0, 0], [0.99, 0.05, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+    problems, _ = run(GOOD, vectors=vecs, existing=[[0, 0, 0.999, 0]])
     text = "\n".join(problems)
     assert "hw_a_0001: near-duplicate of an earlier hand-written item" in text
     assert "hw_n_0001: near-duplicate of an existing candidate" in text
@@ -86,4 +103,9 @@ def test_templates_hold_no_items_and_match_the_schema():
         assert doc["target_count"] == targets[t] and tuple(doc["item"]) == FIELDS
         assert doc["item"]["source"] == "handwritten" and doc["item"]["question_type"] == t
         assert (REPO_ROOT / f"eval/handwritten/{t}.jsonl").read_text() == ""
-    assert targets == {"unanswerable": 50, "adversarial": 20, "natural_phrasing": 30}
+    assert targets == {
+        "unanswerable": 50,
+        "adversarial": 20,
+        "natural_phrasing": 30,
+        "comparison": 20,
+    }

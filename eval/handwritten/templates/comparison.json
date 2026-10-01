@@ -1,0 +1,33 @@
+{
+ "note": "TEMPLATE, not an item. Copy `item` into eval/handwritten/<type>.jsonl, one JSON object per line, fill every blank, and run `python -m scripts.handwritten_validate`. A null expected_abstain or an empty field fails validation until decided.",
+ "type": "comparison",
+ "target_count": 20,
+ "prd": "PRD 11.1 comparison row: 20 hand-written; the only plain year-over-year comparisons (F-84, F-83)",
+ "subtypes": {},
+ "evidence_sets": "Each set is a minimal sufficient set (F-84): one chunk if a later filing prints both periods (F-83), else two. List every alternative set.",
+ "expected_abstain": false,
+ "item": {
+  "item_id": "hw_comparison_NNNN",
+  "question": "",
+  "question_type": "comparison",
+  "difficulty": "",
+  "reference_answer": "",
+  "gold_evidence_sets": [
+   [
+    "<chunk_id>",
+    "<chunk_id, if a second is needed>"
+   ]
+  ],
+  "gold_accessions": [
+   "<accessions of the cited chunks>"
+  ],
+  "expected_abstain": false,
+  "tags": [
+   "kind:<annual|quarter|ytd|instant>"
+  ],
+  "source": "handwritten",
+  "xbrl_fact_id": null,
+  "reviewed_by_human": false,
+  "dataset_version": "handwritten_candidates_v1"
+ }
+}
