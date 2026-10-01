@@ -5014,3 +5014,67 @@ check: an Apple net-sales sentence scored 0.9995 against a bank-deposits one at
 The floor at 0.30 changes nothing; every item is over the 800 ms timeout on this
 machine (F-111). The llm_seeded slice drops slightly after reranking, consistent
 with F-110 (BM25's lexical advantage on seeded questions).
+
+## 2026-10-01 — Reranker timeout (F-111): device and model measured
+
+`rerank.device` in config; rerank runs record device, torch and machine
+(`api.query.rerank.machine`) and exclude one warm-up pass from latency;
+`scripts.rerank_run --model/--revision/--device` override config for a
+measurement only. Checked: a CrossEncoder with no device lands on `mps:0`, so run
+4aef651ade44 was on the GPU, not the CPU as first reported.
+
+Rerank on mps, first attempt (22:30Z): launched inside a tool call that also polled; the call hit its 2-minute timeout and the process group was killed at about 50 of 283 items. Offline measurement, no run file written; relaunched on its own.
+
+`python -m scripts.rerank_run 01019ff395ec` (bge-reranker-base, mps;
+`eval/runs/dd372192a070.rerank.json`):
+
+    rerank run dd372192a070 of retrieval run 01019ff395ec: 283 items; BAAI/bge-reranker-base@2cfc18c9415c; floor 0.3 (pending)
+    metric                                 xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                        200            83             -           283
+    pre_suff@8                                 0.330         0.867             -         0.488
+    pre_suff@10                                0.365         0.892             -         0.519
+    post_suff@top_n                            0.450         0.831             -         0.562
+    post_recall@top_n                          0.465         0.831             -         0.572
+    post_mrr                                   0.256         0.523             -         0.334
+    post_ndcg@top_n                            0.305         0.597             -         0.390
+    post_floor_suff@top_n (pending)            0.450         0.831             -         0.562
+    floor_empties (abstain)                        0             0             -             0
+    over_timeout                                 200            83             -           283
+    latency per item (one pass of up to 50 pairs): {'p50': 1.406, 'p95': 1.802, 'max': 2.011}; warm-up pass (not counted) 2.189 s
+    device mps; machine {'torch': '2.14.1', 'platform': 'macOS-27.0.1-arm64-arm-64bit', 'cpu': 'Apple M1 Pro', 'gpu': 'Apple M1 Pro (16 GPU cores)', 'ram_gb': 16.0, 'mps_available': True}
+
+`... --model cross-encoder/ms-marco-MiniLM-L-6-v2 --revision 233902d2... --device cpu`
+(`45e3ed5c8f13.rerank.json`):
+
+    rerank run 45e3ed5c8f13 of retrieval run 01019ff395ec: 283 items; cross-encoder/ms-marco-MiniLM-L-6-v2@233902d25c44; floor 0.3 (pending)
+    metric                                 xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                        200            83             -           283
+    pre_suff@8                                 0.330         0.867             -         0.488
+    pre_suff@10                                0.365         0.892             -         0.519
+    post_suff@top_n                            0.270         0.819             -         0.431
+    post_recall@top_n                          0.270         0.819             -         0.431
+    post_mrr                                   0.118         0.518             -         0.235
+    post_ndcg@top_n                            0.155         0.590             -         0.282
+    post_floor_suff@top_n (pending)            0.270         0.819             -         0.431
+    floor_empties (abstain)                        0             0             -             0
+    over_timeout                                  31             3             -            34
+    latency per item (one pass of up to 50 pairs): {'p50': 0.756, 'p95': 0.834, 'max': 1.061}; warm-up pass (not counted) 0.808 s
+
+`... --device mps` (`46523deda1c0.rerank.json`):
+
+    rerank run 46523deda1c0 of retrieval run 01019ff395ec: 283 items; cross-encoder/ms-marco-MiniLM-L-6-v2@233902d25c44; floor 0.3 (pending)
+    metric                                 xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                        200            83             -           283
+    pre_suff@8                                 0.330         0.867             -         0.488
+    pre_suff@10                                0.365         0.892             -         0.519
+    post_suff@top_n                            0.270         0.819             -         0.431
+    post_recall@top_n                          0.270         0.819             -         0.431
+    post_mrr                                   0.118         0.518             -         0.235
+    post_ndcg@top_n                            0.155         0.590             -         0.282
+    post_floor_suff@top_n (pending)            0.270         0.819             -         0.431
+    floor_empties (abstain)                        0             0             -             0
+    over_timeout                                   0             0             -             0
+    latency per item (one pass of up to 50 pairs): {'p50': 0.259, 'p95': 0.272, 'max': 0.51}; warm-up pass (not counted) 1.083 s
+
+Adopted: MiniLM on mps (the only one under 800 ms). F-111 resolved; F-113 logged
+(MiniLM reranks below the fused order).

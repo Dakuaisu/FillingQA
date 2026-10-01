@@ -1,6 +1,10 @@
 """Rerank a retrieval-only run's fused lists and measure (PRD 7.3; F-13).
 
-python -m scripts.rerank_run RETRIEVAL_RUN_ID
+python -m scripts.rerank_run RETRIEVAL_RUN_ID [--model M --revision R] [--device D]
+
+--model/--revision/--device override the `rerank` config for a measurement only
+(F-111: choosing between PRD 7.3's two models on latency); the run report
+records what was used.
 
 No generation. For each item: the stored hybrid top-50 (the pre-rerank list),
 reranked by the cross-encoder in one pass; the post-rerank list is the top-n
@@ -18,7 +22,7 @@ import uuid
 
 from api.config import REPO_ROOT, rerank
 from api.db import connect
-from api.query.rerank import apply_floor, load_reranker, top_n_for
+from api.query.rerank import apply_floor, load_reranker, machine, top_n_for
 from api.query.rerank import rerank as rerank_one
 from eval.metrics.retrieval import mrr, ndcg_at_k, recall_at_k, sufficiency_at_k
 from eval.runner import COLUMNS, SOURCES
@@ -34,7 +38,10 @@ def mean(xs):
 
 def main() -> None:
     src = sys.argv[1]
-    cfg = rerank()
+    cfg = dict(rerank())
+    for flag in ("model", "revision", "device"):
+        if f"--{flag}" in sys.argv:
+            cfg[flag] = sys.argv[sys.argv.index(f"--{flag}") + 1]
     doc = json.loads((RUNS / f"{src}.retrieval.json").read_text(encoding="utf-8"))
     items = {}
     for p in DATASETS:
@@ -47,6 +54,9 @@ def main() -> None:
         texts = dict(conn.execute("SELECT chunk_id, text FROM chunks WHERE chunk_id = ANY(%s)",
                                   (ids,)).fetchall())  # fmt: skip
     model = load_reranker(cfg)
+    first = doc["results"][0]
+    _, warmup = rerank_one(model, items[first["item_id"]]["question"],
+                           [(c, texts[c]) for c in first["hybrid"]])  # fmt: skip
     out = []
     for n, r in enumerate(doc["results"], start=1):
         it = items[r["item_id"]]
@@ -84,7 +94,8 @@ def main() -> None:
     columns = {**{s: col(rs) if rs else None for s, rs in by.items()}, "aggregate": col(out)}
     lat = sorted(r["seconds"] for r in out)
     report = {"run_id": run_id, "kind": "rerank of a retrieval-only run, no generation",
-              "source_run": src, "rerank": cfg, "columns": columns,
+              "source_run": src, "rerank": cfg, "device": cfg["device"], "machine": machine(),
+              "warmup_s": round(warmup, 3), "columns": columns,
               "latency_s": {"p50": lat[len(lat) // 2], "p95": lat[int(0.95 * (len(lat) - 1))],
                             "max": lat[-1]}}  # fmt: skip
     (RUNS / f"{run_id}.rerank.json").write_text(
@@ -99,7 +110,9 @@ def main() -> None:
         shown = ["-" if v is None else f"{v:.3f}" if isinstance(v, float) else str(v)
                  for v in cells]  # fmt: skip
         print(f"{m:34}" + "".join(f"{x:>14}" for x in shown))
-    print(f"latency per item (one pass of up to 50 pairs, this machine): {report['latency_s']}")
+    print(f"latency per item (one pass of up to 50 pairs): {report['latency_s']}; "
+          f"warm-up pass (not counted) {report['warmup_s']} s")  # fmt: skip
+    print(f"device {cfg['device']}; machine {report['machine']}")
 
 
 if __name__ == "__main__":

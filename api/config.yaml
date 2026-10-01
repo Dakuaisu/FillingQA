@@ -231,13 +231,16 @@ retrieval:
 
 # Cross-encoder reranking (PRD 7.3, Appendix A) over the fused top-50.
 rerank:
-  model: BAAI/bge-reranker-base
-  revision: 2cfc18c9415c912f9d8155881c133215df768a70
+  # PRD 7.3's second model, adopted because it alone meets the 800 ms timeout on
+  # this machine (F-111); bge-reranker-base@2cfc18c9 measured p95 1.80 s on mps.
+  model: cross-encoder/ms-marco-MiniLM-L-6-v2
+  revision: 233902d25c440f23af6f7d6e94d2946bac0bee0a
   top_n: 8                  # PRD 7.3; synthesis items take top_n_synthesis
   top_n_synthesis: 10
   score_floor: 0.30         # sigmoid-normalized; calibration PENDING: on reviewed items only (F-104)
   floor_calibration: pending
   timeout_ms: 800           # over it, fall through to RRF order (PRD 7.3)
+  device: mps               # torch device; latency is a property of the hardware (F-111)
 
 span_resolution:
   min_rate: 0.80

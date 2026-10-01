@@ -2310,3 +2310,38 @@ always (fine at this size; the PRD specifies HNSW).
 *Alternatives:* `cross-encoder/ms-marco-MiniLM-L-6-v2` (PRD 7.3's other option;
 smaller and faster, not measured); raw logits for the floor (no fixed scale for
 "0.3").
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: reranker chosen to meet the 800 ms timeout (F-111)
+
+Decided by the supervisor's rule: the 800 ms timeout is PRD 7.3's spec and stays;
+the fix is within PRD 7.3's two named models, chosen on measured latency, never
+on sufficiency; if both met it, bge-base would be kept. Every rerank run records
+device, torch version and machine (CPU, GPU, RAM).
+
+Measured on the 283 candidates' fused lists (retrieval run 01019ff395ec), Apple
+M1 Pro (16 GPU cores), 16 GB, torch 2.14.1, one batched pass of 50 pairs, warm-up
+excluded:
+
+| model | device | p50 | p95 | over 800 ms | run |
+|---|---|---|---|---|---|
+| bge-reranker-base | mps | 1.406 s | 1.802 s | 283 | dd372192a070 |
+| ms-marco-MiniLM-L-6-v2 | cpu | 0.756 s | 0.834 s | 34 | 45e3ed5c8f13 |
+| ms-marco-MiniLM-L-6-v2 | mps | 0.259 s | 0.272 s | 0 | 46523deda1c0 |
+
+Adopted: `cross-encoder/ms-marco-MiniLM-L-6-v2` @233902d25c44 on `mps`, the only
+combination under the timeout. Run 4aef651ade44, first reported as CPU, was in
+fact on `mps`: sentence-transformers places a CrossEncoder on `mps` when no
+device is given (checked), so its latency is bge-base on the GPU. Its quality
+numbers stand.
+
+The adopted model reranks worse than the order it receives (F-113): post-rerank
+Sufficiency at top-n 0.431 against 0.488 at 8 pre-rerank (aggregate), against
+bge-base's 0.562. That is reported, not acted on: the rule forbids choosing on
+sufficiency.
+
+*Alternatives:* raise the timeout to fit this machine (rejected: loosening PRD
+7.3's threshold, which also feeds the p95 latency row); bge-base on CPU (not
+measured; the GPU run already misses the timeout); choose bge-base for its
+sufficiency (rejected: the eval set would pick the component).

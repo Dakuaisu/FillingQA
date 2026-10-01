@@ -14,7 +14,35 @@ import time
 def load_reranker(cfg: dict):
     from sentence_transformers import CrossEncoder  # torch is heavy; load on use
 
-    return CrossEncoder(cfg["model"], revision=cfg["revision"])
+    return CrossEncoder(cfg["model"], revision=cfg["revision"], device=cfg["device"])
+
+
+def machine() -> dict:
+    """What a latency number depends on: device, torch, CPU, GPU, RAM."""
+    import platform
+    import subprocess
+
+    import torch
+
+    def sysctl(name: str) -> str:
+        r = subprocess.run(["sysctl", "-n", name], capture_output=True, text=True, check=False)
+        return r.stdout.strip()
+
+    gpu = subprocess.run(["system_profiler", "SPDisplaysDataType"], capture_output=True,
+                         text=True, check=False).stdout  # fmt: skip
+    chip = next(
+        (ln.split(":", 1)[1].strip() for ln in gpu.splitlines() if "Chipset Model" in ln), ""
+    )
+    cores = next((ln.split(":", 1)[1].strip() for ln in gpu.splitlines()
+                  if "Total Number of Cores" in ln), "")  # fmt: skip
+    mem = sysctl("hw.memsize")
+    return {
+        "torch": torch.__version__, "platform": platform.platform(),
+        "cpu": sysctl("machdep.cpu.brand_string") or platform.processor(),
+        "gpu": f"{chip} ({cores} GPU cores)" if chip else "",
+        "ram_gb": round(int(mem) / 2**30, 1) if mem.isdigit() else None,
+        "mps_available": torch.backends.mps.is_available(),
+    }  # fmt: skip
 
 
 def sigmoid(x: float) -> float:
