@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 31 |
+| OPEN | 36 |
 | RESOLVED | 31 |
-| **Total** | **62** |
+| **Total** | **67** |
 
 ---
 
@@ -27,8 +27,13 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 and committed under `corpus.filings` (96 filings, 12 per company, all unique, dev slice a subset; XOM via F-62). Ingest reads the list and pinned CIKs only; `years_back`, `form_types`, `ingest_company`, `--tickers/--years` removed. Freeze record still to write. When the freeze record is written it references F-58 | OPEN |
+| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 and committed under `corpus.filings` (96 filings, 12 per company, all unique, dev slice a subset; XOM via F-62). Ingest reads the list and pinned CIKs only; `years_back`, `form_types`, `ingest_company`, `--tickers/--years` removed. Freeze record not written: 45 of 96 filings quarantined and 3 more mis-sectioned (F-63..F-67). When the freeze record is written it references F-58 | OPEN |
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
+| F-63 | Item and Part headings rendered as single-cell layout tables are invisible to section detection, which reads only paragraph and heading blocks. PFE 10-K (all Items, 0 sections) x3; XOM 10-K (all Items, 0 sections) x3; BAC 10-K Items 7 and 8 x3; XOM 10-Q Part I Item 1 x9; PFE 10-Q "PART I/II" headings x9, so Part tracking never starts and codes come out unqualified ("1" not "I.1"). 27 quarantined filings | OPEN |
+| F-64 | BAC 10-Qs print MD&A (Item 2) before the financial statements (Item 1), with a "Part II. Other Information" block in between, so Part tracking tags Items 2-4 as Part II and `I.2` is reported missing. 9 quarantined filings | OPEN |
+| F-65 | JPM 10-Qs carry no Part I Item 1 or Item 2 headings: the document is JPM's financial report with a cross-reference index mapping Items to pages; only Items 3 and 4 have "Item" headings, detected without a Part. PRD 6.2's table-of-contents-anchor fallback was never built. 9 quarantined filings | OPEN |
+| F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Their chunks carry Item 15 / Part I labels for MD&A and statement text | OPEN |
+| F-67 | Four chunks exceed `max_seq_length` (716-747 and 670 tokens): JPM's 10-K "LOBs and Corporate ... Risk Management VaR" layout table kept as prose (F-46), no sentence punctuation, x3; NVDA FY2026 10-K exhibit index (F-56's shape, no ". " between entries) x1. The embedding pre-write check refused the run, as specified: no corpus chunk is embedded | OPEN |
 
 ## Blocking Phase 3
 

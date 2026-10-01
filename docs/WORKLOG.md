@@ -1469,3 +1469,136 @@ Coverage, from the stored facts:
 
 `make test`: 225 passed (4 guard tests removed, pinned-CIK, list and mislabelled-
 page tests added), 3 snapshots passed.
+
+## 2026-10-01 — Corpus parse: 45 of 96 quarantined; freeze not written
+
+F-62 and the list committed as `b87dc0b`.
+
+`python -m api.parse.validate` on all 96 (2 min 12 s):
+
+    parser_version 0e417d5495e4
+    ticker accession              form   FY fp sect miss data alpha scale uncol spans items score  rows skip  status
+    AAPL   0000320193-23-000106   10-K 2023 FY   23    0   46 0.762 0.976 1.000 0.994 1.000 0.994   983    6  parsed
+    AAPL   0000320193-24-000006   10-Q 2024 Q1   11    0   24 0.724 0.957 1.000 0.996 1.000 0.991   522    2  parsed
+    AAPL   0000320193-24-000069   10-Q 2024 Q2   11    0   24 0.704 0.957 1.000 0.997 1.000 0.991   676    2  parsed
+    AAPL   0000320193-24-000081   10-Q 2024 Q3   11    0   24 0.698 0.957 1.000 0.996 1.000 0.990   678    3  parsed
+    AAPL   0000320193-24-000123   10-K 2024 FY   23    0   44 0.765 0.974 1.000 0.996 1.000 0.994   957    4  parsed
+    AAPL   0000320193-25-000008   10-Q 2025 Q1   11    0   23 0.736 0.955 1.000 0.994 1.000 0.990   520    3  parsed
+    AAPL   0000320193-25-000057   10-Q 2025 Q2   11    0   23 0.725 0.955 1.000 0.997 1.000 0.990   670    2  parsed
+    AAPL   0000320193-25-000073   10-Q 2025 Q3   11    0   25 0.701 0.957 1.000 0.996 1.000 0.990   680    3  parsed
+    AAPL   0000320193-25-000079   10-K 2025 FY   23    0   43 0.765 0.974 1.000 0.995 1.000 0.994   962    5  parsed
+    AAPL   0000320193-26-000006   10-Q 2026 Q1   11    0   23 0.722 0.955 1.000 0.993 1.000 0.989   554    4  parsed
+    AAPL   0000320193-26-000013   10-Q 2026 Q2   11    0   25 0.733 0.958 1.000 0.995 1.000 0.991   750    4  parsed
+    AAPL   0000320193-26-000020   10-Q 2026 Q3   11    0   26 0.728 0.960 1.000 0.995 1.000 0.991   756    4  parsed
+    BAC    0000070858-23-000272   10-Q 2023 Q3    9    1  129 0.689 1.000 0.992 0.999 0.500 0.898     0   10  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-24-000122   10-K 2023 FY   21    2  159 0.748 1.000 0.969 0.997 0.600 0.913     0   21  quarantined: required Items missing: ['7', '8']
+    BAC    0000070858-24-000156   10-Q 2024 Q1    9    1  119 0.701 1.000 0.992 0.998 0.500 0.898     0    9  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-24-000208   10-Q 2024 Q2    9    1  127 0.683 1.000 0.992 0.999 0.500 0.898     0    6  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-24-000280   10-Q 2024 Q3    9    1  126 0.685 1.000 0.992 0.999 0.500 0.898     0    8  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-25-000139   10-K 2024 FY   21    2  158 0.746 1.000 0.975 0.998 0.600 0.914     0   19  quarantined: required Items missing: ['7', '8']
+    BAC    0000070858-25-000200   10-Q 2025 Q1    9    1  118 0.701 1.000 1.000 0.999 0.500 0.900     0    6  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-25-000268   10-Q 2025 Q2    9    1  123 0.685 1.000 0.992 0.999 0.500 0.898     0    6  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-25-000405   10-Q 2025 Q3    9    1  122 0.686 1.000 0.992 0.999 0.500 0.898     0    7  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-26-000157   10-K 2025 FY   21    2  157 0.746 1.000 0.968 0.998 0.600 0.913     0   19  quarantined: required Items missing: ['7', '8']
+    BAC    0000070858-26-000249   10-Q 2026 Q1    9    1  117 0.700 1.000 1.000 0.999 0.500 0.900     0    8  quarantined: required Items missing: ['I.2']
+    BAC    0000070858-26-000394   10-Q 2026 Q2    9    1  123 0.681 1.000 0.992 0.999 0.500 0.898     0    8  quarantined: required Items missing: ['I.2']
+    COST   0000909832-23-000042   10-K 2023 FY   22    0   44 0.775 0.938 1.000 0.995 1.000 0.987   833    4  parsed
+    COST   0000909832-23-000065   10-Q 2024 Q1   11    0   25 0.755 0.882 1.000 0.990 1.000 0.974   392    4  parsed
+    COST   0000909832-24-000017   10-Q 2024 Q2   11    0   26 0.739 0.889 1.000 0.993 1.000 0.976   569    4  parsed
+    COST   0000909832-24-000029   10-Q 2024 Q3   11    0   26 0.738 0.889 1.000 0.993 1.000 0.976   566    4  parsed
+    COST   0000909832-24-000049   10-K 2024 FY   23    0   44 0.776 0.938 1.000 0.995 1.000 0.987   837    4  parsed
+    COST   0000909832-24-000079   10-Q 2025 Q1   11    0   25 0.758 0.882 1.000 0.989 1.000 0.974   357    4  parsed
+    COST   0000909832-25-000015   10-Q 2025 Q2   11    0   26 0.743 0.889 1.000 0.992 1.000 0.976   495    4  parsed
+    COST   0000909832-25-000033   10-Q 2025 Q3   11    0   26 0.740 0.889 1.000 0.992 1.000 0.976   490    4  parsed
+    COST   0000909832-25-000101   10-K 2025 FY   23    0   44 0.779 0.938 1.000 0.994 1.000 0.986   818    5  parsed
+    COST   0000909832-25-000169   10-Q 2026 Q1   11    0   27 0.756 0.895 1.000 0.988 1.000 0.976   395    5  parsed
+    COST   0000909832-26-000029   10-Q 2026 Q2   11    0   28 0.738 0.900 1.000 0.991 1.000 0.978   571    5  parsed
+    COST   0000909832-26-000051   10-Q 2026 Q3   11    0   28 0.737 0.900 1.000 0.991 1.000 0.978   570    5  parsed
+    JPM    0000019617-23-000524   10-Q 2023 Q3    9    2  243 0.701 1.000 0.984 0.995 0.000 0.796     0   36  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0000019617-24-000225   10-K 2023 FY   22    0  268 0.754 1.000 0.993 0.997 1.000 0.998  7776   27  parsed
+    JPM    0000019617-24-000326   10-Q 2024 Q1    9    2  218 0.716 1.000 1.000 0.994 0.000 0.799     0   33  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0000019617-24-000453   10-Q 2024 Q2    9    2  232 0.700 1.000 0.983 0.996 0.000 0.796     0   31  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0000019617-24-000611   10-Q 2024 Q3    9    2  232 0.701 1.000 0.983 0.995 0.000 0.796     0   37  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0000019617-25-000270   10-K 2024 FY   22    0  267 0.755 1.000 0.993 0.996 1.000 0.998  7805   34  parsed
+    JPM    0000019617-25-000421   10-Q 2025 Q1    9    2  219 0.713 1.000 1.000 0.997 0.000 0.799     0   20  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0000019617-25-000615   10-Q 2025 Q2    9    2  234 0.694 1.000 0.983 0.996 0.000 0.796     0   27  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0001628280-25-048859   10-Q 2025 Q3    9    2  233 0.697 1.000 0.983 0.996 0.000 0.796     0   33  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0001628280-26-008131   10-K 2025 FY   22    0  272 0.752 1.000 0.993 0.995 1.000 0.998  7921   38  parsed
+    JPM    0001628280-26-029344   10-Q 2026 Q1    9    2  219 0.714 1.000 1.000 0.997 0.000 0.799     0   16  quarantined: required Items missing: ['I.1', 'I.2']
+    JPM    0001628280-26-054343   10-Q 2026 Q2    9    2  228 0.695 1.000 0.982 0.997 0.000 0.796     0   20  quarantined: required Items missing: ['I.1', 'I.2']
+    NVDA   0001045810-23-000227   10-Q 2024 Q3    9    0   41 0.762 1.000 1.000 0.998 1.000 1.000   964    2  parsed
+    NVDA   0001045810-24-000029   10-K 2024 FY   23    0   53 0.790 1.000 1.000 0.993 1.000 0.999  1207    9  parsed
+    NVDA   0001045810-24-000124   10-Q 2025 Q1    9    0   43 0.766 1.000 1.000 0.993 1.000 0.999   746    5  parsed
+    NVDA   0001045810-24-000264   10-Q 2025 Q2    9    0   45 0.755 1.000 1.000 0.995 1.000 0.999   988    5  parsed
+    NVDA   0001045810-24-000316   10-Q 2025 Q3    9    0   44 0.754 1.000 1.000 0.996 1.000 0.999   984    4  parsed
+    NVDA   0001045810-25-000023   10-K 2025 FY   23    0   56 0.789 1.000 1.000 0.993 1.000 0.999  1220    9  parsed
+    NVDA   0001045810-25-000116   10-Q 2026 Q1    9    0   40 0.768 1.000 1.000 0.994 1.000 0.999   721    4  parsed
+    NVDA   0001045810-25-000209   10-Q 2026 Q2    9    0   39 0.752 1.000 1.000 0.994 1.000 0.999   940    6  parsed
+    NVDA   0001045810-25-000230   10-Q 2026 Q3    9    0   38 0.761 1.000 1.000 0.992 1.000 0.998   943    8  parsed
+    NVDA   0001045810-26-000021   10-K 2026 FY   23    0   49 0.790 1.000 1.000 0.991 1.000 0.998  1117   10  parsed
+    NVDA   0001045810-26-000052   10-Q 2027 Q1    9    0   37 0.769 1.000 1.000 0.994 1.000 0.999   699    4  parsed
+    NVDA   0001045810-26-000075   10-Q 2027 Q2    9    0   41 0.753 1.000 1.000 0.996 1.000 0.999   996    4  parsed
+    PFE    0000078003-23-000115   10-Q 2023 Q3    9    2   46 0.760 1.000 1.000 0.989 0.000 0.798     0   20  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-24-000039   10-K 2023 FY    0    5   78 0.784 1.000 1.000 0.988 0.000 0.798     0   37  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    PFE    0000078003-24-000107   10-Q 2024 Q1    9    2   44 0.773 1.000 1.000 0.982 0.000 0.796     0   22  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-24-000166   10-Q 2024 Q2    9    2   50 0.758 1.000 1.000 0.988 0.000 0.798     0   22  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-24-000191   10-Q 2024 Q3    9    2   50 0.758 1.000 1.000 0.985 0.000 0.797     0   27  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-25-000054   10-K 2024 FY    0    5   86 0.783 1.000 1.000 0.984 0.000 0.797     0   47  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    PFE    0000078003-25-000114   10-Q 2025 Q1    9    2   41 0.774 1.000 1.000 0.974 0.000 0.795     0   30  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-25-000138   10-Q 2025 Q2    9    2   50 0.757 1.000 1.000 0.984 0.000 0.797     0   27  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-25-000150   10-Q 2025 Q3    9    2   50 0.760 1.000 1.000 0.986 0.000 0.797     0   24  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-26-000026   10-K 2025 FY    0    5   82 0.785 1.000 1.000 0.986 0.000 0.797     0   40  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    PFE    0000078003-26-000054   10-Q 2026 Q1    9    2   40 0.773 1.000 1.000 0.984 0.000 0.797     0   20  quarantined: required Items missing: ['I.1', 'I.2']
+    PFE    0000078003-26-000095   10-Q 2026 Q2    9    2   48 0.757 1.000 1.000 0.989 0.000 0.798     0   20  quarantined: required Items missing: ['I.1', 'I.2']
+    TGT    0000027419-23-000052   10-Q 2023 Q3   11    0   29 0.716 1.000 1.000 0.980 1.000 0.996   553   11  parsed
+    TGT    0000027419-24-000032   10-K 2023 FY   23    0   60 0.768 0.977 1.000 0.986 1.000 0.993   984   14  parsed
+    TGT    0000027419-24-000129   10-Q 2024 Q1   11    0   28 0.730 1.000 1.000 0.982 1.000 0.996   385    7  parsed
+    TGT    0000027419-24-000152   10-Q 2024 Q2   11    0   30 0.710 1.000 1.000 0.985 1.000 0.997   517    8  parsed
+    TGT    0000027419-24-000179   10-Q 2024 Q3   11    0   30 0.711 1.000 1.000 0.982 1.000 0.996   532   10  parsed
+    TGT    0000027419-25-000018   10-K 2024 FY   23    0   62 0.773 1.000 1.000 0.988 1.000 0.998   973   12  parsed
+    TGT    0000027419-25-000101   10-Q 2025 Q1   11    0   30 0.734 1.000 1.000 0.981 1.000 0.996   406    8  parsed
+    TGT    0000027419-25-000118   10-Q 2025 Q2   11    0   33 0.718 1.000 1.000 0.986 1.000 0.997   546    8  parsed
+    TGT    0000027419-25-000126   10-Q 2025 Q3   11    0   34 0.720 1.000 1.000 0.983 1.000 0.997   576   10  parsed
+    TGT    0000027419-26-000016   10-K 2025 FY   23    0   64 0.774 1.000 1.000 0.987 1.000 0.997   977   13  parsed
+    TGT    0000027419-26-000022   10-Q 2026 Q1   11    0   30 0.736 1.000 1.000 0.980 1.000 0.996   401    8  parsed
+    TGT    0000027419-26-000042   10-Q 2026 Q2   11    0   32 0.720 1.000 1.000 0.979 1.000 0.996   547   12  parsed
+    XOM    0000034088-23-000056   10-Q 2023 Q3    7    1   36 0.715 1.000 1.000 1.000 0.500 0.900     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-24-000018   10-K 2023 FY    0    5  113 0.738 1.000 0.982 1.000 0.000 0.796     0    1  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    XOM    0000034088-24-000029   10-Q 2024 Q1    7    1   35 0.740 1.000 1.000 1.000 0.500 0.900     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-24-000050   10-Q 2024 Q2    7    1   40 0.715 1.000 1.000 1.000 0.500 0.900     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-24-000068   10-Q 2024 Q3    7    1   40 0.714 1.000 1.000 1.000 0.500 0.900     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-25-000010   10-K 2024 FY    0    5  118 0.739 1.000 0.958 1.000 0.000 0.791     0    1  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    XOM    0000034088-25-000024   10-Q 2025 Q1    7    1   38 0.730 1.000 0.947 1.000 0.500 0.889     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-25-000042   10-Q 2025 Q2    7    1   44 0.695 1.000 0.909 1.000 0.500 0.882     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-25-000061   10-Q 2025 Q3    7    1   44 0.697 1.000 0.909 1.000 0.500 0.882     0    0  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-26-000045   10-K 2025 FY    0    5  116 0.739 1.000 0.983 0.999 0.000 0.796     0    2  quarantined: 0 sections < 5; required Items missing: ['1', '1A', '7', '7A', '8']; 10-K has no Item 1A
+    XOM    0000034088-26-000067   10-Q 2026 Q1    8    1   34 0.732 1.000 0.941 0.999 0.500 0.888     0    1  quarantined: required Items missing: ['I.1']
+    XOM    0000034088-26-000093   10-Q 2026 Q2    8    1   36 0.703 1.000 0.889 0.999 0.500 0.878     0    2  quarantined: required Items missing: ['I.1']
+
+Parsed: all 48 AAPL, COST, NVDA, TGT filings, and JPM's three 10-Ks.
+Quarantined: BAC 12/12, JPM 9/12 (every 10-Q), PFE 12/12, XOM 12/12. Not
+patched, by instruction.
+
+Diagnosis, from the blocks that start with "Item n" or "Part":
+- Headings as single-cell layout tables, invisible to section detection (F-63):
+  PFE and XOM 10-Ks (every Item), BAC 10-K Items 7 and 8, XOM 10-Q Item 1, PFE
+  10-Q Part headings.
+- BAC 10-Qs: MD&A before Item 1 with a Part II block between, so Items 2-4 are
+  tagged Part II (F-64).
+- JPM 10-Qs: no Part I Item 1/2 headings at all; a cross-reference index stands
+  in for them (F-65).
+- JPM 10-Ks pass but are mis-sectioned: Items 7 and 8 are 395- and 368-char
+  cross-reference stubs, 1,008,217 of 1,208,667 chars land under Item 15, and
+  Items 1-14 are all Part I (F-66).
+
+Chunk, embed, resolve on the 51 parsed filings: 8,868 chunks; 4 over 512 tokens
+(F-67), so `python -m api.index.embed` refused the run at its pre-write check --
+`EmbeddingCheckError: 4 chunks exceed max_seq_length, e.g.
+[('0000019617-25-000270:2228.0:2228.0', 747), ...]` -- and nothing was embedded.
+The re-chunk nulled the 12 dev filings' embeddings; their vectors are in
+`embedding_cache` and refill once the check passes. Resolve: 57,959 of 58,025
+spans (0.999; 1.000 within Items), 66 before the first Item; JPM 10-Ks ~7,800
+spans each, all resolved -- under F-66's wrong Item labels.
+
+No freeze record is written: 45 quarantined filings and 3 mis-sectioned ones would
+be frozen into the corpus. Phase 3 stays closed.
