@@ -46,6 +46,15 @@ def retrieval_slice(items: dict, results: list[dict], k: int, field: str = "retr
     return out
 
 
+def floor_empty(r: dict) -> bool:
+    """The score floor emptied the post-rerank list (abstained, no generator call).
+    Records written before the `abstain_reason` tag carry it as an empty post-rerank
+    list without an RRF fallback, the only path that produces one."""
+    if r.get("abstain_reason") == "score_floor":
+        return True
+    return r.get("retrieved_post_rerank") == [] and not r.get("rerank_fell_back")
+
+
 def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict:
     ret = {"sufficiency": [], "recall": [], "precision": [], "mrr": [], "ndcg": [],
            "sufficiency_post_rerank": []}  # fmt: skip
@@ -74,6 +83,8 @@ def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict
         "mrr": _mean(ret["mrr"]),
         f"ndcg@{k}": _mean(ret["ndcg"]),
         f"sufficiency@{k}_post_rerank": _mean(ret["sufficiency_post_rerank"]),
+        "floor_empties": sum(floor_empty(r) for r in results),
+        "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "numeric": aggregate(scores),
         "abstention": rates(two_by_two(abst)),
         "generation": _generation(results, nli_threshold),
@@ -159,6 +170,8 @@ def format_report(report: dict) -> str:
             (f"Precision@{k}", lambda c: c[f"precision@{k}"]), ("MRR", lambda c: c["mrr"]),
             (f"nDCG@{k}", lambda c: c[f"ndcg@{k}"]),
             ("Sufficiency post-rerank (top-n)", lambda c: c[f"sufficiency@{k}_post_rerank"]),
+            ("  floor_empties (abstain, score_floor; F-112)", lambda c: c.get("floor_empties", 0)),
+            ("  rerank fell back to RRF order", lambda c: c.get("rerank_fell_back", 0)),
             ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
             ("  numeric items scored", lambda c: c["numeric"]["n"]),
             ("  excluded unit_scale_unknown",

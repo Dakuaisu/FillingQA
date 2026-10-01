@@ -146,8 +146,9 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
     }  # fmt: skip
     if c["abstain"]:  # every chunk below the score floor: no generator call (PRD 7.3)
         return {**record, "answer": {"text": "", "claims": [], "abstained": True},
-                "verdict": "ABSTAIN", "model_served": None, "backend": gen["backend"],
-                "usage": None, "latency_s": round(time.monotonic() - t0, 2),
+                "verdict": "ABSTAIN", "abstain_reason": "score_floor", "model_served": None,
+                "backend": gen["backend"], "usage": None,
+                "latency_s": round(time.monotonic() - t0, 2),
                 "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
     texts = texts_for(conn, c["generator_input"])
     chunks = [Retrieved(cid, 0.0, texts[cid]) for cid in c["generator_input"]]

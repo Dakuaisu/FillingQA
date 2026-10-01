@@ -95,3 +95,19 @@ def test_generation_metrics_print_na_without_claims_and_faithfulness_carries_ans
         build_report(ITEMS, with_claims, meta("claude_cli"), 10)
     out = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10, 0.5))
     assert "1.000 [1.000]" in out
+
+
+def test_floor_empties_are_counted_per_source_tagged_or_not():
+    abst = {"verdict": "ABSTAIN", "answer": {"text": "", "claims": [], "abstained": True},
+            "retrieved_post_rerank": []}  # fmt: skip
+    floor = {**result("x1", ["a"], ""), **abst, "rerank_fell_back": False}
+    tagged = {**result("s1", ["c"], ""), **abst, "abstain_reason": "score_floor"}
+    fell_back = {
+        **result("s2", ["d"], "x"),
+        "retrieved_post_rerank": ["d"],
+        "rerank_fell_back": True,
+    }
+    cols = build_report(ITEMS, [floor, tagged, fell_back], meta("claude_cli"), 10)["columns"]
+    assert cols["xbrl_auto"]["floor_empties"] == 1 and cols["llm_seeded"]["floor_empties"] == 1
+    assert cols["llm_seeded"]["rerank_fell_back"] == 1 and cols["aggregate"]["floor_empties"] == 2
+    assert "floor_empties" in format_report(build_report(ITEMS, [floor], meta("claude_cli"), 10))
