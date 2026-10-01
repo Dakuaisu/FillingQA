@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 25 |
+| OPEN | 28 |
 | RESOLVED | 24 |
-| **Total** | **49** |
+| **Total** | **52** |
 
 ---
 
@@ -28,6 +28,8 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
+| F-50 | 11 of 404 data tables are continuations with no header row of their own (the period labels sit in the preceding table), and 4 of them -- AAPL's gross-margin-percentage tables, one per filing -- hold only percentages yet get "in millions" because the 500-char window reaches the preceding table's caption. The chunker would emit a wrong unit in the context line | OPEN |
+| F-51 | A first data row holding only dashes is taken as a header row: AAPL 10-Q 0000320193-26-000020 share-repurchase table gets column labels like "Total Number of Shares Purchased —" and a period ("March 29, 2026 to May 2, 2026:") as its title. 1 of 404 tables | OPEN |
 
 ## Blocking Phase 3
 
@@ -71,6 +73,7 @@ carries the state.
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-46 | Some `layout` tables carry prose content, not scaffolding: TGT's critical audit matters and cybersecurity-oversight tables, AAPL's audit-matter tables. Phase 2 must chunk layout tables as prose rather than drop them | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
+| F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
 
 ## Resolved
 
@@ -120,6 +123,13 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 **F-42 — eval corpus as accession list.** Run the 3-year window once to list
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
+
+**F-50 — continuation tables.** Before the chunker: stop the caption search at a
+preceding table boundary, and decide whether a header-less continuation borrows
+the column labels of the table it continues.
+
+**F-51 — nil-only first row.** Count a dash in the value area as a body cell when
+finding the first body row; re-run the table checks.
 
 **F-47 — restatement count.** Phase 5: the README count and the "later
 restated" annotation. Separate rounding from restatement first; `decimals` is not

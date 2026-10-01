@@ -673,3 +673,33 @@ would be a fabricated value. `scale_coverage` is reported with its source
 split (caption / ixbrl) in the runner output so the Phase 3 metric can follow it.
 The remaining imperfections are known: scale misses are the mixed-magnitude
 tables, span misses are word-form numbers (F-33).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_spans rows, and the Phase 1 exit
+
+**Which spans become rows.** `xbrl_spans` holds `is_numeric` spans with a parsed
+value; word-form figures (F-33: "one", "two") are skipped and counted, 4-13 per
+filing on the slice. `xbrl_spans.value` stays NOT NULL, as migration 0002 and PRD
+6.5.2 declare it, and PRD scopes the table to `ix:nonFraction`.
+
+*Rejected: make `value` nullable and store the word-form spans too.* Every
+consumer of this table -- span-to-chunk resolution in Phase 2, gold labels and
+the restatement-aware lookup in Phase 3 -- reads `value`, and a nullable column
+pushes a "skip if NULL" into each of them, where forgetting it once compares a
+claim against nothing. The skipped spans are not lost: `span_resolution` in the
+parse-quality score counts them, and the parsed document still carries them.
+Inventing a value from the word ("one" -> 1) is the guess CLAUDE.md rule 1
+forbids.
+
+Also: all contexts are stored, dimensional included (F-32 filtering is Phase 3's
+job); spans are written in the same transaction as `norm_path` and the `filings`
+row, deleted and rewritten per accession; a quarantined filing keeps none. No
+columns beyond the migration -- `sign`, `unit_ref` and `element_id` stay in the
+parsed document.
+
+**Hand inspection at the Phase 1 exit was done by the builder**, not the owner:
+two data tables and three stored spans per filing, all 12, in WORKLOG. The owner
+should repeat it on those WORKLOG samples against the printed filings before
+treating Phase 1 as signed off. The builder's pass found three implausible
+table extractions, filed as F-50, F-51 and F-52; no stored span was implausible.

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
+from decimal import Decimal
 from pathlib import Path
 
 import psycopg
@@ -154,9 +155,43 @@ def fiscal_quarter(fiscal_period: str | None) -> int | None:
     return None
 
 
+SpanRow = tuple[str, str, str, Decimal, int | None, str, int, int]
+
+
+def span_rows(doc: ExtractedDocument, accession: str) -> list[SpanRow]:
+    """xbrl_spans rows for one filing: numeric spans with a parsed value.
+
+    `xbrl_spans.value` is NOT NULL and PRD 6.5.2 scopes the table to
+    ix:nonFraction, so word-form figures that do not parse (F-33) are left out
+    rather than given an invented value; `span_resolution` already counts them.
+    Dimensional contexts are kept -- filtering them is Phase 3's job (F-32).
+    """
+    return [
+        (
+            accession,
+            s.concept,
+            s.context_ref,
+            s.value,
+            s.scale,
+            s.raw_text,
+            s.char_start,
+            s.char_end,
+        )
+        for s in doc.spans
+        if s.is_numeric and s.value is not None
+    ]
+
+
+_INSERT_SPAN = """
+    INSERT INTO xbrl_spans
+        (accession, concept, context_ref, value, scale, raw_text, char_start, char_end)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+
 def validate_filing(
     conn: psycopg.Connection, accession: str, form_type: str, raw_path: str, version: str
-) -> tuple[Measurements, list[str], float]:
+) -> tuple[Measurements, list[str], float, int]:
     bounds = parser_bounds()
     doc = extract(Path(raw_path).read_bytes())
     m = measure(doc, form_type)
@@ -165,26 +200,35 @@ def validate_filing(
 
     norm_path = data_dir() / "norm" / f"{accession}.txt"
     write_normalized(doc, norm_path)
-    conn.execute(
-        """
+    rows = [] if failures else span_rows(doc, accession)
+
+    # One transaction per filing: the spans' offsets mean something only against
+    # the text at norm_path, so the two must never be out of step (F-42). A
+    # quarantined filing keeps no spans -- a bad parse feeds nothing downstream.
+    with conn.transaction():
+        conn.execute("DELETE FROM xbrl_spans WHERE accession = %s", (accession,))
+        with conn.cursor() as cur:
+            cur.executemany(_INSERT_SPAN, rows)
+        conn.execute(
+            """
         UPDATE filings
            SET parse_status = %s, parse_error = %s, parse_score = %s,
                parser_version = %s, norm_path = %s,
                fiscal_year = %s, fiscal_quarter = %s
          WHERE accession = %s
         """,
-        (
-            "quarantined" if failures else "parsed",
-            "; ".join(failures) or None,
-            value,
-            version,
-            str(norm_path),
-            m.fiscal_year,
-            fiscal_quarter(m.fiscal_period),
-            accession,
-        ),
-    )
-    return m, failures, value
+            (
+                "quarantined" if failures else "parsed",
+                "; ".join(failures) or None,
+                value,
+                version,
+                str(norm_path),
+                m.fiscal_year,
+                fiscal_quarter(m.fiscal_period),
+                accession,
+            ),
+        )
+    return m, failures, value, len(rows)
 
 
 def main() -> None:
@@ -198,14 +242,19 @@ def main() -> None:
              ORDER BY c.ticker, f.filing_date
             """
         ).fetchall()
+        # End the read's implicit transaction, so each filing's
+        # conn.transaction() below is a real transaction and not a savepoint.
+        conn.commit()
         bounds = parser_bounds()
         print(
             f"{'ticker':6} {'accession':22} {'form':4} {'FY':>4} {'fp':>2} {'sect':>4} "
             f"{'miss':>4} {'data':>4} {'alpha':>5} {'scale':>5} {'uncol':>5} {'spans':>5} "
-            f"{'items':>5} {'score':>5}  status"
+            f"{'items':>5} {'score':>5} {'rows':>5} {'skip':>4}  status"
         )
         for ticker, accession, form_type, raw_path in rows:
-            m, failures, value = validate_filing(conn, accession, form_type, raw_path, version)
+            m, failures, value, written = validate_filing(
+                conn, accession, form_type, raw_path, version
+            )
             c = score_components(m, bounds)
 
             def f(x: float | None) -> str:
@@ -216,10 +265,10 @@ def main() -> None:
                 f"{m.fiscal_period or '-':>2} {m.sections:4} {len(m.missing_items):4} "
                 f"{m.data_tables:4} {m.alpha_ratio:5.3f} {f(c['scale_coverage'])} "
                 f"{f(c['uncollapsed_tables'])} {f(c['span_resolution'])} "
-                f"{f(c['required_items'])} {value:5.3f}  "
+                f"{f(c['required_items'])} {value:5.3f} {written:5} "
+                f"{m.numeric_spans - m.resolved_spans:4}  "
                 + ("quarantined: " + "; ".join(failures) if failures else "parsed")
             )
-        conn.commit()
 
 
 if __name__ == "__main__":

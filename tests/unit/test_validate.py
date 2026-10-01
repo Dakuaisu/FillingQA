@@ -23,6 +23,7 @@ from api.parse.validate import (
     parser_version,
     score,
     score_components,
+    span_rows,
 )
 from tests.conftest import AAPL_10K, AAPL_10Q, TGT_10K, fixture_bytes
 
@@ -130,3 +131,29 @@ def test_aapl_10k_measurements_match_the_baseline():
     measured = measure(extract(fixture_bytes(AAPL_10K)), "10-K")
     assert measured.alpha_ratio == pytest.approx(0.765, abs=5e-4)
     assert replace(measured, alpha_ratio=0.765) == AAPL_10K_MEASURED
+
+
+@pytest.fixture(scope="module")
+def aapl_10k_doc():
+    return extract(fixture_bytes(AAPL_10K))
+
+
+def test_span_rows_are_the_resolved_numeric_spans(aapl_10k_doc):
+    rows = span_rows(aapl_10k_doc, AAPL_10K)
+    resolved = [s for s in aapl_10k_doc.spans if s.is_numeric and s.value is not None]
+    assert len(rows) == len(resolved) == 962  # 967 numeric, 5 word-form skipped (F-33)
+
+
+def test_span_rows_slice_back_to_their_raw_text(aapl_10k_doc):
+    text = aapl_10k_doc.text
+    for accession, _, _, value, _, raw_text, start, end in span_rows(aapl_10k_doc, AAPL_10K):
+        assert accession == AAPL_10K
+        assert value is not None
+        assert 0 <= start < end <= len(text)
+        assert text[start:end] == raw_text
+
+
+def test_span_rows_keep_dimensional_contexts(aapl_10k_doc):
+    # F-32 filtering is Phase 3's; context_ref is stored for it.
+    refs = {row[2] for row in span_rows(aapl_10k_doc, AAPL_10K)}
+    assert any(aapl_10k_doc.contexts[r].is_dimensional for r in refs)
