@@ -1366,3 +1366,44 @@ Served by chunks_hnsw. All five are AAPL; four from the FY2025 10-K's Items 7 an
 Tests: `tests/unit/test_generator.py` (prompt carries every chunk id; missing key
 fails at the call site with a clear message; tiers read from config). `make test`:
 225 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-42: corpus accession list materialized (not committed: F-62)
+
+Step 5 committed as `aed3475` (`test_generation_config_has_what_the_call_reads`
+replaced the literal-id assertion; F-60 resolution path in OPEN and TRADEOFFS).
+
+`python -m scripts.materialize_corpus --as-of 2026-10-01`: window start
+2023-10-01, 85 filings, 0 skipped for missing reportDate. Per ticker: COST, TGT,
+JPM, BAC, AAPL, NVDA, PFE 12 each (3 10-K, 9 10-Q); XOM 1. The first run stopped
+on JPM -- `filings.recent only reaches back to 2025-10-01 ... 70 older file(s)`
+-- the F-28 guard doing its job; pagination added, see TRADEOFFS.
+
+Dev slice: 12 of 12 accessions in the list.
+
+**Fiscal-year coverage** -- issuer labels from companyfacts `fy`/`fp` on each
+accession's facts (submissions carry none, finding #5). `COMPLETE` = 10-K plus
+Q1, Q2, Q3. `XOM*` is what the predecessor CIK would give (F-62):
+
+    dev slice: 12 accessions, 12 in the corpus list, outside: []
+    XOM under predecessor CIK 0000034088: 12 filings
+    
+    ticker cik         fiscal years: 10-K + Q1 Q2 Q3 present (from companyfacts fy/fp)
+    COST   0000909832  FY2023:FY  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2+Q3
+    TGT    0000027419  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    JPM    0000019617  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    BAC    0000070858  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    AAPL   0000320193  FY2023:FY  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2+Q3
+    NVDA   0001045810  FY2024:FY+Q3  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:FY+Q1+Q2+Q3 COMPLETE  FY2027:Q1+Q2
+    XOM    0002115436  FY2026:Q2
+    PFE    0000078003  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1+Q2
+    XOM*   0000034088  FY2023:FY+Q3  FY2024:FY+Q1+Q2+Q3 COMPLETE  FY2025:FY+Q1+Q2+Q3 COMPLETE  FY2026:Q1  unlabelled: ['0000034088-26-000093']
+
+Two complete fiscal years per company, partials at both ends, as F-29 predicted.
+NVDA's labels run a year ahead of the calendar (its fiscal 2026 ended January
+2026). The predecessor's 2026-08-03 10-Q is unlabelled under 0000034088 because
+its facts are filed under the successor CIK.
+
+Guard refined: a remaining paginated file whose `filingTo` ends before the window
+no longer counts as a gap; the list is byte-identical before and after.
+`tests/unit/test_filings.py` gains merge and page-selection tests. `make test`:
+227 passed, 3 snapshots passed.

@@ -13,7 +13,9 @@ from api.ingest.filings import (
     IngestError,
     assert_recent_covers_window,
     discover,
+    merge_pages,
     select_accessions,
+    submissions_since,
     window_start,
 )
 
@@ -185,3 +187,50 @@ def test_raw_path_is_namespaced_by_cik_and_named_by_accession():
     path = make_filing().raw_path(Path("/data"))
     assert path.parent.name == "0000320193"
     assert path.stem == "0000320193-24-000123"
+
+
+# ------------------------------------------------------------- pagination
+
+
+def test_merge_pages_appends_rows_and_lists_only_unmerged_files():
+    page_rows = [("0000320193-23-000106", "10-K", "2023-11-03", "2023-09-30", "aapl-20230930.htm")]
+    page = submissions(page_rows)["filings"]["recent"]
+    files = [
+        {"name": "p1.json", "filingTo": "2023-12-31"},
+        {"name": "p2.json", "filingTo": "2019-12-31"},
+    ]
+    merged = merge_pages(submissions(ROWS, files=files), {"p1.json": page})
+    assert len(merged["filings"]["recent"]["accessionNumber"]) == len(ROWS) + 1
+    assert merged["filings"]["files"] == [{"name": "p2.json", "filingTo": "2019-12-31"}]
+    found, _ = discover(merged, "0000320193", date(2023, 10, 1))
+    assert "0000320193-23-000106" in {f.accession for f in found}
+
+
+class PagedClient:
+    """Serves a submissions payload and its pages from memory; records fetches."""
+
+    def __init__(self, payload, pages):
+        self.payload, self.pages, self.fetched = payload, pages, []
+
+    def fetch_submissions(self, cik):
+        return self.payload
+
+    def fetch_submissions_page(self, name):
+        self.fetched.append(name)
+        return self.pages[name]
+
+
+def test_submissions_since_reads_only_pages_that_reach_the_window():
+    # JPM's shape: recent covers one year, older years sit in pages.
+    page = submissions(
+        [("0000019617-24-000225", "10-Q", "2024-05-03", "2024-03-31", "jpm-20240331.htm")]
+    )["filings"]["recent"]
+    files = [
+        {"name": "p1.json", "filingTo": "2024-06-30"},
+        {"name": "old.json", "filingTo": "2019-12-31"},
+    ]
+    recent_rows = [("0000019617-26-000001", "10-Q", "2026-05-01", "2026-03-31", "jpm.htm")]
+    client = PagedClient(submissions(recent_rows, files=files), {"p1.json": page})
+    merged = submissions_since(client, "0000019617", date(2023, 10, 1))
+    assert client.fetched == ["p1.json"]
+    assert "0000019617-24-000225" in merged["filings"]["recent"]["accessionNumber"]

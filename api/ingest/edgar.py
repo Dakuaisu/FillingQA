@@ -208,6 +208,15 @@ class EdgarClient:
             refresh=refresh,
         )
 
+    def fetch_submissions_page(self, name: str, *, refresh: bool = False) -> dict[str, Any]:
+        """One paginated file named in `filings.files`: the same columns as
+        `filings.recent`, for an older date range."""
+        return self.fetch_json(
+            f"https://data.sec.gov/submissions/{name}",
+            self.cache_dir / "submissions" / name,
+            refresh=refresh,
+        )
+
     def fetch_companyfacts(self, cik: str, *, refresh: bool = False) -> dict[str, Any]:
         cik = f"{int(cik):010d}"
         return self.fetch_json(

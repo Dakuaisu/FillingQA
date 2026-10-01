@@ -953,3 +953,24 @@ is; this entry carries the override.
   longer defines -- the same "claims a setting the run does not have" removed
   from config.
 - *A seed policy.* There is no seed parameter; a policy would be fiction.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the eval corpus is the PRD's 3-year filing-date window, materialized (F-42)
+
+The window, evaluated once as of 2026-10-01 (`scripts/materialize_corpus.py`):
+10-K and 10-Q by exact form (no amendments, the dev slice's rule), filed in
+[2023-10-01, 2026-10-01], reportDate present. The result, not the window, is what
+gets committed under `corpus` in `api/config.yaml`; ingest reads the list.
+
+*Rejected: a fiscal-year-aligned corpus* (e.g. the last three complete fiscal
+years per company). The window is the PRD's own definition, nothing measured
+argues for deviating from it, and it already gives every company three 10-Ks and
+two complete fiscal years (10-K + Q1-Q3), which is what comparison items need.
+
+**Paginated submissions.** `assert_recent_covers_window` fired on JPM, as it was
+written to: `filings.recent` reaches back only to 2025-10-01 against 70 older
+files (BAC: 21). `submissions_since` merges every paginated file whose `filingTo`
+reaches the window, and the guard then counts only remaining files that could
+hold window filings. `ingest_accessions` merges pages the same way when an asked-
+for accession is not in `recent`, bounded by an optional earliest filing date.

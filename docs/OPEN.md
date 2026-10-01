@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 31 |
+| OPEN | 32 |
 | RESOLVED | 30 |
-| **Total** | **61** |
+| **Total** | **62** |
 
 ---
 
@@ -27,7 +27,8 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
+| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 (85 filings for 8 tickers, dev slice a subset); not yet committed to config because XOM's entries depend on F-62. When the freeze record is written it references F-58 | OPEN |
+| F-62 | XOM resolves (SEC `company_tickers.json`) to CIK 0002115436, ExxonMobil Holdings Corp, a new registrant whose submissions start 2026-07-01 (8-K12B succession): 1 10-Q in the window. The 3-year history -- 3 10-Ks, 9 10-Qs, two complete fiscal years -- is under the predecessor CIK 0000034088, Exxon Mobil Corp; the 2026-08-03 10-Q (0000034088-26-000093) is listed under both CIKs, and its companyfacts sit under the successor only. `companies` keys on `cik` with `ticker UNIQUE`, so one ticker cannot hold both CIKs as rows. Blocks the F-42 list and the freeze | OPEN |
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
 
 ## Blocking Phase 3

@@ -99,7 +99,13 @@ def assert_recent_covers_window(submissions: dict[str, Any], start: date) -> Non
     """
     recent = submissions["filings"]["recent"]
     dates = recent.get("filingDate") or []
-    older_files = submissions["filings"].get("files") or []
+    # A file whose filingTo ends before the window cannot hold window filings.
+    # A file with no filingTo is counted: its range is unknown.
+    older_files = [
+        f
+        for f in submissions["filings"].get("files") or []
+        if f.get("filingTo", start.isoformat()) >= start.isoformat()
+    ]
 
     if not dates:
         raise IngestError("submissions.filings.recent contains no filings")
@@ -113,6 +119,40 @@ def assert_recent_covers_window(submissions: dict[str, Any], start: date) -> Non
             f"`recent` and would be silently dropped. Read the paginated files: "
             f"{[f.get('name') for f in older_files]}"
         )
+
+
+def merge_pages(submissions: dict[str, Any], pages: dict[str, dict]) -> dict[str, Any]:
+    """`submissions` with the named paginated files' rows appended to `recent`.
+
+    `pages` maps a `filings.files` name to that file's columns. The merged
+    payload lists only the files NOT merged under `filings.files`, so
+    `assert_recent_covers_window` still sees exactly what remains elsewhere.
+    """
+    recent = submissions["filings"]["recent"]
+    merged = {key: list(values) for key, values in recent.items()}
+    for page in pages.values():
+        for key in merged:
+            merged[key].extend(page.get(key) or [None] * len(page["accessionNumber"]))
+    remaining = [f for f in submissions["filings"].get("files") or [] if f.get("name") not in pages]
+    return {**submissions, "filings": {"recent": merged, "files": remaining}}
+
+
+def submissions_since(client: EdgarClient, cik: str, start: date) -> dict[str, Any]:
+    """Submissions with every paginated file that reaches `start` merged in.
+
+    Large filers outgrow `filings.recent` within a year -- JPM's covers only
+    2025-10-01 onward, against 70 older files -- so a 3-year window needs the
+    pages. Only files whose `filingTo` reaches the window are fetched.
+    """
+    submissions = client.fetch_submissions(cik)
+    needed = [
+        f["name"]
+        for f in submissions["filings"].get("files") or []
+        if f.get("filingTo", "") >= start.isoformat()
+    ]
+    merged = merge_pages(submissions, {n: client.fetch_submissions_page(n) for n in needed})
+    assert_recent_covers_window(merged, start)
+    return merged
 
 
 def discover(
@@ -308,6 +348,7 @@ def ingest_accessions(
     ticker: str,
     wanted: dict[str, str],
     *,
+    since: date | None = None,
     root: Path | None = None,
 ) -> IngestReport:
     """Download and register exactly the given accessions for one company."""
@@ -315,6 +356,20 @@ def ingest_accessions(
 
     cik = client.resolve_cik(ticker)
     submissions = client.fetch_submissions(cik)
+    recent = set(submissions["filings"]["recent"]["accessionNumber"])
+    if not set(wanted) <= recent:
+        # Older accessions live in paginated files. With `since` (the earliest
+        # filing date asked for) only pages reaching it are read; without it,
+        # every page. select_accessions still raises on any accession not found.
+        floor = since.isoformat() if since else ""
+        pages = [
+            f["name"]
+            for f in submissions["filings"].get("files") or []
+            if f.get("filingTo", "") >= floor
+        ]
+        submissions = merge_pages(
+            submissions, {name: client.fetch_submissions_page(name) for name in pages}
+        )
     filings = select_accessions(submissions, cik, wanted)
 
     upsert_company(conn, cik, ticker, submissions, sector_of(ticker))
