@@ -5906,6 +5906,1006 @@
    ]
   },
   {
+   "fact_id": 46024,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000029",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2021-02-01",
+    "2022-01-30"
+   ],
+   "value": "189000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-24-000029:1086.0:1086.0",
+    "0001045810-24-000029:1089.1:1089.1",
+    "0001045810-24-000029:741.0:741.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46025,
+   "cik": "0001045810",
+   "accession": "0001045810-23-000227",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-31",
+    "2022-10-30"
+   ],
+   "value": "-61000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-23-000227:131.0:137.0",
+    "0001045810-23-000227:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46026,
+   "cik": "0001045810",
+   "accession": "0001045810-23-000227",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-08-01",
+    "2022-10-30"
+   ],
+   "value": "-67000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-23-000227:131.0:137.0",
+    "0001045810-23-000227:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46027,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000029",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-31",
+    "2023-01-29"
+   ],
+   "value": "-187000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-24-000029:1086.0:1086.0",
+    "0001045810-24-000029:1089.1:1089.1",
+    "0001045810-24-000029:741.0:741.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46028,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000023",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-31",
+    "2023-01-29"
+   ],
+   "value": "-187000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-25-000023:1099.0:1099.0",
+    "0001045810-25-000023:1102.1:1102.1",
+    "0001045810-25-000023:768.0:768.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46029,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000124",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2023-04-30"
+   ],
+   "value": "166000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-24-000124:118.0:132.0",
+    "0001045810-24-000124:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46030,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000264",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2023-07-30"
+   ],
+   "value": "958000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-24-000264:125.0:136.0",
+    "0001045810-24-000264:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46031,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000264",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-05-01",
+    "2023-07-30"
+   ],
+   "value": "793000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-24-000264:125.0:136.0",
+    "0001045810-24-000264:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46032,
+   "cik": "0001045810",
+   "accession": "0001045810-23-000227",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2023-10-29"
+   ],
+   "value": "2237000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-23-000227:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46033,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000316",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2023-10-29"
+   ],
+   "value": "2237000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-24-000316:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46034,
+   "cik": "0001045810",
+   "accession": "0001045810-23-000227",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-07-31",
+    "2023-10-29"
+   ],
+   "value": "1279000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-23-000227:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46035,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000316",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-07-31",
+    "2023-10-29"
+   ],
+   "value": "1279000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-24-000316:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46036,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000029",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2024-01-28"
+   ],
+   "value": "4058000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-24-000029:1086.0:1086.0",
+    "0001045810-24-000029:1089.1:1089.1",
+    "0001045810-24-000029:741.0:741.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46037,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000023",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2024-01-28"
+   ],
+   "value": "4058000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-25-000023:1099.0:1099.0",
+    "0001045810-25-000023:1102.1:1102.1",
+    "0001045810-25-000023:768.0:768.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46038,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000021",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-30",
+    "2024-01-28"
+   ],
+   "value": "4058000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-26-000021:1059.0:1059.0",
+    "0001045810-26-000021:1076.0:1076.0",
+    "0001045810-26-000021:751.0:751.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46039,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000124",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-04-28"
+   ],
+   "value": "2398000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-24-000124:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46040,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000116",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-04-28"
+   ],
+   "value": "2398000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-25-000116:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46041,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000264",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-07-28"
+   ],
+   "value": "5013000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-24-000264:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46042,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000209",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-07-28"
+   ],
+   "value": "5013000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-25-000209:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46043,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000264",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-04-29",
+    "2024-07-28"
+   ],
+   "value": "2615000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-24-000264:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46044,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000209",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-04-29",
+    "2024-07-28"
+   ],
+   "value": "2615000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-25-000209:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46045,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000316",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-10-27"
+   ],
+   "value": "8020000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-24-000316:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46046,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000230",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2024-10-27"
+   ],
+   "value": "8020000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-25-000230:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46047,
+   "cik": "0001045810",
+   "accession": "0001045810-24-000316",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-07-29",
+    "2024-10-27"
+   ],
+   "value": "3007000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-24-000316:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46048,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000230",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-07-29",
+    "2024-10-27"
+   ],
+   "value": "3007000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-25-000230:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46049,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000023",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2025-01-26"
+   ],
+   "value": "11146000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-25-000023:1099.0:1099.0",
+    "0001045810-25-000023:1102.1:1102.1",
+    "0001045810-25-000023:768.0:768.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46050,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000021",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-29",
+    "2025-01-26"
+   ],
+   "value": "11146000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-26-000021:1059.0:1059.0",
+    "0001045810-26-000021:1076.0:1076.0",
+    "0001045810-26-000021:751.0:751.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46051,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000116",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2025-04-27"
+   ],
+   "value": "3135000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-25-000116:43.0:43.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46052,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000052",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2025-04-27"
+   ],
+   "value": "3135000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-26-000052:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46053,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000209",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2025-07-27"
+   ],
+   "value": "7920000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-25-000209:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46054,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000075",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2025-07-27"
+   ],
+   "value": "7920000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-26-000075:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46055,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000209",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-04-28",
+    "2025-07-27"
+   ],
+   "value": "4784000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-25-000209:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46056,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000075",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-04-28",
+    "2025-07-27"
+   ],
+   "value": "4784000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-26-000075:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46057,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000230",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2025-10-26"
+   ],
+   "value": "13945000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-25-000230:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46058,
+   "cik": "0001045810",
+   "accession": "0001045810-25-000230",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-07-28",
+    "2025-10-26"
+   ],
+   "value": "6026000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001045810-25-000230:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46059,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000021",
+   "ticker": "NVDA",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-27",
+    "2026-01-25"
+   ],
+   "value": "21383000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0001045810-26-000021:1059.0:1059.0",
+    "0001045810-26-000021:1067.0:1067.0",
+    "0001045810-26-000021:751.0:751.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46060,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000052",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-01-26",
+    "2026-04-26"
+   ],
+   "value": "11582000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001045810-26-000052:44.0:44.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 46061,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000075",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-01-26",
+    "2026-07-26"
+   ],
+   "value": "23400000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-26-000075:273.0:281.0",
+    "0001045810-26-000075:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6,
+    9
+   ]
+  },
+  {
+   "fact_id": 46062,
+   "cik": "0001045810",
+   "accession": "0001045810-26-000075",
+   "ticker": "NVDA",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-04-27",
+    "2026-07-26"
+   ],
+   "value": "11819000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2027,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001045810-26-000075:45.0:45.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
    "fact_id": 50103,
    "cik": "0000034088",
    "accession": "0000034088-23-000056",

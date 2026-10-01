@@ -1547,3 +1547,27 @@ twice, their errors counted twice).
 - *Spot-check:* the seeded 10% (4 of 40) plus the flagged, with each gold
   chunk's text; nothing marked reviewed (OWNER-BLOCKED).
 - *Output:* `eval/candidates/`, never a `golden_*` file; byte-identical on re-run.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: tests use real rows; seeding before metric definitions
+
+**Test rows.** A test asserts on a real pool row whenever the pool has an
+instance of the case. A modified copy of a real row is allowed only where the
+pool has none, and the test says so. The scale-mismatch test now runs on the real
+NVDA income-tax pair (first half of fiscal 2025 vs 2027, scales (6,) / (6, 9));
+the equal-values test stays a modified copy because the pool has no equal-value
+pair (`comparison_supply`: 0). *Alternative:* any mutated copy. Rejected: the
+mutated TGT pair asserted a case the pool actually contains, while the real one
+went untested, and a mutation can produce a combination the data never shows.
+
+**Ordering.** Next comes LLM seeding (PRD 11.1 Stage 1 and Stage 2, 50 `table` and
+40 `synthesis` items): first a measurement (`scripts/seed_supply.py`), then a
+proposal with no model-calling code. Hand-written authoring and validation
+tooling and the review CLI follow, each logged OWNER-BLOCKED. The
+metric-definitions proposal (F-77, F-81, F-13, F-09) comes after these, and no
+metric code before it. PRD 14 and the Phase 3 build order put seeding and its
+filters before metrics, and nothing in OPEN recorded the 90 `llm_seeded` items.
+*Alternative:* definitions first. Rejected: the definitions would be fitted to
+the two auto slices alone, and the seeded items' evidence shapes (table vs prose,
+one chunk vs several) are what F-77 and F-81 must cover.

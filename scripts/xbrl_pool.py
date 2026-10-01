@@ -41,7 +41,7 @@ FIXTURE_SLICE = {
     ("TGT", "cost_of_revenue"), ("TGT", "sga"), ("JPM", "net_income"),
     ("BAC", "total_assets"), ("PFE", "income_tax"), ("XOM", "eps_diluted"),
     ("AAPL", "inventory"), ("COST", "income_tax"), ("PFE", "share_repurchases"),
-    ("TGT", "share_repurchases"), ("PFE", "eps_diluted"),
+    ("TGT", "share_repurchases"), ("PFE", "eps_diluted"), ("NVDA", "income_tax"),
 }  # fmt: skip
 
 

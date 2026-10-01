@@ -23,6 +23,7 @@ from api.db import connect
 from eval.generate.comparison import (
     build_comparison_items,
     build_pairs,
+    chunks,
     cooccurrence,
     eligible_pairs,
     tokens,
@@ -131,6 +132,7 @@ def main() -> None:
     for i in items:
         split[i["tags"][0]][f"{i['tags'][4]}/{i['tags'][5]}"] += 1
     evsets = Counter(len(i["gold_evidence_sets"]) for i in items)
+    distinct = Counter(len({c for s in i["gold_evidence_sets"] for c in s}) for i in items)
     spot = spot_check_ids(items, cfg["seed"], cfg["spot_check_n"])
     facts = {
         i["item_id"]: {
@@ -157,6 +159,7 @@ def main() -> None:
         "kind_gap": dict(sorted(groups.items())),
         "kind_gap_per_ticker": {t: dict(sorted(split[t].items())) for t in tickers},
         "evidence_sets_per_item": {str(k): v for k, v in sorted(evsets.items())},
+        "distinct_gold_chunks_per_item": {str(k): v for k, v in sorted(distinct.items())},
         "spot_check": {"n": cfg["spot_check_n"], "item_ids": spot, "reviewed": False},
         "flagged": {
             "rule": "side <= 0, sign flip, or untagged co-occurrence",
@@ -178,16 +181,26 @@ def main() -> None:
         "# xbrl_auto comparison spot-check (PRD 11.1: 10%)", "",
         f"{len(spot)} of {len(items)} candidates, drawn with seed {cfg['seed']} "
         f"(`python -m scripts.comparison_candidates`). OWNER-BLOCKED: nothing here is reviewed.",
-        "Each evidence set is two chunks, one per side; gold chunks are listed once.", "",
+        "Each evidence set is two chunks, one earlier and one later; each chunk is shown once,",
+        "headed with the side it is gold for.", "",
     ]  # fmt: skip
 
     def render_item(iid: str) -> list[str]:
-        i = by_id[iid]
-        once = sorted({c for s in i["gold_evidence_sets"] for c in s})
+        i, p = by_id[iid], pair_of[by_id[iid]["xbrl_fact_id"]]
+        side = {c: "earlier" for c in chunks(p.earlier)} | {c: "later" for c in chunks(p.later)}
         head = item_lines({**i, "gold_evidence_sets": []}, texts)
-        body = [f"- Flagged: {'; '.join(flagged[iid])}", ""] if iid in flagged else []
-        for c in once:
-            body += [f"### {c}", "", "```", texts[c].rstrip(), "```", ""]
+        e, la, sets = p.earlier, p.later, i["gold_evidence_sets"]
+        body = [
+            f"- Earlier: {e.own_accession} {e.period_start}..{e.period_end}",
+            f"- Later: {la.own_accession} {la.period_start}..{la.period_end}",
+            f"- Evidence sets ({len(sets)}, each one earlier + one later chunk): "
+            + "; ".join(" + ".join(s) for s in sets),
+            "",
+        ]
+        if iid in flagged:
+            body += [f"- Flagged: {'; '.join(flagged[iid])}", ""]
+        for c in sorted(side, key=lambda c: (side[c] != "earlier", c)):
+            body += [f"### {side[c]}: {c}", "", "```", texts[c].rstrip(), "```", ""]
         return head + body
 
     for iid in spot:
@@ -219,6 +232,7 @@ def main() -> None:
     for t in tickers:
         print(f"  {t:5} {dict(sorted(split[t].items()))}")
     print(f"evidence sets per item: {dict(sorted(evsets.items()))}")
+    print(f"distinct gold chunks per item: {dict(sorted(distinct.items()))}")
     print(f"flagged: {len(flagged)}")
     for iid, why in flagged.items():
         print(f"  {iid}: {'; '.join(why)}")

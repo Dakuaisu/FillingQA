@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 45 |
+| OPEN | 46 |
 | RESOLVED | 41 |
-| **Total** | **86** |
+| **Total** | **87** |
 
 ---
 
@@ -21,8 +21,8 @@ carries the state.
 
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
-| F-77 | PRD 11.2 defines neither `rel_i` nor IDCG over alternative evidence sets. With union-as-relevant, an item with 8 single-chunk alternatives scores nDCG@10 of about 0.25 (1 / 3.95) for one gold chunk at rank 1 and nothing else; sufficiency gets easier as alternatives grow. Candidates have 1 to 10 sets per item (manifest). Settle the definition when metrics are built, before any run; gold is not shaped around it | Phase 3 metrics | OPEN |
-| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold Also, for comparison items: which of the three figures (two values, difference) numeric accuracy requires, and how an answer giving only the two values, or a correct percent change, is scored | Phase 3 metrics | OPEN |
+| F-77 | PRD 11.2 defines neither `rel_i` nor IDCG over alternative evidence sets. With union-as-relevant, an item with 8 single-chunk alternatives scores nDCG@10 of about 0.25 (1 / 3.95) for one gold chunk at rank 1 and nothing else; sufficiency gets easier as alternatives grow. Sets per item: xbrl_numeric 1 to 10 (`{1: 54, 2: 45, 3: 23, 4: 11, 5: 9, 6: 13, 7: 2, 8: 1, 10: 2}`), each one chunk; comparison 1 to 27 two-chunk sets (`{1: 6, 2: 17, 3: 1, 4: 3, 6: 1, 8: 7, 12: 1, 18: 1, 21: 2, 27: 1}`) over 2 to 12 distinct gold chunks (`{2: 6, 3: 17, 4: 4, 5: 1, 6: 7, 7: 1, 9: 1, 10: 2, 12: 1}`), printed by `scripts.xbrl_candidates` / `scripts.comparison_candidates`. Settle the definition when metrics are built, before any run; gold is not shaped around it | Phase 3 metrics | OPEN |
+| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold Also, for comparison items: which of the three figures (two values, difference) numeric accuracy requires, and how an answer giving only the two values, or a correct percent change, is scored. Also the printed sign (F-87): 296 exact-value gold spans of positive facts print in parentheses, so an answer reading the chunk's "(2,815)" as -2,815 disagrees with the reference "$2,815 million" | Phase 3 metrics | OPEN |
 
 ## Blocking Phase 2
 
@@ -64,6 +64,7 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
+| F-87 | Gold spans print the sign differently from the fact (`python -m scripts.sign_display`): of the eligible keys' exact-value gold spans, 296 positive facts print in parentheses (share repurchases 127, capex 99, credit-loss allowance 31, R&D 26 in reconciliation tables, cost of revenue 13) and 3 negative facts print plain ("tax benefit of $28 million"). PRD 7.5 normalizes "(7,286)" as negative, so a sign-sensitive grounding check would strip a correct claim. Candidates with such a gold span: 25 xbrl_numeric, 5 comparison. Measured only; gold and reference answers unchanged | OPEN |
 | F-85 | A comparison item's difference is printed in no chunk, so PRD 7.5's numeric grounding ("every number in the claim appears in a cited chunk") would strip a correct difference claim | OPEN |
 | F-82 | Numeric grounding of a zero claim: the correct figure is $0, but the cited chunk prints "—" (PFE share repurchases, xbrl_0116/0117: `raw_text='—'`, value 0, scale 6), so matching the claim's number against the chunk text finds no "0" | OPEN |
 | F-10 | `supported()` omits `citation_valid` for figure claims, contradicting §7.5's own table | OPEN |

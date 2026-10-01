@@ -117,6 +117,7 @@ def main() -> None:
         split[i["tags"][0]][i["tags"][3]] += 1
     kinds = Counter(i["tags"][4] for i in items)
     evsets = Counter(len(i["gold_evidence_sets"]) for i in items)
+    distinct = Counter(len({c for s in i["gold_evidence_sets"] for c in s}) for i in items)
     spot = spot_check_ids(items, cfg["seed"], cfg["spot_check_n"])
     key_of = {k.xbrl_fact_id: k for k in draw}
     flagged = [i["item_id"] for i in items if key_of[i["xbrl_fact_id"]].value <= 0]
@@ -187,6 +188,7 @@ def main() -> None:
     print(f"form split per ticker (10-K/10-Q): {per}")
     print(f"form split: {dict(sum(split.values(), Counter()))}")
     print(f"evidence sets per item: {dict(sorted(evsets.items()))}")
+    print(f"distinct gold chunks per item: {dict(sorted(distinct.items()))}")
     filing_scoped = [i for i in items if tag(i, "template:").endswith("_filing")]
     print(f"filing-scoped items: {len(filing_scoped)}, all single-accession: "
           f"{all(len(i['gold_accessions']) == 1 for i in filing_scoped)}")  # fmt: skip

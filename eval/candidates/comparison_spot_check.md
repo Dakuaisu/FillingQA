@@ -1,7 +1,8 @@
 # xbrl_auto comparison spot-check (PRD 11.1: 10%)
 
 4 of 40 candidates, drawn with seed 20261002 (`python -m scripts.comparison_candidates`). OWNER-BLOCKED: nothing here is reviewed.
-Each evidence set is two chunks, one per side; gold chunks are listed once.
+Each evidence set is two chunks, one earlier and one later; each chunk is shown once,
+headed with the side it is gold for.
 
 ## cmp_0003
 
@@ -11,7 +12,11 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 - xbrl_fact_id: 849
 - tags: AAPL, capex, FY2024, FY2026, ytd, gap2, template:cmp_dur_both, unit_scale_millions
 
-### 0000320193-24-000069:62.0:62.0
+- Earlier: 0000320193-24-000069 2023-10-01..2024-03-30
+- Later: 0000320193-26-000013 2025-09-28..2026-03-28
+- Evidence sets (2, each one earlier + one later chunk): 0000320193-24-000069:62.0:62.0 + 0000320193-26-000013:62.0:62.0; 0000320193-25-000057:62.0:62.0 + 0000320193-26-000013:62.0:62.0
+
+### earlier: 0000320193-24-000069:62.0:62.0
 
 ```
 [Apple Inc. (AAPL) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
@@ -43,7 +48,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Financing activities: |  |  |
 ```
 
-### 0000320193-25-000057:62.0:62.0
+### earlier: 0000320193-25-000057:62.0:62.0
 
 ```
 [Apple Inc. (AAPL) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
@@ -75,7 +80,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Financing activities: |  |  |
 ```
 
-### 0000320193-26-000013:62.0:62.0
+### later: 0000320193-26-000013:62.0:62.0
 
 ```
 [Apple Inc. (AAPL) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
@@ -115,7 +120,11 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 - xbrl_fact_id: 2007
 - tags: COST, capex, FY2024, FY2026, ytd, gap2, template:cmp_dur_diff, unit_scale_millions
 
-### 0000909832-24-000017:68.0:68.0
+- Earlier: 0000909832-24-000017 2023-09-04..2024-02-18
+- Later: 0000909832-26-000029 2025-09-01..2026-02-15
+- Evidence sets (2, each one earlier + one later chunk): 0000909832-24-000017:68.0:68.0 + 0000909832-26-000029:68.0:68.0; 0000909832-25-000015:68.0:68.0 + 0000909832-26-000029:68.0:68.0
+
+### earlier: 0000909832-24-000017:68.0:68.0
 
 ```
 [COSTCO WHOLESALE CORP /NEW (COST) | 10-Q | Q2 FY2024 | Part I, Item 1: Financial Statements]
@@ -150,7 +159,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Financing lease payments | (94) | (158) |
 ```
 
-### 0000909832-25-000015:68.0:68.0
+### earlier: 0000909832-25-000015:68.0:68.0
 
 ```
 [COSTCO WHOLESALE CORP /NEW (COST) | 10-Q | Q2 FY2025 | Part I, Item 1: Financial Statements]
@@ -184,7 +193,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Cash dividend payments | (515) | (8,012) |
 ```
 
-### 0000909832-26-000029:68.0:68.0
+### later: 0000909832-26-000029:68.0:68.0
 
 ```
 [COSTCO WHOLESALE CORP /NEW (COST) | 10-Q | Q2 FY2026 | Part I, Item 1: Financial Statements]
@@ -226,7 +235,11 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 - xbrl_fact_id: 50949
 - tags: XOM, operating_cash_flow, FY2024, FY2026, quarter, gap2, template:cmp_dur_compare, unit_scale_millions
 
-### 0000034088-24-000029:48.0:48.0
+- Earlier: 0000034088-24-000029 2024-01-01..2024-03-31
+- Later: 0000034088-26-000067 2026-01-01..2026-03-31
+- Evidence sets (3, each one earlier + one later chunk): 0000034088-24-000029:48.0:48.0 + 0000034088-26-000067:62.0:62.0; 0000034088-25-000024:234.0:234.0 + 0000034088-26-000067:62.0:62.0; 0000034088-25-000024:52.0:52.0 + 0000034088-26-000067:62.0:62.0
+
+### earlier: 0000034088-24-000029:48.0:48.0
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q1 FY2024 | Part I, Item 1: FINANCIAL STATEMENTS]
@@ -258,7 +271,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Increase/(decrease) in cash and cash equivalents | 1,781 | 3,011 |
 ```
 
-### 0000034088-25-000024:234.0:234.0
+### earlier: 0000034088-25-000024:234.0:234.0
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q1 FY2025 | Part I, Item 2: MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS]
@@ -279,7 +292,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 |  | Because of the ongoing nature of our asset management and divestment program, we believe it is useful for investors to consider proceeds associated with asset sales together with cash provided by operating activities when evaluating cash available for investment in the business and financing activities, including shareholder distributions. |  |
 ```
 
-### 0000034088-25-000024:52.0:52.0
+### earlier: 0000034088-25-000024:52.0:52.0
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q1 FY2025 | Part I, Item 1: FINANCIAL STATEMENTS]
@@ -311,7 +324,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 | Net cash used in financing activities | (13,579) | (7,982) |
 ```
 
-### 0000034088-26-000067:62.0:62.0
+### later: 0000034088-26-000067:62.0:62.0
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q1 FY2026 | Part I, Item 1: FINANCIAL STATEMENTS]
@@ -350,7 +363,11 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 - xbrl_fact_id: 52064
 - tags: XOM, stockholders_equity, FY2024, FY2025, instant, gap1, template:cmp_ins_diff, unit_scale_millions
 
-### 0000034088-24-000068:45.1:45.1
+- Earlier: 0000034088-24-000068 None..2024-09-30
+- Later: 0000034088-25-000061 None..2025-09-30
+- Evidence sets (1, each one earlier + one later chunk): 0000034088-24-000068:45.1:45.1 + 0000034088-25-000061:48.1:48.1
+
+### earlier: 0000034088-24-000068:45.1:45.1
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q3 FY2024 | Part I, Item 1: FINANCIAL STATEMENTS]
@@ -368,7 +385,7 @@ Each evidence set is two chunks, one per side; gold chunks are listed once.
 |  | The information in the Notes to Condensed Consolidated Financial Statements is an integral part of these statements. |  |
 ```
 
-### 0000034088-25-000061:48.1:48.1
+### later: 0000034088-25-000061:48.1:48.1
 
 ```
 [Exxon Mobil Corporation (XOM) | 10-Q | Q3 FY2025 | Part I, Item 1: FINANCIAL STATEMENTS]

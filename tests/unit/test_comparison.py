@@ -94,8 +94,14 @@ def test_equal_values_give_a_numeric_zero_difference():
 
 
 def test_sides_at_different_scales_are_reported():
-    p = pair("TGT", "cost_of_revenue", "quarter", 2, "2025-11-01")
-    p = dataclasses.replace(p, earlier=dataclasses.replace(p.earlier, own_scales=(3,)))
+    # Real pair (comparison_supply): NVDA income tax, first half of fiscal 2025 vs
+    # 2027. The later 10-Q prints the figure as "23,400" (scale 6) and "23.4"
+    # (scale 9), F-80; the earlier side prints at scale 6 only.
+    p = pair("NVDA", "income_tax", "ytd", 2, "2026-07-26")
+    assert (p.earlier.period_end, p.earlier.own_scales, p.later.own_scales) == (
+        "2024-07-28", (6,), (6, 9),
+    )  # fmt: skip
+    assert p in eligible_pairs(PAIRS, set())
     with pytest.raises(ItemError, match="scales"):
         reference_answer(p)
 

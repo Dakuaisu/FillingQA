@@ -3422,3 +3422,61 @@ Against a copy of the manifest with cmp_0001's earlier value set to 1 (ad hoc):
     tampered manifest (cmp_0001 earlier value -> 1): verify returns 1
 
 `make test`: 282 passed; `make lint` clean; `python -m scripts.xbrl_candidates --verify`: 0 mismatches, its three outputs unchanged.
+
+## 2026-10-01 — Review fixes: real scale-mismatch pair, sheet sides, sign display (F-87)
+
+- `tests/fixtures/xbrl_pool_rows.json` regenerated with NVDA income tax added
+  to the slice (`--write-fixture`: 384 rows). `test_sides_at_different_scales_are_reported`
+  asserts on the real pair (ytd, gap 2, 2024-07-28 (6,) / 2026-07-26 (6, 9)).
+- `comparison_spot_check.md` heads each gold chunk `earlier:` / `later:` and lists
+  the evidence sets; the manifest gains `distinct_gold_chunks_per_item`. Both
+  candidate files are unchanged (sha256 e8f78af3..., 19fb355d...).
+
+`python -m scripts.comparison_candidates`:
+
+    eligible pairs (no shared gold chunk, no drawn xbrl_numeric key): 622
+    items: 40 (drawn 40); not generated: 0
+    validation failures: 0
+    distinct period keys: 80 of 80; overlap with drawn xbrl_numeric keys: 0
+    items per template: {'cmp_dur_both': 6, 'cmp_dur_change': 6, 'cmp_dur_compare': 6, 'cmp_dur_diff': 2, 'cmp_dur_versus': 6, 'cmp_ins_both': 4, 'cmp_ins_change': 1, 'cmp_ins_compare': 4, 'cmp_ins_diff': 3, 'cmp_ins_versus': 2}
+    kind/gap: {'instant/gap1': 5, 'instant/gap2': 9, 'quarter/gap2': 16, 'ytd/gap2': 10}
+      COST  {'instant/gap2': 1, 'ytd/gap2': 4}
+      TGT   {'instant/gap2': 2, 'quarter/gap2': 3}
+      JPM   {'instant/gap2': 1, 'quarter/gap2': 4}
+      BAC   {'instant/gap2': 2, 'quarter/gap2': 2, 'ytd/gap2': 1}
+      AAPL  {'instant/gap1': 1, 'quarter/gap2': 2, 'ytd/gap2': 2}
+      NVDA  {'instant/gap1': 1, 'instant/gap2': 1, 'quarter/gap2': 2, 'ytd/gap2': 1}
+      XOM   {'instant/gap1': 2, 'quarter/gap2': 1, 'ytd/gap2': 2}
+      PFE   {'instant/gap1': 1, 'instant/gap2': 2, 'quarter/gap2': 2}
+    evidence sets per item: {1: 6, 2: 17, 3: 1, 4: 3, 6: 1, 8: 7, 12: 1, 18: 1, 21: 2, 27: 1}
+    distinct gold chunks per item: {2: 6, 3: 17, 4: 4, 5: 1, 6: 7, 7: 1, 9: 1, 10: 2, 12: 1}
+    flagged: 0
+    spot-check (eval/candidates/comparison_spot_check.md): seeded ['cmp_0003', 'cmp_0015', 'cmp_0036', 'cmp_0040']; 12 gold chunks shown
+    manifest fact records: 40 (later + earlier)
+    wrote eval/candidates/comparison_candidates.jsonl sha256 e8f78af34061ba4f
+
+`python -m scripts.sign_display`:
+
+    exact-value gold spans of the 1713 eligible keys, (fact sign, printed): {('negative', 'parens'): 66, ('negative', 'plain'): 3, ('positive', 'parens'): 296, ('positive', 'plain'): 3964, ('zero', 'plain'): 13}
+      by line item:
+        capex                        {'positive printed negative': 99}
+        cost_of_revenue              {'positive printed negative': 13}
+        credit_loss_allowance        {'positive printed negative': 31}
+        income_tax                   {'negative printed plain': 3}
+        research_and_development     {'positive printed negative': 26}
+        share_repurchases            {'positive printed negative': 127}
+      positive keys with a gold span printed negative: 178; with every gold span so printed: 130
+    xbrl_numeric candidates (160): items with a gold span whose printed sign disagrees with the fact: {'positive printed negative': 24, 'negative printed plain': 1}
+      25 items
+      ['xbrl_0001', 'xbrl_0004', 'xbrl_0007', 'xbrl_0020', 'xbrl_0022', 'xbrl_0023', 'xbrl_0029', 'xbrl_0039', 'xbrl_0041', 'xbrl_0050', 'xbrl_0057', 'xbrl_0060', 'xbrl_0068', 'xbrl_0073', 'xbrl_0086', 'xbrl_0093', 'xbrl_0110', 'xbrl_0112', 'xbrl_0119', 'xbrl_0121', 'xbrl_0122', 'xbrl_0127', 'xbrl_0143', 'xbrl_0151', 'xbrl_0157']
+    comparison candidates (40): items with a gold span whose printed sign disagrees with the fact: {'positive printed negative': 5}
+      5 items
+      ['cmp_0002', 'cmp_0003', 'cmp_0007', 'cmp_0015', 'cmp_0035']
+
+Two flagged items checked against the normalized text: xbrl_0001 (AAPL R&D
+FY2023) is printed "(29,915)" in a reconciliation table of the FY2025 10-K
+(chunk 592.0) and plain on the income statements; xbrl_0119 (PFE income tax
+FY2024, -$28 million) is "(28)" on the income statement and "The tax benefit of
+$28 million" in prose.
+
+`make test`: 282 passed; `make lint` clean; both `--verify` runs: 0 mismatches.
