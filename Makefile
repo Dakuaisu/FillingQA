@@ -1,6 +1,6 @@
-.PHONY: help install db-up db-down db-psql migrate lint fmt test
+.PHONY: help install db-up db-down db-psql migrate lint fmt test eval
 
-# Targets are added as the modules behind them land. Phase 1 only.
+# Targets are added as the modules behind them land.
 
 help:
 	@echo "install   install the package plus dev extras"
@@ -11,6 +11,7 @@ help:
 	@echo "lint      ruff check + ruff format --check"
 	@echo "fmt       ruff format + ruff check --fix"
 	@echo "test      pytest, excluding network-marked tests"
+	@echo "eval      verify the freeze, run the eval over the candidates, print the report"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -37,3 +38,10 @@ fmt:
 
 test:
 	pytest -m "not network"
+
+# One full eval run (PRD 11.4): freeze check first, then every candidate item.
+# The report carries the backend; a claude_cli run is marked a development run.
+# Resume a stopped run with: python -m scripts.eval_run --resume RUN_ID
+eval:
+	python -m scripts.verify_freeze
+	python -m scripts.eval_run --run

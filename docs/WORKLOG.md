@@ -4702,3 +4702,10 @@ two BAC pre-tax figures likewise. The 29 are flagged in a new section of
 `xbrl_numeric_spot_check.md` / `comparison_spot_check.md` (and `flagged_f100` in
 both manifests), with the matching non-gold chunk and row. Both candidate files
 are byte-identical; both `--verify` runs 0 mismatches. `make test`: 391 passed.
+
+## 2026-10-01 — `make eval`
+
+Target added: `python -m scripts.verify_freeze`, then `python -m scripts.eval_run
+--run` (report stamped with the backend; dev banner on claude_cli). `make -n eval`
+prints exactly those two commands (`tests/unit/test_make_eval.py`). Not run here.
+`make eval-fast` is Phase 4.
