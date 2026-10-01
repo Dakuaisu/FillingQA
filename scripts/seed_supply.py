@@ -47,7 +47,12 @@ FIXTURE_CHUNKS = (
     "0001045810-24-000029:748.0:752.0",
     "0000019617-24-000326:1892.0:1892.0",  # JPM Note 18, EPS, unit_scale millions (F-90)
 )
-CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
+# The gold exclusion is the 200 auto candidates' chunks; seeded items are not part of it.
+CANDIDATES = sorted(
+    p
+    for p in (REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl")
+    if not p.name.startswith("llm_seeded")
+)
 
 
 def quantiles(xs: list[int]) -> str:

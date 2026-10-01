@@ -4549,3 +4549,5 @@ parenthesized 7, quarter_label_on_span 6, no_context:near_match 2,
 seed_backend:claude_cli 83, seed_model:claude-sonnet-5-5 83. Other same-filing
 chunks printing a table item's figure, items by count: 0: 21, 1: 7, 2: 12, 3: 3,
 4: 2, 5: 2. No email address or "/Users/" in any of the four new files.
+
+Gold-exclusion globs in `seed_draw`, `seed_supply` and `seed_run` now take the 200 auto candidates only (the seeded file would otherwise widen the exclusion). `python -m scripts.seed_draw` then reproduces `draw_v2.json` byte-identical (sha256 1c23e9f6...): a reproducibility check, not a re-draw.

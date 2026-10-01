@@ -26,7 +26,12 @@ from scripts.write_freeze import FREEZE_FILE
 
 OUT = REPO_ROOT / "eval" / "seeding" / "draw_v2.json"
 PROMPT = REPO_ROOT / "eval" / "generate" / "prompts" / "seed_v1.txt"
-CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
+# The gold exclusion is the 200 auto candidates' chunks; seeded items are not part of it.
+CANDIDATES = sorted(
+    p
+    for p in (REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl")
+    if not p.name.startswith("llm_seeded")
+)
 KINDS = (("table", "table"), ("synthesis", "prose"))
 
 

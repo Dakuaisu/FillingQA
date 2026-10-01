@@ -39,7 +39,12 @@ ERRORS = SEEDING / "call_errors_v1.jsonl"
 VERIFY = SEEDING / "verify_v1.jsonl"
 PROMPT = REPO_ROOT / "eval" / "generate" / "prompts" / "seed_v1.txt"
 TEMPLATES = REPO_ROOT / "eval" / "templates.yaml"
-CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
+# The gold exclusion is the 200 auto candidates' chunks; seeded items are not part of it.
+CANDIDATES = sorted(
+    p
+    for p in (REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl")
+    if not p.name.startswith("llm_seeded")
+)
 TIER = "tier_large"
 TRANSPORT_RETRIES = 3
 MAX_HALTS = 3
