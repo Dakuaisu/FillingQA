@@ -1,0 +1,879 @@
+{
+ "dataset_version": "comparison_candidates_v1",
+ "candidates_file": "eval/candidates/comparison_candidates.jsonl",
+ "candidates_sha256": "e8f78af34061ba4fe05c10facc6f9dcab2d4e30219dcad40806616614dbb0eef",
+ "eval_comparison": {
+  "seed": 20261002,
+  "total": 40,
+  "per_ticker": {
+   "COST": 5,
+   "TGT": 5,
+   "JPM": 5,
+   "BAC": 5,
+   "AAPL": 5,
+   "NVDA": 5,
+   "XOM": 5,
+   "PFE": 5
+  },
+  "gaps": [
+   1,
+   2
+  ],
+  "dataset_version": "comparison_candidates_v1",
+  "spot_check_n": 4
+ },
+ "excluded_keys": "the 160 drawn xbrl_numeric keys (eval_sampler)",
+ "parser_version": "d58d26e08e5a",
+ "chunker_version": "964f77f6f9cb",
+ "eligible_pairs": 622,
+ "items": 40,
+ "validation_failures": {},
+ "not_generated": [],
+ "items_per_template": {
+  "cmp_dur_both": 6,
+  "cmp_dur_change": 6,
+  "cmp_dur_compare": 6,
+  "cmp_dur_diff": 2,
+  "cmp_dur_versus": 6,
+  "cmp_ins_both": 4,
+  "cmp_ins_change": 1,
+  "cmp_ins_compare": 4,
+  "cmp_ins_diff": 3,
+  "cmp_ins_versus": 2
+ },
+ "kind_gap": {
+  "instant/gap1": 5,
+  "instant/gap2": 9,
+  "quarter/gap2": 16,
+  "ytd/gap2": 10
+ },
+ "kind_gap_per_ticker": {
+  "COST": {
+   "instant/gap2": 1,
+   "ytd/gap2": 4
+  },
+  "TGT": {
+   "instant/gap2": 2,
+   "quarter/gap2": 3
+  },
+  "JPM": {
+   "instant/gap2": 1,
+   "quarter/gap2": 4
+  },
+  "BAC": {
+   "instant/gap2": 2,
+   "quarter/gap2": 2,
+   "ytd/gap2": 1
+  },
+  "AAPL": {
+   "instant/gap1": 1,
+   "quarter/gap2": 2,
+   "ytd/gap2": 2
+  },
+  "NVDA": {
+   "instant/gap1": 1,
+   "instant/gap2": 1,
+   "quarter/gap2": 2,
+   "ytd/gap2": 1
+  },
+  "XOM": {
+   "instant/gap1": 2,
+   "quarter/gap2": 1,
+   "ytd/gap2": 2
+  },
+  "PFE": {
+   "instant/gap1": 1,
+   "instant/gap2": 2,
+   "quarter/gap2": 2
+  }
+ },
+ "evidence_sets_per_item": {
+  "1": 6,
+  "2": 17,
+  "3": 1,
+  "4": 3,
+  "6": 1,
+  "8": 7,
+  "12": 1,
+  "18": 1,
+  "21": 2,
+  "27": 1
+ },
+ "spot_check": {
+  "n": 4,
+  "item_ids": [
+   "cmp_0003",
+   "cmp_0015",
+   "cmp_0036",
+   "cmp_0040"
+  ],
+  "reviewed": false
+ },
+ "flagged": {
+  "rule": "side <= 0, sign flip, or untagged co-occurrence",
+  "outside_spot_check": true,
+  "items": {}
+ },
+ "facts": {
+  "cmp_0001": {
+   "later": {
+    "accession": "0000320193-26-000020",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2026-03-29",
+    "period_end": "2026-06-27",
+    "unit": "USD",
+    "value": "29789000000"
+   },
+   "earlier_fact_id": 42555,
+   "earlier": {
+    "accession": "0000320193-24-000081",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2024-03-31",
+    "period_end": "2024-06-29",
+    "unit": "USD",
+    "value": "21448000000"
+   }
+  },
+  "cmp_0002": {
+   "later": {
+    "accession": "0000320193-26-000020",
+    "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+    "period_start": "2025-09-28",
+    "period_end": "2026-06-27",
+    "unit": "USD",
+    "value": "62094000000"
+   },
+   "earlier_fact_id": 43148,
+   "earlier": {
+    "accession": "0000320193-24-000081",
+    "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+    "period_start": "2023-10-01",
+    "period_end": "2024-06-29",
+    "unit": "USD",
+    "value": "69866000000"
+   }
+  },
+  "cmp_0003": {
+   "later": {
+    "accession": "0000320193-26-000013",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2025-09-28",
+    "period_end": "2026-03-28",
+    "unit": "USD",
+    "value": "4344000000"
+   },
+   "earlier_fact_id": 43254,
+   "earlier": {
+    "accession": "0000320193-24-000069",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2023-10-01",
+    "period_end": "2024-03-30",
+    "unit": "USD",
+    "value": "4388000000"
+   }
+  },
+  "cmp_0004": {
+   "later": {
+    "accession": "0000320193-26-000013",
+    "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "period_start": "2025-12-28",
+    "period_end": "2026-03-28",
+    "unit": "USD",
+    "value": "111184000000"
+   },
+   "earlier_fact_id": 43614,
+   "earlier": {
+    "accession": "0000320193-24-000069",
+    "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "period_start": "2023-12-31",
+    "period_end": "2024-03-30",
+    "unit": "USD",
+    "value": "90753000000"
+   }
+  },
+  "cmp_0005": {
+   "later": {
+    "accession": "0000320193-25-000057",
+    "concept": "us-gaap:AccountsReceivableNetCurrent",
+    "period_start": null,
+    "period_end": "2025-03-29",
+    "unit": "USD",
+    "value": "26136000000"
+   },
+   "earlier_fact_id": 40749,
+   "earlier": {
+    "accession": "0000320193-24-000069",
+    "concept": "us-gaap:AccountsReceivableNetCurrent",
+    "period_start": null,
+    "period_end": "2024-03-30",
+    "unit": "USD",
+    "value": "21837000000"
+   }
+  },
+  "cmp_0006": {
+   "later": {
+    "accession": "0000070858-26-000249",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-31",
+    "unit": "USD",
+    "value": "10404000000"
+   },
+   "earlier_fact_id": 36260,
+   "earlier": {
+    "accession": "0000070858-24-000156",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "7262000000"
+   }
+  },
+  "cmp_0007": {
+   "later": {
+    "accession": "0000070858-26-000394",
+    "concept": "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest",
+    "period_start": null,
+    "period_end": "2026-06-30",
+    "unit": "USD",
+    "value": "13114000000"
+   },
+   "earlier_fact_id": 40182,
+   "earlier": {
+    "accession": "0000070858-24-000208",
+    "concept": "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest",
+    "period_start": null,
+    "period_end": "2024-06-30",
+    "unit": "USD",
+    "value": "13238000000"
+   }
+  },
+  "cmp_0008": {
+   "later": {
+    "accession": "0000070858-26-000394",
+    "concept": "us-gaap:NoninterestExpense",
+    "period_start": "2026-04-01",
+    "period_end": "2026-06-30",
+    "unit": "USD",
+    "value": "18627000000"
+   },
+   "earlier_fact_id": 37801,
+   "earlier": {
+    "accession": "0000070858-24-000208",
+    "concept": "us-gaap:NoninterestExpense",
+    "period_start": "2024-04-01",
+    "period_end": "2024-06-30",
+    "unit": "USD",
+    "value": "16309000000"
+   }
+  },
+  "cmp_0009": {
+   "later": {
+    "accession": "0000070858-26-000394",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2026-06-30",
+    "unit": "USD",
+    "value": "301094000000"
+   },
+   "earlier_fact_id": 39520,
+   "earlier": {
+    "accession": "0000070858-24-000208",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2024-06-30",
+    "unit": "USD",
+    "value": "293892000000"
+   }
+  },
+  "cmp_0010": {
+   "later": {
+    "accession": "0000070858-26-000394",
+    "concept": "us-gaap:InterestIncomeExpenseNet",
+    "period_start": "2026-01-01",
+    "period_end": "2026-06-30",
+    "unit": "USD",
+    "value": "31742000000"
+   },
+   "earlier_fact_id": 36976,
+   "earlier": {
+    "accession": "0000070858-24-000208",
+    "concept": "us-gaap:InterestIncomeExpenseNet",
+    "period_start": "2024-01-01",
+    "period_end": "2024-06-30",
+    "unit": "USD",
+    "value": "27734000000"
+   }
+  },
+  "cmp_0011": {
+   "later": {
+    "accession": "0000909832-26-000051",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2025-09-01",
+    "period_end": "2026-05-10",
+    "unit": "USD",
+    "value": "11133000000"
+   },
+   "earlier_fact_id": 9764,
+   "earlier": {
+    "accession": "0000909832-24-000029",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2023-09-04",
+    "period_end": "2024-05-12",
+    "unit": "USD",
+    "value": "8381000000"
+   }
+  },
+  "cmp_0012": {
+   "later": {
+    "accession": "0000909832-26-000029",
+    "concept": "us-gaap:LongTermDebtNoncurrent",
+    "period_start": null,
+    "period_end": "2026-02-15",
+    "unit": "USD",
+    "value": "5688000000"
+   },
+   "earlier_fact_id": 9673,
+   "earlier": {
+    "accession": "0000909832-24-000017",
+    "concept": "us-gaap:LongTermDebtNoncurrent",
+    "period_start": null,
+    "period_end": "2024-02-18",
+    "unit": "USD",
+    "value": "5865000000"
+   }
+  },
+  "cmp_0013": {
+   "later": {
+    "accession": "0000909832-26-000051",
+    "concept": "us-gaap:IncomeTaxExpenseBenefit",
+    "period_start": "2025-09-01",
+    "period_end": "2026-05-10",
+    "unit": "USD",
+    "value": "2014000000"
+   },
+   "earlier_fact_id": 9134,
+   "earlier": {
+    "accession": "0000909832-24-000029",
+    "concept": "us-gaap:IncomeTaxExpenseBenefit",
+    "period_start": "2023-09-04",
+    "period_end": "2024-05-12",
+    "unit": "USD",
+    "value": "1614000000"
+   }
+  },
+  "cmp_0014": {
+   "later": {
+    "accession": "0000909832-26-000051",
+    "concept": "us-gaap:CostOfGoodsAndServicesSold",
+    "period_start": "2025-09-01",
+    "period_end": "2026-05-10",
+    "unit": "USD",
+    "value": "180748000000"
+   },
+   "earlier_fact_id": 8375,
+   "earlier": {
+    "accession": "0000909832-24-000029",
+    "concept": "us-gaap:CostOfGoodsAndServicesSold",
+    "period_start": "2023-09-04",
+    "period_end": "2024-05-12",
+    "unit": "USD",
+    "value": "152770000000"
+   }
+  },
+  "cmp_0015": {
+   "later": {
+    "accession": "0000909832-26-000029",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2025-09-01",
+    "period_end": "2026-02-15",
+    "unit": "USD",
+    "value": "2815000000"
+   },
+   "earlier_fact_id": 10216,
+   "earlier": {
+    "accession": "0000909832-24-000017",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2023-09-04",
+    "period_end": "2024-02-18",
+    "unit": "USD",
+    "value": "2071000000"
+   }
+  },
+  "cmp_0016": {
+   "later": {
+    "accession": "0001628280-26-029344",
+    "concept": "us-gaap:IncomeTaxExpenseBenefit",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-31",
+    "unit": "USD",
+    "value": "3985000000"
+   },
+   "earlier_fact_id": 27910,
+   "earlier": {
+    "accession": "0000019617-24-000326",
+    "concept": "us-gaap:IncomeTaxExpenseBenefit",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "3874000000"
+   }
+  },
+  "cmp_0017": {
+   "later": {
+    "accession": "0001628280-26-029344",
+    "concept": "us-gaap:NoninterestExpense",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-31",
+    "unit": "USD",
+    "value": "26850000000"
+   },
+   "earlier_fact_id": 29492,
+   "earlier": {
+    "accession": "0000019617-24-000326",
+    "concept": "us-gaap:NoninterestExpense",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "22757000000"
+   }
+  },
+  "cmp_0018": {
+   "later": {
+    "accession": "0001628280-25-048859",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2025-07-01",
+    "period_end": "2025-09-30",
+    "unit": "USD",
+    "value": "18743000000"
+   },
+   "earlier_fact_id": 27842,
+   "earlier": {
+    "accession": "0000019617-23-000524",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2023-07-01",
+    "period_end": "2023-09-30",
+    "unit": "USD",
+    "value": "16733000000"
+   }
+  },
+  "cmp_0019": {
+   "later": {
+    "accession": "0001628280-26-029344",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-31",
+    "unit": "USD/shares",
+    "value": "5.94"
+   },
+   "earlier_fact_id": 26459,
+   "earlier": {
+    "accession": "0000019617-24-000326",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD/shares",
+    "value": "4.44"
+   }
+  },
+  "cmp_0020": {
+   "later": {
+    "accession": "0001628280-25-048859",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2025-09-30",
+    "unit": "USD",
+    "value": "360212000000"
+   },
+   "earlier_fact_id": 32144,
+   "earlier": {
+    "accession": "0000019617-23-000524",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2023-09-30",
+    "unit": "USD",
+    "value": "317371000000"
+   }
+  },
+  "cmp_0021": {
+   "later": {
+    "accession": "0001045810-26-000052",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2026-01-26",
+    "period_end": "2026-04-26",
+    "unit": "USD",
+    "value": "50344000000"
+   },
+   "earlier_fact_id": 46787,
+   "earlier": {
+    "accession": "0001045810-24-000124",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2024-01-29",
+    "period_end": "2024-04-28",
+    "unit": "USD",
+    "value": "15345000000"
+   }
+  },
+  "cmp_0022": {
+   "later": {
+    "accession": "0001045810-25-000230",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2025-10-26",
+    "unit": "USD",
+    "value": "161148000000"
+   },
+   "earlier_fact_id": 44524,
+   "earlier": {
+    "accession": "0001045810-23-000227",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2023-10-29",
+    "unit": "USD",
+    "value": "54148000000"
+   }
+  },
+  "cmp_0023": {
+   "later": {
+    "accession": "0001045810-26-000052",
+    "concept": "us-gaap:LongTermDebtNoncurrent",
+    "period_start": null,
+    "period_end": "2026-04-26",
+    "unit": "USD",
+    "value": "7470000000"
+   },
+   "earlier_fact_id": 46689,
+   "earlier": {
+    "accession": "0001045810-25-000116",
+    "concept": "us-gaap:LongTermDebtNoncurrent",
+    "period_start": null,
+    "period_end": "2025-04-27",
+    "unit": "USD",
+    "value": "8464000000"
+   }
+  },
+  "cmp_0024": {
+   "later": {
+    "accession": "0001045810-26-000075",
+    "concept": "us-gaap:CostOfRevenue",
+    "period_start": "2026-04-27",
+    "period_end": "2026-07-26",
+    "unit": "USD",
+    "value": "24079000000"
+   },
+   "earlier_fact_id": 45109,
+   "earlier": {
+    "accession": "0001045810-24-000264",
+    "concept": "us-gaap:CostOfRevenue",
+    "period_start": "2024-04-29",
+    "period_end": "2024-07-28",
+    "unit": "USD",
+    "value": "7466000000"
+   }
+  },
+  "cmp_0025": {
+   "later": {
+    "accession": "0001045810-25-000230",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2025-01-27",
+    "period_end": "2025-10-26",
+    "unit": "USD",
+    "value": "91052000000"
+   },
+   "earlier_fact_id": 45984,
+   "earlier": {
+    "accession": "0001045810-23-000227",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2023-01-30",
+    "period_end": "2023-10-29",
+    "unit": "USD",
+    "value": "19712000000"
+   }
+  },
+  "cmp_0026": {
+   "later": {
+    "accession": "0000078003-26-000054",
+    "concept": "us-gaap:CostOfGoodsAndServicesSold",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-29",
+    "unit": "USD",
+    "value": "3548000000"
+   },
+   "earlier_fact_id": 53674,
+   "earlier": {
+    "accession": "0000078003-24-000107",
+    "concept": "us-gaap:CostOfGoodsAndServicesSold",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "3379000000"
+   }
+  },
+  "cmp_0027": {
+   "later": {
+    "accession": "0000078003-25-000114",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2025-03-30",
+    "unit": "USD",
+    "value": "208028000000"
+   },
+   "earlier_fact_id": 53110,
+   "earlier": {
+    "accession": "0000078003-24-000107",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "221095000000"
+   }
+  },
+  "cmp_0028": {
+   "later": {
+    "accession": "0000078003-25-000150",
+    "concept": "us-gaap:Liabilities",
+    "period_start": null,
+    "period_end": "2025-09-28",
+    "unit": "USD",
+    "value": "115635000000"
+   },
+   "earlier_fact_id": 55704,
+   "earlier": {
+    "accession": "0000078003-23-000115",
+    "concept": "us-gaap:Liabilities",
+    "period_start": null,
+    "period_end": "2023-10-01",
+    "unit": "USD",
+    "value": "117817000000"
+   }
+  },
+  "cmp_0029": {
+   "later": {
+    "accession": "0000078003-26-000054",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-29",
+    "unit": "USD",
+    "value": "2687000000"
+   },
+   "earlier_fact_id": 56008,
+   "earlier": {
+    "accession": "0000078003-24-000107",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "3115000000"
+   }
+  },
+  "cmp_0030": {
+   "later": {
+    "accession": "0000078003-25-000150",
+    "concept": "us-gaap:AccountsReceivableNetCurrent",
+    "period_start": null,
+    "period_end": "2025-09-28",
+    "unit": "USD",
+    "value": "14260000000"
+   },
+   "earlier_fact_id": 52879,
+   "earlier": {
+    "accession": "0000078003-23-000115",
+    "concept": "us-gaap:AccountsReceivableNetCurrent",
+    "period_start": null,
+    "period_end": "2023-10-01",
+    "unit": "USD",
+    "value": "11086000000"
+   }
+  },
+  "cmp_0031": {
+   "later": {
+    "accession": "0000027419-26-000042",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2026-05-03",
+    "period_end": "2026-08-01",
+    "unit": "USD",
+    "value": "1877000000"
+   },
+   "earlier_fact_id": 14064,
+   "earlier": {
+    "accession": "0000027419-24-000152",
+    "concept": "us-gaap:NetIncomeLoss",
+    "period_start": "2024-05-05",
+    "period_end": "2024-08-03",
+    "unit": "USD",
+    "value": "1192000000"
+   }
+  },
+  "cmp_0032": {
+   "later": {
+    "accession": "0000027419-25-000126",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2025-11-01",
+    "unit": "USD",
+    "value": "59991000000"
+   },
+   "earlier_fact_id": 11864,
+   "earlier": {
+    "accession": "0000027419-23-000052",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2023-10-28",
+    "unit": "USD",
+    "value": "56229000000"
+   }
+  },
+  "cmp_0033": {
+   "later": {
+    "accession": "0000027419-25-000126",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2025-08-03",
+    "period_end": "2025-11-01",
+    "unit": "USD",
+    "value": "859000000"
+   },
+   "earlier_fact_id": 13441,
+   "earlier": {
+    "accession": "0000027419-23-000052",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2023-07-30",
+    "period_end": "2023-10-28",
+    "unit": "USD",
+    "value": "1235000000"
+   }
+  },
+  "cmp_0034": {
+   "later": {
+    "accession": "0000027419-26-000022",
+    "concept": "us-gaap:InventoryNet",
+    "period_start": null,
+    "period_end": "2026-05-02",
+    "unit": "USD",
+    "value": "12317000000"
+   },
+   "earlier_fact_id": 13672,
+   "earlier": {
+    "accession": "0000027419-24-000129",
+    "concept": "us-gaap:InventoryNet",
+    "period_start": null,
+    "period_end": "2024-05-04",
+    "unit": "USD",
+    "value": "11730000000"
+   }
+  },
+  "cmp_0035": {
+   "later": {
+    "accession": "0000027419-26-000022",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2026-02-01",
+    "period_end": "2026-05-02",
+    "unit": "USD",
+    "value": "1035000000"
+   },
+   "earlier_fact_id": 14634,
+   "earlier": {
+    "accession": "0000027419-24-000129",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "period_start": "2024-02-04",
+    "period_end": "2024-05-04",
+    "unit": "USD",
+    "value": "674000000"
+   }
+  },
+  "cmp_0036": {
+   "later": {
+    "accession": "0000034088-26-000067",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2026-01-01",
+    "period_end": "2026-03-31",
+    "unit": "USD",
+    "value": "8705000000"
+   },
+   "earlier_fact_id": 50936,
+   "earlier": {
+    "accession": "0000034088-24-000029",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "period_start": "2024-01-01",
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "14664000000"
+   }
+  },
+  "cmp_0037": {
+   "later": {
+    "accession": "0000034088-26-000093",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "period_start": "2026-01-01",
+    "period_end": "2026-06-30",
+    "unit": "USD/shares",
+    "value": "4.47"
+   },
+   "earlier_fact_id": 50119,
+   "earlier": {
+    "accession": "0000034088-24-000050",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "period_start": "2024-01-01",
+    "period_end": "2024-06-30",
+    "unit": "USD/shares",
+    "value": "4.2"
+   }
+  },
+  "cmp_0038": {
+   "later": {
+    "accession": "0000034088-25-000061",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2025-01-01",
+    "period_end": "2025-09-30",
+    "unit": "USD",
+    "value": "33237000000"
+   },
+   "earlier_fact_id": 50324,
+   "earlier": {
+    "accession": "0000034088-23-000056",
+    "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "period_start": "2023-01-01",
+    "period_end": "2023-09-30",
+    "unit": "USD",
+    "value": "42158000000"
+   }
+  },
+  "cmp_0039": {
+   "later": {
+    "accession": "0000034088-25-000024",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2025-03-31",
+    "unit": "USD",
+    "value": "451908000000"
+   },
+   "earlier_fact_id": 49368,
+   "earlier": {
+    "accession": "0000034088-24-000029",
+    "concept": "us-gaap:Assets",
+    "period_start": null,
+    "period_end": "2024-03-31",
+    "unit": "USD",
+    "value": "377918000000"
+   }
+  },
+  "cmp_0040": {
+   "later": {
+    "accession": "0000034088-25-000061",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2025-09-30",
+    "unit": "USD",
+    "value": "260561000000"
+   },
+   "earlier_fact_id": 52056,
+   "earlier": {
+    "accession": "0000034088-24-000068",
+    "concept": "us-gaap:StockholdersEquity",
+    "period_start": null,
+    "period_end": "2024-09-30",
+    "unit": "USD",
+    "value": "268592000000"
+   }
+  }
+ }
+}

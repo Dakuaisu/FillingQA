@@ -87,6 +87,11 @@ def eval_sampler(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_sampler"]
 
 
+def eval_comparison(path: Path = CORPUS_FILE) -> dict:
+    """The `eval_comparison:` block of api/config.yaml: comparison sampler and output."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_comparison"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

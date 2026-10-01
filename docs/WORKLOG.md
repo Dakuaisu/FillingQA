@@ -3367,3 +3367,58 @@ year-ago quarter-end cash under another tag.
 (Correction to the report of this measurement: it summed the two-chunk pool as
 324 + 234 = 558 and left out the 182 instant pairs two years apart, and it gave
 the per-ticker minimum as 41; it is 46, JPM.)
+
+## 2026-10-01 — 40 comparison candidates (xbrl_auto)
+
+Checked after the supply commit: the untagged co-occurrence of COST cash
+12,356 / 9,095 is chunk 0000909832-25-000015:68.1:68.1, the Q2 FY2025 10-Q cash-flow
+statement, tagged there as `CashCashEquivalentsRestrictedCash...`, not the pair's
+concept.
+
+Pairing, eligibility, co-occurrence, evidence sets and the reference answer are
+pure functions in `eval/generate/comparison.py`; `scripts/comparison_supply.py`
+now calls them. Its output has the same lines as the committed run; only the
+co-occurrence listing is reordered (pairs now sorted by key):
+`diff <(sort old) <(sort new)` is empty. `sample` takes pairs as well as keys
+(no key in two pairs); the xbrl_numeric outputs are byte-identical after the
+change (sha256 unchanged).
+
+`python -m scripts.comparison_candidates`:
+
+    eligible pairs (no shared gold chunk, no drawn xbrl_numeric key): 622
+    items: 40 (drawn 40); not generated: 0
+    validation failures: 0
+    distinct period keys: 80 of 80; overlap with drawn xbrl_numeric keys: 0
+    items per template: {'cmp_dur_both': 6, 'cmp_dur_change': 6, 'cmp_dur_compare': 6, 'cmp_dur_diff': 2, 'cmp_dur_versus': 6, 'cmp_ins_both': 4, 'cmp_ins_change': 1, 'cmp_ins_compare': 4, 'cmp_ins_diff': 3, 'cmp_ins_versus': 2}
+    kind/gap: {'instant/gap1': 5, 'instant/gap2': 9, 'quarter/gap2': 16, 'ytd/gap2': 10}
+      COST  {'instant/gap2': 1, 'ytd/gap2': 4}
+      TGT   {'instant/gap2': 2, 'quarter/gap2': 3}
+      JPM   {'instant/gap2': 1, 'quarter/gap2': 4}
+      BAC   {'instant/gap2': 2, 'quarter/gap2': 2, 'ytd/gap2': 1}
+      AAPL  {'instant/gap1': 1, 'quarter/gap2': 2, 'ytd/gap2': 2}
+      NVDA  {'instant/gap1': 1, 'instant/gap2': 1, 'quarter/gap2': 2, 'ytd/gap2': 1}
+      XOM   {'instant/gap1': 2, 'quarter/gap2': 1, 'ytd/gap2': 2}
+      PFE   {'instant/gap1': 1, 'instant/gap2': 2, 'quarter/gap2': 2}
+    evidence sets per item: {1: 6, 2: 17, 3: 1, 4: 3, 6: 1, 8: 7, 12: 1, 18: 1, 21: 2, 27: 1}
+    flagged: 0
+    spot-check (eval/candidates/comparison_spot_check.md): seeded ['cmp_0003', 'cmp_0015', 'cmp_0036', 'cmp_0040']; 12 gold chunks shown
+    manifest fact records: 40 (later + earlier)
+    wrote eval/candidates/comparison_candidates.jsonl sha256 e8f78af34061ba4f
+
+A second run left all three files' sha256 unchanged:
+
+    e8f78af34061ba4fe05c10facc6f9dcab2d4e30219dcad40806616614dbb0eef  eval/candidates/comparison_candidates.jsonl
+    f8f83e418430d6fca74c691be9129d3b64b41a90c8e038e28ede1aad4b262fe1  eval/candidates/comparison_manifest.json
+    d3ec2b6eb9a40ec704405bc30a22bfcf0c62718887b007e95c7a88fe40b9a2a6  eval/candidates/comparison_spot_check.md
+
+`python -m scripts.comparison_candidates --verify` (exit 0):
+
+    verify: 40 items, 80 fact ids checked, 80 found in xbrl_facts, 0 mismatches
+
+Against a copy of the manifest with cmp_0001's earlier value set to 1 (ad hoc):
+
+    verify: 40 items, 80 fact ids checked, 80 found in xbrl_facts, 1 mismatches
+      MISMATCH cmp_0001 earlier: fact_id 42555 is {'accession': '0000320193-24-000081', 'concept': 'us-gaap:NetIncomeLoss', 'period_start': '2024-03-31', 'period_end': '2024-06-29', 'unit': 'USD', 'value': '21448000000'}, want {'accession': '0000320193-24-000081', 'concept': 'us-gaap:NetIncomeLoss', 'period_start': '2024-03-31', 'period_end': '2024-06-29', 'unit': 'USD', 'value': '1'}
+    tampered manifest (cmp_0001 earlier value -> 1): verify returns 1
+
+`make test`: 282 passed; `make lint` clean; `python -m scripts.xbrl_candidates --verify`: 0 mismatches, its three outputs unchanged.

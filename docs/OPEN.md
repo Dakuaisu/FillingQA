@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 41 |
+| OPEN | 45 |
 | RESOLVED | 41 |
-| **Total** | **82** |
+| **Total** | **86** |
 
 ---
 
@@ -22,7 +22,7 @@ carries the state.
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
 | F-77 | PRD 11.2 defines neither `rel_i` nor IDCG over alternative evidence sets. With union-as-relevant, an item with 8 single-chunk alternatives scores nDCG@10 of about 0.25 (1 / 3.95) for one gold chunk at rank 1 and nothing else; sufficiency gets easier as alternatives grow. Candidates have 1 to 10 sets per item (manifest). Settle the definition when metrics are built, before any run; gold is not shaped around it | Phase 3 metrics | OPEN |
-| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold | Phase 3 metrics | OPEN |
+| F-81 | PRD 11.2's numeric accuracy ("exact match after unit normalization") does not say how "a benefit of $28 million", "(28)", "net cash used of $691 million", "none" or "—" compare with the reference answers "-$28 million" and "$0 million". Six candidates are negative or zero. Settle before any run, never by rewording gold Also, for comparison items: which of the three figures (two values, difference) numeric accuracy requires, and how an answer giving only the two values, or a correct percent change, is scored | Phase 3 metrics | OPEN |
 
 ## Blocking Phase 2
 
@@ -44,10 +44,13 @@ carries the state.
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
 | F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
 | F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |
-| F-76 | PRD 8's `eval_items.question_type` comment lists `lookup\|comparison\|synthesis\|table\|unanswerable\|adversarial`; PRD 11.1's Type column has `xbrl_numeric` and `natural_phrasing` and no `lookup`. `eval/generate/schema.py` follows 11.1; no migration yet. Also: `difficulty` has no assignment rule in the PRD and no metric reads it; xbrl_numeric items take `easy` from PRD 11.1's example | OPEN |
+| F-76 | PRD 8's `eval_items.question_type` comment lists `lookup\|comparison\|synthesis\|table\|unanswerable\|adversarial`; PRD 11.1's Type column has `xbrl_numeric` and `natural_phrasing` and no `lookup`. `eval/generate/schema.py` follows 11.1; no migration yet. Also: `difficulty` has no assignment rule in the PRD and no metric reads it; xbrl_numeric items take `easy` from PRD 11.1's example; comparison items take `medium`, by the same absence of a rule | OPEN |
 | F-78 | `xbrl_fact_id` is a DB serial (`xbrl_facts.fact_id`), filled with `ON CONFLICT DO NOTHING`; the stored ids have gaps (43,122 rows over 1..58,979), so a rebuild from the freeze would not reproduce them. Not verified by a rebuild | Guarded, ids still not reproducible: the candidates manifest records each item's fact by natural key, and `python -m scripts.xbrl_candidates --verify` exits non-zero if an id no longer names it (TRADEOFFS) | OPEN |
 | F-79 | PRD 11.1's 10% spot-check of XBRL items: `eval/candidates/xbrl_numeric_spot_check.md`, 16 of 160 candidates (seed 20261001), with each gold chunk's text; plus a "flagged, outside the seeded 10%" section selected by rule (`value <= 0`): xbrl_0070, 0113, 0115 (also seeded), 0116, 0117, 0119. Ids in the manifest. Nothing marked reviewed. OWNER-BLOCKED | OPEN |
 | F-80 | NVDA income tax, six months ended 2026-07-26 (0001045810-26-000075): the exact-value spans print "23,400" (scale 6) and "23.4" (scale 9), so `format_value` reports the key instead of picking a scale. The only such key among the 1,713 eligible; not drawn | OPEN |
+| F-83 | PRD 11.1 Stage 3's "gold set = both chunk_ids" fails on real data: every consecutive-year duration pair (735) has one chunk holding both exact values, because a later filing prints the prior-year column (`python -m scripts.comparison_supply`). Auto comparison items draw only on pairs with no shared gold chunk (TRADEOFFS) | OPEN |
+| F-84 | The 20 hand-written comparison items (PRD 11.1) are now the only plain year-over-year comparisons, the auto pool having excluded them (F-83). Authoring is the owner's; evidence sets are minimal sufficient sets (TRADEOFFS). OWNER-BLOCKED | OPEN |
+| F-86 | PRD 11.1's 10% spot-check of the 40 comparison candidates: `eval/candidates/comparison_spot_check.md`, 4 seeded (cmp_0003, cmp_0015, cmp_0036, cmp_0040) with each gold chunk's text, plus a flagged section by rule (side <= 0, sign flip, untagged co-occurrence): none drawn. Nothing marked reviewed. OWNER-BLOCKED | OPEN |
 | F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
 | F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 28 listed tags (`python -m scripts.concept_coverage`: human-label queue 0). Queue: `eval/human_label_queue.csv`. Labeling OWNER-BLOCKED | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
@@ -61,6 +64,7 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
+| F-85 | A comparison item's difference is printed in no chunk, so PRD 7.5's numeric grounding ("every number in the claim appears in a cited chunk") would strip a correct difference claim | OPEN |
 | F-82 | Numeric grounding of a zero claim: the correct figure is $0, but the cited chunk prints "—" (PFE share repurchases, xbrl_0116/0117: `raw_text='—'`, value 0, scale 6), so matching the claim's number against the chunk text finds no "0" | OPEN |
 | F-10 | `supported()` omits `citation_valid` for figure claims, contradicting §7.5's own table | OPEN |
 | F-12 | `eval.compare` compares a fast/CI-corpus run against a full-corpus baseline | OPEN |

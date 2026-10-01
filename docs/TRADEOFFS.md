@@ -1471,3 +1471,79 @@ now caught instead of silently pointing at another fact.
 - *A deterministic `fact_id` via migration.* Rejected: it touches a Phase 1 table
   under the frozen corpus.
 - *Do nothing.* Rejected: a stale id in a frozen file would go unnoticed.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_auto comparison items (PRD 11.1 comparison row, Stage 3)
+
+Every number here is printed by `python -m scripts.comparison_supply`.
+
+**1. Pool: pairs whose two keys share no gold chunk.** A pair is two eligible
+keys (F-75) of one filer and line item, same period kind and fiscal quarter, one
+or two fiscal years apart by the own-period filing's dei label (`gaps` in
+config). It is eligible only if no chunk holds a tagged exact-value span of both
+sides. Only then is Stage 3's "gold set = both chunk_ids" true. The pool is what
+the rule yields: instant one year apart 234, instant two years 182, quarter two
+years 178, year-to-date two years 146 (740; 622 with neither side among the 160
+drawn keys).
+- *Excluded by the rule:* all 735 consecutive-year duration pairs, the 49 annual
+  pairs two years apart, and 129 consecutive instant pairs (all 73 year-end, 56
+  quarter-end) -- including the shape of PRD 7.1's own example (AAPL inventory
+  FY2023 to FY2024). Plain year-over-year comparisons exist only in the 20
+  hand-written comparison items (F-84). Stage 3's wording failing on real data
+  is F-83.
+- *"Needs two chunks" holds for tagged exact-value spans only.* 29 of the 622
+  pairs have a chunk printing both sides' values somewhere untagged for this
+  pair (token match, an upper bound: e.g. a 10-Q cash-flow statement printing
+  year-ago quarter-end cash under another tag). They are not excluded; a drawn
+  one goes on the flagged section of the spot-check sheet.
+- Each item is tagged with its kind and gap.
+- *Alternatives:* consecutive-year pairs as specified (40 single-table lookups
+  under a label that implies multi-hop); a mix of both (blurs what the slice
+  measures).
+
+**2. An evidence set is a minimal sufficient set.** A chunk holding both values
+would be a set on its own, and the data overrides Stage 3's wording. Under 1
+this never arises for auto items: the generator raises if the two sides share a
+chunk. The sets are every (a, b) combination of the two sides' gold chunks,
+uncapped (as for the 1-3 rule; F-77 unchanged). The rule binds the hand-written
+comparisons and the review. *Alternatives:* "both chunk_ids" literally (wrong
+whenever one chunk suffices); a cap on sets.
+
+**3. Reference answer: both values with their period labels, plus the
+difference; no percent change.** The difference is later minus earlier on the
+fact values (Decimal, base units), formatted at the shared printed scale, never
+computed from formatted strings. The direction word ("an increase of", "a
+decrease of") comes from its sign only; equal values give "a difference of $0
+million", not "unchanged". No question form words a direction. A pair whose
+sides print at different scales is reported and not generated (F-80
+precedent): one such pair in the pool, NVDA income tax, whose later side is the
+F-80 key. Equal-value pairs in the pool: 0. *Alternatives:* both values only
+(the comparison itself is never checked); add a percent change (no rounding
+rule, F-81, and undefined or misleading on zero sides and sign flips). Which
+figures numeric accuracy requires is F-81; a difference is printed in no chunk,
+F-85.
+
+**4. No reuse.** Neither side among the 160 drawn xbrl_numeric keys, and no key
+in more than one pair. *Alternative:* allow reuse (the same figures tested
+twice, their errors counted twice).
+
+**Also settled:**
+- *Forms:* five per period type in `eval/templates.yaml` (`comparison_forms`),
+  using both own-filing period labels; seeded pick; form id in tags; all
+  corpus-scoped. No filing-scoped form: pairs two years apart never sit in one
+  filing, so it would apply to some pairs and not others.
+- *Sampler:* `eval_comparison` config block (seed 20261002, total 40, 5 per
+  ticker, gaps, dataset_version, spot_check_n), fixed before the first draw; no
+  re-draw. Strata ticker x line item x kind, the same round-robin as `sample`,
+  `Shortfall` instead of backfill.
+- *Edge values:* no exclusion. Drawn pairs with a side <= 0, a sign flip, or an
+  untagged co-occurrence go on the flagged section.
+- *Fields:* `question_type = comparison`, `source = xbrl_auto`,
+  `reviewed_by_human = false`, `difficulty = medium` (F-76). `xbrl_fact_id` is
+  the later period's own-filing fact; the earlier fact is in the manifest by id
+  and natural key, and `--verify` checks both. *Alternative:* a list-valued
+  `xbrl_fact_id` (changes PRD 8's table).
+- *Spot-check:* the seeded 10% (4 of 40) plus the flagged, with each gold
+  chunk's text; nothing marked reviewed (OWNER-BLOCKED).
+- *Output:* `eval/candidates/`, never a `golden_*` file; byte-identical on re-run.

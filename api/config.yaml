@@ -249,3 +249,21 @@ eval_sampler:
   # xbrl_numeric candidates (scripts/xbrl_candidates.py). Not a golden_* file.
   dataset_version: xbrl_candidates_v1
   spot_check_n: 16          # PRD 11.1: spot-check 10% of XBRL items
+
+# xbrl_auto comparison candidates (PRD 11.1 comparison row, Stage 3; TRADEOFFS).
+# Seed fixed before the first draw; no re-draw after seeing it.
+eval_comparison:
+  seed: 20261002
+  total: 40
+  per_ticker:
+    COST: 5
+    TGT: 5
+    JPM: 5
+    BAC: 5
+    AAPL: 5
+    NVDA: 5
+    XOM: 5
+    PFE: 5
+  gaps: [1, 2]              # fiscal years between the two sides
+  dataset_version: comparison_candidates_v1
+  spot_check_n: 4           # PRD 11.1: 10%

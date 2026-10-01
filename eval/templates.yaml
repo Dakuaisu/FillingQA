@@ -33,3 +33,20 @@ forms:
     - {id: ins_figure, scope: corpus, text: "{company} {label} at {period}: what was the figure?"}
     - {id: ins_balance, scope: corpus, text: "What was the balance of {company}'s {label} on {date}?"}
     - {id: ins_filing, scope: filing, text: "According to its {filing}, what figure did {company} report for {label} as of {date}?"}
+
+# xbrl_auto comparison forms (TRADEOFFS, comparison items). {earlier} and {later}
+# are the two own-filing period labels. No form words a direction: the reference
+# answer's direction comes from the sign of the difference only.
+comparison_forms:
+  duration:
+    - {id: cmp_dur_compare, text: "How did {company}'s {label} for {later} compare with {earlier}?"}
+    - {id: cmp_dur_change, text: "By how much did {company}'s {label} change from {earlier} to {later}?"}
+    - {id: cmp_dur_both, text: "What did {company} report as its {label} for {earlier} and for {later}, and what is the difference?"}
+    - {id: cmp_dur_versus, text: "{company} {label}, {earlier} versus {later}: what are the two figures and the difference?"}
+    - {id: cmp_dur_diff, text: "What is the difference between {company}'s {label} for {later} and for {earlier}?"}
+  instant:
+    - {id: cmp_ins_compare, text: "How did {company}'s {label} at {later} compare with {earlier}?"}
+    - {id: cmp_ins_change, text: "By how much did {company}'s {label} change from {earlier} to {later}?"}
+    - {id: cmp_ins_both, text: "What did {company} report as its {label} at {earlier} and at {later}, and what is the difference?"}
+    - {id: cmp_ins_versus, text: "{company} {label}, {earlier} versus {later}: what are the two figures and the difference?"}
+    - {id: cmp_ins_diff, text: "What is the difference between {company}'s {label} at {later} and at {earlier}?"}

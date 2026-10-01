@@ -16,25 +16,16 @@ label. Reports, by group (kind, gap):
 
 from __future__ import annotations
 
-import re
 from collections import Counter, defaultdict
 
 from api.config import eval_sampler
 from api.db import connect
+from eval.generate.comparison import build_pairs, chunks, cooccurrence, shares_chunk, tokens
 from eval.generate.pool import build_pool, sample
 from eval.generate.xbrl_items import period_info
 from scripts.concept_coverage import classify_facts
 
 KINDS = ("annual", "quarter", "ytd")
-NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
-
-
-def chunks(k) -> set[str]:
-    return {c for _, cs in k.evidence for c in cs}
-
-
-def tokens(text: str) -> set[str]:
-    return {m.group(0).rstrip(",") for m in NUMBER.finditer(text)}
 
 
 def by_group(ps) -> dict[str, int]:
@@ -57,12 +48,7 @@ def main() -> None:
     dup = sum(1 for v in slots.values() if len(v) > 1)
     print(f"eligible keys: {len(pool.eligible)}; slots holding more than one key: {dup}")
 
-    pairs = []  # (kind, gap, earlier, later)
-    for (cik, item, kind, q, fy), ks in sorted(slots.items(), key=lambda s: str(s[0])):
-        for gap in (1, 2):
-            prev = slots.get((cik, item, kind, q, fy - gap))
-            if prev and len(ks) == 1 and len(prev) == 1:
-                pairs.append((kind, gap, prev[0], ks[0]))
+    pairs = [(p.kind, p.gap, p.earlier, p.later) for p in build_pairs(pool.eligible, [1, 2])]
     shared = lambda p: bool(chunks(p[2]) & chunks(p[3]))  # noqa: E731
     groups = Counter((kind, gap) for kind, gap, _, _ in pairs)
     single = Counter((kind, gap) for kind, gap, a, b in pairs if shared((kind, gap, a, b)))
@@ -121,13 +107,11 @@ def main() -> None:
             for tok in tokens(raw):
                 index[cik][tok].add(cid)
     co = []
-    for p in free:
-        a, b = p[2], p[3]
-        hits_a = set().union(*(index[a.cik].get(t, set()) for t in printed[a.key]))
-        hits_b = set().union(*(index[b.cik].get(t, set()) for t in printed[b.key]))
-        both = hits_a & hits_b
-        if both:
-            co.append((p, both))
+    for p in build_pairs(pool.eligible, [1, 2]):
+        if not shares_chunk(p) and p.earlier.key not in drawn and p.later.key not in drawn:
+            both = cooccurrence(p, printed, index)
+            if both:
+                co.append(((p.kind, p.gap, p.earlier, p.later), both))
     print(f"\nuntagged co-occurrence: pairs with a chunk printing both sides' values: {len(co)} "
           f"of {len(free)}; by group {by_group([p for p, _ in co])}")  # fmt: skip
     print(f"  chunks per such pair: {dict(sorted(Counter(len(c) for _, c in co).items()))}")

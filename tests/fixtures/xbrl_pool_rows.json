@@ -862,6 +862,231 @@
    ]
   },
   {
+   "fact_id": 3451,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:513.0:513.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3452,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "506000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3453,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "1007000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:513.0:513.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3454,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "250000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3455,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "258000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3456,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2025-11-01"
+   ],
+   "value": "408000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3457,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2026-01-31"
+   ],
+   "value": "408000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:513.0:513.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3458,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2026-02-01",
+    "2026-05-02"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 3459,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2026-02-01",
+    "2026-08-01"
+   ],
+   "value": "3000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
    "fact_id": 3608,
    "cik": "0000027419",
    "accession": "0000027419-26-000016",
@@ -2492,6 +2717,406 @@
    "filing_fiscal_quarter": 2,
    "gold": [
     "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14571,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2021-01-31",
+    "2022-01-29"
+   ],
+   "value": "7188000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:487.1:487.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14572,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-30",
+    "2022-10-29"
+   ],
+   "value": "2646000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14573,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "2646000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:487.1:487.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14574,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "2646000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:496.0:496.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14575,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2023-07-29"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14576,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14577,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14578,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:487.1:487.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14579,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:496.0:496.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14581,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2024-05-04"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14582,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "155000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14583,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "155000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14584,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "506000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14586,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "1007000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:496.0:496.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14588,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "250000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:50.0:50.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 14590,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "258000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:50.0:50.0"
    ],
    "bucket": "1-3",
    "exact_scales": [
@@ -6085,6 +6710,981 @@
    ]
   },
   {
+   "fact_id": 54242,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2021-01-01",
+    "2021-12-31"
+   ],
+   "value": "3.85",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:823.1:823.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54243,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-01-01",
+    "2022-10-02"
+   ],
+   "value": "4.6",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.1:49.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54244,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-07-04",
+    "2022-10-02"
+   ],
+   "value": "1.51",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.1:49.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54245,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "5.47",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:823.1:823.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54246,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "5.47",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:763.1:763.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54247,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000107",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-04-02"
+   ],
+   "value": "0.97",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-24-000107:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54248,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-07-02"
+   ],
+   "value": "1.38",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54249,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-04-03",
+    "2023-07-02"
+   ],
+   "value": "0.41",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54250,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-10-01"
+   ],
+   "value": "0.96",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.1:49.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54251,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-10-01"
+   ],
+   "value": "0.96",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.2:50.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54252,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-07-03",
+    "2023-10-01"
+   ],
+   "value": "-0.42",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.1:49.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54253,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-07-03",
+    "2023-10-01"
+   ],
+   "value": "-0.42",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.2:50.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54254,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "0.37",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:823.1:823.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54255,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "0.37",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:763.1:763.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54256,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "0.37",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:760.1:760.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54257,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000107",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "0.55",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-24-000107:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54258,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000114",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "0.55",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-25-000114:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54259,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "0.55",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54260,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "0.55",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54261,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "0.01",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54262,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "0.01",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54263,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-09-29"
+   ],
+   "value": "1.34",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.2:50.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54264,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-09-29"
+   ],
+   "value": "1.34",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54265,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-07-01",
+    "2024-09-29"
+   ],
+   "value": "0.78",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.2:50.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54266,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-07-01",
+    "2024-09-29"
+   ],
+   "value": "0.78",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54267,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-12-31"
+   ],
+   "value": "1.41",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:763.1:763.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54268,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-12-31"
+   ],
+   "value": "1.41",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:760.1:760.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54269,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000114",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-03-30"
+   ],
+   "value": "0.52",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-25-000114:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54270,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000054",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-03-30"
+   ],
+   "value": "0.52",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-26-000054:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54271,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-06-29"
+   ],
+   "value": "1.03",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54272,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-06-29"
+   ],
+   "value": "1.03",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.2:51.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54273,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-03-31",
+    "2025-06-29"
+   ],
+   "value": "0.51",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54274,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-03-31",
+    "2025-06-29"
+   ],
+   "value": "0.51",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.2:51.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54275,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-09-28"
+   ],
+   "value": "1.65",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54276,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-06-30",
+    "2025-09-28"
+   ],
+   "value": "0.62",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54277,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-12-31"
+   ],
+   "value": "1.36",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:760.1:760.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54278,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000054",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-01-01",
+    "2026-03-29"
+   ],
+   "value": "0.47",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-26-000054:50.1:50.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54279,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-01-01",
+    "2026-06-28"
+   ],
+   "value": "0.43",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.2:51.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
+   "fact_id": 54280,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-03-30",
+    "2026-06-28"
+   ],
+   "value": "-0.04",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.2:51.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    0
+   ]
+  },
+  {
    "fact_id": 55160,
    "cik": "0000078003",
    "accession": "0000078003-24-000039",
@@ -7066,6 +8666,206 @@
    "filing_fiscal_quarter": 2,
    "gold": [
     "0000078003-26-000095:51.0:51.0"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57296,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2021-01-01",
+    "2021-12-31"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:848.2:848.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57297,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-01",
+    "2022-10-02"
+   ],
+   "value": "2000000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:77.1:77.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57298,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "2000000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:848.2:848.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57299,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "2000000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:788.2:788.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57300,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-01",
+    "2023-10-01"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:77.1:77.1"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57301,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:848.2:848.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57302,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:788.2:788.2"
+   ],
+   "bucket": "1-3",
+   "exact_scales": [
+    6
+   ]
+  },
+  {
+   "fact_id": 57303,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "share_repurchases",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period": [
+    "2024-01-01",
+    "2024-12-31"
+   ],
+   "value": "0",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:788.2:788.2"
    ],
    "bucket": "1-3",
    "exact_scales": [

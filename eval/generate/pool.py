@@ -46,6 +46,14 @@ class PoolKey:
         return (self.ticker, self.line_item, self.own_form)
 
     @property
+    def sort_key(self) -> tuple:
+        return (self.cik, self.concept, self.period_start or "", self.period_end)
+
+    @property
+    def members(self) -> frozenset[tuple]:
+        return frozenset({self.key})
+
+    @property
     def gold_accessions(self) -> list[str]:
         return evidence_for(self)[1]
 
@@ -126,12 +134,17 @@ class Shortfall(Exception):
         )
 
 
-def sample(eligible: list[PoolKey], seed: int, total: int, per_ticker: dict[str, int]):
-    """Seeded draw: per ticker, round-robin over its strata in shuffled order."""
+def sample(eligible: list, seed: int, total: int, per_ticker: dict[str, int]):
+    """Seeded draw: per ticker, round-robin over its strata in shuffled order.
+
+    Candidates have `ticker`, `stratum`, `sort_key` and `members` (the period keys
+    they use); a candidate sharing a member with one already taken is skipped, so
+    no key is drawn twice.
+    """
     if sum(per_ticker.values()) != total:
         raise ValueError(f"per_ticker sums to {sum(per_ticker.values())}, total is {total}")
-    by_ticker: dict[str, dict[tuple, list[PoolKey]]] = defaultdict(lambda: defaultdict(list))
-    for k in sorted(eligible, key=lambda k: (k.key[0], k.key[1], k.key[2] or "", k.key[3])):
+    by_ticker: dict[str, dict[tuple, list]] = defaultdict(lambda: defaultdict(list))
+    for k in sorted(eligible, key=lambda k: k.sort_key):
         by_ticker[k.ticker][k.stratum].append(k)
     short = {
         t: (sum(len(v) for v in by_ticker[t].values()), n)
@@ -141,17 +154,27 @@ def sample(eligible: list[PoolKey], seed: int, total: int, per_ticker: dict[str,
     if short:
         raise Shortfall(short)
     rng = random.Random(seed)
-    draw: list[PoolKey] = []
+    draw: list = []
+    used: set[tuple] = set()
     for ticker in sorted(per_ticker):
         strata = [list(by_ticker[ticker][s]) for s in sorted(by_ticker[ticker])]
         for keys in strata:
             rng.shuffle(keys)
         rng.shuffle(strata)
-        taken: list[PoolKey] = []
+        taken: list = []
         while len(taken) < per_ticker[ticker]:
+            progressed = False
             for keys in strata:
-                if keys and len(taken) < per_ticker[ticker]:
-                    taken.append(keys.pop())
+                while keys and len(taken) < per_ticker[ticker]:
+                    k = keys.pop()
+                    if k.members & used:
+                        continue
+                    taken.append(k)
+                    used |= k.members
+                    progressed = True
+                    break
+            if not progressed:
+                raise Shortfall({ticker: (len(taken), per_ticker[ticker])})
         draw.extend(taken)
     return draw
 

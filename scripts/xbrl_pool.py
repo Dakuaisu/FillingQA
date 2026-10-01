@@ -40,7 +40,8 @@ FIXTURE_FIELDS = (
 FIXTURE_SLICE = {
     ("TGT", "cost_of_revenue"), ("TGT", "sga"), ("JPM", "net_income"),
     ("BAC", "total_assets"), ("PFE", "income_tax"), ("XOM", "eps_diluted"),
-    ("AAPL", "inventory"), ("COST", "income_tax"),
+    ("AAPL", "inventory"), ("COST", "income_tax"), ("PFE", "share_repurchases"),
+    ("TGT", "share_repurchases"), ("PFE", "eps_diluted"),
 }  # fmt: skip
 
 
