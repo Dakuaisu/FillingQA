@@ -85,3 +85,8 @@ embedding:
   max_seq_length: 512
   tokenizer_file: api/chunk/bge-base-en-v1.5.tokenizer.json
   tokenizer_sha256: d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66
+
+# PRD 14 Phase 2: "assert >=80% resolve". A floor on span-to-chunk resolution;
+# well below it means offsets did not survive parsing and Phase 1 needs fixing.
+span_resolution:
+  min_rate: 0.80

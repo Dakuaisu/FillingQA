@@ -891,3 +891,61 @@ F-54; `parts` = chunks from split tables; `partOverlap` must be 0):
 `>512` is 0 except TGT's 10-K: two units of its exhibit index (648 and 992
 tokens) that the sentence splitter cannot break (F-56). Every split table's parts
 tile it with no overlap. `make test`: 209 passed, 3 snapshots passed.
+
+## 2026-10-01 — Migration 0005, chunks written; Phase 2 step 2: span -> chunk resolution
+
+Chunker committed as `2a2addb`.
+
+`0005_chunks.sql`: `chunks` exactly as PRD 8 (nullable `embedding VECTOR(768)`,
+generated `tsv`, `chunks_meta`); HNSW and GIN deferred to step 4.
+`xbrl_spans.chunk_id TEXT REFERENCES chunks(chunk_id) ON DELETE SET NULL`.
+Applied; second `make migrate` printed `no pending migrations`.
+
+`python -m api.chunk.store` (one transaction per filing: delete, insert; refuses a
+stale parse):
+
+    chunker_version 40eaec61b7a0  parser_version f1090fb5f594
+    ticker accession              chunks prose table >512
+    AAPL   0000320193-25-000079      174   118    56    0
+    AAPL   0000320193-26-000006       69    41    28    0
+    AAPL   0000320193-26-000013       87    54    33    0
+    AAPL   0000320193-26-000020       86    52    34    0
+    COST   0000909832-25-000101      179   129    50    0
+    COST   0000909832-25-000169       81    51    30    0
+    COST   0000909832-26-000029       89    55    34    0
+    COST   0000909832-26-000051       90    56    34    0
+    TGT    0000027419-25-000126       83    45    38    0
+    TGT    0000027419-26-000016      214   147    67    2
+    TGT    0000027419-26-000022       72    39    33    0
+    TGT    0000027419-26-000042       77    42    35    0
+
+Second run identical; `resolve.py` excluded from the version hash and both
+re-run, giving the version above. DB: 1,301 chunks, 12 filings, 1 `chunker_version`,
+`max(token_count)` 992, 2 over 512 (F-56), `tsv` on all 1,301, 0 embeddings.
+
+`python -m api.chunk.resolve`:
+
+    ticker accession              spans preItem unique overlap splitPara unresInItem   rate inItems
+    AAPL   0000320193-25-000079     962       2    960       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000006     554       1    553       0         0           0  0.998   1.000
+    AAPL   0000320193-26-000013     750       1    749       0         0           0  0.999   1.000
+    AAPL   0000320193-26-000020     756       1    755       0         0           0  0.999   1.000
+    COST   0000909832-25-000101     818       2    814       2         0           0  0.998   1.000
+    COST   0000909832-25-000169     395       1    394       0         0           0  0.997   1.000
+    COST   0000909832-26-000029     571       1    570       0         0           0  0.998   1.000
+    COST   0000909832-26-000051     570       1    569       0         0           0  0.998   1.000
+    TGT    0000027419-25-000126     576       1    573       2         0           0  0.998   1.000
+    TGT    0000027419-26-000016     977       2    973       2         0           0  0.998   1.000
+    TGT    0000027419-26-000022     401       1    400       0         0           0  0.998   1.000
+    TGT    0000027419-26-000042     547       1    546       0         0           0  0.998   1.000
+    total spans 7877, resolved 7862 (0.998; 1.000 within Items), before first Item 15
+
+The 15 unresolved spans are all before Item 1, all `dei` cover facts --
+`EntityCommonStockSharesOutstanding` x12, `EntityPublicFloat` x3. 0 unresolved
+inside an Item. Spans landing in a split paragraph: 0. Check on stored rows: all
+7,862 resolved spans have their `raw_text` inside their chunk's `raw_text`; 7,278
+of them are in table chunks.
+
+Tests: `tests/unit/test_resolve.py` (categories on plain ranges; the AAPL 10-K
+fixture end to end: 962 spans, 2 before Item 1, 960 resolved, every one inside its
+chunk's text). `make test`: 212 passed, 3 snapshots passed.

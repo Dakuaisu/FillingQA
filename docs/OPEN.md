@@ -11,8 +11,8 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 30 |
-| RESOLVED | 27 |
+| OPEN | 29 |
+| RESOLVED | 28 |
 | **Total** | **57** |
 
 ---
@@ -72,7 +72,6 @@ carries the state.
 | F-24 | §15's prompt-injection fixture is synthetic corpus data, which CLAUDE.md rule 2 forbids | OPEN |
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
-| F-46 | Some `layout` tables carry prose content, not scaffolding: TGT's critical audit matters and cybersecurity-oversight tables, AAPL's audit-matter tables. Phase 2 must chunk layout tables as prose rather than drop them | OPEN |
 | F-55 | `page_hint` is not computed; `chunks.page_hint` is NULL. PRD 6.2 step 5, the 9 API response and the 10 source panel all carry it | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
 | F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
@@ -108,6 +107,7 @@ carries the state.
 | F-50 | Continuation tables with no header row of their own got the preceding table's caption scale: percentage-only tables read "in millions" | Caption window stops at the end of a preceding table; never inherit labels or scale from a neighbour. 8 percentage tables now unscaled, 4 untagged TGT ROIC tables lose a borrowed scale. Residual: 11 header-less data tables on the slice stay header-less -- the chunker must emit no column-label line for them, not an empty one. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-51 | A dash-only first data row was taken as a header row | A row whose cells right of the label column are all dashes is a body row. Header rows changed on exactly 1 of 404 data tables (AAPL 0000320193-26-000020 share repurchases) | 2026-10-01 |
 | F-53 | PRD 6.3's 500-800-token chunks (Appendix A: 700) exceed bge-base-en-v1.5's 512-token input and would be silently truncated; no tokenizer was installed | `target_tokens: 500` counted with the pinned model's own vendored tokenizer, header and special tokens included; `max_seq_length: 512` violations counted, never truncated. 12 filings: 0 over 512 except 2 in TGT's 10-K (F-56). Consequence: PRD 11.7's 800 and 1200-token chunk-size ablation points are impossible on bge-base (F-57). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-46 | Some `layout` tables carry prose (audit matters, cybersecurity oversight, executive officers), not scaffolding | Every layout table that is not page furniture chunks as prose; no length rule (cell lengths of TOCs, exhibit indexes and prose tables overlap). Verified: AAPL's uncertain-tax-positions audit matter is in a stored prose chunk (test). Furniture residual tracked as F-54 | 2026-10-01 |
 
 ---
 

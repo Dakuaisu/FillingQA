@@ -816,3 +816,25 @@ through `_cell_rows` and fragment merging, because empty HTML rows are dropped
 before `Table.body` is built and Block.rows cannot be indexed by body position.
 Sentence pieces of an oversized paragraph still share their block's offsets; step
 2 counts spans landing in them.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: span-to-chunk resolution (Phase 2 step 2)
+
+1. **A span resolves to a chunk whose `[char_start, char_end)` contains it; with
+   several candidates, the earliest chunk wins.** Table spans have one candidate
+   (split parts tile their table). Prose spans can have two -- overlap, or
+   sentence pieces sharing a block's offsets -- and both cases are counted. On the
+   slice: 6 overlap, 0 split-paragraph. *Rejected:* resolving to every candidate
+   (one `chunk_id` column cannot hold it, and Phase 3's gold set would double-count
+   the overlap region).
+2. **The PRD's 80% floor lives in `api/config.yaml` under `span_resolution:`**, not
+   in `chunking:`, so changing the floor does not change `chunker_version`.
+3. **Spans before the first Item are their own category** and stay unresolved:
+   on the slice, all 15 are `dei` cover-page facts (shares outstanding, public
+   float), which no chunk covers by chunker decision 1.
+
+`chunker_version` hashes `api/chunk/` code, the vendored tokenizer and the
+`chunking:` config; `store.py` and `resolve.py` are excluded the way
+`validate.py` is from `parser_version`. Chunking refuses a filing whose stored `parser_version` or
+`norm_path` text differs from a fresh parse.
