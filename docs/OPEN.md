@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 48 |
+| OPEN | 49 |
 | RESOLVED | 41 |
-| **Total** | **89** |
+| **Total** | **90** |
 
 ---
 
@@ -43,6 +43,7 @@ carries the state.
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried. Extended 2026-10-01: also blocks PRD 11.1 Stage 1 (LLM seeding of the 50 `table` and 40 `synthesis` items) and Stage 2's no-context filter ("is the question answerable without the chunk"), both model calls. `.env` still has no key; neither is stubbed | OPEN |
 | F-88 | The 90 `llm_seeded` items (PRD 11.1: 50 `table`, 40 `synthesis`) are not built. Decided 2026-10-01 (TRADEOFFS, LLM seeding): 6 per ticker + AAPL, XOM 7 for tables, 5 per ticker for synthesis; the 441 gold chunks excluded; proportional allocation within ticker by (form, item_code), 2x overdraw, one draw; key-free filters built and tested (`eval/generate/seeding.py`). Allocation at 1x/2x printed by `python -m scripts.seed_supply`; every ticker has MD&A slots. Open: the minimum prose length (proposed 40 body tokens), the draw, the runner. Generation is blocked by F-59 | OPEN |
 | F-89 | PRD 7.1's `synthesis` intent (summaries, top-10 lists, answers drawn from several chunks) has no eval item behind it: PRD 11.1 Stage 1 seeds `synthesis` items from one chunk each (TRADEOFFS, LLM seeding). No report may call the `synthesis` slice multi-chunk | OPEN |
+| F-90 | `attach_scale` takes the scale from `chunks.unit_scale`, but a caption's exception ("in millions, except per share data") survives in neither `unit_scale` nor the chunk header: 0 of 9,221 scaled table chunks have "except" in the header line, while 153 print "except ... per share" in their text (e.g. JPM Note 18, Earnings per share, `unit_scale = millions`). A seeded per-share answer from such a table would be scaled by 10^6 without a flag. Found before any draw; not fixed | OPEN |
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
 | F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
 | F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |

@@ -3726,3 +3726,8 @@ filters and review aids. They are tested in `tests/unit/test_seeding.py` (12
 tests) on 7 real chunks in `tests/fixtures/seed_chunks.json` (`python -m
 scripts.seed_supply --write-fixture`, stamped with the freeze's parser and
 chunker versions). `make test`: 294 passed; `make lint` clean.
+
+F-90, found while checking the scale rule (psql over `chunks`, table chunks with
+a non-NULL `unit_scale`): 153 of 9,221 contain "except ... per share" in their
+text, 0 have "except" in the header line; JPM's Note 18 Earnings per share table
+(0000019617-24-000326:1892.0:1892.0) has `unit_scale = millions`. Logged, not fixed.
