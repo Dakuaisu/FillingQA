@@ -851,3 +851,27 @@ class of false split as "Mr. Smith" already is, acting only inside paragraphs
 already over budget, so offsets are unaffected; it removed both over-limit chunks
 (TGT 10-K exhibit index, 648 and 992 tokens) and changed nothing outside that
 filing.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: embedding cache (Phase 2 step 3)
+
+**The content-hash cache is its own table, `embedding_cache` (migration 0006),
+keyed on `(content_hash, model, revision)`; `chunks.embedding` is filled from
+it.** `content_hash` is sha256 of `chunks.text`, header included -- exactly what
+is embedded. The cache outlives chunk rows, which `store.py` deletes and
+reinserts on every re-chunk, so an unchanged chunk is never re-encoded. Model and
+revision are in the key, so a vector from a different model can never be read
+back as current.
+
+*Rejected: carry embeddings over inside `store.py`* (keep the old row's vector
+when a re-chunked row has the same `content_hash`). It cannot tell a stale
+model's vector from a fresh one -- `chunks` records no model or revision -- and it
+would couple the chunk writer to the embedder.
+
+Also decided while building, inside the supervisor's spec: `embedding.dim: 768`
+and `embedding.batch_size: 64` live in `api/config.yaml` (Appendix A's keys), with
+a third pre-write check that the model's dimension equals `dim` -- the columns are
+`VECTOR(768)`. The model weights are not vendored: they come from the Hugging Face
+cache at the pinned revision (the tokenizer, which decides chunk sizes, is
+vendored and sha-checked).

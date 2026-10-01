@@ -9,6 +9,8 @@ dependencies = [
     "psycopg[binary]>=3.2",
     "PyYAML>=6.0",
     "tokenizers>=0.19",
+    "sentence-transformers==6.1.0",
+    "torch==2.14.1",
 ]
 
 [project.optional-dependencies]

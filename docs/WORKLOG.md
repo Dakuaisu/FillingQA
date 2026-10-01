@@ -1015,3 +1015,94 @@ Resolve table before and after is identical:
 `content_hash` diff by chunk_id: TGT 10-K 214 -> 217 chunks, 4 changed, 1
 removed, 4 added; the other 11 filings 0 changed, 0 removed, 0 added. `make test`:
 213 passed, 3 snapshots passed.
+
+## 2026-10-01 — F-54 measured (not fixed); Phase 2 step 3: embedding pipeline
+
+F-56 committed as `1f10f6a`.
+
+**F-54.** The block-level rule ("a leaf block made entirely of in-document
+anchors is navigation") was checked against the raw HTML before building it.
+TGT's nav tables per filing: 30 / 80 / 28 / 28; entirely anchors: 1 per filing;
+mixed (a plain-text section label such as "RISK FACTORS" beside the two links):
+29 / 79 / 27 / 27. AAPL and COST: none. The rule would reclassify one block per
+TGT filing and leave the residual, so the fix needs a block-model change (anchor
+ranges per block plus a rule for mixed blocks). Stopped there as instructed;
+F-54 rewritten to say exactly that, and now states it blocks the Phase 2 exit.
+
+**Dependencies.** `sentence-transformers==6.1.0` and `torch==2.14.1` pinned in
+`pyproject.toml` (installed with uv; also brought `transformers` 5.18.0, numpy,
+scipy, scikit-learn and others). `tokenizers` stays 0.23.2.
+
+**Migration 0006** `embedding_cache (content_hash, model, revision)` -> vector.
+Applied; second `make migrate` printed `no pending migrations`.
+
+**`api/index/embed.py`.** Loads the model named in config at the pinned revision.
+Before any write: model dimension == `embedding.dim`, `max_seq_length` ==
+`embedding.max_seq_length`, and the model's own tokenizer with truncation off
+reproduces every stored `token_count`; any chunk over the limit fails the run.
+Per filing: fill from the cache, encode the misses (normalized, batch 64, `text`
+with header, no instruction prefix), write them to the cache, fill again.
+
+Run 1 (wall time 47.8 s total on MPS):
+
+    model BAAI/bge-base-en-v1.5@a5beb1e3e68b device mps:0
+    checks: {'dim': 768, 'max_seq_length': 512, 'chunks_checked': 1304, 'token_count_mismatches': 0, 'over_max_seq_length': 0}
+    ticker accession              embedded cache skipped seconds
+    AAPL   0000320193-25-000079        174     0       0     6.8
+    AAPL   0000320193-26-000006         69     0       0     3.0
+    AAPL   0000320193-26-000013         87     0       0     2.8
+    AAPL   0000320193-26-000020         86     0       0     2.9
+    COST   0000909832-25-000101        179     0       0     5.9
+    COST   0000909832-25-000169         81     0       0     2.9
+    COST   0000909832-26-000029         89     0       0     3.1
+    COST   0000909832-26-000051         90     0       0     3.3
+    TGT    0000027419-25-000126         83     0       0     3.0
+    TGT    0000027419-26-000016        217     0       0     7.6
+    TGT    0000027419-26-000022         72     0       0     3.1
+    TGT    0000027419-26-000042         77     0       0     3.4
+    chunks with embedding IS NULL: 0
+
+Run 2, resume:
+
+    checks: {'dim': 768, 'max_seq_length': 512, 'chunks_checked': 1304, 'token_count_mismatches': 0, 'over_max_seq_length': 0}
+    ticker accession              embedded cache skipped seconds
+    AAPL   0000320193-25-000079          0     0     174     0.0
+    AAPL   0000320193-26-000006          0     0      69     0.0
+    AAPL   0000320193-26-000013          0     0      87     0.0
+    AAPL   0000320193-26-000020          0     0      86     0.0
+    COST   0000909832-25-000101          0     0     179     0.0
+    COST   0000909832-25-000169          0     0      81     0.0
+    COST   0000909832-26-000029          0     0      89     0.0
+    COST   0000909832-26-000051          0     0      90     0.0
+    TGT    0000027419-25-000126          0     0      83     0.0
+    TGT    0000027419-26-000016          0     0     217     0.0
+    TGT    0000027419-26-000022          0     0      72     0.0
+    TGT    0000027419-26-000042          0     0      77     0.0
+    chunks with embedding IS NULL: 0
+
+Then `python -m api.chunk.store` re-chunked every filing (delete + insert: 1,304
+of 1,304 rows with `embedding IS NULL`), and run 3:
+
+    checks: {'dim': 768, 'max_seq_length': 512, 'chunks_checked': 1304, 'token_count_mismatches': 0, 'over_max_seq_length': 0}
+    ticker accession              embedded cache skipped seconds
+    AAPL   0000320193-25-000079          0   174       0     0.0
+    AAPL   0000320193-26-000006          0    69       0     0.0
+    AAPL   0000320193-26-000013          0    87       0     0.0
+    AAPL   0000320193-26-000020          0    86       0     0.0
+    COST   0000909832-25-000101          0   179       0     0.0
+    COST   0000909832-25-000169          0    81       0     0.0
+    COST   0000909832-26-000029          0    89       0     0.0
+    COST   0000909832-26-000051          0    90       0     0.0
+    TGT    0000027419-25-000126          0    83       0     0.0
+    TGT    0000027419-26-000016          0   217       0     0.0
+    TGT    0000027419-26-000022          0    72       0     0.0
+    TGT    0000027419-26-000042          0    77       0     0.0
+    chunks with embedding IS NULL: 0
+
+The re-chunk nulled `xbrl_spans.chunk_id` (ON DELETE SET NULL); `resolve`
+re-run: 7,862 of 7,877, unchanged. Cache: 1,296 rows for 1,304 chunks -- 8 chunks
+share their exact text with another. All vector norms 1.000000. Stored vs fresh
+encode on 5 chunks: cosine 1.000000 each. No HNSW or GIN index yet (step 4).
+
+Tests: `tests/unit/test_embed.py` (5; stand-in model on the vendored tokenizer,
+no network). `make test`: 218 passed, 3 snapshots passed.

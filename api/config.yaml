@@ -83,6 +83,8 @@ embedding:
   model: BAAI/bge-base-en-v1.5
   revision: a5beb1e3e68b9ab74eb54cfd186867f64f240e1a
   max_seq_length: 512
+  dim: 768                 # chunks.embedding and embedding_cache are VECTOR(768)
+  batch_size: 64
   tokenizer_file: api/chunk/bge-base-en-v1.5.tokenizer.json
   tokenizer_sha256: d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66
 
