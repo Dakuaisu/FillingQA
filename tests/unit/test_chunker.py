@@ -7,13 +7,14 @@ tokenizer (F-53), the same counts the embedding model will see.
 
 from __future__ import annotations
 
+import collections
 import itertools
 import re
 from datetime import date
 
 import pytest
 
-from api.chunk.chunker import chunk_document, furniture_keys, split_sentences
+from api.chunk.chunker import _fit, chunk_document, furniture_keys, split_sentences
 from api.chunk.context import DocumentMeta
 from api.chunk.tokens import count_tokens, sequence_length
 from api.config import chunking, embedding
@@ -268,3 +269,45 @@ def test_running_headers_are_navigation_and_cross_references_are_not(tokenized):
         assert "See accompanying Notes to Consolidated Financial Statements." in prose
     else:
         assert stats.navigation_dropped == 0
+
+
+# ------------------------------------------------- F-67: never over the limit
+
+
+def test_layout_table_over_budget_splits_at_rows_with_its_header(tokenized):
+    """PRD 6.3 rule 1 for a layout table chunked as prose (F-46, F-67)."""
+    doc, meta, tables, chunks, stats = tokenized
+    if meta.accession != TGT_10K:
+        return
+    assert stats.layout_tables_split > 0
+    by_block = collections.defaultdict(list)
+    for c in chunks:
+        if c.chunk_type == "prose":
+            by_block[int(c.chunk_id.split(":")[1].split(".")[0])].append(c)
+    layout = {i for i, b in enumerate(doc.blocks) if b.kind == "table"} - {
+        doc.blocks.index(t.block) for t in tables if t.kind == "data"
+    }
+    split = [cs for i, cs in by_block.items() if i in layout and len({c.chunk_id for c in cs}) > 1]
+    assert split
+    for parts in split:
+        first_rows = {c.raw_text.splitlines()[0] for c in parts}
+        assert len(first_rows) == 1  # the header row repeated in every part
+
+
+def test_long_sentence_splits_at_clauses_never_truncated():
+    # BAC's forward-looking statements: one sentence of "; "-separated clauses.
+    sentence = "; ".join(
+        f"the risk number {n} related to interest rates and credit" for n in range(60)
+    )
+    pieces, windows = _fit([sentence], count_tokens, 120)
+    assert windows == 0
+    assert all(count_tokens(p) <= 120 for p in pieces)
+    assert " ".join(pieces).split() == sentence.split()
+
+
+def test_whitespace_windows_only_for_a_clause_still_over_budget():
+    clause = " ".join(f"word{n}" for n in range(400))  # no sentence or clause boundary
+    pieces, windows = _fit([clause], count_tokens, 100)
+    assert windows == len(pieces) > 1
+    assert all(count_tokens(p) <= 100 for p in pieces)
+    assert " ".join(pieces).split() == clause.split()

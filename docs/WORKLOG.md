@@ -2067,3 +2067,109 @@ Parsed 75 -> 84 (all JPM 10-Qs). JPM 10-Ks quarantined by the content check.
 Chunks: no previously chunked filing changed; 9 newly chunked; 18,779 chunks, 28
 over 512 (F-67). Resolve: 177,144 of 177,240 (0.999; 1.000 within Items).
 Snapshots 3 passed; `make test` 236 passed.
+
+## 2026-10-01 — F-67: split at rows, then clauses; embedding runs
+
+F-65/F-66 committed as `d8f85b1`.
+
+Over-512 chunks after F-65, classified by source block: 16 layout tables chunked
+as prose (rows 9-38, longest row 98 tokens), 12 paragraphs each a single
+over-budget sentence (BAC 9, XOM 3). See TRADEOFFS F-67.
+
+An interruption left the whitespace-window counter declared but not incremented;
+a summary run in that state printed `ws 0` from an unwritten field. Caught before
+use, wired, and re-run -- the 0 below is counted.
+
+Chunk summary, 84 parsed filings, totals:
+
+    before: prose 10181, table 8598, psplit 109, pieces 206, >512 28, partOverlap 0, max 990
+    after:  prose 10190, table 8598, psplit 73, pieces 146, ltsplit 36, ws 0, >512 0, partOverlap 0, max 500
+
+`content_hash` diff by filing (`chunker_version` abe01d8d9b7b -> 964f77f6f9cb):
+
+    accession              before  after changed removed added
+    0000019617-23-000524      784    784       1       1     1
+    0000019617-24-000326      647    647       1       1     1
+    0000019617-24-000453      730    730       1       1     1
+    0000019617-24-000611      731    731       1       1     1
+    0000027419-24-000032      197    197       3       5     5
+    0000027419-25-000018      208    209       4       6     7
+    0000027419-26-000016      217    218       3       6     7
+    0000034088-25-000024      100    101       1       1     2
+    0000034088-25-000042      119    120       1       1     2
+    0000034088-25-000061      119    120       1       1     2
+    0000070858-23-000272      482    482       1       3     3
+    0000070858-24-000156      406    406       1       3     3
+    0000070858-24-000208      467    467       1       3     3
+    0000070858-24-000280      467    467       1       3     3
+    0000070858-25-000200      403    403       1       1     1
+    0000070858-25-000268      459    460       1       1     2
+    0000070858-25-000405      454    455       1       3     4
+    0000070858-26-000249      399    400       1       1     2
+    0000070858-26-000394      449    449       1       2     2
+    0000078003-23-000115      219    219       2       5     5
+    0000078003-24-000107      184    184       2       4     4
+    0000078003-24-000166      213    215       2       4     6
+    0000078003-24-000191      210    212       1       7     9
+    0000078003-25-000114      173    173       2       4     4
+    0000078003-25-000138      203    203       2       6     6
+    0000078003-25-000150      210    209       1      11    10
+    0000078003-26-000095      201    200       0       3     2
+    0000909832-23-000042      179    179       1       1     1
+    0000909832-24-000049      184    184       1       1     1
+    0001045810-26-000021      253    253       1       1     1
+    0001628280-25-048859      718    717       0       3     2
+    0001628280-26-029344      641    641       1       1     1
+    0001628280-26-054343      713    713       1       1     1
+    filings with chunk changes: 33 of 84
+
+Attribution, every changed, added or removed chunk:
+
+    0000019617-23-000524: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0000019617-24-000326: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0000019617-24-000453: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0000019617-24-000611: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0000027419-24-000032: changed/added/removed 13, spanning a large layout table: 13, other: 0 []
+    0000027419-25-000018: changed/added/removed 17, spanning a large layout table: 16, other: 1 ['0000027419-25-000018:813.0:814.0']
+    0000027419-26-000016: changed/added/removed 16, spanning a large layout table: 15, other: 1 ['0000027419-26-000016:841.0:849.0']
+    0000034088-25-000024: changed/added/removed 4, spanning a large layout table: 0, other: 4 ['0000034088-25-000024:259.0:259.0', '0000034088-25-000024:259.1:260.0', '0000034088-25-000024:259.1:264.0', '0000034088-25-000024:263.0:264.0']
+    0000034088-25-000042: changed/added/removed 4, spanning a large layout table: 0, other: 4 ['0000034088-25-000042:317.0:317.0', '0000034088-25-000042:317.1:318.0', '0000034088-25-000042:317.1:322.0', '0000034088-25-000042:321.0:322.0']
+    0000034088-25-000061: changed/added/removed 4, spanning a large layout table: 0, other: 4 ['0000034088-25-000061:323.0:323.0', '0000034088-25-000061:323.1:324.0', '0000034088-25-000061:323.1:326.0', '0000034088-25-000061:325.0:326.0']
+    0000070858-23-000272: changed/added/removed 7, spanning a large layout table: 0, other: 7 ['0000070858-23-000272:54.0:54.0', '0000070858-23-000272:54.1:60.0', '0000070858-23-000272:56.0:61.0', '0000070858-23-000272:59.0:62.0']
+    0000070858-24-000156: changed/added/removed 7, spanning a large layout table: 0, other: 7 ['0000070858-24-000156:54.0:54.0', '0000070858-24-000156:54.1:60.0', '0000070858-24-000156:56.0:61.0', '0000070858-24-000156:59.0:62.0']
+    0000070858-24-000208: changed/added/removed 7, spanning a large layout table: 0, other: 7 ['0000070858-24-000208:54.0:54.0', '0000070858-24-000208:54.1:60.0', '0000070858-24-000208:56.0:61.0', '0000070858-24-000208:59.0:63.0']
+    0000070858-24-000280: changed/added/removed 7, spanning a large layout table: 0, other: 7 ['0000070858-24-000280:54.0:54.0', '0000070858-24-000280:54.1:60.0', '0000070858-24-000280:56.0:61.0', '0000070858-24-000280:59.0:63.0']
+    0000070858-25-000200: changed/added/removed 3, spanning a large layout table: 0, other: 3 ['0000070858-25-000200:54.0:54.0', '0000070858-25-000200:54.1:60.0', '0000070858-25-000200:56.0:60.0']
+    0000070858-25-000268: changed/added/removed 4, spanning a large layout table: 0, other: 4 ['0000070858-25-000268:54.0:54.0', '0000070858-25-000268:54.1:57.0', '0000070858-25-000268:56.0:60.0', '0000070858-25-000268:57.0:60.0']
+    0000070858-25-000405: changed/added/removed 8, spanning a large layout table: 0, other: 8 ['0000070858-25-000405:54.0:54.0', '0000070858-25-000405:54.1:57.0', '0000070858-25-000405:56.0:60.0', '0000070858-25-000405:57.0:61.0']
+    0000070858-26-000249: changed/added/removed 4, spanning a large layout table: 0, other: 4 ['0000070858-26-000249:54.0:54.0', '0000070858-26-000249:54.1:57.0', '0000070858-26-000249:56.0:60.0', '0000070858-26-000249:57.0:60.0']
+    0000070858-26-000394: changed/added/removed 5, spanning a large layout table: 0, other: 5 ['0000070858-26-000394:54.0:54.0', '0000070858-26-000394:54.1:57.0', '0000070858-26-000394:56.0:60.0', '0000070858-26-000394:57.0:61.0']
+    0000078003-23-000115: changed/added/removed 12, spanning a large layout table: 7, other: 5 ['0000078003-23-000115:658.0:662.0', '0000078003-23-000115:664.0:672.0', '0000078003-23-000115:667.0:672.0', '0000078003-23-000115:674.0:683.0']
+    0000078003-24-000107: changed/added/removed 10, spanning a large layout table: 8, other: 2 ['0000078003-24-000107:603.0:609.0', '0000078003-24-000107:608.0:609.0']
+    0000078003-24-000166: changed/added/removed 12, spanning a large layout table: 9, other: 3 ['0000078003-24-000166:652.0:653.0', '0000078003-24-000166:675.0:685.0', '0000078003-24-000166:680.0:688.0']
+    0000078003-24-000191: changed/added/removed 17, spanning a large layout table: 7, other: 10 ['0000078003-24-000191:653.0:655.0', '0000078003-24-000191:658.0:667.0', '0000078003-24-000191:661.0:671.0', '0000078003-24-000191:666.0:671.0']
+    0000078003-25-000114: changed/added/removed 10, spanning a large layout table: 7, other: 3 ['0000078003-25-000114:542.0:544.0', '0000078003-25-000114:560.0:565.0', '0000078003-25-000114:562.0:566.0']
+    0000078003-25-000138: changed/added/removed 14, spanning a large layout table: 8, other: 6 ['0000078003-25-000138:571.0:576.0', '0000078003-25-000138:574.0:576.0', '0000078003-25-000138:578.0:589.0', '0000078003-25-000138:579.0:589.0']
+    0000078003-25-000150: changed/added/removed 22, spanning a large layout table: 9, other: 13 ['0000078003-25-000150:597.0:603.0', '0000078003-25-000150:601.0:603.0', '0000078003-25-000150:605.0:610.0', '0000078003-25-000150:607.0:613.0']
+    0000078003-26-000095: changed/added/removed 5, spanning a large layout table: 3, other: 2 ['0000078003-26-000095:562.0:562.0', '0000078003-26-000095:564.0:569.0']
+    0000909832-23-000042: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0000909832-24-000049: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0001045810-26-000021: changed/added/removed 3, spanning a large layout table: 2, other: 1 ['0001045810-26-000021:1177.0:1182.0']
+    0001628280-25-048859: changed/added/removed 5, spanning a large layout table: 4, other: 1 ['0001628280-25-048859:1147.0:1149.0']
+    0001628280-26-029344: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    0001628280-26-054343: changed/added/removed 3, spanning a large layout table: 3, other: 0 []
+    chunk changes (changed+added+removed) across 33 filings: 244; with a split source in the chunk or earlier in its prose run: 232; unexplained: 12
+    with the prose run searched both ways: 244 of 244 explained; unexplained: []
+
+The six clean filings that moved (COST 10-K x2, TGT 10-K x3, NVDA FY2026 10-K)
+each contain layout tables over the prose budget that were sentence-split before
+and are row-split now; the chunks around them in the same prose run re-pack.
+
+`python -m api.index.embed` (9 min 25 s, MPS):
+
+    checks: {'dim': 768, 'max_seq_length': 512, 'chunks_checked': 18788, 'token_count_mismatches': 0, 'over_max_seq_length': 0}
+    embedded 17494, from cache 1294, skipped 0
+    chunks with embedding IS NULL: 0
+
+Resolve: 177,144 of 177,240 (0.999; 1.000 within Items), unchanged. `make test`:
+241 passed, 3 snapshots passed.

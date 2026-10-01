@@ -1065,3 +1065,26 @@ Part III. Rows with page numbers and no link contribute nothing (F-55).
 rows link to the in-body stubs, and the stubs name the Annual Report pages
 holding the content with no link. That is the stop condition: no page mechanism
 (F-55). The three 10-Ks stay quarantined by the content check (F-66).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-67, splitting units over the token budget
+
+Never raise 512, never truncate. Measured first: of the 28 chunks over 512 after
+F-65, 16 were layout tables chunked as prose (PFE's pipeline tables, NVDA's
+exhibit index; longest row 98 tokens) and 12 were ordinary paragraphs that are a
+single over-budget sentence (BAC's forward-looking-statements sentence, 617-656
+tokens of "; "-separated clauses; XOM's "These include ..." risk sentence).
+
+1. **Layout tables (as specified):** a layout table over the prose budget splits
+   at row boundaries, its first row repeated at the head of every part; parts
+   take offsets from their rows and tile the table (PRD 6.3 rule 1).
+2. **Over-budget sentences (beyond the spec, so flagged):** split at clause
+   boundaries ("; "), and only a clause still over budget into whitespace
+   windows -- the same last resort the spec allows for a single row. Without it
+   the 12 paragraphs would either exceed 512 (the embedder refuses the run) or
+   be truncated (ruled out).
+
+Whitespace windows used across the 84 parsed filings: 0. *Rejected:* raising
+`max_seq_length` (the model's input), truncation, and leaving the 12 for a later
+fix (embedding cannot run until every chunk fits).

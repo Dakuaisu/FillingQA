@@ -80,6 +80,8 @@ class ChunkStats:
     headerless_tables: int = 0
     paragraphs_split: int = 0
     paragraph_pieces: int = 0  # sentence groups the split paragraphs became
+    layout_tables_split: int = 0  # layout tables over budget, split at row boundaries
+    whitespace_splits: int = 0  # single sentences or rows still over budget (F-67)
     furniture_samples: Counter = field(default_factory=Counter)
     navigation_dropped: int = 0
     nav_samples: Counter = field(default_factory=Counter)
@@ -232,13 +234,22 @@ def chunk_document(
             # A paragraph over budget is split at sentence boundaries, never inside
             # a sentence. Sentence pieces share the block's offsets: sub-block
             # offsets would need a second coordinate system.
-            stats.paragraphs_split += 1
-            pieces = _group(split_sentences(text), count_tokens, budget)
-            stats.paragraph_pieces += len(pieces)
-            for n, piece in enumerate(pieces):
-                run.append(
+            if table is not None:
+                # A layout table kept as prose (F-46) still has rows: split at row
+                # boundaries, its first row repeated as the header (PRD 6.3 rule
+                # 1, F-67). Each part covers its own rows' offsets.
+                stats.layout_tables_split += 1
+                units = _layout_row_units(doc, i, count_tokens, budget, stats)
+            else:
+                stats.paragraphs_split += 1
+                fitted, windows = _fit(split_sentences(text), count_tokens, budget)
+                stats.whitespace_splits += windows
+                units = [
                     _Unit(i, n, piece, block.char_start, block.char_end, count_tokens(piece))
-                )
+                    for n, piece in enumerate(_group(fitted, count_tokens, budget))
+                ]
+                stats.paragraph_pieces += len(units)
+            run.extend(units)
         chunks.extend(_pack_prose(run, header, meta, section, budget, overlap))
 
     for chunk in chunks:
@@ -246,6 +257,87 @@ def chunk_document(
         if max_seq_length is not None and chunk.token_count > max_seq_length:
             stats.over_max_seq_length += 1
     return chunks, stats
+
+
+def _clauses(sentence: str) -> list[str]:
+    return [c for c in re.split(r"(?<=;)\s+", sentence) if c.strip()]
+
+
+def _words(text: str, count_tokens: CountTokens, budget: int) -> list[str]:
+    """Last resort: whitespace windows. Never mid-word, never a truncation."""
+    out, current = [], []
+    for word in text.split():
+        if current and count_tokens(" ".join([*current, word])) > budget:
+            out.append(" ".join(current))
+            current = [word]
+        else:
+            current.append(word)
+    if current:
+        out.append(" ".join(current))
+    return out
+
+
+def _fit(pieces: list[str], count_tokens: CountTokens, budget: int) -> tuple[list[str], int]:
+    """Pieces no longer than `budget`: a sentence over budget is split at clause
+    boundaries ("; "), and a clause still over it into whitespace windows (F-67).
+    BAC's forward-looking-statements sentence runs to 650 tokens of "; "-separated
+    clauses; truncating it, or embedding it whole past 512, are both ruled out.
+    Returns the pieces and how many whitespace windows had to be made."""
+    out: list[str] = []
+    windows = 0
+    for piece in pieces:
+        if count_tokens(piece) <= budget:
+            out.append(piece)
+            continue
+        for clause in _clauses(piece):
+            if count_tokens(clause) <= budget:
+                out.append(clause)
+            else:
+                split = _words(clause, count_tokens, budget)
+                windows += len(split)
+                out.extend(split)
+    return out, windows
+
+
+def _layout_row_units(
+    doc: ExtractedDocument, index: int, count_tokens: CountTokens, budget: int, stats: ChunkStats
+) -> list[_Unit]:
+    """A layout table over budget as row groups, each repeating the first row.
+
+    Row offsets come from the cells, so the parts tile the table: the first part
+    starts at the table, the last ends at it, and the boundaries between are row
+    boundaries -- no span inside the table resolves to two parts.
+    """
+    block = doc.blocks[index]
+    rows = []
+    for row in block.rows or []:
+        cells = [(s, e) for s, e, *_ in row if doc.text[s:e].strip()]
+        if cells:
+            rows.append((" ".join(" ".join(doc.text[s:e].split()) for s, e in cells),
+                         min(s for s, _ in cells), max(e for _, e in cells)))  # fmt: skip
+    header, rest = rows[0][0], rows[1:]
+    groups: list[list[tuple[str, int, int]]] = []
+    current: list[tuple[str, int, int]] = []
+    for row in rest:
+        candidate = "\n".join([header] + [r[0] for r in [*current, row]])
+        if current and count_tokens(candidate) > budget:
+            groups.append(current)
+            current = [row]
+        else:
+            current.append(row)
+    if current:
+        groups.append(current)
+
+    units = []
+    for n, group in enumerate(groups):
+        text = "\n".join([header] + [r[0] for r in group])
+        start = block.char_start if n == 0 else group[0][1]
+        end = block.char_end if n == len(groups) - 1 else group[-1][2]
+        parts, windows = _fit([text], count_tokens, budget)
+        stats.whitespace_splits += windows
+        for m, part in enumerate(parts):
+            units.append(_Unit(index, n * 1000 + m, part, start, end, count_tokens(part)))
+    return units
 
 
 def _group(sentences: list[str], count_tokens: CountTokens, target: int) -> list[str]:
