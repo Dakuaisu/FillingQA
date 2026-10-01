@@ -3480,3 +3480,74 @@ FY2024, -$28 million) is "(28)" on the income statement and "The tax benefit of
 $28 million" in prose.
 
 `make test`: 282 passed; `make lint` clean; both `--verify` runs: 0 mismatches.
+
+## 2026-10-01 — LLM seeding supply measured (no model call, no item)
+
+`python -m scripts.seed_supply`:
+
+    parsed accessions: 90; chunks: 22354; candidate files: ['comparison_candidates.jsonl', 'xbrl_numeric_candidates.jsonl']
+    
+    chunks by (chunk_type, form): count, gold for a candidate, tokens
+      prose 10-K   4067 gold    2  tokens min 28, p25 224, median 385, p75 459, max 500
+      prose 10-Q   8422 gold    0  tokens min 34, p25 153, median 327, p75 446, max 500
+      table 10-K   1973 gold   94  tokens min 72, p25 209, median 331, p75 475, max 500
+      table 10-Q   7892 gold  345  tokens min 113, p25 252, median 395, p75 481, max 500
+      gold chunks by candidate file: {'comparison_candidates': 162, 'xbrl_numeric_candidates': 326}; distinct 441
+    
+    strata (ticker, form_type, item_code, chunk_type): 270 non-empty
+      table: 55 strata; chunks per stratum min 1, p25 8, median 25, p75 174, max 2101
+      prose: 215 strata; chunks per stratum min 2, p25 3, median 9, p75 18, max 1546
+    
+    chunks by (form, item_code) x chunk_type: table (gold) / prose (gold)
+      10-K II.8   table  1198 ( 79)   prose  1436 (  2)
+      10-K II.7   table   470 (  0)   prose   837 (  0)
+      10-K I.1A   table     0 (  0)   prose   709 (  0)
+      10-K IV.15  table   228 ( 15)   prose   298 (  0)
+      10-K I.1    table    26 (  0)   prose   354 (  0)
+      10-K II.5   table    33 (  0)   prose    39 (  0)
+      10-K I.1C   table     0 (  0)   prose    40 (  0)
+      10-K II.9A  table     0 (  0)   prose    40 (  0)
+      10-K I.2    table    12 (  0)   prose    24 (  0)
+      10-K II.7A  table     3 (  0)   prose    30 (  0)
+      10-K I.3    table     0 (  0)   prose    30 (  0)
+      10-K IV.16  table     0 (  0)   prose    28 (  0)
+      10-K III.10 table     0 (  0)   prose    25 (  0)
+      10-K III.12 table     3 (  0)   prose    21 (  0)
+      10-K II.9B  table     0 (  0)   prose    21 (  0)
+      10-K II.6   table     0 (  0)   prose    18 (  0)
+      10-K II.9   table     0 (  0)   prose    18 (  0)
+      10-K III.11 table     0 (  0)   prose    18 (  0)
+      10-K III.13 table     0 (  0)   prose    18 (  0)
+      10-K III.14 table     0 (  0)   prose    18 (  0)
+      10-K I.1B   table     0 (  0)   prose    15 (  0)
+      10-K II.9C  table     0 (  0)   prose    15 (  0)
+      10-K I.4    table     0 (  0)   prose    15 (  0)
+      10-Q I.1    table  5075 (344)   prose  4042 (  0)
+      10-Q I.2    table  2725 (  1)   prose  3468 (  0)
+      10-Q II.1A  table     0 (  0)   prose   273 (  0)
+      10-Q II.2   table    68 (  0)   prose   136 (  0)
+      10-Q II.6   table    24 (  0)   prose   110 (  0)
+      10-Q II.1   table     0 (  0)   prose    93 (  0)
+      10-Q II.5   table     0 (  0)   prose    82 (  0)
+      10-Q I.3    table     0 (  0)   prose    72 (  0)
+      10-Q I.4    table     0 (  0)   prose    72 (  0)
+      10-Q II.3   table     0 (  0)   prose    36 (  0)
+      10-Q II.4   table     0 (  0)   prose    36 (  0)
+      10-Q I.7A   table     0 (  0)   prose     2 (  0)
+    
+    per ticker: table (10-K / 10-Q) and prose (10-K / 10-Q); not gold for any candidate
+      AAPL  table   173 /   270 (free 158 / 223)   prose   356 /   396 (free 356 / 396)
+      XOM   table     0 /   476 (free 0 / 434)   prose     0 /   463 (free 0 / 463)
+      BAC   table   901 /  2151 (free 886 / 2091)   prose  1291 /  1838 (free 1291 / 1838)
+      PFE   table   366 /   674 (free 346 / 645)   prose  1008 /  1101 (free 1006 / 1101)
+      TGT   table   197 /   309 (free 183 / 268)   prose   427 /   354 (free 427 / 354)
+      JPM   table     0 /  3315 (free 0 / 3256)   prose     0 /  2992 (free 0 / 2992)
+      COST  table   154 /   283 (free 139 / 247)   prose   388 /   480 (free 388 / 480)
+      NVDA  table   182 /   414 (free 167 / 383)   prose   597 /   798 (free 597 / 798)
+
+The candidates' gold sits almost entirely in statement tables (10-Q I.1 344,
+10-K II.8 79, 10-K IV.15 15). MD&A tables (10-K II.7 470, 10-Q I.2 2,725) and all
+prose but 2 chunks are untouched. JPM and BAC hold 6,367 of the 9,865 table
+chunks. JPM and XOM have no 10-K chunks (F-66, F-70). F-59 extended to Stage 1
+and the no-context filter and moved under Blocking Phase 3; F-88 records the 90
+`llm_seeded` items.

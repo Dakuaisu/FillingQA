@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 46 |
+| OPEN | 47 |
 | RESOLVED | 41 |
-| **Total** | **87** |
+| **Total** | **88** |
 
 ---
 
@@ -28,7 +28,6 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
 
 ## Owner review (quarantined at the freeze)
 
@@ -41,6 +40,8 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
+| F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried. Extended 2026-10-01: also blocks PRD 11.1 Stage 1 (LLM seeding of the 50 `table` and 40 `synthesis` items) and Stage 2's no-context filter ("is the question answerable without the chunk"), both model calls. `.env` still has no key; neither is stubbed | OPEN |
+| F-88 | The 90 `llm_seeded` items (PRD 11.1: 50 `table` from table chunks, 40 `synthesis` from prose chunks) are not built. Supply measured (`python -m scripts.seed_supply`: 9,865 table and 12,489 prose chunks in the frozen 90; 439 table and 2 prose chunks already gold for a candidate); sampler, prompt and Stage 2 filters proposed, not decided. Generation is blocked by F-59 | OPEN |
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
 | F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
 | F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |
