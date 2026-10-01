@@ -4751,3 +4751,17 @@ Tests: `test_comparison_rules` and the good-item case. `make test`: 397 passed.
       adversarial: 0 items, PRD 11.1 asks for 20
       natural_phrasing: 0 items, PRD 11.1 asks for 30
       comparison: 0 items, PRD 11.1 asks for 20
+
+## 2026-10-01 — Review CLI (no decisions)
+
+`eval/review.py`, `scripts/review.py` (worksheet / import / status),
+`eval/review/decisions_v1.jsonl` (empty), worksheets for the three sheets (44, 9
+and 83 items). Tests: `tests/unit/test_review.py` (4). `make test`: 401 passed;
+`make lint`: 112 files already formatted.
+
+`python -m scripts.review status`:
+
+    decisions on file: 0 (eval/review/decisions_v1.jsonl)
+      comparison_candidates.jsonl: 40 items; {'undecided': 40}
+      llm_seeded_candidates.jsonl: 83 items; {'undecided': 83}
+      xbrl_numeric_candidates.jsonl: 160 items; {'undecided': 160}

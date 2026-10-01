@@ -1,0 +1,42 @@
+sheet: comparison_spot_check.md
+instructions: For each item set decision to accept, reject or edit_evidence. For edit_evidence
+  give evidence_sets as a list of lists of chunk ids (every alternative sufficient
+  set, F-84). Leave decision null to skip. Import with `python -m scripts.review import
+  <this file> --reviewer <name>`.
+decisions:
+- item_id: cmp_0003
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0015
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0036
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0040
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0006
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0009
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0010
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0016
+  decision: null
+  evidence_sets: null
+  note: ''
+- item_id: cmp_0018
+  decision: null
+  evidence_sets: null
+  note: ''
