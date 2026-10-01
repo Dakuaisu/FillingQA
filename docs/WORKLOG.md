@@ -4524,3 +4524,8 @@ lint` clean.
     slot fill (first survivors in draw order): candidates 83 ({'table': 47, 'synthesis': 36} of slots {'table': 50, 'synthesis': 40}); reserve 53
       short strata (7): synthesis AAPL 10-K I.1A 0/1, synthesis COST 10-K I.1A 0/1, synthesis NVDA 10-K I.1A 0/1, synthesis TGT 10-K I.1A 0/1, table AAPL 10-K II.8 1/2, table AAPL 10-K IV.15 0/1, table AAPL 10-Q I.2 0/1
     no candidates or reserve file written: the llm_seeded item fields are not decided
+
+Correction to F-88 as first written in this commit's predecessor: none of the 4
+near-duplicate drops is against an existing candidate. All four partners are
+seeded chunks, and the highest cosine of a seeded question to an existing
+candidate is 0.909, below 0.92.
