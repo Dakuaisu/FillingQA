@@ -141,3 +141,21 @@ def hybrid_top_k(
     w = cfg["weights"]
     fused = rrf_fuse([[r.chunk_id for r in dense], sp], [w["dense"], w["sparse"]], cfg["rrf_k"])
     return fused[: max(cfg["k_dense"], cfg["k_sparse"])]
+
+
+_DENSE_FILTERED = """
+    SELECT chunk_id FROM chunks WHERE chunk_id = ANY(%(ids)s)
+     ORDER BY embedding <=> %(q)s::vector, chunk_id LIMIT %(k)s
+"""
+
+
+def dense_filtered_top_k(
+    conn: psycopg.Connection, query_vector: str, k: int, allowed: set[str]
+) -> list[str]:
+    """Exact nearest neighbours among the allowed chunks (sequential scan): a
+    filtered HNSW scan can return fewer than k rows, and a filtered slice is small."""
+    with conn.transaction():
+        conn.execute("SET LOCAL enable_indexscan = off")
+        conn.execute("SET LOCAL enable_bitmapscan = off")
+        rows = conn.execute(_DENSE_FILTERED, {"ids": sorted(allowed), "q": query_vector, "k": k})
+        return [r[0] for r in rows.fetchall()]

@@ -66,8 +66,11 @@ class Index:
         if key != self.key:
             raise StaleIndexError("BM25 index was built over another chunk set; rebuild it")
 
-    def search(self, question: str, k: int) -> list[tuple[str, float]]:
-        """Top-k (chunk_id, score), score descending, then chunk_id; zero scores dropped."""
+    def search(
+        self, question: str, k: int, allowed: set[str] | None = None
+    ) -> list[tuple[str, float]]:
+        """Top-k (chunk_id, score), score descending, then chunk_id; zero scores dropped.
+        `allowed` restricts the result to those chunk ids (metadata filters)."""
         scores: dict[int, float] = {}
         for term in set(tokenize(question)):
             plist = self.postings.get(term)
@@ -77,6 +80,8 @@ class Index:
             for doc, tf in plist:
                 norm = self.k1 * (1 - self.b + self.b * self.lengths[doc] / self.avgdl)
                 scores[doc] = scores.get(doc, 0.0) + w * tf * (self.k1 + 1) / (tf + norm)
+        if allowed is not None:
+            scores = {d: v for d, v in scores.items() if self.ids[d] in allowed}
         ranked = sorted(scores.items(), key=lambda x: (-x[1], self.ids[x[0]]))
         return [(self.ids[d], s) for d, s in ranked[:k] if s > 0]
 
