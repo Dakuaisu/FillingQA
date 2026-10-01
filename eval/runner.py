@@ -91,6 +91,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "k": k,
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
+        "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "columns": {
             **{
                 s: _slice(items, rs, k, nli_threshold) if rs else None
@@ -142,14 +143,22 @@ def format_report(report: dict) -> str:
              f"generation model requested: {report['model_requested']}"]  # fmt: skip
     if report["development_run"]:
         lines.append(DEV_BANNER)
-    lines.append(f"served models: {report['served_models']}  retrieval measured on: "
+    lines.append(f"pipeline: {report.get('pipeline', 'config_1_dense')}  served models: "
+                 f"{report['served_models']}  retrieval measured on: "
                  f"{report['retrieval_stage']} (F-13)")  # fmt: skip
+    if report.get("rerank"):
+        rr = report["rerank"]
+        lines.append(f"rerank: {rr['model']}@{rr['revision'][:12]} on {rr['device']}; top-n "
+                     f"{rr['top_n']} ({rr['top_n_synthesis']} synthesis); floor "
+                     f"{rr['score_floor']} ({rr['floor_calibration']}); timeout "
+                     f"{rr['timeout_ms']} ms; fell back to RRF order: "
+                     f"{report.get('rerank_fell_back', 0)}")  # fmt: skip
     rows = [("items", lambda c: c["items"]), ("retrieval items", lambda c: c["retrieval_n"]),
             (f"Sufficiency@{k}", lambda c: c[f"sufficiency@{k}"]),
             (f"Recall@{k}", lambda c: c[f"recall@{k}"]),
             (f"Precision@{k}", lambda c: c[f"precision@{k}"]), ("MRR", lambda c: c["mrr"]),
             (f"nDCG@{k}", lambda c: c[f"ndcg@{k}"]),
-            (f"Sufficiency@{k} post-rerank", lambda c: c[f"sufficiency@{k}_post_rerank"]),
+            ("Sufficiency post-rerank (top-n)", lambda c: c[f"sufficiency@{k}_post_rerank"]),
             ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
             ("  numeric items scored", lambda c: c["numeric"]["n"]),
             ("  excluded unit_scale_unknown",

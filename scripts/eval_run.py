@@ -5,15 +5,17 @@ python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
 
+The pipeline is `eval_run.pipeline` (PRD 11.6 configs: config_1_dense,
+config_3_hybrid, config_4_rerank; eval/pipeline.py). Each result stores the
+pre-rerank list (`retrieved`), the reranked list, and what the generator received.
+
 Each item's result is appended to eval/runs/<run_id>.results.jsonl as it
 completes, so a killed process loses at most the item in flight; --resume skips
 recorded items after checking the backend, datasets and freeze versions still
 match the run's meta. A call with no usable response halts the run (exit 1) with
 the error in <run_id>.errors.jsonl and the item left unrecorded. When no item is
 pending, the report is written to <run_id>.json and printed. Refuses a baseline
-path for a development backend before any work (F-59). Retrieval: the Phase 2
-dense top-k at `eval_run.retrieve_depth` (the pre-rerank list, F-13); the
-generator gets `baseline.top_k` of it.
+path for a development backend before any work (F-59).
 """
 
 from __future__ import annotations
@@ -29,7 +31,7 @@ from datetime import UTC, datetime
 
 import yaml
 
-from api.config import REPO_ROOT, baseline, eval_run, generation, retrieval
+from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval
 from api.generate import claude_cli
 from api.generate.generator import generate, refuse_dev_baseline
 from eval.runner import build_report, format_report
@@ -57,28 +59,102 @@ def read_jsonl(path) -> list[dict]:
     return [json.loads(x) for x in path.read_text(encoding="utf-8").split("\n") if x]
 
 
+STAGES = {
+    "config_1_dense": "dense top-k (no fusion, no rerank)",
+    "config_3_hybrid": "BM25 + dense, RRF-fused pre-rerank list (no rerank)",
+    "config_4_rerank": "BM25 + dense, RRF-fused pre-rerank list; reranked list stored beside it",
+}
+
+
 def current_meta(gen: dict, run_cfg: dict) -> dict:
+    """Everything a resumed run must match. Names the PRD 11.6 pipeline (F-61)."""
+    from api.db import connect
+    from api.query.rerank import machine
+    from api.query.retrieve import load_bm25
+
     freeze = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
-    return {
+    pipeline, rc = run_cfg["pipeline"], retrieval()
+    meta = {
         "backend": gen["backend"], "model_requested": gen[TIER], "tier": TIER,
-        "retrieval_stage": "dense top-k (Phase 2 baseline; no fusion, no rerank)",
+        "pipeline": pipeline, "retrieval_stage": STAGES[pipeline],
         "retrieve_depth": run_cfg["retrieve_depth"], "generator_top_k": baseline()["top_k"],
-        "hnsw_ef_search": retrieval()["hnsw_ef_search"], "k_dense": retrieval()["k_dense"],
+        "hnsw_ef_search": rc["hnsw_ef_search"], "k_dense": rc["k_dense"],
         "parser_version": freeze["parser_version"], "chunker_version": freeze["chunker_version"],
         "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
     }  # fmt: skip
+    if pipeline != "config_1_dense":
+        meta["retrieval"] = rc
+        if rc["sparse"]["backend"] == "bm25":
+            with connect() as conn:
+                meta["bm25_index_key"] = load_bm25(conn, rc["sparse"])[0].key
+    if pipeline == "config_4_rerank":
+        meta["rerank"] = rerank()
+        meta["machine"] = machine()
+    return meta
 
 
-def answer_one(conn, model, emb, it: dict, gen: dict, depth: int) -> dict:
-    from api.query.retrieve import dense_top_k, embed_question
+class Context:
+    """Everything loaded once per run: embedder, BM25 index, reranker."""
+
+    def __init__(self, conn, pipeline: str):
+        from api.index.embed import load_model
+        from api.query.rerank import load_reranker
+        from api.query.retrieve import load_bm25
+
+        self.model, self.emb = load_model()
+        self.rcfg, self.rrcfg = retrieval(), rerank()
+        self.index = self.key = self.reranker = None
+        if pipeline != "config_1_dense" and self.rcfg["sparse"]["backend"] == "bm25":
+            self.index, _ = load_bm25(conn, self.rcfg["sparse"])
+            self.key = self.index.key
+        if pipeline == "config_4_rerank":
+            self.reranker = load_reranker(self.rrcfg)
+
+
+def texts_for(conn, ids: list[str]) -> dict[str, str]:
+    rows = conn.execute("SELECT chunk_id, text FROM chunks WHERE chunk_id = ANY(%s)", (ids,))
+    return dict(rows.fetchall())
+
+
+def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
+    from api.query.rerank import rerank as rerank_one
+    from api.query.retrieve import Retrieved, dense_top_k, embed_question, rrf_fuse, sparse
+    from eval.pipeline import context_for
 
     t0 = time.monotonic()
-    ef = retrieval()["hnsw_ef_search"]
-    chunks, _ = dense_top_k(conn, embed_question(model, emb, it["question"]), depth, ef)
+    pipeline, rc = run_cfg["pipeline"], ctx.rcfg
+    vec = embed_question(ctx.model, ctx.emb, it["question"])
+    depth = run_cfg["retrieve_depth"] if pipeline == "config_1_dense" else rc["k_dense"]
+    dense = [r.chunk_id for r in dense_top_k(conn, vec, depth, rc["hnsw_ef_search"])[0]]
+    fused, reranked, secs = [], None, None
+    if pipeline != "config_1_dense":
+        sp = sparse(conn, it["question"], rc["k_sparse"], rc["sparse"], ctx.index)
+        w = rc["weights"]
+        fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])
+        fused = fused[: max(rc["k_dense"], rc["k_sparse"])]
+    if pipeline == "config_4_rerank":
+        texts = texts_for(conn, fused)
+        reranked, secs = rerank_one(ctx.reranker, it["question"], [(c, texts[c]) for c in fused])
+    c = context_for(pipeline, dense=dense, fused=fused, reranked=reranked, rerank_seconds=secs,
+                    rerank_cfg=ctx.rrcfg, question_type=it["question_type"],
+                    baseline_top_k=baseline()["top_k"])  # fmt: skip
+    record = {
+        "item_id": it["item_id"], "pipeline": pipeline, "retrieved": c["retrieved"],
+        "retrieved_post_rerank": c["retrieved_post_rerank"],
+        "generator_input": c["generator_input"], "rerank_seconds": secs,
+        "rerank_fell_back": c["fell_back"], "claims_pre": [], "claims_post": [],
+    }  # fmt: skip
+    if c["abstain"]:  # every chunk below the score floor: no generator call (PRD 7.3)
+        return {**record, "answer": {"text": "", "claims": [], "abstained": True},
+                "verdict": "ABSTAIN", "model_served": None, "backend": gen["backend"],
+                "usage": None, "latency_s": round(time.monotonic() - t0, 2),
+                "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
+    texts = texts_for(conn, c["generator_input"])
+    chunks = [Retrieved(cid, 0.0, texts[cid]) for cid in c["generator_input"]]
     last = None
     for _ in range(TRANSPORT_RETRIES):
         try:
-            a = generate(it["question"], chunks[: baseline()["top_k"]], gen, TIER)
+            a = generate(it["question"], chunks, gen, TIER)
             break
         except claude_cli.TransportError as e:
             last = e
@@ -87,10 +163,7 @@ def answer_one(conn, model, emb, it: dict, gen: dict, depth: int) -> dict:
     if gen[TIER] not in a.model.split(","):
         raise claude_cli.CliError(f"served {a.model}, requested {gen[TIER]}")
     return {
-        "item_id": it["item_id"], "retrieved": [c.chunk_id for c in chunks],
-        "retrieved_post_rerank": None,
-        "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
-        "claims_pre": [], "claims_post": [],
+        **record, "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,

@@ -343,6 +343,7 @@ eval_run:
   k: 10
   retrieve_depth: 10
   runs_dir: eval/runs
+  pipeline: config_4_rerank   # config_1_dense | config_3_hybrid | config_4_rerank (PRD 11.6, F-61)
   nli_threshold: null        # PRD 7.5: calibrated in Phase 4; scoring claims refuses while null
 
 # Hand-written items (PRD 11.1, Stage 4; authored by the owner). Counts per PRD 11.1.
