@@ -92,3 +92,19 @@ embedding:
 # well below it means offsets did not survive parsing and Phase 1 needs fixing.
 span_resolution:
   min_rate: 0.80
+
+# Phase 2 naive baseline (PRD 14): dense-only, top-k, unstructured generation.
+# `top_k` is the number of chunks handed to the generator -- not
+# `retrieval.k_dense`, which is the hybrid candidate pool of Phase 4.
+baseline:
+  top_k: 5
+
+# PRD Appendix A. Provider Anthropic (PRD 12's CI config carries only
+# ANTHROPIC_API_KEY). The baseline uses tier_small.
+generation:
+  tier_small: claude-haiku-4-5-20251001
+  tier_large: claude-sonnet-5-5
+  # No `temperature`: the Messages API at anthropic==1.11.0 takes no sampling
+  # parameters, so Appendix A's 0.0 cannot be applied (F-60). A key here that
+  # is not sent would claim a setting the run does not have.
+  max_tokens: 1024        # the Messages API requires a cap; not in Appendix A

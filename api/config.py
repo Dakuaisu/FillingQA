@@ -62,6 +62,16 @@ def chunking(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["chunking"]
 
 
+def baseline(path: Path = CORPUS_FILE) -> dict:
+    """The `baseline:` block of api/config.yaml (PRD 14, Phase 2)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["baseline"]
+
+
+def generation(path: Path = CORPUS_FILE) -> dict:
+    """The `generation:` block of api/config.yaml (PRD Appendix A)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["generation"]
+
+
 def span_resolution(path: Path = CORPUS_FILE) -> dict:
     """The `span_resolution:` block of api/config.yaml (PRD 14, Phase 2)."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["span_resolution"]

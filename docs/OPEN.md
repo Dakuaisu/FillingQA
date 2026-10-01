@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 28 |
+| OPEN | 31 |
 | RESOLVED | 30 |
-| **Total** | **58** |
+| **Total** | **61** |
 
 ---
 
@@ -28,12 +28,14 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do | OPEN |
+| F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
 
 ## Blocking Phase 3
 
 | ID | Finding | Status |
 |---|---|---|
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | OPEN |
+| F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
 | F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
@@ -50,6 +52,7 @@ carries the state.
 | F-10 | `supported()` omits `citation_valid` for figure claims, contradicting §7.5's own table | OPEN |
 | F-12 | `eval.compare` compares a fast/CI-corpus run against a full-corpus baseline | OPEN |
 | F-16 | Chunk-size and context-header ablations need a full re-embed; budget is ~10× short | OPEN |
+| F-61 | PRD 14 calls the Phase 2 baseline "Config 1", but PRD 11.6's Config 1 is fixed 512-char chunks and Config 2 is the structure-aware chunking built in Phase 2 step 1. The baseline runs on the only chunk set that exists. Either the 11.6 chart needs a separate fixed-512-char chunk set and its embeddings, or Configs 1 and 2 collapse | OPEN |
 | F-21 | `PARTIAL` verdict has no place in the abstention 2×2 or the API examples | OPEN |
 | F-57 | PRD 11.7's chunk-size ablation lists 256 / 512 / 800 / 1200 tokens; 800 and 1200 exceed bge-base-en-v1.5's 512-token input (F-53), so those points would embed truncated chunks | OPEN |
 

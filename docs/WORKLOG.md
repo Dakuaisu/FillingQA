@@ -1328,3 +1328,41 @@ vector is elided in the plan):
 Both query shapes are served by their index; 20 of 20 sampled chunks return
 themselves at cosine distance 0 through chunks_hnsw, and none of the 20 has an
 identical-text twin.
+
+## 2026-10-01 — Phase 2 step 5: naive baseline (retrieval verified; generation owner-blocked)
+
+Step 4 committed as `e96fbf8` (docstring row count dropped).
+
+`api/query/retrieve.py` (question embedding + dense top-k), `api/generate/
+generator.py` (plain prompt, free text, `usage` kept), `api/query/baseline.py`
+(CLI). Config: `baseline.top_k: 5`; `generation:` tier_small / tier_large /
+max_tokens. `anthropic==1.11.0` pinned. `.env.example` gains `ANTHROPIC_API_KEY=`.
+
+Key: `.env` has no `*_API_KEY` line. The shell environment did carry an
+`ANTHROPIC_API_KEY`, so the exit call was attempted once. First attempt failed
+before any request: `Messages.create() got an unexpected keyword argument
+'temperature'` -- the pinned SDK has no sampling parameters (F-60); temperature
+removed. Second attempt reached the API and was rejected:
+
+    anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CfbYkv3BmDectYSJKfAn6'}
+
+Not retried. Generation is unexercised (F-59, owner-blocked).
+
+Retrieval half, real output of
+`python -m api.query.baseline --retrieve-only "What were Apple's total net sales in fiscal 2025?"`
+(cosine distance, chunk id, context header):
+
+    question: What were Apple's total net sales in fiscal 2025?
+    plan: ->  Index Scan using chunks_hnsw on chunks  (cost=840.74..5450.06 rows=1303 width=375)
+      0.1934  0000320193-25-000079:305.0:318.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 7: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.1970  0000320193-25-000079:456.0:456.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 8: Financial Statements and Supplementary Data]
+      0.1974  0000320193-26-000013:181.0:193.0  [Apple Inc. (AAPL) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.2021  0000320193-25-000079:291.0:303.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 7: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.2057  0000320193-25-000079:595.0:595.0  [Apple Inc. (AAPL) | 10-K | FY2025 | Item 8: Financial Statements and Supplementary Data]
+
+Served by chunks_hnsw. All five are AAPL; four from the FY2025 10-K's Items 7 and
+8, one from the Q2 FY2026 10-Q's MD&A.
+
+Tests: `tests/unit/test_generator.py` (prompt carries every chunk id; missing key
+fails at the call site with a clear message; tiers read from config). `make test`:
+225 passed, 3 snapshots passed.

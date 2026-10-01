@@ -904,3 +904,52 @@ Known false positive, measured, not tuned: TGT 10-K Item 15's list item
 "•Notes to Consolidated Financial Statements" links to the Notes, shares that
 target set with seven "See accompanying Notes..." sentences, and has no full stop
 (F-58).
+
+**Addendum (F-58).** Block 826 stays dropped through the freeze. The alternative
+was a one-block rule -- a length cap, a phrase list or a bullet check, the shapes
+rejected above -- tested on 3 filers but run on 8 in Phase 5; the block is a
+hyperlink label with no figure and no span. Reopening it after the freeze
+re-resolves every gold chunk id, so it is a before-Phase-3 decision for the owner.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Phase 2 baseline
+
+Scope is PRD 14's line and nothing from PRD 7.4: dense-only, top 5, unstructured
+generation.
+
+1. **No query instruction prefix.** The question is embedded with the same
+   pinned model and revision as the chunks, exactly as they were: normalized,
+   nothing prepended. PRD is silent. *Alternative:* the bge model card's prefix
+   on queries only ("Represent this sentence for searching relevant passages: ").
+   A query longer than `max_seq_length` fails, as a chunk would.
+2. **`baseline.top_k: 5` in config**, separate from `retrieval.k_dense` (the
+   Phase 4 hybrid candidate pool).
+3. **Through chunks_hnsw.** On a corpus this small the planner picks an exact
+   sequential scan; the retrieval transaction sets `enable_seqscan = off` (LOCAL)
+   so the baseline uses the index it specifies, and the CLI prints the plan node.
+4. **Generation: Anthropic, `tier_small` = `claude-haiku-4-5-20251001`**, with
+   `tier_large` = `claude-sonnet-5-5` as given. PRD 12's CI carries only
+   `ANTHROPIC_API_KEY`. `anthropic==1.11.0` pinned; it replaces nothing.
+   `max_tokens: 1024` added to `generation:` -- the Messages API requires a cap
+   and Appendix A has none. `usage` token counts are kept with every answer.
+5. **No `temperature`.** The pinned SDK's `Messages.create` takes no sampling
+   parameters at all, so Appendix A's 0.0 cannot be sent; the key is not kept in
+   config, where it would claim a setting the run does not have (F-60).
+
+**F-60 resolution path (supervisor, 2026-10-01).** Generation without a
+temperature parameter is accepted: there is nothing else to send. The
+determinism requirement in PRD 7.4, 11.4 and Appendix A is replaced by
+measurement. In Phase 3 the runner records `response.model` per item and repeats
+the fast subset at least 3 times on identical config, reporting the spread of
+every gated metric beside its value. Kappa is computed on one fixed run against
+the owner's hand labels. The spread is reported noise, never a reason to widen a
+threshold; a threshold sitting inside it is an F-07 input. The PRD text stays as
+is; this entry carries the override.
+
+*Rejected:*
+- *Downgrade the SDK to one that still has `temperature`.* The client is
+  generated from the API surface, so an older one sends a parameter the API no
+  longer defines -- the same "claims a setting the run does not have" removed
+  from config.
+- *A seed policy.* There is no seed parameter; a policy would be fiction.
