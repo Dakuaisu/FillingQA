@@ -58,19 +58,29 @@ def child_env(env: dict[str, str]) -> dict[str, str]:
 
 
 def parse_output(stdout: str) -> CliResult:
+    """The CLI's JSON result; any malformed document raises CliError, never KeyError."""
     try:
         doc = json.loads(stdout)
     except json.JSONDecodeError as e:
         raise CliError(f"claude CLI output is not JSON: {e.msg}") from e
+    if not isinstance(doc, dict):
+        raise CliError(f"claude CLI output is a JSON {type(doc).__name__}, not an object")
     if doc.get("is_error"):
         raise CliError(f"claude CLI error ({doc.get('subtype')}): {doc.get('result')!r}")
-    served = sorted(doc.get("modelUsage") or {})
-    if not served:
+    model_usage = doc.get("modelUsage")
+    if not isinstance(model_usage, dict) or not model_usage:
         raise CliError("claude CLI result has no modelUsage")
-    usage = doc["usage"]
+    usage = doc.get("usage")
+    if not isinstance(usage, dict) or not all(
+        isinstance(usage.get(k), int) for k in ("input_tokens", "output_tokens")
+    ):
+        raise CliError("claude CLI result has no usable usage")
+    text = doc.get("result")
+    if not isinstance(text, str) or not text.strip():
+        raise CliError(f"claude CLI result is missing or empty: {text!r}")
     return CliResult(
-        text=doc["result"],
-        model=",".join(served),
+        text=text,
+        model=",".join(sorted(model_usage)),
         input_tokens=usage["input_tokens"],
         output_tokens=usage["output_tokens"],
         cache_read_tokens=usage.get("cache_read_input_tokens", 0),

@@ -3,7 +3,7 @@
 python -m scripts.seed_run                  # status only, no call
 python -m scripts.seed_run --verify CHUNK   # one call on a chunk outside the draw and gold
 python -m scripts.seed_run --show-verify    # outcome of the verify records, offline
-python -m scripts.seed_run --run            # every pending drawn chunk, in draw order
+python -m scripts.seed_run --run [--limit N] # pending drawn chunks, in draw order
 
 Each response is appended to eval/seeding/raw_v1.jsonl as it arrives, so a crash
 resumes; a chunk with a recorded response is never called again. A call that
@@ -92,6 +92,11 @@ def call(chunk: dict, meta: dict, cfg: dict, template: str, shas: dict, cli_vers
         except claude_cli.CliError as e:
             attempts.append({"called_at": called_at, "kind": "cli", "error": str(e)})
             raise CallFailed(attempts) from e
+        if cfg[TIER] not in a.model.split(","):
+            attempts.append({"called_at": called_at, "kind": "wrong_model",
+                             "error": f"served {a.model}, requested {cfg[TIER]}",
+                             "response": a.text})  # fmt: skip
+            raise CallFailed(attempts)
         return {**meta, "called_at": called_at, "backend": cfg["backend"],
                 "model_requested": cfg[TIER], "model_served": a.model, **shas,
                 "cli_version": cli_version,
@@ -125,10 +130,22 @@ def run_pending(todo: list[dict], chunk_of, call_one, raw: Path, errors: Path) -
     return 0
 
 
+def limited(todo: list[dict], argv: list[str]) -> list[dict]:
+    """`--limit N`: the first N pending chunks in draw order."""
+    if "--limit" not in argv:
+        return todo
+    n = int(argv[argv.index("--limit") + 1])
+    if n < 1:
+        raise SystemExit("--limit must be at least 1")
+    return todo[:n]
+
+
 def read_jsonl(path: Path) -> list[dict]:
+    """One record per "\n"-terminated line. Not splitlines(): it also splits on
+    U+2028, U+2029 and U+0085, which ensure_ascii=False leaves raw in a response."""
     if not path.exists():
         return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").split("\n") if line]
 
 
 def append(path: Path, record: dict) -> list[str]:
@@ -166,8 +183,8 @@ def main() -> None:
     if "--verify" in sys.argv:
         cid = sys.argv[sys.argv.index("--verify") + 1]
         gold = {
-            c for p in CANDIDATES for line in p.read_text(encoding="utf-8").splitlines()
-            for s in json.loads(line)["gold_evidence_sets"] for c in s
+            c for p in CANDIDATES for item in read_jsonl(p)
+            for s in item["gold_evidence_sets"] for c in s
         }  # fmt: skip
         assert cid not in {d["chunk_id"] for d in order}, f"{cid} is in the draw"
         assert cid not in gold, f"{cid} is gold for a candidate"
@@ -191,8 +208,7 @@ def main() -> None:
 
     if "--show-verify" in sys.argv:
         with connect() as conn:
-            for line in VERIFY.read_text(encoding="utf-8").splitlines():
-                rec = json.loads(line)
+            for rec in read_jsonl(VERIFY):
                 chunk = load_chunk(conn, rec["chunk_id"])
                 print(f"{rec['chunk_id']} (offline, from {VERIFY.relative_to(REPO_ROOT)}):")
                 print(json.dumps(outcome(rec, chunk, rec["kind"], company_names), indent=1,
@@ -201,6 +217,7 @@ def main() -> None:
 
     if "--run" not in sys.argv:
         return
+    todo = limited(todo, sys.argv)
     with connect() as conn:
         code = run_pending(
             todo,

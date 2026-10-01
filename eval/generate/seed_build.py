@@ -40,14 +40,33 @@ def stratum_of(d: dict) -> tuple[str, str, str, str]:
     return (d["kind"], d["ticker"], d["form"], d["item_code"])
 
 
-def key_free(raw: list[dict], draw: dict, chunks: dict[str, dict], company_names: list[str]):
+def check_raw(raw: list[dict], draw: dict, draw_sha: str) -> dict[str, dict]:
+    """chunk_id -> record, after refusing anything the rebuild must not mix in."""
+    drawn = {d["chunk_id"] for d in drawn_order(draw)}
+    by_chunk: dict[str, dict] = {}
+    for r in raw:
+        cid = r["chunk_id"]
+        if r.get("verification"):
+            raise ValueError(f"a verification record is in the raw file: {cid}")
+        if cid in by_chunk:
+            raise ValueError(f"duplicate raw record for {cid}")
+        if cid not in drawn:
+            raise ValueError(f"raw record for {cid}, which is not in the draw")
+        if r.get("draw_sha256") != draw_sha:
+            raise ValueError(f"{cid}: draw_sha256 {r.get('draw_sha256')} is not the draw file's")
+        if r.get("prompt_sha256") != draw["prompt_sha256"]:
+            raise ValueError(f"{cid}: prompt_sha256 differs from the draw manifest's")
+        by_chunk[cid] = r
+    return by_chunk
+
+
+def key_free(raw: list[dict], draw: dict, draw_sha: str, chunks: dict[str, dict],
+             company_names: list[str]):  # fmt: skip
     """Key-free stage over every drawn chunk with a recorded response.
 
     Returns (survivors per stratum in draw order, dropped records, counts).
     """
-    if any(r.get("verification") for r in raw):
-        raise ValueError("a verification record is in the raw file")
-    by_chunk = {r["chunk_id"]: r for r in raw}
+    by_chunk = check_raw(raw, draw, draw_sha)
     survivors: dict[tuple, list[dict]] = defaultdict(list)
     dropped, counts = [], Counter()
     for index, d in enumerate(drawn_order(draw)):
@@ -117,3 +136,24 @@ def fill_slots(survivors: dict, draw: dict) -> tuple[dict, dict, dict]:
                 if len(got) < s["slots_1x"]:
                     short[key] = (len(got), s["slots_1x"])
     return candidates, reserve, short
+
+
+def stratum_table(draw: dict, survivors: dict, raw: list[dict]) -> list[tuple]:
+    """Every slotted stratum: (key, survivors, slots_1x, drawn, pending)."""
+    have = {r["chunk_id"] for r in raw}
+    rows = []
+    for kind, k in draw["kinds"].items():
+        for ticker, strata in k["per_ticker"].items():
+            for s in strata:
+                key = (kind, ticker, s["form"], s["item_code"])
+                pend = sum(1 for c in s["drawn"] if c not in have)
+                rows.append(
+                    (key, len(survivors.get(key, [])), s["slots_1x"], len(s["drawn"]), pend)
+                )
+    return rows
+
+
+def redacted_responses(raw: list[dict]) -> list[str]:
+    """Records whose response was redacted: a redacted quote fails quote_verbatim,
+    which must not be read as a filter drop."""
+    return [r["chunk_id"] for r in raw if "response" in r.get("scrubbed_fields", [])]

@@ -4137,3 +4137,13 @@ lint`: 88 files already formatted.
     no survivors: no candidates or reserve to write
 
 No drawn chunk has been called.
+
+## 2026-10-01 — Seeding: pre-run fixes (served model, malformed result, JSONL, rebuild integrity, --limit)
+
+`claude_cli.parse_output` raises `CliError` on a non-object document, missing or
+non-integer usage, or a missing, non-string or empty result; `call` halts on a
+served model other than `tier_large` (kind `wrong_model`, text kept); `read_jsonl`
+splits on "\n" only (the candidates and verify readers use it too); the rebuild
+refuses duplicates, undrawn chunks and stale shas and prints every slotted
+stratum, `model_served` and redacted responses; `--limit N` on `--run`. Tests
+added for each. `make test`: 334 passed; `make lint`: 88 files already formatted.

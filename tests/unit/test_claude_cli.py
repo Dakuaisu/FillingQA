@@ -48,3 +48,18 @@ def test_is_error_raises():
         parse_output("Invalid API key")
     with pytest.raises(CliError, match="modelUsage"):
         parse_output(json.dumps({**json.loads(RAW), "modelUsage": {}}))
+
+
+@pytest.mark.parametrize(
+    ("change", "match"),
+    [(lambda d: [d], "not an object"),
+     (lambda d: {k: v for k, v in d.items() if k != "usage"}, "usage"),
+     (lambda d: {**d, "usage": {"input_tokens": "1", "output_tokens": 2}}, "usage"),
+     (lambda d: {k: v for k, v in d.items() if k != "result"}, "missing or empty"),
+     (lambda d: {**d, "result": 7}, "missing or empty"),
+     (lambda d: {**d, "result": "  "}, "missing or empty")],
+)  # fmt: skip
+def test_malformed_results_raise_cli_error(change, match):
+    # The recorded response, each time with one part made malformed.
+    with pytest.raises(CliError, match=match):
+        parse_output(json.dumps(change(json.loads(RAW))))

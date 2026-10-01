@@ -1867,3 +1867,39 @@ owner. Amends "the seeding runner".
 - *A circuit breaker that still spends one chunk per incident:* each incident
   costs a chunk with no third draw to replace it.
 - *Rebuild after the run:* the code could be fitted to the output.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding run protocol
+
+Decided by the supervisor before any drawn call; recorded for the owner.
+
+- **Wrong model halts.** If the requested `tier_large` model is not among the
+  `modelUsage` keys, the attempt (kind `wrong_model`, response text kept) goes to
+  `call_errors_v1.jsonl` and the chunk stays pending. *Alternatives:*
+  record-and-drop (a silent fallback drains the draw); record-and-keep (mixed
+  models under one manifest).
+- **Malformed or empty result halts.** A non-object document, a missing or
+  non-integer `usage`, or a missing, non-string or empty `result` raises
+  `CliError` (previously the first three escaped as `KeyError` and never reached
+  the errors file, and an empty `result` entered raw and spent the chunk).
+  *Alternative:* a parse drop (an outage would spend chunks).
+- **JSONL reads split on "\n" only**: `splitlines()` also splits on U+2028,
+  U+2029 and U+0085, which `ensure_ascii=False` writes raw.
+- **The rebuild refuses** a duplicate `chunk_id`, a record for a chunk not in the
+  draw, or a `draw_sha256`/`prompt_sha256` that differs from the draw file; it
+  prints every slotted stratum (survivors / slots / drawn / pending),
+  `model_served` counts, and the records whose response was redacted (a redacted
+  quote fails `quote_verbatim` and must not read as a filter drop).
+- **Prose verification outside the draw** before any drawn call: the lowest
+  `chunk_id` in the largest synthesis stratum (by `eligible`) in neither
+  `draw_v2` nor gold. *Alternative:* first exercising prose on drawn chunks.
+- **Batches**: one process at a time, `--run --limit 5`, then `seed_build`, then
+  batches of 20; `raw_v1.jsonl` and `call_errors_v1.jsonl` committed after each
+  batch, never edited. From the first drawn call: no edits to the prompt,
+  `seeding.py`, `outcome`, `seed_build.py` or `eval_seeding`. Exit 1: read the
+  error record first; for a usage or rate limit wait for the reset (each re-run
+  spends one of the chunk's 3 halts). Exit 2, a traceback, or a raw response that
+  is CLI/API error text: stop and report. Filter drops, parse drops of real model
+  output and shortfalls are findings, not stop conditions. *Alternative:* one
+  180-call process (a tool kill loses a call unrecorded).
