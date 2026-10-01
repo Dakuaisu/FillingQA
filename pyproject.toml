@@ -44,6 +44,7 @@ select = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-q --strict-markers"
 markers = [
     "network: hits SEC EDGAR; deselected by default in CI",

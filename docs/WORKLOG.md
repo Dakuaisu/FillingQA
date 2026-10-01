@@ -138,3 +138,26 @@ TGT's 10-K has 250 table blocks against AAPL's 54 (F-35).
 below it hold 22 OPEN and 17 RESOLVED, which matches F-39 as the highest ID with
 no gaps. Counts corrected to 22 / 17 / 39. The register is the state file; a
 stale header is the kind of number that gets quoted back later.
+
+## 2026-10-01 — Environment moved to macOS
+
+The Windows/WSL machine is gone. New environment: macOS, fresh clone, Docker
+Desktop 29.7.2, Postgres in the `pgvector/pgvector:pg18` container (PG 18.6,
+vector 0.8.6). System `python3` is 3.9 and cannot run the project; the venv is
+`.venv`, Python 3.12.14, created with `uv`.
+
+`make db-up` failed first time: pg18 images reject a volume at
+`/var/lib/postgresql/data` (F-40). The compose file had never actually been run.
+Mount moved to `/var/lib/postgresql`; the empty volume from the failed attempt
+was reused.
+
+`make migrate` applied 0001--0003; a second run printed `no pending migrations`.
+
+`make test` failed collection with `No module named 'tests'` -- bare `pytest`
+does not add the repo root to `sys.path`, `python -m pytest` does (F-41). CI
+uses bare `pytest`, so CI had the same latent failure. Fixed with
+`pythonpath = ["."]`. After the fix: 59 passed, 3 snapshots passed against the
+committed baselines, no snapshot files modified.
+
+`data/` does not survive the move (gitignored), so the dev slice must be
+re-ingested from EDGAR.

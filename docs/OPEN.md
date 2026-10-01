@@ -7,13 +7,13 @@ this file is the complete record rather than a to-do list.
 `docs/TRADEOFFS.md` carries the reasoning behind each resolution. This file
 carries the state.
 
-**Last updated: 2026-08-30**
+**Last updated: 2026-10-01**
 
 | Status | Count |
 |---|---|
 | OPEN | 22 |
-| RESOLVED | 17 |
-| **Total** | **39** |
+| RESOLVED | 19 |
+| **Total** | **41** |
 
 ---
 
@@ -80,6 +80,8 @@ carries the state.
 | F-36 | `.gitignore` corrupted with UTF-16 bytes by an external tool | Rewritten as clean UTF-8; `.bridge/` kept as a normal entry | 2026-08-30 |
 | F-37 | `ixbrl.py` and `sections.py` had no tests and no committed fixtures | 3 real filings gzipped under `tests/fixtures/filings/` (0.31 MB) with a manifest; hash re-checked on every load; snapshot baseline hand-verified against printed figures before blessing | 2026-08-30 |
 | F-38 | PRD §6.2's `Document` dataclass has no `full_text`, yet its validation calls `alpha_char_ratio(doc.full_text)` | Normalized text persisted to `data/norm/{accession}.txt` with sha256 | 2026-08-30 |
+| F-40 | `docker-compose.yml` mounted the volume at `/var/lib/postgresql/data`; `pgvector/pgvector:pg18` refuses to start with that layout. Never caught because the old machine never ran Docker | Mount moved to `/var/lib/postgresql`. Verified: container healthy, PG 18.6, vector 0.8.6 | 2026-10-01 |
+| F-41 | `make test` and CI run bare `pytest`, which does not put the repo root on `sys.path`, so `from tests.conftest import ...` fails collection. Only `python -m pytest` worked | `pythonpath = ["."]` in `[tool.pytest.ini_options]`. Verified: `make test` 59 passed, 3 snapshots passed | 2026-10-01 |
 
 ---
 
