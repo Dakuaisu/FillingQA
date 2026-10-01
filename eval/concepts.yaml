@@ -1,0 +1,47 @@
+# CURATED_CONCEPTS (PRD 6.5.3, F-15): the line items xbrl_auto items may ask about.
+#
+# 26 line items, 28 tags. Each line item has its PRD-named or supplement tag; two
+# also have a variant -- the tag some filers use for that same line. A filer
+# uses the variant only if it has no fact under the named tag in the frozen
+# corpus (api/corpus_freeze.yaml), so no line item ever has two answers for one
+# filing and period. scripts/concept_coverage.py reads this file and reports
+# which tag each filer resolves to.
+#
+# Selection, as applied (TRADEOFFS, Phase 3 step 1):
+# - named: all 19 PRD 6.5.3 concepts, regardless of how many filers tag them.
+# - bank_supplement: PRD 6.5.3's own criterion, lines an analyst asks about,
+#   chosen among concepts both JPM and BAC tag in nearly every frozen filing.
+# - variants: only where a filer tags the named line under another tag.
+# No retrieval result was consulted.
+
+line_items:
+  - {id: revenue, group: named, tag: "us-gaap:Revenues",
+     variant: "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax"}
+  - {id: cost_of_revenue, group: named, tag: "us-gaap:CostOfRevenue",
+     variant: "us-gaap:CostOfGoodsAndServicesSold"}
+  - {id: gross_profit, group: named, tag: "us-gaap:GrossProfit"}
+  - {id: operating_income, group: named, tag: "us-gaap:OperatingIncomeLoss"}
+  - {id: net_income, group: named, tag: "us-gaap:NetIncomeLoss"}
+  - {id: research_and_development, group: named, tag: "us-gaap:ResearchAndDevelopmentExpense"}
+  - {id: sga, group: named, tag: "us-gaap:SellingGeneralAndAdministrativeExpense"}
+  - {id: eps_diluted, group: named, tag: "us-gaap:EarningsPerShareDiluted"}
+  - {id: total_assets, group: named, tag: "us-gaap:Assets"}
+  - {id: current_assets, group: named, tag: "us-gaap:AssetsCurrent"}
+  - {id: total_liabilities, group: named, tag: "us-gaap:Liabilities"}
+  - {id: stockholders_equity, group: named, tag: "us-gaap:StockholdersEquity"}
+  - {id: cash_and_equivalents, group: named, tag: "us-gaap:CashAndCashEquivalentsAtCarryingValue"}
+  - {id: inventory, group: named, tag: "us-gaap:InventoryNet"}
+  - {id: accounts_receivable, group: named, tag: "us-gaap:AccountsReceivableNetCurrent"}
+  - {id: long_term_debt_noncurrent, group: named, tag: "us-gaap:LongTermDebtNoncurrent"}
+  - {id: operating_cash_flow, group: named, tag: "us-gaap:NetCashProvidedByUsedInOperatingActivities"}
+  - {id: capex, group: named, tag: "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment"}
+  - {id: share_repurchases, group: named, tag: "us-gaap:PaymentsForRepurchaseOfCommonStock"}
+  - {id: net_interest_income, group: bank_supplement, tag: "us-gaap:InterestIncomeExpenseNet"}
+  - {id: noninterest_income, group: bank_supplement, tag: "us-gaap:NoninterestIncome"}
+  - {id: noninterest_expense, group: bank_supplement, tag: "us-gaap:NoninterestExpense"}
+  - {id: credit_loss_allowance, group: bank_supplement,
+     tag: "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest"}
+  - {id: deposits, group: bank_supplement, tag: "us-gaap:Deposits"}
+  - {id: pretax_income, group: bank_supplement,
+     tag: "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"}
+  - {id: income_tax, group: bank_supplement, tag: "us-gaap:IncomeTaxExpenseBenefit"}

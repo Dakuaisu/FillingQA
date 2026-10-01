@@ -1154,3 +1154,72 @@ where parser work stops (PRD 14: timebox hard).
   so BAC 10-K chunk IDs can shift: a re-freeze plus a dataset version bump.
 
 **The cheap window closes when the first gold evidence set is written.**
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Phase 3 step 1, what xbrl_auto may draw on
+
+Measurement only; no eval item generated, no retrieval run against candidates.
+
+1. **F-32:** `xbrl_auto` draws on non-dimensional facts only. companyfacts
+   carries no dimensional facts, and gold chunks count only spans on
+   non-dimensional contexts. F-32 stays OPEN until the generator enforces this
+   under test.
+2. **F-48:** a fact with no visible span has no gold chunk; PRD 6.5.3 sends it
+   to the human-labeling queue (`eval/human_label_queue.csv`). The labeling is
+   OWNER-BLOCKED.
+3. **Corpus:** facts come only from the 90 parsed accessions in
+   `api/corpus_freeze.yaml`.
+4. **F-15:** the list lives in `eval/concepts.yaml` and
+   `scripts/concept_coverage.py` reads it; every number about it comes from
+   that script.
+5. **The list, and the rule as applied.** 26 line items, 28 tags:
+   - *named:* all 19 PRD 6.5.3 concepts, kept whatever their filer count
+     (`GrossProfit` and R&D at 2 filers, `CostOfRevenue` at 1,
+     `AccountsReceivableNetCurrent` at 3, `LongTermDebtNoncurrent` at 4);
+   - *bank supplements:* net interest income, noninterest income, noninterest
+     expense, the credit-loss allowance, deposits, pre-tax income and income
+     tax -- chosen by PRD 6.5.3's own criterion, lines an analyst asks about,
+     among concepts both JPM and BAC tag in nearly every frozen filing (not by
+     coverage alone);
+   - *variants:* `RevenueFromContractWithCustomerExcludingAssessedTax` for
+     revenue and `CostOfGoodsAndServicesSold` for cost of revenue, used by a
+     filer only if it has no fact under the named tag in the frozen 90. Revenue
+     resolves to the variant for AAPL and TGT; cost of revenue to `CostOfRevenue`
+     for NVDA and the variant for COST, TGT, AAPL and PFE. Each variant-only
+     pair has a printed row caption in WORKLOG naming that line.
+
+   No retrieval result was consulted.
+
+   *Alternatives:*
+   - *The builder's first 26* -- dropped PRD-named concepts (`CostOfRevenue`,
+     `AccountsReceivableNetCurrent`, `LongTermDebtNoncurrent`) for reasons the
+     data does not force, and fed both revenue tags to one question; for PFE's
+     FY2023 10-K those differ (58,496M vs 50,914M), so one question had two
+     answers.
+   - *Basic EPS as its own concept.* A scope addition: basic is a different
+     figure from the named diluted EPS. Struck, with `LongTermDebt` (it includes
+     current maturities, so it is not the `LongTermDebtNoncurrent` line).
+   - *Both revenue tags as line items with distinct labels.* Two questions whose
+     wording a reader cannot tell apart, on a distinction (total vs contract
+     revenue) the filings print differently from filer to filer.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-72, gold is exact-value spans only
+
+A fact's gold chunks are the chunks holding a span of the same accession,
+concept and non-dimensional period **whose value equals the fact's**. The
+reference answer is the fact's value and numeric accuracy is exact match after
+normalization; a chunk printing only "$201 billion" cannot produce 201,131
+million, so counting it as sufficient would credit retrieval with evidence that
+cannot yield the answer, and the miss would surface as a generation failure.
+PRD 6.5.3's key assumed every span of a context prints the fact's value; 68
+facts say otherwise, so the data wins. Buckets are computed on exact-value gold.
+Nothing extra is stored on an item; rounded mentions stay derivable from
+`xbrl_spans`.
+
+Measured on the final list (`python -m scripts.concept_coverage`): 4,335 facts;
+68 have a smaller gold set under exact value; no bucket changes; none left
+without gold. *Alternative:* PRD 6.5.3's literal key `(accession, concept,
+context)`. F-72 stays OPEN until the generator enforces it under test.

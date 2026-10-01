@@ -12,8 +12,8 @@ carries the state.
 | Status | Count |
 |---|---|
 | OPEN | 34 |
-| RESOLVED | 37 |
-| **Total** | **71** |
+| RESOLVED | 38 |
+| **Total** | **72** |
 
 ---
 
@@ -21,7 +21,7 @@ carries the state.
 
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
-| F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures | Phase 3 | OPEN |
+| F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures Decision 2026-10-01: `xbrl_auto` draws on non-dimensional facts only, and gold chunks count only spans on non-dimensional contexts; stays OPEN until the generator enforces it under test | Phase 3 | OPEN |
 
 ## Blocking Phase 2
 
@@ -41,14 +41,14 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | OPEN |
+| F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Decided 2026-10-01: gold is exact-value spans only; buckets on exact-value gold. On the final list, 68 of 4,335 facts have a smaller gold set, no bucket changes, none left without gold. Stays OPEN until the generator enforces it under test (TRADEOFFS) | OPEN |
 | F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
-| F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling | OPEN |
+| F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 33 coverage candidates. Queue built: `eval/human_label_queue.csv` (0 entries for the candidates). Labeling OWNER-BLOCKED | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
 | F-08 | `faithfulness_pre` is undefined for Configs 1–4, yet §11.6 plots it there | OPEN |
 | F-09 | Abstained items in generation-metric denominators — a third circularity | OPEN |
 | F-14 | Judge must be a different model family, but CI carries one provider key | OPEN |
-| F-15 | `CURATED_CONCEPTS` yields near-zero items for JPM and BAC | OPEN |
 | F-20 | `natural_phrasing_gap` is gated in `thresholds.yaml` but never defined as a metric | OPEN |
 
 ## Blocking Phase 4
@@ -127,6 +127,7 @@ carries the state.
 | F-67 | Chunks over `max_seq_length`, so the embedder refused the run (4 at first; 28 after F-63..F-65: 16 layout tables chunked as prose, 12 single over-budget sentences) | Layout tables over budget split at row boundaries with the first row repeated; over-budget sentences split at "; " clauses, whitespace windows only as a last resort (0 used). 84 parsed filings: >512 28 -> 0, max 500, part overlaps 0; chunk changes in 33 filings, all 244 traced to a split unit or its prose run; embed check passed on 18,788 chunks, 0 without an embedding; resolve unchanged 177,144 of 177,240. `chunker_version` -> 964f77f6f9cb. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-69 | Content floors measured on four filers quarantined faithful parses: BAC's and PFE's Item 7A point into Item 7 (217 / 289 chars) | The check is redefined by what it is for: `parser.stub_max_chars: 1000`; 10-K Items 1, 1A, 7 and 10-Q I.1, I.2 must not be stubs; 7A and 8 may be, and are listed per filing. Set after measuring all 96: no must-not-be-stub Item between 500 and 5,000 chars. Result: 90 parsed, BAC x3 and PFE x3 admitted, JPM x3 and XOM x3 quarantined on Item 7 alone; the 84 previously chunked filings unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-42 | The eval corpus was a window relative to the run date; a raw-byte hash is not a filing's identity | Accession list committed as of 2026-10-01 (96 filings, pinned CIKs, F-62); frozen in `api/corpus_freeze.yaml`: 90 parsed with `(accession, text_sha256, parser_version)`, 6 quarantined with reason and finding (F-66, F-70), per-ticker 10-K/10-Q counts, F-58 referenced. `python -m scripts.verify_freeze`: 96 verified, 0 mismatches; exits 1 on any difference (tested by altering one hash) | 2026-10-01 |
+| F-15 | `CURATED_CONCEPTS` named in PRD 6.5.3 yields near-zero items for JPM and BAC | `eval/concepts.yaml`: 26 line items, 28 tags -- all 19 named concepts, 7 bank supplements chosen by PRD 6.5.3's analyst-relevance criterion, and two variants used only by filers with no fact under the named tag. On the frozen 90 (`python -m scripts.concept_coverage`): 4,335 facts, 4,051 in the 1-3 bucket, 284 in >3, 0 in 0; every ticker supplied, JPM and XOM by 10-Qs only. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 

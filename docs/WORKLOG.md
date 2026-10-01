@@ -2710,3 +2710,312 @@ Failing run, `chunking.target_tokens` temporarily 499, no re-chunk (exit 1;
 **Phase 2 owes nothing except F-59**, OWNER-BLOCKED: no valid `ANTHROPIC_API_KEY`,
 so the generation call is unexercised. No mocked or canned answer stands in for
 it; the Phase 2 exit's "plausible answer out" waits on the key.
+
+## 2026-10-01 — Phase 3 step 1: concept coverage on the frozen corpus (measurement only)
+
+Phase 2 close-out committed as `fb871fa`.
+
+Bank candidates were chosen from the concepts both JPM and BAC tag in nearly
+every frozen filing (`us-gaap` only, ≥6 filings each): net interest income,
+noninterest income and expense, loan interest income, the credit-loss allowance,
+gross loans, pre-tax income, income tax; plus `Deposits` and the loan-loss
+provision to probe.
+
+`python -m scripts.concept_coverage` -- facts from the freeze record's 90 parsed
+accessions; gold chunks = distinct chunks with a span of the same accession,
+concept and period on a non-dimensional context:
+
+    frozen parsed accessions: 90; linked facts in them: 38709; with no visible non-dimensional span (F-48): 476
+    human-label queue (eval/human_label_queue.csv): 0 facts (Counter())
+    
+    facts of these concepts: 4899; bucket changes if gold kept only spans whose value equals the fact's (F-72): none; gold set smaller: 68; left with no exact-value gold: 0
+    
+    cell = facts as 0 / 1-3 / >3 gold chunks; '-' = no linked fact
+    group   concept                                      form          COST           TGT           JPM           BAC          AAPL          NVDA           XOM           PFE
+    named   Revenues                                     10-K     0/  9/  0             -             -     0/  9/  0             -     0/  3/  6             -     0/  0/  9
+    named   Revenues                                     10-Q     0/ 32/  0             -             -     0/ 30/  0             -     0/ 14/ 16     0/ 30/  0     0/  0/ 30
+    named   CostOfRevenue                                10-K             -             -             -             -             -     0/  9/  0             -             -
+    named   CostOfRevenue                                10-Q             -             -             -             -             -     0/ 30/  0             -             -
+    named   GrossProfit                                  10-K             -             -             -             -     0/  9/  0     0/  9/  0             -             -
+    named   GrossProfit                                  10-Q             -             -             -             -     0/ 30/  0     0/ 30/  0             -             -
+    named   OperatingIncomeLoss                          10-K     0/  9/  0     0/  9/  0             -             -     0/  9/  0     0/  9/  0             -             -
+    named   OperatingIncomeLoss                          10-Q     0/ 36/  0     0/ 30/  0             -             -     0/ 30/  0     0/ 30/  0             -             -
+    named   NetIncomeLoss                                10-K     0/  6/  3     0/  0/  9             -     0/  0/  9     0/  0/  9     0/  0/  9             -     0/  9/  0
+    named   NetIncomeLoss                                10-Q     0/  8/ 22     0/ 60/  6     0/  0/ 30     0/  0/ 30     0/ 12/ 18     0/  0/ 30     0/ 30/  0     0/ 30/  0
+    named   ResearchAndDevelopmentExpense                10-K             -             -             -             -     0/  9/  0     0/  9/  0             -             -
+    named   ResearchAndDevelopmentExpense                10-Q             -             -             -             -     0/ 30/  0     0/ 30/  0             -             -
+    named   SellingGeneralAndAdministrativeExpense       10-K     0/  9/  0     0/  9/  0             -             -     0/  9/  0     0/  9/  0             -     0/  9/  0
+    named   SellingGeneralAndAdministrativeExpense       10-Q     0/ 30/  0     0/ 30/  0             -             -     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0
+    named   EarningsPerShareDiluted                      10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  9/  0
+    named   EarningsPerShareDiluted                      10-Q     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0
+    named   Assets                                       10-K     0/  9/  0     0/  6/  0             -     0/  4/  2     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   Assets                                       10-Q     0/ 18/  0     0/ 27/  0     0/ 27/  0     0/ 24/  3     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0
+    named   AssetsCurrent                                10-K     0/  6/  0     0/  6/  0             -             -     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   AssetsCurrent                                10-Q     0/ 18/  0     0/ 27/  0             -             -     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0
+    named   Liabilities                                  10-K     0/  6/  0             -             -     0/  6/  0     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   Liabilities                                  10-Q     0/ 18/  0             -     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0
+    named   StockholdersEquity                           10-K     0/  6/  0     0/ 12/  0             -     0/ 12/  0     0/ 12/  0     0/ 12/  0             -     0/  6/  0
+    named   StockholdersEquity                           10-Q     0/ 38/  0     0/ 63/  0     0/ 27/  0     0/ 48/  0     0/ 48/  0     0/ 48/  0     0/ 18/  0     0/ 18/  0
+    named   CashAndCashEquivalentsAtCarryingValue        10-K     0/  6/  0             -             -             -     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   CashAndCashEquivalentsAtCarryingValue        10-Q     0/ 18/  0             -             -             -     0/ 18/  0     0/ 19/  0     0/ 18/  0     0/ 18/  0
+    named   InventoryNet                                 10-K     0/  6/  0     0/  6/  0             -             -     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   InventoryNet                                 10-Q     0/ 18/  0     0/ 27/  0             -             -     0/ 18/  0     0/ 18/  0             -     0/ 18/  0
+    named   AccountsReceivableNetCurrent                 10-K             -             -             -             -     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   AccountsReceivableNetCurrent                 10-Q             -             -             -             -     0/ 18/  0     0/ 18/  0             -     0/ 18/  0
+    named   LongTermDebtNoncurrent                       10-K     0/  6/  0             -             -             -     0/  6/  0     0/  6/  0             -     0/  6/  0
+    named   LongTermDebtNoncurrent                       10-Q     0/ 18/  0             -             -             -     0/ 18/  0     0/ 18/  0             -     0/ 18/  0
+    named   NetCashProvidedByUsedInOperatingActivities   10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  9/  0
+    named   NetCashProvidedByUsedInOperatingActivities   10-Q     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0
+    named   PaymentsToAcquirePropertyPlantAndEquipment   10-K     0/  9/  0     0/  9/  0             -             -     0/  9/  0             -             -     0/  9/  0
+    named   PaymentsToAcquirePropertyPlantAndEquipment   10-Q     0/ 18/  0     0/ 18/  0             -             -     0/ 18/  0             -     0/ 18/  0     0/ 18/  0
+    named   PaymentsForRepurchaseOfCommonStock           10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  6/  0
+    named   PaymentsForRepurchaseOfCommonStock           10-Q     0/ 18/  0     0/ 16/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/ 18/  0     0/  2/  0
+    bank    InterestIncomeExpenseNet                     10-K             -             -             -     0/  9/  0             -             -             -             -
+    bank    InterestIncomeExpenseNet                     10-Q             -             -     0/ 30/  0     0/ 30/  0             -             -             -             -
+    bank    NoninterestIncome                            10-K             -             -             -     0/  0/  9             -             -             -             -
+    bank    NoninterestIncome                            10-Q             -             -     0/ 30/  0     0/  0/ 30             -             -             -             -
+    bank    NoninterestExpense                           10-K             -             -             -     0/  9/  0             -             -             -             -
+    bank    NoninterestExpense                           10-Q             -             -     0/ 30/  0     0/ 30/  0             -             -             -             -
+    bank    InterestAndFeeIncomeLoansAndLeases           10-K             -             -             -     0/  9/  0             -             -             -             -
+    bank    InterestAndFeeIncomeLoansAndLeases           10-Q             -             -     0/ 30/  0     0/ 30/  0             -             -             -             -
+    bank    ProvisionForLoanLeaseAndOtherLosses          10-K             -             -             -             -             -             -             -             -
+    bank    ProvisionForLoanLeaseAndOtherLosses          10-Q             -             -     0/ 12/ 18             -             -             -             -             -
+    bank    FinancingReceivableAllowanceForCreditLossExc 10-K             -             -             -     0/ 12/  0             -             -             -             -
+    bank    FinancingReceivableAllowanceForCreditLossExc 10-Q             -             -     0/ 36/  0     0/ 48/  0             -             -             -             -
+    bank    FinancingReceivableExcludingAccruedInterestB 10-K             -             -             -     0/  6/  0             -             -             -             -
+    bank    FinancingReceivableExcludingAccruedInterestB 10-Q             -             -     0/ 27/  0     0/ 18/  0             -             -             -             -
+    bank    Deposits                                     10-K             -             -             -     0/  6/  0             -             -             -             -
+    bank    Deposits                                     10-Q             -             -     0/ 18/  0     0/ 18/  0             -             -             -             -
+    bank    IncomeLossFromContinuingOperationsBeforeInco 10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  9/  0
+    bank    IncomeLossFromContinuingOperationsBeforeInco 10-Q     0/ 10/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0
+    bank    IncomeTaxExpenseBenefit                      10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  8/  1
+    bank    IncomeTaxExpenseBenefit                      10-Q     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0
+    variant RevenueFromContractWithCustomerExcludingAsse 10-K     0/  9/  0     0/  9/  0             -             -     0/  6/  3             -             -     0/  3/  0
+    variant RevenueFromContractWithCustomerExcludingAsse 10-Q     0/ 30/  0     0/ 30/  0             -             -     0/ 30/  0             -             -             -
+    variant CostOfGoodsAndServicesSold                   10-K     0/  9/  0     0/  9/  0             -             -     0/  9/  0             -             -     0/  9/  0
+    variant CostOfGoodsAndServicesSold                   10-Q     0/ 30/  0     0/ 30/  0             -             -     0/ 30/  0             -             -     0/ 30/  0
+    variant LongTermDebt                                 10-K             -     0/  6/  0             -     0/  6/  0     0/  6/  0     0/  6/  0             -             -
+    variant LongTermDebt                                 10-Q             -             -             -     0/ 18/  0     0/ 18/  0     0/ 18/  0             -             -
+    variant EarningsPerShareBasic                        10-K     0/  9/  0     0/  9/  0             -     0/  9/  0     0/  9/  0     0/  9/  0             -     0/  9/  0
+    variant EarningsPerShareBasic                        10-Q     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0     0/ 30/  0
+
+Spot check of 8 random facts (span value vs fact value, printed text inside the
+gold chunk):
+
+    BAC 0000070858-26-000249 StockholdersEquity None..2025-03-31 value=293949000000 USD: 1 gold chunks
+        0000070858-26-000249:603.0:603.0 span '293,949' span value=293949000000 | span value == fact value: True | printed text in chunk: True
+    TGT 0000027419-23-000052 EarningsPerShareDiluted 2023-01-29..2023-10-28 value=5.96 USD/shares: 1 gold chunks
+        0000027419-23-000052:36.0:36.0 span '5.96' span value=5.96 | span value == fact value: True | printed text in chunk: True
+    AAPL 0000320193-24-000123 StockholdersEquity None..2023-09-30 value=62146000000 USD: 3 gold chunks
+        0000320193-24-000123:416.1:416.1 span '62,146' span value=62146000000 | span value == fact value: True | printed text in chunk: True
+        0000320193-24-000123:422.0:422.0 span '62,146' span value=62146000000 | span value == fact value: True | printed text in chunk: True
+        0000320193-24-000123:422.1:422.1 span '62,146' span value=62146000000 | span value == fact value: True | printed text in chunk: True
+    COST 0000909832-25-000101 OperatingIncomeLoss 2024-09-02..2025-08-31 value=10383000000 USD: 2 gold chunks
+        0000909832-25-000101:439.0:439.0 span '10,383' span value=10383000000 | span value == fact value: True | printed text in chunk: True
+        0000909832-25-000101:722.0:722.0 span '10,383' span value=10383000000 | span value == fact value: True | printed text in chunk: True
+    TGT 0000027419-26-000042 NetIncomeLoss 2025-02-02..2025-05-03 value=1036000000 USD: 1 gold chunks
+        0000027419-26-000042:54.0:54.0 span '1,036' span value=1036000000 | span value == fact value: True | printed text in chunk: True
+    PFE 0000078003-26-000095 Assets None..2026-06-28 value=201131000000 USD: 2 gold chunks
+        0000078003-26-000095:410.0:414.0 span '201' span value=201000000000 | span value == fact value: False | printed text in chunk: True
+        0000078003-26-000095:65.0:65.0 span '201,131' span value=201131000000 | span value == fact value: True | printed text in chunk: True
+    COST 0000909832-25-000015 EarningsPerShareBasic 2023-11-27..2024-02-18 value=3.93 USD/shares: 1 gold chunks
+        0000909832-25-000015:33.0:33.0 span '3.93' span value=3.93 | span value == fact value: True | printed text in chunk: True
+    AAPL 0000320193-25-000057 Liabilities None..2024-09-28 value=308030000000 USD: 1 gold chunks
+        0000320193-25-000057:50.0:50.0 span '308,030' span value=308030000000 | span value == fact value: True | printed text in chunk: True
+
+F-48 across all linked facts of the 90:
+
+    F-48 facts with no visible non-dimensional span: 476 across 33 concepts; in the coverage candidates: 0
+        69 us-gaap:PreferredStockSharesIssued
+        63 us-gaap:PreferredStockSharesOutstanding
+        37 us-gaap:NumberOfReportableSegments
+        36 us-gaap:NumberOfOperatingSegments
+        30 us-gaap:GoodwillImpairmentLoss
+        30 us-gaap:DebtSecuritiesHeldToMaturityAccruedInterestWriteoff
+        30 us-gaap:DebtSecuritiesAvailableForSaleAccruedInterestWriteoff
+        24 us-gaap:CommonStockSharesOutstanding
+        18 us-gaap:FairValueOptionLoansHeldAsAssetsAggregateDifference
+        16 us-gaap:CommonStockParOrStatedValuePerShare
+        16 us-gaap:CommonStockSharesAuthorized
+        16 us-gaap:PreferredStockParOrStatedValuePerShare
+
+**Proposed list, 26 concepts, by coverage alone** (no retrieval run):
+
+    concept (truncated as in the table)            group   tickers K/Q  facts   0   1-3    >3
+    Revenues                                       named           4/5    188   0   127    61
+    RevenueFromContractWithCustomerExcludingAsse   variant         4/3    120   0   117     3
+    CostOfGoodsAndServicesSold                     variant         4/4    156   0   156     0
+    GrossProfit                                    named           2/2     78   0    78     0
+    OperatingIncomeLoss                            named           4/4    162   0   162     0
+    NetIncomeLoss                                  named           6/8    330   0   155   175
+    ResearchAndDevelopmentExpense                  named           2/2     78   0    78     0
+    SellingGeneralAndAdministrativeExpense         named           5/6    225   0   225     0
+    IncomeLossFromContinuingOperationsBeforeInco   bank            6/8    274   0   274     0
+    IncomeTaxExpenseBenefit                        bank            6/8    294   0   293     1
+    EarningsPerShareDiluted                        named           6/8    294   0   294     0
+    EarningsPerShareBasic                          variant         6/8    294   0   294     0
+    Assets                                         named           6/8    210   0   205     5
+    AssetsCurrent                                  named           5/6    147   0   147     0
+    Liabilities                                    named           5/7    156   0   156     0
+    StockholdersEquity                             named           6/8    368   0   368     0
+    CashAndCashEquivalentsAtCarryingValue          named           4/5    115   0   115     0
+    InventoryNet                                   named           5/5    129   0   129     0
+    NetCashProvidedByUsedInOperatingActivities     named           6/8    198   0   198     0
+    PaymentsToAcquirePropertyPlantAndEquipment     named           4/5    126   0   126     0
+    PaymentsForRepurchaseOfCommonStock             named           6/8    177   0   177     0
+    InterestIncomeExpenseNet                       bank            1/2     69   0    69     0
+    NoninterestIncome                              bank            1/2     69   0    30    39
+    NoninterestExpense                             bank            1/2     69   0    69     0
+    FinancingReceivableAllowanceForCreditLossExc   bank            1/2     96   0    96     0
+    Deposits                                       bank            1/2     42   0    42     0
+    TOTAL (26 concepts)                                                  4464   0  4180   284
+    
+    facts per ticker in the proposal (10-K / 10-Q): {'COST': '156/470', 'TGT': '138/502', 'JPM': '0/402', 'BAC': '141/465', 'AAPL': '168/522', 'NVDA': '150/475', 'XOM': '0/354', 'PFE': '135/386'}
+    not proposed: ['CostOfRevenue', 'AccountsReceivableNetCurrent', 'LongTermDebtNoncurrent', 'InterestAndFeeIncomeLoansAndLeases', 'ProvisionForLoanLeaseAndOtherLosses', 'FinancingReceivableExcludingAccruedInterestB', 'LongTermDebt']
+
+Facts include comparatives (prior periods restated in later filings), so the
+item count will be far below 4,464 once items are keyed by company and period --
+the item schema's step. JPM and XOM contribute 10-Q facts only (their 10-Ks are
+quarantined). Not proposed: `CostOfRevenue` (NVDA only), `AccountsReceivableNetCurrent`
+(3 filers, no retail), the two long-term-debt tags (split across filers), the
+loan-loss provision (JPM only), loan interest income and gross loans (bank lines
+overlapping net interest income and the allowance).
+
+Stopped here, as instructed: no eval item, no item schema, F-11 untouched.
+
+## 2026-10-01 — Concept list fixed (F-15); exact-value gold (F-72)
+
+The proposal of the previous entry was not adopted: it dropped PRD-named
+concepts, fed both revenue tags to one question and added basic EPS. The list
+is `eval/concepts.yaml` (26 line items, 28 tags; TRADEOFFS). Every number below
+is the output of `python -m scripts.concept_coverage`, which reads that file:
+
+    list: 26 line items, 28 tags (eval/concepts.yaml)
+    frozen parsed accessions: 90; listed facts: 4335
+    buckets on exact-value gold: 0 0, 1-3 4051, >3 284
+    human-label queue (eval/human_label_queue.csv): 0
+    F-72, exact-value gold vs PRD 6.5.3 context key: {'gold smaller under exact value': 68}
+    
+    cell = tag (N named / V variant) and facts as 0 / 1-3 / >3 gold chunks; '-' = none
+    line item                  form            COST             TGT             JPM             BAC            AAPL            NVDA             XOM             PFE
+    revenue                    10-K   N   0/  9/  0   V   0/  9/  0               -   N   0/  9/  0   V   0/  6/  3   N   0/  3/  6               -   N   0/  0/  9
+    revenue                    10-Q   N   0/ 32/  0   V   0/ 30/  0               -   N   0/ 30/  0   V   0/ 30/  0   N   0/ 14/ 16   N   0/ 30/  0   N   0/  0/ 30
+    cost_of_revenue            10-K   V   0/  9/  0   V   0/  9/  0               -               -   V   0/  9/  0   N   0/  9/  0               -   V   0/  9/  0
+    cost_of_revenue            10-Q   V   0/ 30/  0   V   0/ 30/  0               -               -   V   0/ 30/  0   N   0/ 30/  0               -   V   0/ 30/  0
+    gross_profit               10-K               -               -               -               -   N   0/  9/  0   N   0/  9/  0               -               -
+    gross_profit               10-Q               -               -               -               -   N   0/ 30/  0   N   0/ 30/  0               -               -
+    operating_income           10-K   N   0/  9/  0   N   0/  9/  0               -               -   N   0/  9/  0   N   0/  9/  0               -               -
+    operating_income           10-Q   N   0/ 36/  0   N   0/ 30/  0               -               -   N   0/ 30/  0   N   0/ 30/  0               -               -
+    net_income                 10-K   N   0/  6/  3   N   0/  0/  9               -   N   0/  0/  9   N   0/  0/  9   N   0/  0/  9               -   N   0/  9/  0
+    net_income                 10-Q   N   0/  8/ 22   N   0/ 60/  6   N   0/  0/ 30   N   0/  0/ 30   N   0/ 12/ 18   N   0/  0/ 30   N   0/ 30/  0   N   0/ 30/  0
+    research_and_development   10-K               -               -               -               -   N   0/  9/  0   N   0/  9/  0               -               -
+    research_and_development   10-Q               -               -               -               -   N   0/ 30/  0   N   0/ 30/  0               -               -
+    sga                        10-K   N   0/  9/  0   N   0/  9/  0               -               -   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0
+    sga                        10-Q   N   0/ 30/  0   N   0/ 30/  0               -               -   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0
+    eps_diluted                10-K   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0
+    eps_diluted                10-Q   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0
+    total_assets               10-K   N   0/  9/  0   N   0/  6/  0               -   N   0/  4/  2   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    total_assets               10-Q   N   0/ 18/  0   N   0/ 27/  0   N   0/ 27/  0   N   0/ 24/  3   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0
+    current_assets             10-K   N   0/  6/  0   N   0/  6/  0               -               -   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    current_assets             10-Q   N   0/ 18/  0   N   0/ 27/  0               -               -   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0
+    total_liabilities          10-K   N   0/  6/  0               -               -   N   0/  6/  0   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    total_liabilities          10-Q   N   0/ 18/  0               -   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0
+    stockholders_equity        10-K   N   0/  6/  0   N   0/ 12/  0               -   N   0/ 12/  0   N   0/ 12/  0   N   0/ 12/  0               -   N   0/  6/  0
+    stockholders_equity        10-Q   N   0/ 38/  0   N   0/ 63/  0   N   0/ 27/  0   N   0/ 48/  0   N   0/ 48/  0   N   0/ 48/  0   N   0/ 18/  0   N   0/ 18/  0
+    cash_and_equivalents       10-K   N   0/  6/  0               -               -               -   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    cash_and_equivalents       10-Q   N   0/ 18/  0               -               -               -   N   0/ 18/  0   N   0/ 19/  0   N   0/ 18/  0   N   0/ 18/  0
+    inventory                  10-K   N   0/  6/  0   N   0/  6/  0               -               -   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    inventory                  10-Q   N   0/ 18/  0   N   0/ 27/  0               -               -   N   0/ 18/  0   N   0/ 18/  0               -   N   0/ 18/  0
+    accounts_receivable        10-K               -               -               -               -   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    accounts_receivable        10-Q               -               -               -               -   N   0/ 18/  0   N   0/ 18/  0               -   N   0/ 18/  0
+    long_term_debt_noncurrent  10-K   N   0/  6/  0               -               -               -   N   0/  6/  0   N   0/  6/  0               -   N   0/  6/  0
+    long_term_debt_noncurrent  10-Q   N   0/ 18/  0               -               -               -   N   0/ 18/  0   N   0/ 18/  0               -   N   0/ 18/  0
+    operating_cash_flow        10-K   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0
+    operating_cash_flow        10-Q   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0
+    capex                      10-K   N   0/  9/  0   N   0/  9/  0               -               -   N   0/  9/  0               -               -   N   0/  9/  0
+    capex                      10-Q   N   0/ 18/  0   N   0/ 18/  0               -               -   N   0/ 18/  0               -   N   0/ 18/  0   N   0/ 18/  0
+    share_repurchases          10-K   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0   N   0/  9/  0   N   0/  9/  0               -   N   0/  6/  0
+    share_repurchases          10-Q   N   0/ 18/  0   N   0/ 16/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/ 18/  0   N   0/  2/  0
+    net_interest_income        10-K               -               -               -   N   0/  9/  0               -               -               -               -
+    net_interest_income        10-Q               -               -   N   0/ 30/  0   N   0/ 30/  0               -               -               -               -
+    noninterest_income         10-K               -               -               -   N   0/  0/  9               -               -               -               -
+    noninterest_income         10-Q               -               -   N   0/ 30/  0   N   0/  0/ 30               -               -               -               -
+    noninterest_expense        10-K               -               -               -   N   0/  9/  0               -               -               -               -
+    noninterest_expense        10-Q               -               -   N   0/ 30/  0   N   0/ 30/  0               -               -               -               -
+    credit_loss_allowance      10-K               -               -               -   N   0/ 12/  0               -               -               -               -
+    credit_loss_allowance      10-Q               -               -   N   0/ 36/  0   N   0/ 48/  0               -               -               -               -
+    deposits                   10-K               -               -               -   N   0/  6/  0               -               -               -               -
+    deposits                   10-Q               -               -   N   0/ 18/  0   N   0/ 18/  0               -               -               -               -
+    pretax_income              10-K   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0
+    pretax_income              10-Q   N   0/ 10/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0
+    income_tax                 10-K   N   0/  9/  0   N   0/  9/  0               -   N   0/  9/  0   N   0/  9/  0   N   0/  9/  0               -   N   0/  8/  1
+    income_tax                 10-Q   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0   N   0/ 30/  0
+    
+    per-ticker supply (facts by bucket 0 / 1-3 / >3):
+      COST  10-K      0/141/3   10-Q     0/406/22
+      TGT   10-K      0/120/9   10-Q      0/466/6
+      JPM   10-K        0/0/0   10-Q     0/342/30
+      BAC   10-K     0/112/20   10-Q     0/372/63
+      AAPL  10-K     0/159/12   10-Q     0/510/18
+      NVDA  10-K     0/147/15   10-Q     0/465/46
+      XOM   10-K        0/0/0   10-Q      0/324/0
+      PFE   10-K     0/125/10   10-Q     0/362/30
+    
+    variant resolution:
+      revenue: named ['COST', 'BAC', 'NVDA', 'XOM', 'PFE']; variant ['TGT', 'AAPL']
+      cost_of_revenue: named ['NVDA']; variant ['COST', 'TGT', 'AAPL', 'PFE']
+    
+    two-tag check -- filings with facts under both revenue tags for one period:
+      COST  0000909832-23-000042 2020-08-31..2021-08-29  Revenues 195929000000  RevenueFromContract... 195929000000  equal
+      COST  0000909832-23-000042 2021-08-30..2022-08-28  Revenues 226954000000  RevenueFromContract... 226954000000  equal
+      COST  0000909832-23-000042 2022-08-29..2023-09-03  Revenues 242290000000  RevenueFromContract... 242290000000  equal
+      COST  0000909832-23-000065 2022-08-29..2022-11-20  Revenues 54437000000  RevenueFromContract... 54437000000  equal
+      COST  0000909832-23-000065 2023-09-04..2023-11-26  Revenues 57799000000  RevenueFromContract... 57799000000  equal
+      COST  0000909832-24-000017 2022-08-29..2023-02-12  Revenues 109703000000  RevenueFromContract... 109703000000  equal
+      COST  0000909832-24-000017 2022-11-21..2023-02-12  Revenues 55266000000  RevenueFromContract... 55266000000  equal
+      COST  0000909832-24-000017 2023-09-04..2024-02-18  Revenues 116241000000  RevenueFromContract... 116241000000  equal
+      COST  0000909832-24-000017 2023-11-27..2024-02-18  Revenues 58442000000  RevenueFromContract... 58442000000  equal
+      COST  0000909832-24-000029 2022-08-29..2023-05-07  Revenues 163351000000  RevenueFromContract... 163351000000  equal
+      COST  0000909832-24-000029 2023-02-13..2023-05-07  Revenues 53648000000  RevenueFromContract... 53648000000  equal
+      COST  0000909832-24-000029 2023-09-04..2024-05-12  Revenues 174756000000  RevenueFromContract... 174756000000  equal
+      COST  0000909832-24-000029 2024-02-19..2024-05-12  Revenues 58515000000  RevenueFromContract... 58515000000  equal
+      COST  0000909832-24-000049 2021-08-30..2022-08-28  Revenues 226954000000  RevenueFromContract... 226954000000  equal
+      COST  0000909832-24-000049 2022-08-29..2023-09-03  Revenues 242290000000  RevenueFromContract... 242290000000  equal
+      COST  0000909832-24-000049 2023-09-04..2024-09-01  Revenues 254453000000  RevenueFromContract... 254453000000  equal
+      COST  0000909832-24-000079 2023-09-04..2023-11-26  Revenues 57799000000  RevenueFromContract... 57799000000  equal
+      COST  0000909832-24-000079 2024-09-02..2024-11-24  Revenues 62151000000  RevenueFromContract... 62151000000  equal
+      COST  0000909832-25-000015 2023-09-04..2024-02-18  Revenues 116241000000  RevenueFromContract... 116241000000  equal
+      COST  0000909832-25-000015 2023-11-27..2024-02-18  Revenues 58442000000  RevenueFromContract... 58442000000  equal
+      COST  0000909832-25-000015 2024-09-02..2025-02-16  Revenues 125874000000  RevenueFromContract... 125874000000  equal
+      COST  0000909832-25-000015 2024-11-25..2025-02-16  Revenues 63723000000  RevenueFromContract... 63723000000  equal
+      COST  0000909832-25-000033 2023-09-04..2024-05-12  Revenues 174756000000  RevenueFromContract... 174756000000  equal
+      COST  0000909832-25-000033 2024-02-19..2024-05-12  Revenues 58515000000  RevenueFromContract... 58515000000  equal
+      COST  0000909832-25-000033 2024-09-02..2025-05-11  Revenues 189079000000  RevenueFromContract... 189079000000  equal
+      COST  0000909832-25-000033 2025-02-17..2025-05-11  Revenues 63205000000  RevenueFromContract... 63205000000  equal
+      COST  0000909832-25-000101 2022-08-29..2023-09-03  Revenues 242290000000  RevenueFromContract... 242290000000  equal
+      COST  0000909832-25-000101 2023-09-04..2024-09-01  Revenues 254453000000  RevenueFromContract... 254453000000  equal
+      COST  0000909832-25-000101 2024-09-02..2025-08-31  Revenues 275235000000  RevenueFromContract... 275235000000  equal
+      COST  0000909832-25-000169 2024-09-02..2024-11-24  Revenues 62151000000  RevenueFromContract... 62151000000  equal
+      COST  0000909832-25-000169 2025-09-01..2025-11-23  Revenues 67307000000  RevenueFromContract... 67307000000  equal
+      COST  0000909832-26-000029 2024-09-02..2025-02-16  Revenues 125874000000  RevenueFromContract... 125874000000  equal
+      COST  0000909832-26-000029 2024-11-25..2025-02-16  Revenues 63723000000  RevenueFromContract... 63723000000  equal
+      COST  0000909832-26-000029 2025-09-01..2026-02-15  Revenues 136904000000  RevenueFromContract... 136904000000  equal
+      COST  0000909832-26-000029 2025-11-24..2026-02-15  Revenues 69597000000  RevenueFromContract... 69597000000  equal
+      PFE   0000078003-24-000039 2021-01-01..2021-12-31  Revenues 81288000000  RevenueFromContract... 73636000000  DIFFERENT
+      PFE   0000078003-24-000039 2022-01-01..2022-12-31  Revenues 100330000000  RevenueFromContract... 91793000000  DIFFERENT
+      PFE   0000078003-24-000039 2023-01-01..2023-12-31  Revenues 58496000000  RevenueFromContract... 50914000000  DIFFERENT
+    
+    variant captions -- one exact-value gold span per variant-only filer:
+      AAPL  cost_of_revenue  CostOfGoodsAndServicesSold 0000320193-25-000079 2023-09-30: printed '214,137' in row 'Total cost of sales'
+      AAPL  revenue          RevenueFromContractWithCustomerExcludingAssessedTax 0000320193-25-000079 2023-09-30: printed '383,285' in row 'Total net sales'
+      COST  cost_of_revenue  CostOfGoodsAndServicesSold 0000909832-25-000101 2023-09-03: printed '212,586' in row 'Merchandise costs'
+      PFE   cost_of_revenue  CostOfGoodsAndServicesSold 0000078003-24-000039 2021-12-31: printed '30,821' in row 'Cost of sales(b), (c)'
+      TGT   cost_of_revenue  CostOfGoodsAndServicesSold 0000027419-26-000016 2024-02-03: printed '77,828' in row 'Cost of sales'
+      TGT   revenue          RevenueFromContractWithCustomerExcludingAssessedTax 0000027419-26-000016 2024-02-03: printed '107,412' in row 'Net sales'
+
+COST's two revenue tags agree on every period; PFE's differ in its FY2023 10-K
+(`Revenues` includes revenue outside contracts with customers), which is why a
+line item takes one tag per filer. The variant captions are the evidence each
+variant is that filer's line: AAPL "Total net sales" / "Total cost of sales",
+TGT "Net sales" / "Cost of sales", COST "Merchandise costs", PFE "Cost of
+sales".
