@@ -1,0 +1,2241 @@
+{
+ "dataset_version": "llm_seeded_candidates_v1",
+ "candidates_file": "eval/candidates/llm_seeded_candidates.jsonl",
+ "candidates_sha256": "f1b7849ab81e52991b8d5ea9b46e420da81198d6010675949a74c8d25937cf33",
+ "source": "python -m scripts.seed_build (rebuilt from the committed raw files)",
+ "inputs_sha256": {
+  "raw_v1.jsonl": "0524beb61b7efc2165f9fb232bfe24596601248ff1a7e1f9a1e0a06f02d549e0",
+  "no_context_v1.jsonl": "ec8afd6f79622054818004887ec791063f4859c1d9ec660da03eb3f9c5314725",
+  "draw_v2.json": "1c23e9f6511a554eebab64a25e07117d3e2c099cd504ad1948239d46c4028313",
+  "dropped_v1.jsonl": "74cdf4c416e9cbb7a0a326dd208f698647059f8da523814e265ddf7e9e96b33f"
+ },
+ "items": 83,
+ "by_type": {
+  "table": 47,
+  "synthesis": 36
+ },
+ "short_slots": {
+  "synthesis AAPL 10-K I.1A": "0/1",
+  "synthesis COST 10-K I.1A": "0/1",
+  "synthesis NVDA 10-K I.1A": "0/1",
+  "synthesis TGT 10-K I.1A": "0/1",
+  "table AAPL 10-K II.8": "1/2",
+  "table AAPL 10-K IV.15": "0/1",
+  "table AAPL 10-Q I.2": "0/1"
+ },
+ "reserve_file": "eval/seeding/reserve_v1.json",
+ "reviewed": false,
+ "entries": [
+  {
+   "item_id": "seed_0001",
+   "chunk_id": "0000320193-24-000123:410.0:410.0",
+   "stratum": [
+    "table",
+    "AAPL",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 3,
+   "supporting_quote": "| Total comprehensive income | $98,016 | $96,652 | $88,531 |",
+   "value": "98016000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "no-context near-match (within 5%)"
+   ],
+   "no_context_answer": "I don't know Apple's FY2024 total comprehensive income with confidence, so my answer is unknown.\n\nI do recall that net income for FY2024 was $93,736 million. Total comprehensive income is net income plus other comprehensive income (foreign currency translation, derivative instruments and marketable securities). I can't reliably recall the other comprehensive income figure, so I won't guess the total. You can find it in the Consolidated Statements of Comprehensive Income in Apple's FY2024 Form 10-K.",
+   "no_context_figures": [
+    "2024",
+    "2024",
+    "$93,736 million",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [
+    "$93,736 million"
+   ]
+  },
+  {
+   "item_id": "seed_0002",
+   "chunk_id": "0000320193-25-000073:112.0:112.0",
+   "stratum": [
+    "table",
+    "AAPL",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 6,
+   "supporting_quote": "| Total property, plant and equipment, net | $48,508 | $45,680 |",
+   "value": "48508000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure. Apple's net property, plant and equipment was $45.7 billion at the end of fiscal 2024 (September 28, 2024) and rose through fiscal 2025, so the June 28, 2025 figure was probably in the high-$40 billions. I can't give a precise number with confidence, so I'd mark it as unknown. The condensed consolidated balance sheet in Apple's Q3 FY2025 Form 10-Q has the exact amount.",
+   "no_context_figures": [
+    "$45.7 billion",
+    "2024",
+    "28,",
+    "2024)",
+    "2025,",
+    "28,",
+    "2025",
+    "-$40 billions",
+    "3",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0003",
+   "chunk_id": "0000320193-26-000013:85.0:85.0",
+   "stratum": [
+    "table",
+    "AAPL",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 9,
+   "supporting_quote": "| Corporate debt securities | 47,210 | 266 | (916) | 46,560 | — | 10,623 | 35,937 |",
+   "value": "46560000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the corporate debt securities fair value as of September 27, 2025 from Apple's filings, and I'd rather not guess a figure. The Q2 FY2026 10-Q's marketable securities note should list it in the fair value table, and the FY2025 10-K should show the same year-end number.",
+   "no_context_figures": [
+    "27,",
+    "2025",
+    "2",
+    "2026",
+    "10",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0004",
+   "chunk_id": "0000320193-26-000006:56.0:56.0",
+   "stratum": [
+    "table",
+    "AAPL",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 10,
+   "supporting_quote": "| Common stock repurchased | (25,194) | (23,476) |",
+   "value": null,
+   "magnitude": "25194",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)",
+    "scale not applied, mixed table: tagged spans at ix scale [0], caption millions (6)"
+   ],
+   "no_context_answer": "Unknown. I don't have a reliable figure for the \"common stock repurchased\" line in the accumulated deficit column of Apple's statement of shareholders' equity for the quarter ended December 27, 2025. I'd rather not guess at a number. You can find it in Apple's Form 10-Q for Q1 FY2026, in the Condensed Consolidated Statements of Shareholders' Equity.",
+   "no_context_figures": [
+    "27,",
+    "2025",
+    "10",
+    "1",
+    "2026,"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0005",
+   "chunk_id": "0000070858-26-000157:580.0:580.0",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 14,
+   "supporting_quote": "| Total sales and trading revenue | $20,871 | $18,807 |",
+   "value": "20871000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Bank of America's total sales and trading revenue for fiscal year 2025. I recall that its quarterly sales and trading revenue ran at roughly $5.5-6 billion in 2025, but I can't pin down the exact quarterly numbers or the full-year total from memory. The figure should be in the company's 2025 Form 10-K or its Q4 2025 earnings release, which report sales and trading revenue, split into FICC and equities, for the full year.",
+   "no_context_figures": [
+    "2025",
+    "$5.5",
+    "-6 billion",
+    "2025,",
+    "2025",
+    "10",
+    "4",
+    "2025"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0006",
+   "chunk_id": "0000070858-26-000157:2172.3:2172.3",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 16,
+   "supporting_quote": "| Total service charges | 3,438 | 3,135 | 2,952 | 373 | 375 | 335 | 4 | 3 | 2 |",
+   "value": "3438000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Bank of America's total corporation service charges within noninterest income for fiscal year 2025. The figure would be in the company's 2025 Form 10-K or its Q4 2025 earnings release, and I'd rather not guess at a number.",
+   "no_context_figures": [
+    "2025",
+    "2025",
+    "10",
+    "4",
+    "2025"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0007",
+   "chunk_id": "0000070858-24-000208:1148.1:1148.1",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 18,
+   "supporting_quote": "| Net derivative assets (liabilities) (4) | (2,668) | 477 | — | 309 | (243) | — | (287) | (158) | 204 | (2,366) | 460 |",
+   "value": null,
+   "magnitude": "2366000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the exact June 30, 2024 balance of net derivative assets (liabilities) in Bank of America's Q2 2024 10-Q Level 3 table, and I'd rather not guess a figure. The number is in the \"Level 3 – Fair Value Measurements\" note of the 10-Q, which is available on Bank of America's investor relations site or on SEC EDGAR.",
+   "no_context_figures": [
+    "30,",
+    "2024",
+    "2",
+    "2024",
+    "10",
+    "3",
+    "3",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0008",
+   "chunk_id": "0000070858-25-000200:750.2:750.2",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 19,
+   "supporting_quote": "| Total AFS debt securities in a continuous unrealized loss position | $107,328 | $(286) | $103,346 | $(3,574) | $210,674 | $(3,860) |",
+   "value": null,
+   "magnitude": "3860000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't have a reliable figure for the total gross unrealized losses on Bank of America's AFS debt securities in a continuous unrealized loss position as of March 31, 2025. That number is in the securities note of BofA's Q1 2025 Form 10-Q, and I'd rather not guess at it from memory.",
+   "no_context_figures": [
+    "31,",
+    "2025",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0009",
+   "chunk_id": "0000070858-24-000280:570.0:570.0",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 22,
+   "supporting_quote": "| Asset managers and funds | $110,334 | $103,138 | $178,572 | $169,318 |",
+   "value": "178572000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the exact \"total commercial committed\" figure for Asset managers and funds in Bank of America's Q3 2024 10-Q (September 30, 2024), and I'd rather not guess at a number. The figure should be in the commercial credit exposure by industry table in the 10-Q's Credit Risk Management discussion.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "10",
+    "30,",
+    "2024)",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0010",
+   "chunk_id": "0000070858-24-000156:288.1:288.1",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 23,
+   "supporting_quote": "| Tier 1 leverage ratio | 7.6% | 7.6% | 5.0 |",
+   "value": "7.6",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Bank of America's Tier 1 leverage ratio was about **7.0%** as of March 31, 2024. This is from memory, so I'm not fully certain of it. Note also that the Tier 1 leverage ratio isn't calculated differently under the Standardized and Advanced approaches, since it is based on average total assets. I'd recommend checking the figure against the company's Q1 2024 Form 10-Q.",
+   "no_context_figures": [
+    "1",
+    "7.0%",
+    "31,",
+    "2024",
+    "1",
+    "1",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0011",
+   "chunk_id": "0000909832-25-000101:686.0:686.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 26,
+   "supporting_quote": "| Gross unrecognized tax benefit at end of year | $65 | $81 |",
+   "value": "65000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Costco's gross unrecognized tax benefits at the end of fiscal 2025 (which ended August 31, 2025). That number is disclosed in the income taxes note of its fiscal 2025 Form 10-K, so you can check it there.",
+   "no_context_figures": [
+    "2025",
+    "31,",
+    "2025)",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0012",
+   "chunk_id": "0000909832-23-000042:504.0:504.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 28,
+   "supporting_quote": "| Balance at September 3, 2023 | $953 | $26 | $15 | $994 |",
+   "value": "994000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Costco's total goodwill at September 3, 2023 from memory. Costco's FY2023 Form 10-K reports goodwill by segment (United States, Canada, Other International), and I'd rather not guess at the numbers. The Goodwill note in the 10-K's financial statements would give the exact total.",
+   "no_context_figures": [
+    "3,",
+    "2023",
+    "2023",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0013",
+   "chunk_id": "0000909832-26-000029:174.0:174.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 30,
+   "supporting_quote": "| Total assets | 83,639 | 77,099 |",
+   "value": "83639000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of Costco's total assets as of February 15, 2026 (the end of its Q2 FY2026 period), so I won't guess at a figure. The number would be on the consolidated balance sheet in Costco's Form 10-Q for that quarter, which you can find on its investor relations site or on SEC EDGAR.",
+   "no_context_figures": [
+    "15,",
+    "2026",
+    "2",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0014",
+   "chunk_id": "0000909832-24-000017:33.1:33.1",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 31,
+   "supporting_quote": "| Diluted | 444,754 | 444,475 | 444,579 | 444,503 |",
+   "value": "444754",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [3], caption millions (6)"
+   ],
+   "no_context_answer": "Costco's diluted net income per common share for the 12 weeks ended February 18, 2024 was **$3.92**. That was on net income attributable to Costco of about $1,589 million.\n\nI'm answering from memory, not from the filing itself. If you meant a different diluted line, such as the diluted weighted-average share count, tell me and I'll say whether I know it. I believe that count was roughly 445 to 446 million shares, but I'm less sure of it than of the EPS.",
+   "no_context_figures": [
+    "12",
+    "18,",
+    "2024",
+    "$3.92",
+    "$1,589 million",
+    "445",
+    "446 million"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0015",
+   "chunk_id": "0000909832-24-000079:95.0:95.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 32,
+   "supporting_quote": "| Total | $702 | $691 | $229 |",
+   "value": "691000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the exact figure for the total available-for-sale fair value of investments across all maturity periods in Costco's Q1 FY2025 10-Q (quarter ended November 24, 2024). I'd rather not guess a number. If you can provide the filing, or I can look at it in the working directory, I can pull the figure from the investments table.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "10",
+    "24,",
+    "2024)"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0016",
+   "chunk_id": "0000909832-23-000065:211.0:211.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 36,
+   "supporting_quote": "| Net Sales | $56,717 | $53,437 |",
+   "value": "56717",
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "scale unknown: chunk has no unit_scale"
+   ],
+   "no_context_answer": "Costco's net sales for the 12 weeks ended November 26, 2023 (Q1 FY2024) were about **$57.8 billion**, up roughly 6% from about $54.4 billion in the same period a year earlier. Total revenue, which includes membership fees, was about $58.4 billion.\n\nThese figures come from memory, so check them against Costco's 10-Q or earnings release if you need exact numbers.",
+   "no_context_figures": [
+    "12",
+    "26,",
+    "2023",
+    "1",
+    "2024)",
+    "$57.8 billion",
+    "6%",
+    "$54.4 billion",
+    "$58.4 billion",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0017",
+   "chunk_id": "0000019617-25-000615:1344.0:1344.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 38,
+   "supporting_quote": "| Deposits with banks | 396.6 | 396.4 | 0.2 | — | 396.6 | 445.9 | 445.8 | 0.1 | — | 445.9 |",
+   "value": "396600000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the exact carrying value of Deposits with banks on JPMorgan's June 30, 2025 balance sheet. It was several hundred billion dollars (about $446 billion at December 31, 2024), but I can't give a precise figure without risking a wrong number. The Consolidated Balance Sheet in the Q2 2025 10-Q would give the exact value.",
+   "no_context_figures": [
+    "30,",
+    "2025",
+    "$446 billion",
+    "31,",
+    "2024)",
+    "2",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0018",
+   "chunk_id": "0000019617-24-000611:1549.0:1549.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 39,
+   "supporting_quote": "| Foreign exchange derivatives | $151 $(2,487) | $26 $1,650 |",
+   "value": null,
+   "magnitude": "2487000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the specific figure JPMorgan Chase reported for foreign exchange derivatives recorded in OCI for the three months ended September 30, 2024. I'd rather not guess at a number. The figure should be in the hedge accounting table in the derivatives note of the company's Q3 2024 Form 10-Q, which breaks out cash flow hedges and net investment hedges.",
+   "no_context_figures": [
+    "30,",
+    "2024",
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0019",
+   "chunk_id": "0000019617-25-000615:1270.0:1270.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 40,
+   "supporting_quote": "| U.S. GSEs and government agencies | $758 | $— | $45 | $(61) |  | $(41) | $7 | $— | $708 | $— |",
+   "value": "708000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I don't know this figure. JPMorgan's Level 3 fair value rollforward table reports it, but I can't recall the number for Jun. 30, 2024, and I'd rather not guess. Please check the Level 3 rollforward table in the fair value note of the 10-Q, under trading assets, debt instruments, mortgage-backed securities, U.S. GSEs and government agencies.",
+   "no_context_figures": [
+    "3",
+    "30,",
+    "2024,",
+    "3",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0020",
+   "chunk_id": "0001628280-26-054343:1819.1:1819.1",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 41,
+   "supporting_quote": "| Firm-administered multi-seller conduits | — | 20,140 |  | 115 | 20,255 | 18,174 | 24 | 18,198 |",
+   "value": "20255000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the figure for total assets of JPMorgan Chase's firm-administered multi-seller conduits in the Q2 FY2026 10-Q (as of June 30, 2026), and I'd rather not guess at a number. The 10-Q's note on variable interest entities (VIEs) should have it, in the table of consolidated VIEs or the \"Firm-administered multi-seller conduits\" discussion.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "10",
+    "30,",
+    "2026)",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0021",
+   "chunk_id": "0000019617-25-000421:752.0:752.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 46,
+   "supporting_quote": "| Real Estate | $208,848 | $143,444 | $53,314 | $10,554 | $1,536 | $910 | $72 | $(450) | $— |",
+   "value": "208848000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure. JPMorgan's Q1 2025 Form 10-Q reports wholesale credit exposure by industry, including Real Estate, in its wholesale credit portfolio table. I can't recall the Real Estate number from that table with confidence, and I'd rather not guess. The table in the 10-Q's Credit Risk Management section would give the exact amount.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0022",
+   "chunk_id": "0000019617-24-000453:415.1:415.1",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 47,
+   "supporting_quote": "| Total mortgage origination volume(e) | $10.7 | $11.2 | (4) | $17.3 | $16.9 | 2 |",
+   "value": "10700000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember JPMorgan Chase's total mortgage origination volume for Q2 2024, and I'd rather not guess at a figure. The number should be in the Home Lending section of JPMorgan's Q2 2024 Form 10-Q or earnings release supplement.",
+   "no_context_figures": [
+    "2",
+    "2024,",
+    "2",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0023",
+   "chunk_id": "0001045810-26-000021:1010.0:1010.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 50,
+   "supporting_quote": "| Designated as accounting hedges | $1,765 | $1,424 |",
+   "value": "1765000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the figure for foreign currency contracts designated as accounting hedges in NVIDIA's FY2026 10-K (fiscal year ended January 25, 2026), and I'd rather not guess a number. The figure should be in the 10-K's derivatives and hedging disclosures, likely in the notes to the financial statements or in Item 7A (market risk).",
+   "no_context_figures": [
+    "2026",
+    "10",
+    "25,",
+    "2026)",
+    "10",
+    "7"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0024",
+   "chunk_id": "0001045810-25-000023:1122.0:1122.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 51,
+   "supporting_quote": "| Balance at end of period | $2,861 | $1,670 | $1,238 |",
+   "value": "2861000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "NVIDIA's balance of unrecognized tax benefits at the end of fiscal year 2025 (period ended January 26, 2025) was about **$2.17 billion** (roughly $2,167 million), up from about $1.62 billion at the end of fiscal 2024.\n\nI'm recalling this from memory rather than from the filing, so please check it against the income tax note in NVIDIA's fiscal 2025 Form 10-K.",
+   "no_context_figures": [
+    "2025",
+    "26,",
+    "2025)",
+    "$2.17 billion",
+    "$2,167 million",
+    "$1.62 billion",
+    "2024",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0025",
+   "chunk_id": "0001045810-24-000124:178.0:178.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 54,
+   "supporting_quote": "| Raw materials | $1,991 | $1,719 |",
+   "value": "1991000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know this figure with confidence. NVIDIA's Q1 FY2025 10-Q breaks inventory into raw materials, work in process, and finished goods. I recall total inventories of about $5.86 billion at April 28, 2024, but I can't reliably recall the raw materials line, so my answer is unknown. The inventory note in the 10-Q will have the exact number.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "10",
+    "$5.86 billion",
+    "28,",
+    "2024,",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0026",
+   "chunk_id": "0001045810-24-000264:117.0:117.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 56,
+   "supporting_quote": "| Research and development | 832 | 600 | 1,559 | 1,124 |",
+   "value": "832000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "NVIDIA's research and development expense for the three months ended July 28, 2024 was **$3,090 million** (about $3.09 billion), up from $2,040 million in the same quarter a year earlier.\n\nThis is from memory and I haven't checked it against the filing.",
+   "no_context_figures": [
+    "28,",
+    "2024",
+    "$3,090 million",
+    "$3.09 billion",
+    "$2,040 million"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0027",
+   "chunk_id": "0001045810-24-000316:71.1:71.1",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 57,
+   "supporting_quote": "| Shares repurchased | (159) | — | (15) | — | (6,990) | (7,005) |",
+   "value": null,
+   "magnitude": "7005",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)",
+    "scale not applied, mixed table: tagged spans at ix scale [0], caption millions (6)",
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I don't know this figure with enough confidence to give you a number. I recall NVIDIA repurchasing about $9.7 billion of stock over all of fiscal 2024, but I can't reliably split out the nine months ended October 29, 2023, or how much of that reduced shareholders' equity. I'd rather not guess.\n\nYour framing is right that this period is the prior-year comparative in the Q3 fiscal 2025 10-Q. You can find the figure in the Condensed Consolidated Statements of Shareholders' Equity, in the \"Shares repurchased\" line for the nine months ended October 29, 2023.\n\n**Answer: unknown.**",
+   "no_context_figures": [
+    "$9.7 billion",
+    "2024,",
+    "29,",
+    "2023,",
+    "3",
+    "2025",
+    "10",
+    "29,",
+    "2023"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0028",
+   "chunk_id": "0001045810-24-000316:327.0:327.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 60,
+   "supporting_quote": "| Revenue | $35,082 | $30,040 | $18,120 | 17% | 94% |",
+   "value": "35082",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: scale exception clause 'millions, except'"
+   ],
+   "no_context_answer": "NVIDIA's revenue for the three months ended October 27, 2024 (Q3 FY2025) was **$35.08 billion**, up about 94% from a year earlier and up 17% from the prior quarter. Data Center revenue was the largest contributor, at roughly $30.8 billion.",
+   "no_context_figures": [
+    "27,",
+    "2024",
+    "3",
+    "2025)",
+    "$35.08 billion",
+    "94%",
+    "17%",
+    "$30.8 billion"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0029",
+   "chunk_id": "0000078003-26-000026:1124.0:1124.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 62,
+   "supporting_quote": "| Balance, December 31, 2025 | $(7,796) | $(321) | $(28) | $75 | $(8,069) |",
+   "value": null,
+   "magnitude": "8069000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Pfizer's accumulated other comprehensive loss as of December 31, 2025, and I'd rather not guess. The balance sheet in Pfizer's fiscal 2025 Form 10-K, filed in early 2026, reports it directly.",
+   "no_context_figures": [
+    "31,",
+    "2025,",
+    "2025",
+    "10",
+    "2026,"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0030",
+   "chunk_id": "0000078003-26-000026:1261.0:1261.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 63,
+   "supporting_quote": "| Benefit obligation, beginning | $9,781 | $10,756 | $7,363 | $7,292 | $486 | $450 |",
+   "value": "9781000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for the beginning-of-year (January 1, 2025) benefit obligation for Pfizer's U.S. pension plans in the FY2025 10-K, and I'd rather not guess at a precise number.\n\nYou can find it in the 10-K's Note 11, \"Pension and Postretirement Benefit Plans,\" in the table reconciling the change in benefit obligation. The \"Benefit obligation, beginning\" line for the U.S. qualified (or U.S. Pension Plans) column should give it. It should also match the prior year's ending obligation in the FY2024 10-K.",
+   "no_context_figures": [
+    "1,",
+    "2025)",
+    "2025",
+    "10",
+    "10",
+    "11,",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0031",
+   "chunk_id": "0000078003-26-000054:236.0:236.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 66,
+   "supporting_quote": "| Identifiable intangible assets | $126,421 | $(73,862) | $52,559 | $126,227 | $(72,496) | $53,731 |",
+   "value": "52559000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of Pfizer's Identifiable intangible assets, net, as of March 29, 2026 (Q1 FY2026). That figure would be in Pfizer's Form 10-Q for the quarter, on the condensed consolidated balance sheet, and I'd rather not guess at a number.",
+   "no_context_figures": [
+    "29,",
+    "2026",
+    "1",
+    "2026)",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0032",
+   "chunk_id": "0000078003-26-000054:209.1:209.1",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 67,
+   "supporting_quote": "|  | $(13) | $(31) | $267 | $(517) | $44 | $354 |",
+   "value": "267000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of Pfizer's Q1 FY2026 (three months ended March 29, 2026) 10-Q figures, including the total gains/(losses) recognized in OCI in its table of derivative and hedging instruments used to hedge or offset operational foreign exchange or interest rate risk. I'd rather not guess at a number.\n\nTo find it, check Pfizer's Form 10-Q for the quarter ended March 29, 2026, in the Notes to Condensed Consolidated Financial Statements under \"Financial Instruments\" (the derivative and hedging disclosures), where the gains/(losses) recognized in OCI are tabulated by hedge type.",
+   "no_context_figures": [
+    "1",
+    "2026",
+    "29,",
+    "2026)",
+    "10",
+    "10",
+    "29,",
+    "2026,"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0033",
+   "chunk_id": "0000078003-25-000138:70.1:70.1",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 68,
+   "supporting_quote": "| Balance, June 29, 2025 | 9,620 | $481 | $94,053 | (3,935) | $(115,010) | $117,609 | $(8,438) | $88,695 | $317 | $89,012 |",
+   "value": "89012",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: scale exception clause 'MILLIONS, EXCEPT'"
+   ],
+   "no_context_answer": "I don't know the exact figure. Pfizer's total equity as of June 29, 2025 is in its Q2 2025 10-Q, but I can't recall the number reliably. My rough recollection is that it was somewhere around $90–95 billion, but that is an estimate, not the reported value.\n\nFor the exact figure, check the Condensed Consolidated Statements of Equity in the 10-Q on SEC EDGAR or in Pfizer's investor relations filings.",
+   "no_context_figures": [
+    "29,",
+    "2025",
+    "2",
+    "2025",
+    "10",
+    "$90",
+    "95 billion",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0034",
+   "chunk_id": "0000078003-23-000115:586.3:586.3",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 72,
+   "supporting_quote": "|  |  |  | Worldwide | $233 | $— | * | * |  |",
+   "value": "233000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure for Pfizer's third-quarter 2023 worldwide revenue for Nurtec ODT/Vydura, and I'd rather not guess. The number would be in Pfizer's Q3 2023 earnings release or its 10-Q for the quarter ended Oct. 1, 2023.",
+   "no_context_figures": [
+    "2023",
+    "3",
+    "2023",
+    "10",
+    "1,",
+    "2023"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0035",
+   "chunk_id": "0000027419-26-000016:688.0:688.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 75,
+   "supporting_quote": "| Total investment (a) | $403 | $1,015 | $— |",
+   "value": "403",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: scale exception clause 'millions, except'; tagged spans at ix scale [0], caption millions (6)"
+   ],
+   "no_context_answer": "I don't know Target's total share repurchases for fiscal year 2025 (the year ended around January 31, 2026). I don't have a reliable figure, and I don't want to guess. Target's 10-K for that year, in the share repurchase section of Item 5 and in the cash flow statement, will have the exact number.",
+   "no_context_figures": [
+    "2025",
+    "31,",
+    "2026)",
+    "10",
+    "5"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0036",
+   "chunk_id": "0000027419-25-000018:716.0:716.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 76,
+   "supporting_quote": "| Total plan assets |  | $3,371 | $3,514 |",
+   "value": "3371000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the total plan assets fair value in Target's FY2024 fair value measurements table (as of January 31, 2025), and I'd rather not guess a figure. The pension footnote in Target's FY2024 Form 10-K should have it.",
+   "no_context_figures": [
+    "2024",
+    "31,",
+    "2025)",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0037",
+   "chunk_id": "0000027419-23-000052:128.0:128.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 79,
+   "supporting_quote": "| October 28, 2023 | $287 | $(24) | $(693) | $(430) |",
+   "value": null,
+   "magnitude": "430000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the total accumulated other comprehensive income (loss) balance in Target's Q3 FY2023 10-Q as of October 28, 2023, and I'd rather not guess at the figure. The number should be on the consolidated statement of financial position and in the shareholders' investment statement in that 10-Q, which you can check on SEC EDGAR.",
+   "no_context_figures": [
+    "3",
+    "2023",
+    "10",
+    "28,",
+    "2023,",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0038",
+   "chunk_id": "0000027419-25-000118:123.0:123.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 80,
+   "supporting_quote": "| Total investment (a) | $— | $155 | $251 | $155 |",
+   "value": "251",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [0], caption millions (6)",
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I don't know this figure with enough confidence to give a number. I can't reliably recall the share repurchase total from Target's 10-Q for the six months ended August 2, 2025. The figure would be in the 10-Q's share repurchase table and in the financing section of the cash flow statement. If you share the filing, I can pull it out for you.",
+   "no_context_figures": [
+    "10",
+    "2,",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0039",
+   "chunk_id": "0000027419-26-000042:213.0:213.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 82,
+   "supporting_quote": "| GAAP and Adjusted measures | $5,725 | 21.6% | $2,560 | 9.6% | $5,359 | 21.3% | $1,317 | 5.2% |",
+   "value": "2560000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. Target's Q2 FY2026 results (the quarter ended August 1, 2026) were reported after my knowledge cutoff, so I don't have the operating income figure. You can find it in Target's Q2 2026 earnings release or its Form 10-Q for that quarter.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "1,",
+    "2026)",
+    "2",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0040",
+   "chunk_id": "0000027419-25-000101:169.0:169.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 83,
+   "supporting_quote": "| Stores | 97.6% | 97.7% |",
+   "value": "97.6",
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the exact percentage of Target's merchandise sales fulfilled through Stores for Q1 FY2025 (three months ended May 3, 2025). The figure should be in the fulfillment-channel table in Target's Q1 2025 Form 10-Q, but I'd rather not guess a number.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "3,",
+    "2025)",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0041",
+   "chunk_id": "0000034088-25-000042:83.0:83.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 87,
+   "supporting_quote": "| Sales and other operating revenues | 92,167 | 178,557 |",
+   "value": "92167000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "no-context near-match (within 5%)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the exact figure. Exxon's total revenues and other income for Q2 2024 were roughly $93 billion, but I can't confirm the specific \"sales and other operating revenue\" line in millions without checking the filing.",
+   "no_context_figures": [
+    "2",
+    "2024",
+    "$93 billion"
+   ],
+   "no_context_near_figures": [
+    "$93 billion"
+   ]
+  },
+  {
+   "item_id": "seed_0042",
+   "chunk_id": "0000034088-24-000050:117.2:117.2",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 90,
+   "supporting_quote": "| United States | 634 | 684 | 1,289 | 1,364 |",
+   "value": "634000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know this figure. Note 8 in Exxon Mobil's Q2 2024 Form 10-Q has several rows labeled \"United States\", for example segment earnings and revenues, and I can't reliably recall which row or number you mean. I'd rather say unknown than guess. If you share the filing text or the specific line item, I can help read it.",
+   "no_context_figures": [
+    "8",
+    "2",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0043",
+   "chunk_id": "0000034088-26-000067:104.0:104.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 92,
+   "supporting_quote": "| Total | 66 | 74 |",
+   "value": "66000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the figure for total income tax (expense)/credit on components of other comprehensive income in Exxon Mobil's Q1 FY2026 10-Q (three months ended March 31, 2026), so I won't guess a number. You can find it in the Condensed Consolidated Statement of Comprehensive Income in that filing, where the income tax lines for OCI components are shown.",
+   "no_context_figures": [
+    "1",
+    "2026",
+    "10",
+    "31,",
+    "2026)"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0044",
+   "chunk_id": "0000034088-24-000068:97.1:97.1",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 93,
+   "supporting_quote": "| Net benefit cost | 37 | 42 | 106 | 132 |",
+   "value": "37000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure for Exxon Mobil's net benefit cost for pension and other postretirement benefits in Q3 2024, and I'd rather not guess. The Q3 2024 Form 10-Q has the number in its note on pension and other postretirement benefits. It breaks the cost into service cost, interest cost, expected return on plan assets, amortization items, and the net total.",
+   "no_context_figures": [
+    "3",
+    "2024,",
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0045",
+   "chunk_id": "0000034088-24-000050:154.0:154.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 94,
+   "supporting_quote": "| Total Adjusted Operating Costs (non-GAAP) | 78.8 | 79.4 | 37.2 | 39.6 |  |",
+   "value": "39600000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the specific figure for Exxon Mobil's Total Adjusted Operating Costs (non-GAAP) for the six months ended June 30, 2024. I'd rather not guess at a number. The Non-GAAP reconciliation section of the Q2 2024 10-Q should have it.",
+   "no_context_figures": [
+    "30,",
+    "2024",
+    "2",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0046",
+   "chunk_id": "0000034088-25-000061:180.1:180.1",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 95,
+   "supporting_quote": "| Total Cash Operating Expenses (Cash Opex) (Non-GAAP) | 55.0 | 56.4 | 41.3 | 43.0 |  |",
+   "value": "43000000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I don't know this figure with confidence, so my answer is unknown. Exxon's quarterly cash operating expenses have run at roughly $9–10 billion, which would put the nine-month total near $28–30 billion. That is only an estimate from memory, not a reported number. The exact figure is in the non-GAAP reconciliation in Exxon's Q3 2025 earnings release or Form 10-Q.",
+   "no_context_figures": [
+    "$9",
+    "10 billion",
+    "$28",
+    "30 billion",
+    "3",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0047",
+   "chunk_id": "0000034088-25-000061:266.0:266.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 96,
+   "supporting_quote": "| Total | 740 | 794 | 2,175 | 2,306 |",
+   "value": "740000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know this figure with confidence. Exxon Mobil reported total Q3 2025 earnings of about $7.5 billion, but I can't reliably recall the Specialty Products segment number. I'd rather not guess. The exact figure is in the segment table of Exxon's Q3 2025 earnings release or its Form 10-Q for the quarter ended September 30, 2025.",
+   "no_context_figures": [
+    "3",
+    "2025",
+    "$7.5 billion",
+    "3",
+    "2025",
+    "10",
+    "30,",
+    "2025"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0048",
+   "chunk_id": "0000320193-25-000079:478.0:485.0",
+   "stratum": [
+    "synthesis",
+    "AAPL",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 103,
+   "supporting_quote": "Gains and losses arising from amounts that are included in the assessment of cash flow hedge effectiveness are initially deferred in accumulated other comprehensive income/(loss) and subsequently reclassified into earnings when the hedged transaction affects earnings, and in the same line item in the Consolidated Statements of Operations.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Based on my knowledge of Apple's 10-K disclosures on derivatives and hedging (the language has been consistent across recent years, and I'm not able to verify the FY2025 text verbatim):\n\n**Cash flow hedges:** Apple designates derivatives (foreign currency forwards and options, and interest rate swaps) as cash flow hedges to offset variability in forecasted cash flows, such as foreign-currency-denominated revenue/inventory purchases and variable-rate debt interest.\n\n**When gains and losses affect earnings:** Gains and losses on these derivatives are initially recorded in accumulated other comprehensive income (AOCI) as a component of shareholders' equity. They are reclassified into earnings in the same period(s) in which the hedged transaction affects earnings.\n\n**Where they affect earnings:** They are recognized in the same line item as the hedged transaction:\n- For foreign currency hedges of forecasted sales and product purchases, in net sales or cost of sales.\n- For interest rate hedges, in interest and dividend income / other income/(expense), net (i.e., the line where the hedged interest is recorded).\n\n**Excluded components:** The Company generally excludes the time value (forward points/option time value) from effectiveness assessment, with those amounts recognized in earnings (typically over the hedge period, in the same line as the hedged item) per its policy.\n\n**Discontinuation:** If a hedge is no longer effective or the forecasted transaction becomes improbable, gains/losses in AOCI are reclassified to earnings (generally other income/(expense), net) at that time.\n\nThe precise FY2025 wording and dollar amounts I can't confirm from memory, so check the \"Derivative Financial Instruments\" section of Note 1 and Note 8 in the filing for exact text.",
+   "no_context_figures": [
+    "10",
+    "2025",
+    "2025",
+    "1",
+    "8"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0049",
+   "chunk_id": "0000320193-24-000069:105.0:112.0",
+   "stratum": [
+    "synthesis",
+    "AAPL",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 104,
+   "supporting_quote": "As of March 30, 2024, the Company had two vendors that individually represented 10% or more of total vendor non-trade receivables, which accounted for 47% and 19%. As of September 30, 2023, the Company had two vendors that individually represented 10% or more of total vendor non-trade receivables, which accounted for 48% and 23%.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the specific figures with confidence, so I won't state percentages I can't verify.\n\n**What I do know:** Apple's 10-Qs and 10-Ks include a \"Concentration of Credit Risk\" note on vendor non-trade receivables. It reports how many vendors individually represent 10% or more of the total and what percentage each accounts for. Historically, a small number of vendors (typically two or three) account for a large share of the balance. The largest has been above 40%, and often above 50%.\n\n**What I can't give you:** the exact number of 10%+ vendors and their percentages at March 30, 2024 versus September 30, 2023. I don't remember them reliably enough to say whether the concentration rose or fell.\n\n**What the disclosure implies in general:** Vendor non-trade receivables mostly arise when Apple sells components to its contract manufacturers and then buys back the assembled products. A high concentration in a few vendors therefore means that:\n- Apple's credit exposure sits with a small group of manufacturing partners.\n- A financial or operational problem at one of them could affect collectability and supply continuity at the same time.\n- Apple has not historically reported significant credit losses on these balances.\n\nTo get the exact change, check the \"Concentrations in the Available Sources of Supply\" and \"Vendor Non-Trade Receivables\" language in the Notes to the Condensed Consolidated Financial Statements of the Q2 FY2024 10-Q, and compare it with the FY2023 10-K.",
+   "no_context_figures": [
+    "10",
+    "10",
+    "10%",
+    "40%",
+    "50%",
+    "10%",
+    "30,",
+    "2024",
+    "30,",
+    "2023",
+    "2",
+    "2024",
+    "10",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0050",
+   "chunk_id": "0000320193-25-000008:189.0:196.0",
+   "stratum": [
+    "synthesis",
+    "AAPL",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 106,
+   "supporting_quote": "Services gross margin percentage increased during the first quarter of 2025 compared to the same quarter in 2024 due primarily to a different Services mix, partially offset by higher Services costs.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I recall that Services gross margin percentage rose to about 75.0%, from 72.8% in Q1 FY2024. Management attributed the increase mainly to a different Services mix and to leverage from higher Services net sales.\n\nI don't reliably remember what, if anything, management said partly offset the increase, so I'd say that part is unknown. The Gross Margin section of Apple's Q1 FY2025 Form 10-Q would give the exact wording.",
+   "no_context_figures": [
+    "75.0%",
+    "72.8%",
+    "1",
+    "2024",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0051",
+   "chunk_id": "0000320193-26-000013:270.0:272.0",
+   "stratum": [
+    "synthesis",
+    "AAPL",
+    "10-Q",
+    "II.1A"
+   ],
+   "draw_index": 109,
+   "supporting_quote": "If the Company is ultimately unsuccessful in defending its commission structure or if similar restrictions are imposed or expanded in other jurisdictions, and as a result the Company’s commission is narrowed or eliminated, the Company’s business, results of operations, and financial condition could be materially and adversely affected.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the exact language in Apple's 10-Q for Q2 FY2026 (the quarter ended March 2026), so I can't say with confidence what outcome it describes or the conditions it attaches.\n\nApple's recent filings have discussed legal and regulatory pressure on App Store commissions, including the EU Digital Markets Act and the Epic Games litigation in the U.S. I can't reliably quote or paraphrase the specific Q2 FY2026 passage from memory, and I don't want to guess at its wording.\n\nThe relevant text should be in the Legal Proceedings section (Part II, Item 1) and the Risk Factors section (Part II, Item 1A) of the filing on SEC EDGAR. If you paste the passage here, I can help interpret it.",
+   "no_context_figures": [
+    "10",
+    "2",
+    "2026",
+    "2026)",
+    "2",
+    "2026",
+    "1)",
+    "1"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0052",
+   "chunk_id": "0000070858-24-000122:1193.0:1195.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 110,
+   "supporting_quote": "For example, broker quotes in less active markets may only be indicative and therefore less reliable.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the 10-K's exact wording from memory, but BofA's fair value disclosures say broadly the following.\n\nBank of America describes using broker quotes (and pricing services) as inputs when valuing certain assets and liabilities. In less active markets, it places less reliance on those quotes. The reason is that quotes from less active markets are less reliable indicators of fair value:\n\n- **Fewer observable transactions:** With little trading, a quote may not reflect where a transaction would actually take place.\n- **Indicative, not firm:** A broker quote may be non-binding and not backed by an executable trade.\n- **Wider dispersion and less price transparency:** Quotes may differ widely across brokers, so one quote is a weaker measure of an exit price.\n\nBecause of this, BofA says it considers the nature of the quote (for example, whether it is binding or indicative) and the activity in the market. It may also use other valuation techniques, such as internal models or discounted cash flow analyses, and corroborate or adjust the quotes.\n\nI can't confirm the precise language or page reference in the fiscal 2023 filing. Please check the fair value measurements note (Note 20 in recent filings) for the exact wording.",
+   "no_context_figures": [
+    "10",
+    "2023",
+    "20"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0053",
+   "chunk_id": "0000070858-24-000122:1445.0:1453.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 112,
+   "supporting_quote": "For purposes of the Consolidated Balance Sheet, the Corporation offsets derivative assets and liabilities and cash collateral held with the same counterparty where it has such a legally enforceable master netting agreement.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I'm answering from memory of the filing's general disclosures, not from the document itself, so treat the wording as a paraphrase.\n\n**Why the Corporation uses ISDA master netting agreements**\n\nBank of America manages credit risk on derivatives with counterparties largely through these agreements. An ISDA master agreement is a legally enforceable contract that covers all derivative transactions with a given counterparty. If the counterparty defaults, goes bankrupt, or another termination event occurs, the Corporation can close out all the transactions and net the positive and negative values into a single amount owed by one party to the other. This limits credit exposure to the net amount instead of the gross amount of each trade. The agreements are usually paired with collateral provisions (credit support annexes) that require cash or securities to be posted to cover the net exposure. The Corporation also uses central clearing for many derivatives, which provides similar netting.\n\n**Effect on balance sheet presentation**\n\n- Where the netting agreements are legally enforceable, the Corporation offsets derivative assets and liabilities with the same counterparty on the Consolidated Balance Sheet. This applies to contracts under the same master netting agreement.\n- It also offsets the cash collateral received or posted against the net derivative position with that counterparty. This offset is allowed when the criteria are met.\n- As a result, the reported \"derivative assets\" and \"derivative liabilities\" are net figures, not the gross fair values. Gross positive and negative fair values are much larger than the amounts shown.\n- The notes reconcile the gross amounts to the net balance sheet amounts. They show the netting adjustments for counterparty netting and cash collateral, as of December 31, 2023 and 2022.\n- Collateral that cannot be offset on the balance sheet, such as securities collateral or excess cash collateral, is disclosed separately as amounts not offset. It reduces net credit exposure in the disclosure but not in the reported balance.\n\n**Specific figures**\n\nI don't know the exact dollar amounts for gross derivative assets and liabilities, netting offsets, or the resulting net balances at December 31, 2023 and 2022. I can't state them reliably from memory.",
+   "no_context_figures": [
+    "31,",
+    "2023",
+    "2022",
+    "31,",
+    "2023",
+    "2022"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0054",
+   "chunk_id": "0000070858-25-000268:991.0:993.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 114,
+   "supporting_quote": "Based on the assessments, the Corporation concluded that none of its reporting units are at risk of impairment, as each of the reporting units’ fair values are substantially in excess of their carrying values.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "From memory, I can't quote the filing's exact wording, so treat this as approximate.\n\n**Conclusion:** After its annual goodwill impairment test as of June 30, 2025, Bank of America concluded that goodwill was not impaired for any of its reporting units. It also did not identify a meaningful impairment risk for them.\n\n**Basis:** I recall the test being a quantitative assessment. The Corporation compared each reporting unit's estimated fair value with its carrying amount, including allocated goodwill, and found that fair value exceeded carrying amount for every unit. Fair value estimates typically rely on discounted cash flow and market-based inputs, such as earnings forecasts, discount rates and comparable valuations.\n\nI'm not certain whether the 2025 filing added more specific language, such as a statement about macroeconomic conditions or about headroom for particular units. If you need the precise wording, check the goodwill discussion in the 10-Q itself.",
+   "no_context_figures": [
+    "30,",
+    "2025,",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0055",
+   "chunk_id": "0000070858-25-000405:253.0:260.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 116,
+   "supporting_quote": "The return on average allocated capital was 13 percent, down from 14 percent in the same period a year ago, due to an increase in allocated capital, partially offset by higher net income.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't confirm the specific figures for Bank of America's Global Markets segment in Q3 2025, so I can't give you a sourced answer.\n\nROAAC is net income divided by average allocated capital. It can fall while net income rises only if average allocated capital grew proportionally more than net income. Bank of America raised the capital it allocates to its business segments in 2025, in line with higher regulatory capital requirements. That is the most likely explanation, but I can't verify it or the exact numbers from memory.\n\nThe earnings release or the Global Markets segment table in the Q3 2025 10-Q would give the exact net income, allocated capital, and ROAAC figures. If you can share that text, I can help interpret it.",
+   "no_context_figures": [
+    "3",
+    "2025,",
+    "2025,",
+    "3",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0056",
+   "chunk_id": "0000070858-25-000200:433.0:438.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 117,
+   "supporting_quote": "During the three months ended March 31, 2025, commercial credit quality deteriorated as reservable criticized utilized exposure increased primarily driven by commercial real estate due to the sustained high interest rate environment.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't give you the exact wording from Bank of America's Q1 2025 10-Q, so treat this as a general recollection.\n\n- **Characterization:** BofA described commercial credit quality as generally stable and healthy. Net charge-offs stayed low relative to the size of the portfolio.\n- **Likely drivers:** The company pointed to continued strong performance across most commercial segments. It noted ongoing pressure in commercial real estate, particularly office properties, but that pressure was limited in scale. Its allowance and provision also reflected macroeconomic uncertainty at the time, including tariff and trade policy concerns.\n\nI'm not confident of the specific figures (net charge-off amounts, reservable criticized exposure, or the size of the reserve build) or the precise language BofA used. For those, check the \"Commercial Portfolio Credit Quality\" discussion in the Q1 2025 Form 10-Q's MD&A. I'd rather say that is unknown to me than guess at numbers.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "10",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0057",
+   "chunk_id": "0000909832-24-000049:271.0:273.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 122,
+   "supporting_quote": "Rather, we believe that achieving our longer-term objectives of reducing employee turnover, increasing productivity and enhancing employee satisfaction requires maintaining compensation levels that are better than the industry average for much of our workforce.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Based on my recollection of Costco's 10-K (the \"Employees\" / human capital discussion and related risk factors), management's stated reasoning is roughly this:\n\n- **Philosophy:** Costco says it believes that paying employees well and providing good benefits is a sound business strategy, not just a cost. It contrasts this with a approach of minimizing wages and benefits as a way to cut expenses.\n- **Business rationale:** Higher compensation is tied to better employee satisfaction, higher productivity, lower turnover, and stronger loyalty. Those outcomes reduce the costs of hiring and training and support operational efficiency and good member service.\n- **Link to its model:** Because the company's model relies on low prices, high volume, and low operating costs per unit, it argues that a stable, experienced, and motivated workforce helps keep operations efficient and ultimately benefits shareholders and members.\n\nI am working from memory rather than the filing text, so the wording above is a paraphrase and not an exact quote. If you need the precise language, check the Human Capital section of the FY2024 10-K.",
+   "no_context_figures": [
+    "10",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0058",
+   "chunk_id": "0000909832-24-000049:704.0:704.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 124,
+   "supporting_quote": "Wei and Henry have been consolidated with Brown. et al., vs. AffinityLifestyles.com, Inc., et al., Case No. A-21-831776-B, District Court, Clark County, NV. The Company is not a named defendant in Brown.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know. I can't reliably recall how the FY2024 10-K describes the Brown, Wei and Henry cases or any difference in the Company's position between them, and I don't want to guess at details. The \"Legal Proceedings\" discussion in the Commitments and Contingencies note of the 10-K should say.",
+   "no_context_figures": [
+    "2024",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0059",
+   "chunk_id": "0000909832-23-000065:143.0:146.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 126,
+   "supporting_quote": "The Company is named as an alleged joint employer. A complaint has not yet been filed.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know this with confidence. I can't reliably recall the details of the Yesenia Murillo matter in Costco's Q1 FY2024 10-Q (quarter ended November 26, 2023). That includes how the filing describes the Company's relationship to the plaintiff, such as employer or seller, and the claim's procedural status, such as class certification, settlement, or appeal. I'd rather not guess and risk giving you a wrong characterization.\n\nThe answer should be in the legal proceedings discussion, in the Commitments and Contingencies note to the financial statements (Note 5 or similar) and possibly Part II, Item 1. You can find the filing on SEC EDGAR under Costco Wholesale Corp (CIK 909832). If you paste that section here, I can summarize the relationship and procedural status.",
+   "no_context_figures": [
+    "1",
+    "2024",
+    "10",
+    "26,",
+    "2023)",
+    "5",
+    "1",
+    "909832)"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0060",
+   "chunk_id": "0000909832-26-000051:204.0:215.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 128,
+   "supporting_quote": "Membership fee revenue increased 11% to $1,373, primarily driven by new member sign-ups, membership fee increases, and upgrades to Executive Membership;",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable information about Costco's Q3 FY2026 results (the quarter ending around mid-May 2026) or management's explanation for membership fee revenue growth, so I can't say what they cited.\n\nFor context, in recent prior quarters Costco management has generally attributed membership fee growth to the fee increase implemented in September 2024, new member sign-ups, and strong renewal rates. I can't confirm that those were the stated drivers for Q3 FY2026. Costco's Q3 FY2026 earnings release and call transcript would have the actual commentary.",
+   "no_context_figures": [
+    "3",
+    "2026",
+    "2026)",
+    "2024,",
+    "3",
+    "2026",
+    "3",
+    "2026"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0061",
+   "chunk_id": "0000019617-24-000611:2453.0:2461.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 130,
+   "supporting_quote": "The Firm believes that this financial measure is useful in assessing the ability of a lending institution to generate income in excess of its provision for credit losses.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "From my recollection of JPMorgan Chase's filings (I can't verify the exact Q3 2024 wording), the Firm describes pre-provision profit/(loss) as a non-GAAP financial measure that it believes is useful because it:\n\n- **Assesses the Firm's ability to generate capital to cover credit losses** through the credit cycle. It is calculated as total net revenue less noninterest expense, so it excludes the provision for credit losses.\n- **Isolates the performance of the underlying operations.** Provisions for credit losses can be volatile and depend on changes in the economic outlook and reserve builds or releases, so removing them gives a clearer view of core earnings power.\n\nI'm confident about the general rationale, but I can't quote the 10-Q's exact language. If you need the precise wording, check the \"Explanation and Reconciliation of the Firm's Use of Non-GAAP Financial Measures\" section of the filing.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0062",
+   "chunk_id": "0000019617-24-000611:1673.0:1678.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 131,
+   "supporting_quote": "The effective yield excludes unscheduled principal prepayments; and accordingly, actual maturities of securities may differ from their contractual or expected maturities as certain securities may be prepaid.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "The standard language in JPMorgan Chase's filings on securities maturities and average yield says that actual maturities may differ from contractual or expected maturities because **borrowers may have the right to prepay obligations, with or without prepayment penalties**. This applies particularly to mortgage-backed securities and other asset-backed instruments, where underlying borrowers can pay off loans early. Issuers of some securities may also have call options.\n\nI'm working from memory of the filing's general wording, not the Q3 2024 10-Q text itself, so I can't confirm the exact phrasing.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0063",
+   "chunk_id": "0001628280-25-048859:1284.0:1301.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 132,
+   "supporting_quote": "$914 million and $1.2 billion of gross equity derivative receivables and gross equity derivative payables, respectively, as a result of an increase in observability and a decrease in the significance of unobservable inputs.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the specific reason JPMorgan gave for these Q3 2025 transfers, so I can't state it reliably. I don't have dependable knowledge of the disclosure in its Q3 2025 Form 10-Q.\n\nIn general, banks move derivatives from level 3 to level 2 when the unobservable inputs that made them level 3 become observable or less significant to the fair value. For equity derivatives, that usually means inputs such as long-dated equity volatility or correlation. Whether that is what drove JPMorgan's transfers this quarter, I can't confirm.\n\nThe fair value measurement note in the Q3 2025 10-Q, specifically the level 3 rollforward and its accompanying commentary, should state the reason directly. If you can share that text, I can help interpret it.",
+   "no_context_figures": [
+    "3",
+    "2025",
+    "3",
+    "2025",
+    "10",
+    "3",
+    "2",
+    "3",
+    "3",
+    "2025",
+    "10",
+    "3"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0064",
+   "chunk_id": "0001628280-26-029344:908.0:908.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 136,
+   "supporting_quote": "The sensitivities disclosed in the table below may not be representative of the actual gain or loss that would have been realized at March 31, 2026 and December 31, 2025, as the movement in market parameters across maturities may vary and are not intended to imply management’s expectation of future changes in these sensitivities.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't have reliable knowledge of the Q1 FY2026 10-Q's exact figures or wording, so I can't quote them. What follows is the general way JPMorgan frames these disclosures, which I believe carries over but haven't verified for that quarter.\n\n**What the sensitivities do indicate**\n- They give a rough size of the firm's exposure to a specific, stated market move (for example, a 1% or 10% change in a single risk factor) in positions not captured by VaR or earnings-at-risk. Such positions include certain private equity or principal investments, and items such as MSRs, CVA/FVA, or other fair-value or non-trading exposures.\n- They show the direction and approximate scale of the effect on fair value or income as of the reporting date.\n\n**What they do not indicate**\n- **They are not forecasts.** They don't predict future earnings, losses, or market moves, and they carry no probability of the shock occurring.\n- **They are point-in-time.** They reflect positions at the period end, and those positions and market conditions can change quickly.\n- **They are hypothetical and isolated.** They typically assume one factor moves while everything else stays constant. They ignore correlations, simultaneous moves across factors, and nonlinear effects such as convexity, which can make real outcomes larger or smaller than a simple scaling implies.\n- **They exclude management actions.** They don't reflect hedging adjustments or other responses the firm might take.\n- **They are not comparable to VaR or earnings-at-risk.** They use different methodologies, horizons, and confidence frameworks, so they shouldn't be added to those measures or read as a worst-case loss.\n- **They are not a limit on loss.** Actual results could differ materially, and moves larger than the stated shock are possible.\n\nFor the actual Q1 2026 numbers and the precise caveats, check the \"Market Risk Management\" section of the 10-Q, in the part on other sensitivity-based measures.",
+   "no_context_figures": [
+    "1",
+    "2026",
+    "10",
+    "1%",
+    "10%",
+    "1",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0065",
+   "chunk_id": "0001628280-26-054343:948.0:953.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 137,
+   "supporting_quote": "Subsequent changes to this forecast and related estimates will be reflected in the provision for credit losses in future periods.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't have the text of JPMorgan's Q2 FY2026 10-Q, so I can't quote what it says. I can only tell you what JPMorgan's filings have said in earlier periods, and I can't confirm the Q2 2026 wording.\n\nIn earlier 10-Qs and 10-Ks, JPMorgan's discussion of the allowance for credit losses has said roughly the following:\n\n- The allowance rests on forecasts of macroeconomic variables such as unemployment, GDP, and home prices. It also rests on the firm's central scenario and on weightings of alternative scenarios.\n- Changes to those forecasts, or to the weightings, can raise or lower the allowance.\n- A change in the allowance flows through the provision for credit losses in the income statement. A worse outlook means a higher provision, which lowers net income. A better outlook means a lower provision or a reserve release, which raises net income.\n- The effect can be material and can make results more volatile from quarter to quarter.\n\nWhether the Q2 2026 10-Q uses these exact words, or gives specific sensitivities or amounts, is unknown to me. For the precise language, check the \"Allowance for credit losses\" and \"Critical Accounting Estimates\" sections of the filing on SEC EDGAR.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "10",
+    "2",
+    "2026",
+    "10",
+    "10",
+    "2",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0066",
+   "chunk_id": "0001045810-25-000023:1199.0:1205.0",
+   "stratum": [
+    "synthesis",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 142,
+   "supporting_quote": "Such certifications will not be deemed to be incorporated by reference into any filing under the Securities Act or the Exchange Act, except to the extent that the registrant specifically incorporates it by reference.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "In NVIDIA's 10-K for fiscal year 2025, the Exhibit 32.1 and 32.2 certifications (the Section 906 Sarbanes-Oxley certifications by the CEO and CFO) are described as **furnished**, not filed. The exhibit index footnote says that they are \"furnished\" with the Form 10-K and are not deemed \"filed\" for purposes of Section 18 of the Exchange Act.\n\nThey are also not to be incorporated by reference into any filing under the Securities Act or the Exchange Act, regardless of any general incorporation language in that filing.\n\nThis reflects NVIDIA's standard exhibit language, which I'm giving from memory rather than a text check of the filing itself. The exact wording may differ slightly.",
+   "no_context_figures": [
+    "10",
+    "2025,",
+    "32.1",
+    "32.2",
+    "906",
+    "10",
+    "18"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0067",
+   "chunk_id": "0001045810-25-000230:188.0:191.0",
+   "stratum": [
+    "synthesis",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 144,
+   "supporting_quote": "(2) Includes unearned revenue related to hardware and software support and cloud services.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't confirm the footnote's exact wording from memory, so I can't give a verified answer.\n\nMy recollection is that NVIDIA describes its deferred (unearned) revenue as arising mainly from arrangements for software licenses and support, hardware support, and cloud services, along with customer advances. I can't say whether that matches the Q3 FY2026 footnote text or which balance sheet line it references (probably \"Accrued and other current liabilities\"). Please check the filing itself for the exact language.",
+   "no_context_figures": [
+    "3",
+    "2026"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0068",
+   "chunk_id": "0001045810-25-000230:354.0:360.0",
+   "stratum": [
+    "synthesis",
+    "NVDA",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 147,
+   "supporting_quote": "Our revenue is concentrated among a limited number of direct, indirect and cloud service purchasers and this trend may continue.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't give you the exact Q3 FY2026 figures (the quarter ended October 26, 2025) with confidence, so I'm not going to quote percentages from memory.\n\n**What I'm fairly confident about (NVIDIA's general disclosure pattern):**\n- Revenue is concentrated in a small number of direct customers, typically system builders and distributors. In recent quarters, several of them each accounted for 10% or more of revenue, and the top two or three made up a large share of the total.\n- NVIDIA also notes that some customers are indirect. They buy through the direct customers, and a few of these, mostly large cloud service providers and consumer internet companies, may each exceed 10% of revenue.\n- Cloud service providers are described as a major source of Data Center demand, both through direct purchases and through OEMs and system integrators. NVIDIA also says they account for a significant share of Data Center revenue.\n\n**What the filings suggest about the future:**\n- NVIDIA's risk language says the concentration is likely to continue, and that revenue could fluctuate materially with the timing and size of purchases by a few customers.\n- It says that losing, reducing, or delaying orders from a major customer, or a customer's own financial or capital-spending changes, could hurt results.\n\n**Unknown to me:** the exact customer percentages for Q3 FY2026, the specific wording of that 10-Q, and which customers were named or lettered. Please check the 10-Q's revenue and customer concentration note, along with the MD&A and risk factors, for the precise numbers.",
+   "no_context_figures": [
+    "3",
+    "2026",
+    "26,",
+    "2025)",
+    "10%",
+    "10%",
+    "3",
+    "2026,",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0069",
+   "chunk_id": "0001045810-25-000209:462.0:465.0",
+   "stratum": [
+    "synthesis",
+    "NVDA",
+    "10-Q",
+    "II.1A"
+   ],
+   "draw_index": 148,
+   "supporting_quote": "In that event, we would effectively be foreclosed from competing in China's data center computing/compute market, with a material and adverse impact on our business, operating results, and financial condition.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I recall the gist but not the exact wording, so treat this as a paraphrase.\n\nPer NVIDIA's Q2 FY2026 10-Q (quarter ended July 27, 2025), if it cannot create a competitive product for China's data center market that receives USG approval, it would effectively be foreclosed from competing in that market. The filing says this would have a material adverse effect on its business, financial condition and results of operations. It also says Chinese competitors, who aren't subject to these restrictions, could strengthen their position and potentially compete more broadly, including outside China.\n\nI can't quote the precise language from memory, so please check the risk factors and export-control discussion in the filing itself.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "10",
+    "27,",
+    "2025)"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0070",
+   "chunk_id": "0000078003-24-000039:239.0:246.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-K",
+    "I.1"
+   ],
+   "draw_index": 150,
+   "supporting_quote": "However, our branded products are increasingly being placed on the higher tiers or in a non-preferred status. Continuing efforts by managed care entities to contain or reduce costs of healthcare and/or impose price controls may adversely affect demand for our products and our financial performance.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the exact wording from memory, so treat this as the gist rather than a verbatim answer.\n\n- **Trend:** Pfizer describes managed care organizations (including PBMs and health plans) as increasingly using formularies and utilization controls to limit access to branded products. These include tiering, prior authorization, step edits, and exclusions in favor of generics, biosimilars, or competing brands. Pfizer ties this to consolidation among payers and PBMs, which gives them more leverage in negotiations.\n- **Effect on Pfizer:** Pfizer says continuing cost-containment efforts by managed care may put pressure on pricing and reimbursement and may limit or reduce utilization of its products. That could adversely affect its business, revenues, and results of operations.\n\nI'm not certain of the precise phrasing or its exact location in the 10-K (likely the pricing and reimbursement discussion in Item 1 or the related risk factors). To confirm the language, check the filing text directly.",
+   "no_context_figures": [
+    "10",
+    "1"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0071",
+   "chunk_id": "0000078003-24-000039:743.0:746.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 152,
+   "supporting_quote": "primarily representing certain product liability and other legal expenses related to products discontinued and/or divested by Pfizer, and to a lesser extent, legal obligations related to pre-acquisition matters",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't confirm this from memory, so the specifics are unknown to me.\n\nI recall that Pfizer's fiscal 2023 Form 10-K included legal charges in \"Other (income)/deductions—net\", which are typically provisions for litigation and settlements. I believe the Zantac litigation was a significant driver, but I can't reliably recall the exact wording of the $474 million figure or which products the filing names. Guessing would risk giving you a wrong attribution.\n\nTo check it, look at the \"Other (Income)/Deductions—Net\" section of MD&A in the 2023 10-K, and at Note 4 and Note 16 (Contingencies and Certain Commitments) on legal proceedings. I can help interpret the text if you paste it here.",
+   "no_context_figures": [
+    "2023",
+    "10",
+    "$474 million",
+    "2023",
+    "10",
+    "4",
+    "16"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0072",
+   "chunk_id": "0000078003-26-000026:1365.0:1366.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 154,
+   "supporting_quote": "Adverse decisions in these matters could have a material adverse effect on our results of operations.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the FY2025 10-K directly, so I can't say for certain how that filing words it. The exact language is **unknown** to me.\n\nPfizer's earlier 10-Ks used consistent language on this point. They said that if Pfizer lost patent litigation, such as challenges from generic manufacturers, it could face earlier-than-expected loss of exclusivity and generic competition. They said this could have a material adverse effect on the results of operations, financial condition, and cash flows of the affected products or of the company overall. They also noted that generic competitors sometimes launch \"at risk\" before litigation is resolved, which could mean significant revenue loss.\n\nI haven't confirmed that the FY2025 filing keeps this wording. To check it, look at the \"Legal Proceedings\" note (Contingencies) and the risk factors on patent protection and generic competition in the filing itself.",
+   "no_context_figures": [
+    "2025",
+    "10",
+    "10",
+    "2025"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0073",
+   "chunk_id": "0000078003-26-000095:107.0:110.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 156,
+   "supporting_quote": "Dividend income from our investment in ViiV, recorded in Other (income)/deductions—net, was $98 million and $73 million for the three months ended June 28, 2026 and June 29, 2025, respectively, and $180 million and $111 million for the six months ended June 28, 2026 and June 29, 2025, respectively (see Note 4).",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the Q2 2026 figures, so I can't say how the quarter ended June 28, 2026 compared with the prior-year quarter. I don't have reliable numbers for Pfizer's ViiV dividend income in either period, and I won't guess.\n\nPfizer has historically recorded dividend income from its ViiV Healthcare equity investment in **Other (income)/deductions—net** on its income statement. I'm confident of that from earlier filings, but I can't confirm it for this specific period.\n\nFor the exact comparison, check Pfizer's Form 10-Q for the quarter ended June 28, 2026. The \"Other (Income)/Deductions—Net\" note should list the ViiV dividend income for both periods.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "28,",
+    "2026",
+    "10",
+    "28,",
+    "2026"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0074",
+   "chunk_id": "0000078003-25-000114:498.0:503.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 158,
+   "supporting_quote": "The increase in Medicare rebates in the first quarter of 2025 is primarily driven by the impact of higher manufacturer discounts as a result of IRA Medicare Part D Redesign.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the filing, but I believe the increase in Medicare rebates was mainly driven by the Medicare Part D redesign under the Inflation Reduction Act, which took effect January 1, 2025. Under the redesign, manufacturers pay a larger share of costs in the catastrophic and initial coverage phases through the new Manufacturer Discount Program. I'm not certain of the exact wording or whether the 10-Q names other contributing factors, so please check the rebate discussion in the filing.",
+   "no_context_figures": [
+    "1,",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0075",
+   "chunk_id": "0000027419-24-000032:392.0:395.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 162,
+   "supporting_quote": "We believe that the amounts accrued are appropriate; however, our liabilities could be significantly affected if future occurrences or loss developments differ from our assumptions.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I'm answering from memory, not from the filing, so the wording is paraphrased and I can't give exact figures.\n\n**How management characterizes the risk:** In its critical accounting estimates discussion, Target treats the liabilities it self-insures (workers' compensation, general liability, auto liability, and similar) as estimates. These cover both reported claims and incurred-but-not-reported losses, and they rely on actuarial methods and historical claims experience. Management says it doesn't expect the amounts ultimately paid to differ significantly from its estimates. It acknowledges, however, that the accruals could change if future claim experience differs materially from historical trends and actuarial assumptions. In other words, the risk is real but described as limited.\n\n**What the track record suggests:** Target has said that its adjustments to these estimates in recent years have not been material, which supports the view that its actuarial approach has been reasonably accurate. The filing also gives a sensitivity, along the lines of a 10% change in the liability moving net earnings by a modest amount relative to total earnings.\n\nI don't remember the exact dollar sensitivity or the precise wording for FY2023, so I'd treat those specifics as unknown. Please check the 10-K's \"Critical Accounting Estimates\" section to confirm.",
+   "no_context_figures": [
+    "10%",
+    "2023,",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0076",
+   "chunk_id": "0000027419-25-000018:704.0:708.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 164,
+   "supporting_quote": "(b)Accumulated benefit obligation—the present value of benefits earned to date assuming no future salary growth—is materially consistent with the projected benefit obligation in each period presented.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "If the accumulated benefit obligation (ABO) is materially consistent with the projected benefit obligation (PBO), then assumed future salary growth has little effect on the plan's obligations.\n\nThe reasoning is as follows:\n\n- The ABO measures benefits earned to date using current salary levels.\n- The PBO measures the same benefits but projects future salary increases.\n- The gap between them reflects the effect of assumed future compensation growth.\n- If the two are about equal, that gap is small. This usually happens when benefits are not tied to future pay, for example because the plan is frozen, uses a cash-balance or fixed-dollar formula, or has pay-credit or accrual features that don't depend on projected salaries.\n\nI'm drawing this from general principles of pension accounting. I don't have the specific FY2024 figures from Target's filing, so I can't confirm the exact ABO and PBO amounts or the plan features behind the similarity. For those, the pension footnote in Target's 10-K is the place to check.",
+   "no_context_figures": [
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0077",
+   "chunk_id": "0000027419-26-000022:131.0:131.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 166,
+   "supporting_quote": "For the three months ended May 3, 2025, includes $593 million of pretax net gains related to settlements of credit card interchange fee litigation matters. Note 3 provides additional information.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't tell which footnote you mean, because none came through with your message. I also don't want to guess at its wording or where it points readers.\n\nThe period label may also be off. The three months ended May 3, 2025 is Target's first quarter of fiscal 2025, not fiscal 2026. Fiscal 2026 would begin in early February 2026.\n\nI recall that Target's Q1 2025 results included a one-time gain from litigation settlements, which it excluded from adjusted EPS. If your footnote concerns that gain or the GAAP-to-adjusted EPS reconciliation, it would likely point readers to the non-GAAP reconciliation in the MD&A section. I'm not certain of that, so please don't rely on it as a quote from the filing.\n\nIf you paste the footnote text, I can explain what the item is and where the filing refers readers for more detail.",
+   "no_context_figures": [
+    "3,",
+    "2025",
+    "2025,",
+    "2026",
+    "2026",
+    "2026",
+    "1",
+    "2025"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0078",
+   "chunk_id": "0000027419-24-000179:214.0:224.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 168,
+   "supporting_quote": "Cash required for investing activities decreased to $1.9 billion for the nine months ended November 2, 2024, compared to $3.9 billion for the nine months ended October 28, 2023, due to lower capital investments.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "Target's Q3 2024 10-Q states that cash required for investing activities was lower than in the prior-year period mainly because of **a decrease in capital expenditures**. As I recall, capital expenditures were about $2.1 billion for the nine months, versus about $3.4 billion in the same period of 2023. This is from memory and I haven't checked it against the filing, so please confirm the exact wording and figures in the 10-Q.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "10",
+    "$2.1 billion",
+    "$3.4 billion",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0079",
+   "chunk_id": "0000034088-23-000056:75.0:77.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 171,
+   "supporting_quote": "Both the likelihood of such occurrences and their overall effect upon the Corporation vary greatly from country to country and are not predictable.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "ExxonMobil says that political developments and laws and regulations have affected, and may in the future affect, its operations and earnings **\"from time to time in varying degree.\"** It gives examples such as forced divestiture of assets, restrictions on production, imports and exports, price controls, tax increases, and regulatory or legal changes. It adds that **both the likelihood of such events and their overall effect on the company \"vary greatly from country to country and are not predictable.\"**\n\nI'm answering from memory of ExxonMobil's standard filing language, which appears in the 10-K risk factors and is repeated in the 10-Qs. I haven't checked the exact Q3 2023 wording, so the quotation marks may not match it word for word.",
+   "no_context_figures": [
+    "10",
+    "10",
+    "3",
+    "2023"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0080",
+   "chunk_id": "0000034088-26-000093:147.0:168.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 172,
+   "supporting_quote": "Commodity contracts held for trading purposes are presented in the Condensed Consolidated Statement of Income on a net basis in the line “Sales and other operating revenue\" and in the Consolidated Statement of Cash Flows in “Cash Flows from Operating Activities” and included before-tax realized and unrealized losses of $2.3 billion and gains of $534 million for the periods ended June 30, 2026 and 2025, respectively.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the specifics of ExxonMobil's Q2 FY2026 10-Q. I don't have reliable knowledge of its contents, so I can't give you the figures for commodity contracts held for trading for the periods ended June 30, 2026 and 2025.\n\nWhat I can say from general knowledge of ExxonMobil's earlier filings: the Corporation has typically said it uses commodity-based contracts, including derivatives, to manage commodity price risk and to facilitate trading. It has said that these derivatives are generally not designated as accounting hedges and are recorded at fair value, with gains and losses reported in the income statement. It has also noted that the impact of derivatives on its results is not material in most periods. That is only a description of past practice, and I can't confirm that the Q2 2026 wording is the same.\n\nFor the actual characterization and the change in trading results, check the \"Derivative and Financial Instrument Disclosures\" note in the 10-Q itself, which is on SEC EDGAR or ExxonMobil's investor site. If you share the filing text, I can help interpret it.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "10",
+    "30,",
+    "2026",
+    "2025",
+    "2",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0081",
+   "chunk_id": "0000034088-23-000056:132.0:133.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 174,
+   "supporting_quote": "Management uses these figures to improve comparability of the underlying business across multiple periods by isolating and removing significant non-operational events from business results.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the exact wording of that 10-Q from memory, but I can describe what ExxonMobil generally says in its filings about this measure. Treat this as a summary of their standard language, not a verbatim citation.\n\n**Why management uses it:**\n- Earnings (loss) excluding Identified Items are non-GAAP measures. They exclude certain individually significant items, such as impairments, gains or losses on asset sales, severance and restructuring charges, and tax-related effects.\n- Management says these items can obscure underlying business results and trends, and that excluding them helps investors compare operating performance across periods and understand the underlying business, with less distortion from the timing effects of unusual or non-recurring events.\n- Management also uses the measure to evaluate and discuss performance.\n\n**How it should be viewed relative to GAAP net income:**\n- ExxonMobil says the measure is not a substitute for, and should not be considered in isolation from, net income attributable to ExxonMobil as defined by U.S. GAAP.\n- The company provides reconciliations to the most comparable GAAP measure, net income (loss) attributable to ExxonMobil.\n- It notes that the measure is not standardized, so it may not be comparable to similarly titled measures from other companies.\n\nI can't confirm the exact phrasing or any Q3 2023-specific details, such as the dollar amounts of Identified Items. For the precise language, check the \"Non-GAAP\" or \"Frequently Used Terms\" section of the 10-Q.",
+   "no_context_figures": [
+    "10",
+    "3",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0082",
+   "chunk_id": "0000034088-24-000029:168.0:177.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 177,
+   "supporting_quote": "Margin – Margins decreased earnings by $2,000 million driven by weaker industry refining margins.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "The largest negative factor was **weaker industry margins**, meaning lower refining margins, not volumes or costs. I recall this from memory and can't give exact dollar figures with confidence.\n\n**What it indicates about external conditions:**\n- **Normalizing product markets.** Refining margins and crack spreads had been unusually high in 2022 and early 2023 because of tight supply after the Russia-Ukraine disruptions, low inventories, and strong demand recovery. By Q1 2024 those pressures had eased, so margins fell back toward more normal levels.\n- **Price-driven pressure.** The pressure came from market pricing, which the company doesn't control, rather than from the segment's own operations.\n- **Other factors.** Other negatives, such as the effects of timing and maintenance, were smaller than the margin decline.\n\nI can't confirm the exact size of the margin effect (I believe it was on the order of a billion dollars), so treat that figure as unknown and check Exxon's Q1 2024 earnings release for it.",
+   "no_context_figures": [
+    "2022",
+    "2023",
+    "1",
+    "2024",
+    "1",
+    "2024"
+   ],
+   "no_context_near_figures": []
+  },
+  {
+   "item_id": "seed_0083",
+   "chunk_id": "0000034088-26-000067:231.0:253.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 178,
+   "supporting_quote": "the capture of\nefficiencies within and between business lines and the ability to maintain near-term cost reductions as ongoing efficiencies\nwithout impairing our competitive positioning;",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the contents of Exxon Mobil's 10-Q for Q1 FY2026, so I can't say what it states about maintaining near-term cost reductions or what that implies about the risk the company sees in its cost savings.\n\nWhat I can say in general terms is that Exxon's filings have historically included forward-looking-statement cautions listing factors that could cause results to differ from expectations. Those typically cover commodity prices, inflation and cost pressures, project execution, regulatory changes, and the sustainability of structural cost savings. If the 10-Q includes language cautioning that cost reductions may not be maintained, it would generally suggest management sees those savings as not fully locked in. They could be partly offset by inflation, activity levels, or market conditions. I can't confirm that this wording appears in the filing or how it is framed.\n\nIf you can share the relevant passage, or the filing itself, I can help interpret it.",
+   "no_context_figures": [
+    "10",
+    "1",
+    "2026,",
+    "10"
+   ],
+   "no_context_near_figures": []
+  }
+ ]
+}

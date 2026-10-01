@@ -303,3 +303,7 @@ eval_seeding:
     overdraw: 2
     min_body_tokens: 40     # body tokens, header excluded (TRADEOFFS: seeding scale, floor, prompt)
   near_duplicate_cosine: 0.92   # PRD 11.1 Stage 2
+
+# llm_seeded items written by scripts/seed_build.py (TRADEOFFS: seeded item fields).
+eval_seeded_items:
+  dataset_version: llm_seeded_candidates_v1

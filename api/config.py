@@ -97,6 +97,11 @@ def eval_seeding(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_seeding"]
 
 
+def eval_seeded_items(path: Path = CORPUS_FILE) -> dict:
+    """The `eval_seeded_items:` block of api/config.yaml: llm_seeded item output."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_seeded_items"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

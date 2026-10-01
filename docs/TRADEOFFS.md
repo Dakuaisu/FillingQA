@@ -1949,3 +1949,51 @@ Proposed by the builder, adopted by the supervisor with one change (tolerance).
 *Alternatives:* exact match (keeps items the model knows to the PRD's own
 tolerance); matching with sign (treats a correct magnitude as wrong over
 accounting presentation, F-87); a judge model for numbers (no kappa exists).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeded item fields
+
+Proposed by the builder, approved by the supervisor with changes; recorded for
+the owner. `eval/generate/seed_items.py`, written by `python -m
+scripts.seed_build` from the committed raw files.
+
+- `question_type` `table` / `synthesis`; `difficulty` `easy` for table (PRD
+  11.1's item example is literally `question_type: "table", difficulty:
+  "easy"`, the only rule the PRD gives) and `medium` for synthesis (no rule; F-76).
+- `reference_answer`: the model's answer string, unchanged; no rewording of gold.
+  Scale is not written into the answer; it is a tag.
+- `gold_evidence_sets = [[seed chunk]]`, `gold_accessions = [its accession]`,
+  `expected_abstain = false`, `xbrl_fact_id = null`, `reviewed_by_human = false`,
+  `source = llm_seeded`.
+- `tags`: ticker, form, item_code, `kind:factual|interpretive`; table items
+  `unit_scale_<caption scale>` or `unit_scale_unknown` (NULL or mixed scale, and
+  a percent answer, confirmed at review, F-90); `quarter_label_on_span` (F-92),
+  `no_context:near_match`, `parenthesized`, `seed_backend:claude_cli` and
+  `seed_model:claude-sonnet-5-5` (F-59: development-grade, visible to every
+  report).
+- The supporting quote, the resolved value and scale, the no-context answer and
+  its extracted figures (all, and those within 5%), and the stratum go in the
+  manifest (`eval/candidates/llm_seeded_manifest.json`), not the item.
+- `dataset_version`: `llm_seeded_candidates_v1` (config `eval_seeded_items`).
+  The instruction was "the same as the existing 200 candidates", but those carry
+  two values (`xbrl_candidates_v1`, `comparison_candidates_v1`); this follows
+  their shared pattern. `eval_seeding` is frozen, so the value lives in a new
+  block.
+- The 53 reserve survivors are in `eval/seeding/reserve_v1.json`, in draw order,
+  headed "NOT AN EVAL ARTEFACT"; nothing there enters the candidates except
+  through a recorded rebuild.
+- The review sheet (`eval/candidates/llm_seeded_review.md`) covers all 83 (PRD
+  11.1 Stage 5: 100% review of everything not XBRL-derived): question, answer,
+  supporting quote, chunk header, no-context answer, the figures extracted from
+  it and those within 5%, flags, tags; for table items, the other chunks of the
+  same filing printing the item's figure (by magnitude) as candidate alternative
+  evidence for the owner, never written to gold. A last section lists the 18
+  no-context drops with the figure that matched.
+- The near-duplicate comparison set is the 200 non-seeded candidates; the
+  seeded file is excluded so that a rebuild compares against the same set.
+
+*Alternatives:* difficulty by a heuristic (no PRD rule, nothing reads it);
+reference answers normalized to base units (rewords gold, F-81 settles scoring);
+candidate alternatives added to gold automatically (unreviewed evidence
+inflates recall).

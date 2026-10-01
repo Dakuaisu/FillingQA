@@ -1,0 +1,1579 @@
+{
+ "note": "NOT AN EVAL ARTEFACT. Seeded survivors beyond their stratum's slots, in draw order. Nothing here enters the candidates except through a recorded rebuild.",
+ "items": [
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-24-000122:508.2:508.2",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 15,
+   "supporting_quote": "| Total loans and leases | $4,218 | $4,148 | $310,901 | $300,613 | $315,119 | $304,761 | 3% |",
+   "value": "315119000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the exact year-end 2023 Total loans and leases figure for Total Consumer Banking in Bank of America's FY2023 10-K. My recollection is that it was somewhere around $290 billion, but I can't confirm a precise number. The Consumer Banking segment table in the 10-K's MD&A should have the exact figure.",
+   "no_context_figures": [
+    "2023",
+    "2023",
+    "10",
+    "$290 billion",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's FY2023 10-K, what was the year-end Total loans and leases figure for Total Consumer Banking in 2023?",
+   "answer": "$315,119"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-25-000139:1474.1:1474.1",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 17,
+   "supporting_quote": "| Investment grade | 54,041 | 1,288 | 1,185 | 238 | 56,752 |",
+   "value": "56752000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable recollection of the specific figure for the total carrying value of total return swaps/options classified as investment grade in Bank of America's FY2024 10-K (the credit derivatives / \"Credit Derivatives\" or \"Total Return Swaps\" table by maturity and credit rating). I'd rather not guess at a number.\n\nIf you can share the filing text, or the relevant table, I can help pull the figure out and add up the maturity buckets.",
+   "no_context_figures": [
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's FY2024 10-K (as of December 31, 2024), what was the total carrying value of total return swaps/options classified as investment grade across all maturity buckets?",
+   "answer": "56,752"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-24-000156:646.2:646.2",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 20,
+   "supporting_quote": "| Cash and cash equivalents at March 31 | $313,404 | $376,218 |",
+   "value": "313404000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable recollection of Bank of America's reported cash and cash equivalents at March 31, 2024, and I'd rather not guess at the figure. It would be in the cash flow statement of the company's Q1 2024 Form 10-Q, under \"Cash and cash equivalents at end of period.\"",
+   "no_context_figures": [
+    "31,",
+    "2024,",
+    "1",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Bank of America Corporation's cash and cash equivalents at March 31 for the three months ended March 31, 2024 (Q1 FY2024), in millions of USD?",
+   "answer": "$313,404"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-25-000405:710.2:710.2",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 21,
+   "supporting_quote": "| Total derivative assets/liabilities |  |  |  | $40.9 |  |  | $39.4 |",
+   "value": "40900000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [],
+   "no_context_answer": "I believe the figure is about **$48.7 billion**. That is BofA's derivative assets on the consolidated balance sheet at December 31, 2024, which is net of master netting agreements and cash collateral. The Q3 2025 10-Q shows it as the year-end comparative. I'm recalling this from memory and am not fully certain of the exact number, so please check it against the filing's balance sheet or derivatives note.",
+   "no_context_figures": [
+    "$48.7 billion",
+    "31,",
+    "2024,",
+    "3",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's Q3 FY2025 10-Q, what was the total derivative assets figure (in billions, USD) as of December 31, 2024, after netting legally enforceable master netting agreements and cash collateral received?",
+   "answer": "$40.9"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-25-000268:138.4:138.4",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 24,
+   "supporting_quote": "| Net interest income/yield on earning assets (5) |  | $29,403 | 1.96% |  | $28,052 | 1.96% |",
+   "value": "29403000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "quarter label next to a multi-period span (F-92)",
+    "no-context near-match (within 5%)"
+   ],
+   "no_context_answer": "Bank of America's net interest income for the six months ended June 30, 2025 was about **$29.2 billion**. That is from memory and roughly the sum of Q1 (about $14.5 billion) and Q2 (about $14.7 billion). I can't confirm the exact dollar figure in millions from the 10-Q, so please check the filing's consolidated statement of income if you need it precisely.",
+   "no_context_figures": [
+    "30,",
+    "2025",
+    "$29.2 billion",
+    "1",
+    "$14.5 billion",
+    "2",
+    "$14.7 billion",
+    "10"
+   ],
+   "no_context_near_figures": [
+    "$29.2 billion"
+   ],
+   "question": "What was Bank of America Corporation's net interest income for the six months ended June 30, 2025 (Q2 FY2025 10-Q)?",
+   "answer": "$29,403"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-25-000200:546.1:546.1",
+   "stratum": [
+    "table",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 25,
+   "supporting_quote": "| Total trading positions portfolio VaR | 96 | 91 | 119 | 66 | 87 | 68 | 89 | 56 | 62 | 64 | 87 | 53 |",
+   "value": "91000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know this figure. Bank of America reports average VaR for its trading positions in the market risk section of its Q1 2025 10-Q, but I can't recall the exact number for the quarter ended March 31, 2025, and I'd rather not guess. The table to check is the market risk VaR table for trading activities, specifically the average column for the total covered positions portfolio, which is the line closest to \"total trading positions.\"",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "10",
+    "31,",
+    "2025,"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Bank of America Corporation's average total trading positions portfolio VaR for the three months ended March 31, 2025 (Q1 FY2025), in millions of USD?",
+   "answer": "91"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-24-000049:511.0:511.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 29,
+   "supporting_quote": "|  | Accumulated depreciation and amortization | (17,918) | (16,685) |\n|  | Property and equipment, net | $29,032 | $26,684 |",
+   "value": "29032000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Costco's property and equipment, net was about **$26.7 billion** ($26,684 million) at the end of fiscal 2024 (September 1, 2024). This comes from memory, so check it against the 10-K if you need the exact figure.",
+   "no_context_figures": [
+    "$26.7 billion",
+    "($26,684 million",
+    "2024",
+    "1,",
+    "2024)",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Costco Wholesale Corp's property and equipment, net, in fiscal year 2024?",
+   "answer": "$29,032"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-26-000029:177.0:177.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 34,
+   "supporting_quote": "| Total net sales | $68,242 | $62,530 | $134,220 | $123,515 |",
+   "value": "68242000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for Costco's total net sales for the 12 weeks ended February 15, 2026, so I won't guess. For comparison, the same quarter a year earlier (12 weeks ended February 16, 2025) was about $62.5 billion. The exact Q2 FY2026 number is in Costco's earnings release or its Form 10-Q for the quarter.",
+   "no_context_figures": [
+    "12",
+    "15,",
+    "2026,",
+    "(12",
+    "16,",
+    "2025)",
+    "$62.5 billion",
+    "2",
+    "2026",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Costco Wholesale Corp's Total net sales for the 12 weeks ended February 15, 2026 (Q2 FY2026)?",
+   "answer": "$68,242"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-23-000065:104.0:104.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 35,
+   "supporting_quote": "| Total long-term debt | 6,972 | 6,484 |",
+   "value": "6972",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [-2], caption millions (6)"
+   ],
+   "no_context_answer": "I don't know the exact figure for Costco's total long-term debt as of November 26, 2023, so I'm not going to give a number I can't stand behind.\n\nFrom memory, it was roughly $6.4 to $6.5 billion including the current portion. At the end of fiscal 2023 (September 3, 2023), the total was about $6.5 billion. That is an approximation, not a verified figure.\n\nFor the exact number, check the debt note and the balance sheet in Costco's Form 10-Q for the quarter ended November 26, 2023. The balance sheet splits out the current portion of long-term debt and the long-term debt excluding the current portion.",
+   "no_context_figures": [
+    "26,",
+    "2023,",
+    "$6.4",
+    "$6.5 billion",
+    "2023",
+    "3,",
+    "2023)",
+    "$6.5 billion",
+    "10",
+    "26,",
+    "2023"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Costco Wholesale Corp's total long-term debt as of November 26, 2023, the end of its first quarter of fiscal 2024?",
+   "answer": "6,972"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-24-000079:210.0:210.0",
+   "stratum": [
+    "table",
+    "COST",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 37,
+   "supporting_quote": "| Gross margin | $6,876 | $6,260 |",
+   "value": "6876",
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "scale unknown: chunk has no unit_scale"
+   ],
+   "no_context_answer": "I don't know the exact figure for certain. My best recollection is that Costco's gross margin for Q1 FY2025 was roughly 11% of net sales (around 11.2%), but I'm not confident in the exact number. For a precise figure, check the Q1 FY2025 earnings release or Form 10-Q.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "11%",
+    "11.2%",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Costco Wholesale Corp's gross margin for the 12 weeks ended November 24, 2024 (Q1 FY2025)?",
+   "answer": "$6,876"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-25-000615:1706.0:1706.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 42,
+   "supporting_quote": "| Total retained loans | $232,943 | $232,860 |",
+   "value": "232943",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [-2], caption millions (6)"
+   ],
+   "no_context_answer": "Unknown. I can't reliably recall the exact \"total retained loans\" figure from the geographic and FICO table in JPMorgan Chase's Q2 2025 10-Q (as of June 30, 2025). I'd rather not guess at a number. The filing has several tables broken out by geography and FICO score, such as residential real estate and credit card, and each has a different total. If you give me the specific table name or the filing text, I can help pull out the figure.",
+   "no_context_figures": [
+    "2",
+    "2025",
+    "10",
+    "30,",
+    "2025)"
+   ],
+   "no_context_near_figures": [],
+   "question": "In JPMorgan Chase & Co's Q2 FY2025 10-Q (as of June 30, 2025), what was the total retained loans figure in this geographic and FICO table?",
+   "answer": "$232,943"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-24-000326:1130.1:1130.1",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 43,
+   "supporting_quote": "| Total assets(a) | $4,090,727 | $3,875,393 |",
+   "value": "4090727",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [0], caption millions (6)"
+   ],
+   "no_context_answer": "JPMorgan Chase & Co. reported total assets of about **$4.09 trillion** (roughly $4,090 billion) as of March 31, 2024, per its Q1 2024 earnings release. That's from memory, so the exact figure may be slightly off. The 10-Q would have the precise number.",
+   "no_context_figures": [
+    "$4.09 trillion",
+    "$4,090 billion",
+    "31,",
+    "2024,",
+    "1",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was JPMorgan Chase & Co's total assets as of March 31, 2024 (Q1 FY2024)?",
+   "answer": "$4,090,727"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001628280-26-029344:1299.0:1299.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 45,
+   "supporting_quote": "| Total | $(190,662) | $(405,320) | $(32,148) | $(628,130) | $8,408 | $(2,993) | $5,415 |",
+   "value": null,
+   "magnitude": "628130000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the specific figure from JPMorgan Chase's Q1 FY2026 10-Q, namely the total notional amount across all risk ratings of reference entities (credit derivatives protection sold/purchased table) as of December 31, 2025. I'd rather not guess at a number. If you can provide the filing, I can help locate and interpret it.",
+   "no_context_figures": [
+    "1",
+    "2026",
+    "10",
+    "31,",
+    "2025"
+   ],
+   "no_context_near_figures": [],
+   "question": "In JPMorgan Chase & Co's Q1 FY2026 10-Q, what was the total notional amount for the total of all risk ratings of reference entities as of December 31, 2025?",
+   "answer": "$(628,130)"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001628280-26-029344:535.0:535.0",
+   "stratum": [
+    "table",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 49,
+   "supporting_quote": "| Total eligible amount | $572.0 | $249.8 | $563.7 | $246.0 |",
+   "value": "572000000000.0",
+   "magnitude": null,
+   "unit_scale": "billions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable data on JPMorgan Chase's total eligible external TLAC as of March 31, 2026. I'd rather not guess a figure. The number would be in the firm's Q1 2026 Form 10-Q or its quarterly Pillar 3 / TLAC disclosures on the JPMorgan Chase investor relations site.",
+   "no_context_figures": [
+    "31,",
+    "2026",
+    "1",
+    "2026",
+    "10",
+    "3"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was JPMorgan Chase & Co's total eligible external TLAC amount, in billions of USD, as of March 31, 2026 (Q1 FY2026)?",
+   "answer": "$572.0"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-26-000021:778.0:778.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 52,
+   "supporting_quote": "| Net cash provided by operating activities | 102,718 | 64,089 | 28,090 |",
+   "value": "102718000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have a reliable figure for NVIDIA's net cash provided by operating activities for FY2026. For reference, FY2025 was about $64.1 billion. For FY2026, check the cash flow statement in NVIDIA's Form 10-K for the year ended January 25, 2026.",
+   "no_context_figures": [
+    "2026",
+    "2025",
+    "$64.1 billion",
+    "2026,",
+    "10",
+    "25,",
+    "2026"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was NVIDIA Corp's net cash provided by operating activities for the fiscal year ended January 25, 2026 (FY2026)?",
+   "answer": "102,718"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-24-000029:963.0:963.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 53,
+   "supporting_quote": "| Total | $25,684 | $25,724 | $13,112 | $13,055 |",
+   "value": "25724000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't reliably remember the total estimated fair value in the debt securities maturity table of NVIDIA's FY2024 10-K, and I don't want to give you a figure I might have wrong. The number should be in the cash equivalents and marketable securities note, in the table showing amortized cost and estimated fair value by maturity (less than one year, and one to five years).",
+   "no_context_figures": [
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In NVIDIA Corp's FY2024 10-K (fiscal year ended Jan 28, 2024), what was the total estimated fair value of its debt securities in the maturity table as of Jan 28, 2024?",
+   "answer": "$25,724"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-24-000316:192.0:192.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 58,
+   "supporting_quote": "| Total inventories (1) | $7,654 | $5,282 |",
+   "value": "7654000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "NVIDIA's total inventories as of October 27, 2024 were about **$6.59 billion** (roughly $6,589 million), up from $5.28 billion at the end of Q2 FY2025 (July 28, 2024) and $5.28 billion... more precisely, up from about $5.9 billion at the end of Q2.\n\nI'm confident in the $6.59 billion figure for Q3 FY2025, but I'm less sure of the prior-quarter comparison, so treat that part as approximate.",
+   "no_context_figures": [
+    "27,",
+    "2024",
+    "$6.59 billion",
+    "$6,589 million",
+    "$5.28 billion",
+    "2",
+    "2025",
+    "28,",
+    "2024)",
+    "$5.28 billion",
+    "$5.9 billion",
+    "2",
+    "$6.59 billion",
+    "3",
+    "2025,"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was NVIDIA Corp's total inventories balance as of Oct 27, 2024, the end of its Q3 FY2025 period?",
+   "answer": "$7,654"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-26-000052:116.0:116.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 59,
+   "supporting_quote": "| Total intangible assets | $6,183 | $(3,063) | $3,120 | $6,184 | $(2,878) | $3,306 |",
+   "value": "3120000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the net carrying amount of NVIDIA's intangible assets as of April 26, 2026. I'd rather not guess a figure. The number would be in the intangible assets note of NVIDIA's Form 10-Q for Q1 FY2027, if you want to check it there.",
+   "no_context_figures": [
+    "26,",
+    "2026",
+    "10",
+    "1",
+    "2027,"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was NVIDIA Corp's total net carrying amount of intangible assets as of April 26, 2026, the end of Q1 FY2027?",
+   "answer": "$3,120"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-26-000075:378.0:378.0",
+   "stratum": [
+    "table",
+    "NVDA",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 61,
+   "supporting_quote": "| Compute & Networking | $62,696 | $28,363 | $34,333 | 121% | $116,031 | $50,417 | $65,614 | 130% |",
+   "value": "62696000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. NVIDIA's Q2 FY2027 results (quarter ended July 26, 2026) were reported after my knowledge cutoff, so I don't have the Compute & Networking segment operating income for that period. You can find it in NVIDIA's Q2 FY2027 earnings release or Form 10-Q, under the segment information note.",
+   "no_context_figures": [
+    "2",
+    "2027",
+    "26,",
+    "2026)",
+    "2",
+    "2027",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was NVIDIA Corp's Compute & Networking segment operating income for the three months ended Jul 26, 2026 (Q2 FY2027)?",
+   "answer": "$62,696"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-26-000026:1261.1:1261.1",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 64,
+   "supporting_quote": "| Fair value of plan assets, ending | 10,124 | 9,948 | 6,606 | 6,696 | 814 | 736 |",
+   "value": "10124000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I don't have reliable knowledge of the ending fair value of plan assets for Pfizer's U.S. pension plans as of December 31, 2025, and I don't want to guess at a figure. It would be reported in the pension note (the reconciliation of plan assets) of Pfizer's 2025 Form 10-K.",
+   "no_context_figures": [
+    "31,",
+    "2025,",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was the fair value of plan assets, ending, for Pfizer Inc's U.S. Pension Plans for the fiscal year ended December 31, 2025 (in millions USD)?",
+   "answer": "10,124"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-25-000054:1174.1:1174.1",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 65,
+   "supporting_quote": "| Total long-term debt, carried at historical proceeds, as adjusted | $57,405 | $61,538 |",
+   "value": "57405",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [-2], caption millions (6)"
+   ],
+   "no_context_answer": "I don't know the exact figure for that line item with confidence, so my answer is unknown.\n\nI recall that Pfizer's balance sheet showed long-term debt of about $61.5 billion at December 31, 2024. The debt note's total \"carried at historical proceeds, as adjusted\" may differ from that, because it can include the current portion. I can't state that number reliably from memory. Please check the debt footnote in Pfizer's 2024 Form 10-K.",
+   "no_context_figures": [
+    "$61.5 billion",
+    "31,",
+    "2024",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Pfizer Inc's total long-term debt, carried at historical proceeds, as adjusted, as of December 31, 2024 (fiscal year 2024)?",
+   "answer": "$57,405"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-25-000114:153.0:153.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 69,
+   "supporting_quote": "| Tax provision/(benefit) on other comprehensive income/(loss) | $(191) | $53 |",
+   "value": null,
+   "magnitude": "191000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the tax provision/(benefit) on other comprehensive income/(loss) in Pfizer's Q1 FY2025 (three months ended March 30, 2025) results, and I'd rather not guess a figure. You can find it in the Consolidated Statements of Comprehensive Income in Pfizer's Form 10-Q for that quarter. The tax amounts are shown there for each OCI component, and the footnotes break them down further.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "30,",
+    "2025)",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Pfizer Inc's tax provision/(benefit) on other comprehensive income/(loss) for the three months ended March 30, 2025 (Q1 FY2025)?",
+   "answer": "$(191)"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-25-000150:70.0:70.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 70,
+   "supporting_quote": "| Net income |  |  |  |  |  | 3,541 |  | 3,541 | 9 | 3,550 |",
+   "value": "3541",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "scale not applied, mixed table: tagged spans at ix scale [0], caption millions (6)",
+    "no-context near-match (within 5%)"
+   ],
+   "no_context_answer": "I don't know the exact figure. Pfizer's Q3 2025 reported diluted EPS was about $0.62, which implies net income attributable to Pfizer Inc. shareholders of roughly $3.5 billion (about $3,500 million). I can't give the precise number from the Retained Earnings column of the statement of equity without checking the filing.",
+   "no_context_figures": [
+    "3",
+    "2025",
+    "$0.62",
+    "$3.5 billion",
+    "$3,500 million"
+   ],
+   "no_context_near_figures": [
+    "$3,500 million"
+   ],
+   "question": "What was Pfizer Inc.'s net income attributable to Pfizer Inc. shareholders (the Retained Earnings column) in the Q3 FY2025 condensed consolidated statement of equity, in millions of USD?",
+   "answer": "3,541"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-24-000166:203.0:203.0",
+   "stratum": [
+    "table",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 71,
+   "supporting_quote": "| Balance, June 30, 2024 | $(7,822) | $(77) | $(1) | $84 | $(7,816) |",
+   "value": null,
+   "magnitude": "7816000000",
+   "unit_scale": "millions",
+   "flags": [
+    "parenthesized figure: sign wording set at review (F-87)"
+   ],
+   "no_context_answer": "Unknown. I don't reliably remember the exact Accumulated Other Comprehensive Loss figure from Pfizer's Q2 2024 10-Q balance sheet as of June 30, 2024. I know it was a net loss of roughly the low-teens billions of dollars, but I don't want to give you a specific number I can't confirm. You can find the exact figure on the Condensed Consolidated Balance Sheet in that 10-Q, under shareholders' equity.",
+   "no_context_figures": [
+    "2",
+    "2024",
+    "10",
+    "30,",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Pfizer Inc's Accumulated Other Comprehensive Income/(Loss) balance as of June 30, 2024, in the Q2 FY2024 10-Q?",
+   "answer": "$(7,816)"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-25-000018:605.0:605.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 77,
+   "supporting_quote": "| Total required principal payments | $1,500 | $2,000 | $97 | $81 | $1,000 | $9,324 |",
+   "value": "97000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "Unknown. I can't recall the exact figure for Target's required principal payments due in 2027 from its FY2024 10-K (the fiscal year ended February 1, 2025) with enough confidence to state it. I'd rather not guess a number. The debt maturity table in the \"Notes to Consolidated Financial Statements\" (the Notes Payable and Long-Term Debt note) lists the required principal payments by year, so that would be the place to check.",
+   "no_context_figures": [
+    "2027",
+    "2024",
+    "10",
+    "1,",
+    "2025)"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Target Corporation's FY2024 10-K, what was the total required principal payment for 2027?",
+   "answer": "$97"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-24-000152:50.0:50.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 81,
+   "supporting_quote": "| Cash provided by operating activities | 3,339 | 3,398 |",
+   "value": "3339000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I believe Target's cash provided by operating activities for the six months ended August 3, 2024 was about **$4.1 billion** (roughly $4,138 million). I'm working from memory and am not fully certain of the exact figure, so please check it against the Q2 2024 Form 10-Q's cash flow statement.",
+   "no_context_figures": [
+    "3,",
+    "2024",
+    "$4.1 billion",
+    "$4,138 million",
+    "2",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Target Corporation's cash provided by operating activities for the six months ended August 3, 2024 (Q2 FY2024)?",
+   "answer": "3,339"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-25-000101:203.0:203.0",
+   "stratum": [
+    "table",
+    "TGT",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 84,
+   "supporting_quote": "| EBITDA | $2,285 | $2,043 | 11.9% |",
+   "value": "2285000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [
+    "no-context near-match (within 5%)"
+   ],
+   "no_context_answer": "I don't know the exact figure. Target reported Q1 2025 operating income of about $1.5 billion, which included a roughly $593 million litigation settlement gain, and quarterly depreciation and amortization of roughly $0.7 billion. That puts EBITDA at about $2.2 billion, but this is an estimate from memory. I can't give a precise figure in millions, so I'd call it unknown. Target's EBIT and EBITDA reconciliation in its Q1 2025 earnings release would have the exact number.",
+   "no_context_figures": [
+    "1",
+    "2025",
+    "$1.5 billion",
+    "$593 million",
+    "$0.7 billion",
+    "$2.2 billion",
+    "1",
+    "2025"
+   ],
+   "no_context_near_figures": [
+    "$2.2 billion"
+   ],
+   "question": "What was Target Corporation's EBITDA for the three months ended May 3, 2025 (Q1 FY2025), in millions of USD?",
+   "answer": "$2,285"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000034088-24-000029:190.0:190.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 97,
+   "supporting_quote": "| Worldwide | 5,054 | 4,649 |",
+   "value": "5054000",
+   "magnitude": null,
+   "unit_scale": "thousands",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure. My recollection is that Chemical Products third-party sales for Q1 2024 were roughly $6.5–7 billion, but I can't state the precise number from memory. Please check the segment information table in ExxonMobil's Q1 2024 Form 10-Q for the reported value.",
+   "no_context_figures": [
+    "1",
+    "2024",
+    "$6.5",
+    "7 billion",
+    "1",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What were Exxon Mobil Corporation's worldwide Chemical Products sales for the three months ended March 31, 2024 (Q1 FY2024), as reported in its 10-Q?",
+   "answer": "5,054"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000034088-24-000068:224.0:224.0",
+   "stratum": [
+    "table",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 98,
+   "supporting_quote": "| Total | 893 | 249 | 2,457 | 1,448 |",
+   "value": "893000000",
+   "magnitude": null,
+   "unit_scale": "millions",
+   "flags": [],
+   "no_context_answer": "I don't know the exact figure. I recall Exxon Mobil's Chemical Products earnings for Q3 2024 as roughly $0.4 billion, perhaps about $427 million, but I'm not confident in that number. I'd check the segment table in Exxon's Q3 2024 earnings release or its 10-Q for the precise value.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "$0.4 billion",
+    "$427 million",
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "What was Exxon Mobil Corporation's total Chemical Products earnings (U.S. GAAP) for the three months ended September 30, 2024 (Q3 FY2024), in millions?",
+   "answer": "893"
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000320193-24-000081:81.0:84.0",
+   "stratum": [
+    "synthesis",
+    "AAPL",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 105,
+   "supporting_quote": "Approximately 32 million restricted stock units (“RSUs”) were excluded from the computation of diluted earnings per share for the nine months ended July 1, 2023 because their effect would have been antidilutive.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "Apple's 10-Q for Q3 FY2024 (quarter ended June 29, 2024) included a note on earnings per share. It said that for the nine months ended July 1, 2023, certain restricted stock units (RSUs) were excluded from the diluted EPS computation because their effect would have been **antidilutive**.\n\nUnder the treasury stock method, RSUs are counted in diluted shares only if including them would lower EPS. An RSU is antidilutive when the assumed proceeds, meaning the unrecognized compensation cost, exceed the value of the shares that would be issued. Including such units would push EPS up, so they are left out.\n\nI'm recalling this from memory and can't give the exact number of excluded RSUs. If you need that figure, check the EPS note in the filing itself.",
+   "no_context_figures": [
+    "10",
+    "3",
+    "2024",
+    "29,",
+    "2024)",
+    "1,",
+    "2023,"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Apple Inc.'s 10-Q for Q3 FY2024, why were certain RSUs excluded from the diluted earnings per share computation for the nine months ended July 1, 2023?",
+   "answer": "They were excluded because including them would have been antidilutive, meaning their effect would have increased earnings per share (or reduced the loss per share) rather than diluting it."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-24-000122:831.0:835.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 111,
+   "supporting_quote": "If holders of the Guaranteed Securities make claims on their Guaranteed Securities in a bankruptcy, resolution or similar proceeding, any recoveries on those claims will be limited to those available under the applicable guarantee by the Corporation, as described above.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the filing's exact wording from memory, so treat this as the general thrust of Bank of America's FY2023 10-K disclosures, not a verified citation.\n\n**Implication: recovery is uncertain and could be partial or even nil.**\n\n- **Unsecured, structurally weak position.** The Guaranteed Securities are generally understood to be debt issued by a finance subsidiary and guaranteed by the parent. The guarantee is an unsecured obligation of Bank of America Corporation. Holders would rank equally with the parent's other senior unsecured creditors, and behind the parent's secured creditors and any creditors of its subsidiaries.\n- **Single point of entry resolution strategy.** The 10-K describes a plan in which only the parent enters bankruptcy or resolution, while its operating subsidiaries stay solvent. Losses are pushed up to the parent's creditors and shareholders, so holders of the parent's debt and guarantees would absorb them.\n- **Support to subsidiaries.** The parent has contractually committed to provide capital and liquidity to key subsidiaries, and that support is secured by the parent's assets. This would leave fewer assets available to satisfy unsecured claims, including the guarantee.\n- **Possible conversion or write-down.** Claims could be converted into equity or otherwise written down in a resolution. Holders could therefore recover substantially less than the amounts owed, and possibly nothing, and the recovery could be delayed.\n\nIf you need the precise language, check the risk factors on resolution and bankruptcy and the exhibit describing the securities in the filing itself.",
+   "no_context_figures": [
+    "2023",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "For fiscal year 2023, what does Bank of America Corporation's 10-K imply about the recovery prospects of holders of the Guaranteed Securities if they make claims in a bankruptcy, resolution or similar proceeding?",
+   "answer": "Because BofA Finance and the Trusts have no independent assets, revenues or operations and depend on the Corporation and/or its other subsidiaries, holders' recoveries would be limited to what is available under the Corporation's applicable guarantee."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-26-000157:1268.0:1273.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 113,
+   "supporting_quote": "AFS debt securities are debt securities that are not intended to be held until maturity or for trading purposes and are recognized on their trade date and carried at fair value with unrealized gains and losses, net-of-tax, included in accumulated OCI. Other debt securities carried at fair value are debt securities where the Corporation has elected to carry at fair value with unrealized gains and losses included in market making and similar activities.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the FY2025 10-K from memory, so I can't confirm its exact wording. What follows is the treatment Bank of America has described in its prior 10-Ks, which is likely to carry over, but treat it as unverified for FY2025.\n\n**Available-for-sale (AFS) debt securities**\n- They are carried at fair value.\n- Unrealized gains and losses (net of tax) are recorded in accumulated other comprehensive income (OCI), not in earnings.\n- Realized gains and losses on sale go to earnings, in other income.\n- Credit-related impairment is recognized through an allowance for credit losses (and the provision), not OCI. The allowance is limited to the amount by which fair value is below amortized cost.\n- If the Corporation intends to sell a security, or more likely than not will have to sell it before recovery, the unrealized loss is written down through earnings.\n\n**Other debt securities carried at fair value**\n- These are mainly securities held in trading or market-making activities, plus those under the fair value option.\n- Unrealized and realized gains and losses go to earnings immediately, in trading account profits or other income.\n\n**What this suggests about intent**\n- The accounting follows the purpose for holding the securities.\n- AFS securities are held for liquidity, interest rate risk management, and investment purposes. The Corporation is not seeking short-term trading profits, so fair value swings sit in OCI (and capital) rather than in net income.\n- Trading and fair-value-option positions are held for near-term resale, market-making, or to offset the risk of other fair-valued items. Running their fair value changes through earnings reflects that purpose and matches the offsetting hedges or liabilities.\n- The intent-to-sell test for AFS securities shows the link directly. If the Corporation decides to sell, the securities are treated as if earnings-oriented, and the loss moves from OCI to earnings.\n\nPlease check the exact language and figures in the Debt Securities note and the accounting policies note of the FY2025 10-K.",
+   "no_context_figures": [
+    "2025",
+    "10",
+    "10",
+    "2025",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's FY2025 10-K, how does the accounting treatment of unrealized gains and losses differ between available-for-sale (AFS) debt securities and other debt securities carried at fair value, and what does this suggest about how the Corporation links the treatment to its intent for holding the securities?",
+   "answer": "For AFS debt securities, which are not intended to be held until maturity or for trading, unrealized gains and losses (net-of-tax) go to accumulated OCI. For other debt securities carried at fair value, where the Corporation has elected fair value, they go to market making and similar activities. The treatment depends on management's intent and election: AFS holdings keep fair value swings out of earnings until realized, while elected fair value holdings show them in earnings."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-24-000208:1135.0:1138.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 115,
+   "supporting_quote": "Total recurring Level 3 assets were 0.30 percent of total consolidated assets, and total recurring Level 3 liabilities were 0.24 percent of total consolidated liabilities.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't recall the exact Level 3 figures from that 10-Q, so the numbers below are approximate and should be checked against the fair value note (Note 3, \"Fair Value Measurements\").\n\n**Scale (approximate)**\n- Total assets at June 30, 2024 were about $3.26 trillion.\n- Recurring Level 3 assets were, as I recall, in the low-to-mid $20 billion range. That is well under 1% of total assets, roughly 0.6–0.8%.\n- Recurring Level 3 liabilities were much smaller, likely under $10 billion. That is a fraction of a percent of total liabilities of about $2.9 trillion.\n- Most of the Level 3 balances are in trading account assets (such as corporate and mortgage-related securities and loans), derivative assets and liabilities (especially long-dated or illiquid interest rate, credit and equity derivatives), and some AFS/other debt securities and loans held for sale.\n\n**What it suggests**\n- **Low reliance on hard-to-value measurements.** The great majority of BofA's balance sheet is either carried at amortized cost (loans, deposits, held-to-maturity securities) or measured at fair value using Level 1 or Level 2 inputs, such as Treasuries, agencies, liquid corporate bonds, and standard derivatives.\n- **Limited earnings and capital sensitivity.** Because the Level 3 balances are small relative to equity (roughly $295 billion), even sizable valuation changes would have a modest effect on results and capital.\n- **Concentration is still worth noting.** The exposure sits in the Global Markets trading business, where the judgments about unobservable inputs (volatilities, correlations, credit spreads, prepayment rates) are more material. The sensitivity disclosures and Level 3 rollforward show the actual uncertainty.\n- **Level 3 is not the whole story.** Level 2 positions with model-based valuation, and the amortized-cost loan book (where allowance estimates are judgmental), are also sources of estimation risk.\n\nIf you want exact figures, I'd need the filing itself. I can work from it if you point me to a copy in the working directory.",
+   "no_context_figures": [
+    "3",
+    "10",
+    "3,",
+    "30,",
+    "2024",
+    "$3.26 trillion",
+    "3",
+    "$20 billion",
+    "1%",
+    "0.6",
+    "0.8%",
+    "3",
+    "$10 billion",
+    "$2.9 trillion",
+    "3",
+    "1",
+    "2",
+    "3",
+    "$295 billion",
+    "3",
+    "3",
+    "2"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's 10-Q for Q2 FY2024, how significant are recurring Level 3 assets and liabilities relative to the company's consolidated balance sheet, and what does this suggest about its reliance on hard-to-value fair value measurements?",
+   "answer": "Recurring Level 3 items are a very small share of the balance sheet, at 0.30 percent of total consolidated assets and 0.24 percent of total consolidated liabilities, suggesting that Bank of America relies only minimally on fair value measurements based on unobservable inputs."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-25-000405:328.0:331.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 118,
+   "supporting_quote": "As of January 1, 2025, CECL transition provision’s impact was fully phased-in.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "**Short answer:** At December 31, 2024, Bank of America's regulatory capital and ratios still reflected the CECL transition provision, which was only partly phased in. By September 30, 2025, the provision was fully phased in, so the capital figures reflect the full CECL impact and no transition benefit remains.\n\nThis is from my own knowledge of how the rule works, not from re-reading the filing, so check the exact wording in the 10-Q.\n\n- **December 31, 2024:** Under the 2020 regulatory option, BofA phased the CECL adoption impact into regulatory capital over a transition period. The 2-year delay was followed by a 3-year phase-in (25% in 2022, 50% in 2023, 75% in 2024). At year-end 2024, the ratios therefore included a remaining benefit, since about 25% of the adoption impact was not yet recognized in capital.\n- **September 30, 2025:** The phase-in finished on January 1, 2025, so 100% of the CECL impact is recognized. The capital ratios no longer include any transition benefit.\n\nBecause of this, the 2025 comparison to year-end 2024 contains a small step-down in capital from the final phase-in. I can't give the exact basis-point amount from memory, so I'd call that figure unknown.",
+   "no_context_figures": [
+    "31,",
+    "2024,",
+    "30,",
+    "2025,",
+    "10",
+    "31,",
+    "2024",
+    "2020",
+    "2",
+    "3",
+    "(25%",
+    "2022,",
+    "50%",
+    "2023,",
+    "75%",
+    "2024)",
+    "2024,",
+    "25%",
+    "30,",
+    "2025",
+    "1,",
+    "2025,",
+    "100%",
+    "2025",
+    "2024"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's Q3 FY2025 10-Q (September 30, 2025 compared with December 31, 2024), how does the treatment of the CECL transition provision differ between the two dates?",
+   "answer": "At September 30, 2025 the CECL transition provision's impact was fully phased-in, effective January 1, 2025, whereas the December 31, 2024 figures still reflected only a partial (25 percent) transition impact."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000070858-23-000272:397.0:400.0",
+   "stratum": [
+    "synthesis",
+    "BAC",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 119,
+   "supporting_quote": "We hold our GLS in legal entities that allow us to meet the liquidity requirements of our global businesses, and we consider the impact of potential regulatory, tax, legal and other restrictions that could limit the transferability of funds among entities.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "From memory, I can't quote the filing exactly, but this is the gist of what BofA says in its liquidity risk discussion.\n\n**Why it holds GLS in particular legal entities:** BofA holds its Global Liquidity Sources (cash and high-quality, unencumbered, liquid securities) in the parent company and in selected bank and broker-dealer subsidiaries. The aim is to meet the liquidity needs of each of those entities, such as their own funding obligations, stress outflows, and regulatory liquidity requirements. This is meant to ensure each entity can withstand stress on its own, without relying on others.\n\n**Constraints it weighs:** Liquidity at one entity is not always freely available to another. The company considers:\n- Regulatory limits on transfers between entities, such as Sections 23A and 23B of the Federal Reserve Act and Regulation W, which restrict bank-to-affiliate funding.\n- Legal, tax, and jurisdictional restrictions, including those on non-U.S. subsidiaries.\n- Entity-level liquidity requirements and stress-testing rules, such as the Liquidity Coverage Ratio and internal stress scenarios.\n- Other operational constraints on moving liquidity quickly across entities.\n\nI'm less certain about the exact wording and the specific rules the Q3 2023 10-Q cites, so check the filing's \"Liquidity Risk\" section for those details.",
+   "no_context_figures": [
+    "23",
+    "23",
+    "3",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Bank of America Corporation's Q3 FY2023 10-Q, why does the company hold its Global Liquidity Sources in particular legal entities, and what constraints does it weigh in doing so?",
+   "answer": "It holds GLS in legal entities that let it meet the liquidity needs of its global businesses, and it weighs regulatory, tax, legal and other restrictions that could limit how easily funds can be transferred among entities."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-23-000042:283.0:285.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-K",
+    "II.7"
+   ],
+   "draw_index": 123,
+   "supporting_quote": "More members auto renewing and higher penetration of Executive members benefit renewal rates.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't recall the exact wording of Costco's FY2023 10-K on this, so I'll give my best recollection and flag where I'm unsure.\n\nAt the end of fiscal 2023, Costco reported renewal rates of about 92.7% in the U.S. and Canada and about 90.5% worldwide. As I remember it, the company attributes renewal strength to:\n\n- **Member loyalty and satisfaction:** members value the warehouse model, which offers quality merchandise at low prices.\n- **Executive membership:** a growing share of members hold the higher-tier Executive membership, which has higher renewal rates and offers added benefits such as the 2% reward.\n- **Digital engagement:** the company has promoted digital tools and online engagement, though it has also noted that members who sign up online renew at lower rates, which weighs on the overall figure.\n\nI'm not certain of the exact phrasing or of the order and emphasis of the factors. For the precise language, check the \"Membership\" discussion in the MD&A of the FY2023 Form 10-K.",
+   "no_context_figures": [
+    "2023",
+    "10",
+    "2023,",
+    "92.7%",
+    "90.5%",
+    "2%",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "According to Costco Wholesale Corp's fiscal year 2023 disclosures, what factors does the company say help support its member renewal rates at the end of 2023?",
+   "answer": "Costco attributes the benefit to more members auto renewing and a higher penetration of Executive members."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-24-000049:512.0:514.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 125,
+   "supporting_quote": "For asset groups held and used, including warehouses to be relocated, the carrying value of the asset group is considered recoverable when the estimated future undiscounted cash flows generated from the use and eventual disposition of the asset group exceed the respective carrying value.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "From my recollection of Costco's FY2024 10-K (fiscal year ended September 1, 2024), the policy on long-lived assets works like this:\n\n**Grouping and review triggers**\n- The Company periodically evaluates long-lived assets for impairment when events or changes in circumstances indicate that the carrying value may not be recoverable.\n- For assets held and used, the asset group is generally an individual warehouse, since that is the lowest level for which identifiable cash flows are largely independent.\n\n**Recoverability test**\n- The Company compares the carrying value of the asset group with the estimated future undiscounted cash flows expected to be generated by it (including the eventual disposition, such as sale of the property).\n- If the carrying value is higher than the undiscounted cash flows, the asset group is not recoverable.\n\n**Recording an impairment loss**\n- When the asset group is not recoverable, the Company records an impairment loss equal to the amount by which the carrying value exceeds the asset group's fair value.\n- Fair value is generally based on market value or discounted cash flows.\n\n**Assets held for sale**\n- Assets to be disposed of are reported at the lower of carrying amount or fair value less costs to sell.\n\nI'm recalling this from memory rather than from the filing itself, so the exact wording may differ slightly. I also recall that impairment charges in FY2024 were not material, but I'm not certain of the figures.",
+   "no_context_figures": [
+    "2024",
+    "10",
+    "1,",
+    "2024)",
+    "2024"
+   ],
+   "no_context_near_figures": [],
+   "question": "For Costco Wholesale Corp's fiscal year 2024, how does the Company determine that a held-and-used asset group (generally an individual warehouse) is recoverable, and when does it record an impairment loss?",
+   "answer": "The carrying value is considered recoverable when the estimated future undiscounted cash flows from the use and eventual disposition of the asset group exceed its carrying value. If it is not recoverable, an impairment loss is recognized equal to the excess of the carrying value over the estimated fair value of the asset group."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-25-000033:152.0:156.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 127,
+   "supporting_quote": "In February 2025 the court granted the Company’s motion to strike portions of the complaint. The plaintiff filed a further amended complaint; the Company's motion to strike a portion of this complaint was granted on May 13, 2025.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know. I can't reliably recall how the court ruled on the Company's motions to strike in the *Nader v. Costco* PAGA action, as described in Costco's Q3 FY2025 10-Q (quarter ended May 11, 2025). I don't want to guess at the ruling or infer the Company's position from one I can't confirm.\n\nThe 10-Q's legal proceedings note (Note on Commitments and Contingencies) should have the answer. Costco typically describes the procedural status of cases there, including whether motions were granted, denied, or partly granted. Whatever the ruling was, a single ruling on a motion to strike usually says little about the merits of a PAGA case. It mostly shapes which claims or allegations go forward, and Costco usually states that it can't estimate a possible loss.\n\nIf you share the relevant passage, I can help interpret it.",
+   "no_context_figures": [
+    "3",
+    "2025",
+    "10",
+    "11,",
+    "2025)",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Costco Wholesale Corp's 10-Q for Q3 FY2025, how did the court rule on the Company's motions to strike in the Nader v. Costco PAGA action, and what does this suggest about the Company's position in that case?",
+   "answer": "The court granted the Company's motions to strike portions of the complaint, both in February 2025 and again on May 13, 2025 after a further amended complaint, suggesting the Company has had favorable procedural rulings in narrowing the plaintiff's claims."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000909832-25-000033:221.0:227.0",
+   "stratum": [
+    "synthesis",
+    "COST",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 129,
+   "supporting_quote": "The increase was across all categories, most significantly fresh foods which benefited from sales leverage, higher productivity, and lower prices for certain commodities.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the specific reason Costco gave for fresh foods showing the largest gross margin increase in Q3 FY2025, so I'd rather not guess. I recall that Costco's filings and earnings commentary for that quarter noted core merchandise gross margin improving as a percentage of core sales, with fresh foods among the categories that contributed. I can't reliably recall the stated driver, such as sourcing costs, mix, or pricing.\n\nThe company's Q3 FY2025 Form 10-Q (quarter ended May 11, 2025), in the gross margin section of MD&A, would state this directly.",
+   "no_context_figures": [
+    "3",
+    "2025,",
+    "3",
+    "2025",
+    "10",
+    "11,",
+    "2025)"
+   ],
+   "no_context_near_figures": [],
+   "question": "For Costco Wholesale Corp's third quarter of fiscal 2025 (Q3 FY2025), why did gross margin in core merchandise categories, measured as a percentage of core merchandise sales, increase most significantly in fresh foods?",
+   "answer": "Fresh foods benefited from sales leverage, higher productivity, and lower prices for certain commodities, and the core merchandise gross margin increase was across all categories, with fresh foods the most significant."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-23-000524:2434.0:2440.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 133,
+   "supporting_quote": "In the second quarter of 2023, the Firm updated its line of business capital allocations to reflect the impact of the First Republic acquisition.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the stated reason with confidence, so I can't give you a reliable answer.\n\nI recall that JPMorgan's 10-Q disclosures say it allocates capital to its lines of business and updates those allocations periodically. The updates typically reflect changes in regulatory capital requirements, risk-weighted assets, and the businesses' risk profiles, and sometimes acquisitions. I can't confirm whether the Q2 2023 update was driven by one of these, such as the First Republic acquisition or the regulatory capital changes, or by something else. Naming one would be a guess.\n\nIf the filing's reason is the kind I described, it would imply that capital allocation is a managed, periodic process. Management would revisit it as regulation, the balance sheet, and business risk change, rather than set it once. Allocations would also be tied to the Firm's capital framework (such as Basel standardized requirements) rather than being purely discretionary. This is an inference from how the Firm describes its practice in general, not from the specific passage.\n\nTo get the exact wording, check the \"Business Segment Results\" or \"Capital Management\" section of the Q3 2023 10-Q.",
+   "no_context_figures": [
+    "10",
+    "2",
+    "2023",
+    "3",
+    "2023",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In JPMorgan Chase & Co's 10-Q for Q3 FY2023, why did the Firm update its line of business capital allocations in the second quarter of 2023, and what does this imply about how capital allocations are managed?",
+   "answer": "The Firm updated the allocations to reflect the impact of the First Republic acquisition. This implies allocations are reassessed at least annually and can also be adjusted mid-year when a significant event, such as an acquisition, changes the businesses."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-23-000524:2571.0:2595.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 134,
+   "supporting_quote": "The following types of modifications are considered FDMs: principal forgiveness, interest rate reduction, other-than-insignificant payment delay, term extension or a combination of these modifications.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the glossary verbatim, so this comes from memory and may differ in wording.\n\n**How the glossary characterizes FDMs:** JPMorgan defines a financial difficulty modification (FDM) as a modification granted to a borrower experiencing financial difficulty. This is the category that replaced troubled debt restructurings (TDRs) after the firm adopted ASU 2022-02 on January 1, 2023. As I recall, the glossary lists the forms an FDM can take:\n- principal forgiveness\n- interest rate reduction\n- other-than-insignificant payment delay\n- term extension\n- a combination of these\n\n**What this implies:**\n- **Broad range:** FDMs are defined by the borrower's financial difficulty and the economic concession, not by one specific type of change. They can range from a simple maturity extension or payment deferral to a rate cut or an actual reduction of principal owed.\n- **Combinations count:** Many FDMs involve more than one of these concessions at once.\n- **Wider than the old TDR concept:** The FDM framework drops the TDR requirement of a separate creditor concession judgment. It also applies uniformly across loan portfolios, so it covers consumer and wholesale loans alike.\n- **Materiality threshold:** Minor changes, such as insignificant payment delays, fall outside the definition.\n\nI'm not certain of the exact wording or order of the list in the Q3 2023 glossary, so please check the filing text to confirm.",
+   "no_context_figures": [
+    "2022",
+    "-02",
+    "1,",
+    "2023",
+    "3",
+    "2023"
+   ],
+   "no_context_near_figures": [],
+   "question": "In JPMorgan Chase & Co's Q3 FY2023 10-Q, how does the glossary characterize the types of loan modifications that are considered FDMs, and what does this imply about the range of modifications covered?",
+   "answer": "The glossary treats FDMs as covering several kinds of changes to a loan's original terms: principal forgiveness, interest rate reduction, other-than-insignificant payment delay, term extension, or a combination of these. This implies that the category is broad and includes both single and combined modifications."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-23-000524:2284.0:2285.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 135,
+   "supporting_quote": "AOCI includes the after-tax change in unrealized gains and losses on investment securities, foreign currency translation adjustments (including the impact of related derivatives), fair value changes of excluded components on fair value hedges, cash flow hedging activities, net gain/(loss) related to the Firm’s defined benefit pension and OPEB plans, and fair value option-elected liabilities arising from changes in the Firm’s own credit risk (DVA).",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know what Note 21 of JPMorgan's Q3 2023 10-Q says, and I can't confirm which topic that note covers. I'd rather not guess at its contents.\n\nWhat I can say more generally is that JPMorgan's own-credit effects usually appear in its fair value disclosures. Changes in the Firm's own credit spreads affect the fair value of certain liabilities, such as structured notes and other liabilities measured under the fair value option, and of derivative liabilities. For fair value option liabilities, the portion of the change due to own credit risk (debt valuation adjustment, or DVA) is recorded in other comprehensive income, not in net income. For derivatives, own-credit effects are included in fair value through a credit valuation adjustment. Those disclosures are typically in the fair value measurement and fair value option notes, not necessarily Note 21.\n\nIf you can share the text of Note 21, I can help interpret it.",
+   "no_context_figures": [
+    "21",
+    "3",
+    "2023",
+    "10",
+    "21",
+    "21,"
+   ],
+   "no_context_near_figures": [],
+   "question": "In JPMorgan Chase & Co's Q3 FY2023 10-Q, how does Note 21 indicate that changes in the Firm's own creditworthiness affect its financial statements?",
+   "answer": "Changes in the Firm's own credit risk on fair value option-elected liabilities are reported in accumulated other comprehensive income/(loss) as DVA, rather than being listed among the other AOCI components such as investment securities or hedging activities."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-23-000524:864.0:871.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 138,
+   "supporting_quote": "Each of the Firm and JPMorgan Chase Bank, N.A.'s average LCR may fluctuate from period to period due to changes in their respective eligible HQLA and estimated net cash outflows as a result of ongoing business activity and from the continued impacts of Federal Reserve actions as well as other factors.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't quote the exact Q3 2023 wording with confidence, but here is what I recall of JPMorgan's standard disclosure on this point.\n\nIn its quarterly LCR disclosures (the Pillar 3-style \"Liquidity Coverage Ratio\" disclosure), JPMorgan Chase says the average LCR for the firm and for JPMorgan Chase Bank, N.A. may fluctuate from period to period. The reasons it gives are generally:\n\n- **Changes in the balance sheet:** movements in the size and composition of High Quality Liquid Assets (HQLA) and of net cash outflows.\n- **Customer and client activity:** deposit levels and client financing and trading activity.\n- **Management actions:** how the firm deploys its liquidity and funding, such as debt issuance and repayment and the investment of excess liquidity.\n- **Market conditions and the interest rate environment:** these affect the value of HQLA and the pace of deposit flows.\n\nI can't confirm that these are the specific drivers the Q3 2023 filing named, or how it phrased them. Beyond that general pattern, the precise Q3 2023 explanation is unknown to me.",
+   "no_context_figures": [
+    "3",
+    "2023",
+    "3",
+    "3",
+    "2023",
+    "3",
+    "2023"
+   ],
+   "no_context_near_figures": [],
+   "question": "For Q3 FY2023, why does JPMorgan Chase & Co say its average LCR, and that of JPMorgan Chase Bank, N.A., may fluctuate from period to period?",
+   "answer": "Because changes in eligible HQLA and estimated net cash outflows, driven by ongoing business activity, the continued impacts of Federal Reserve actions and other factors, can move the average LCR from one period to the next."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000019617-25-000615:813.0:821.0",
+   "stratum": [
+    "synthesis",
+    "JPM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 139,
+   "supporting_quote": "The Firm believes that it maintains sufficient liquidity to withstand a potential decrease in funding capacity due to ratings downgrades.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "JPMorgan says it believes it can withstand a potential decrease in funding capacity from credit ratings downgrades. I'm answering from memory and haven't checked the filing text, so the wording may differ.\n\nAs I recall, the Q2 2025 10-Q's liquidity risk discussion makes these points:\n\n- **Ratings can change:** Downgrades could reduce the Firm's access to funding markets, raise its cost of funds, and trigger additional collateral or cash requirements on derivatives and other obligations. The Firm monitors the factors behind its ratings, but it cannot guarantee they won't change.\n- **Resilience:** The Firm sees its liquidity position, including its large high-quality liquid assets and diversified funding, as enough to absorb a downgrade-driven decline in funding capacity.\n- **Debt terms:** Its unsecured debt has no provisions that accelerate payments or require additional collateral because of changes in its credit ratings, financial ratios, earnings, or stock price.\n\nFor the exact wording, check the \"Liquidity Risk Management – Credit ratings\" section of the 10-Q for the quarter ended June 30, 2025.",
+   "no_context_figures": [
+    "2",
+    "2025",
+    "10",
+    "10",
+    "30,",
+    "2025"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Q2 FY2025, how does JPMorgan Chase & Co. say it views its ability to withstand a potential decrease in funding capacity from credit ratings downgrades?",
+   "answer": "The Firm believes it maintains sufficient liquidity to withstand a potential decrease in funding capacity due to ratings downgrades, and that the contractual and behavioral factors affecting the impact of downgrades are incorporated in its liquidity risk and stress testing metrics."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0001045810-24-000029:1063.0:1066.0",
+   "stratum": [
+    "synthesis",
+    "NVDA",
+    "10-K",
+    "IV.15"
+   ],
+   "draw_index": 143,
+   "supporting_quote": "Maximum potential future payments cannot be estimated because many of these agreements do not have a maximum stated liability. We have not recorded any liability in our Consolidated Financial Statements for such indemnifications.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "From my recollection of NVIDIA's fiscal 2024 Form 10-K (the Guarantees/Indemnifications disclosure in the notes to the Consolidated Financial Statements), the characterization is roughly this:\n\n**Ability to estimate:** NVIDIA says it is not possible to determine the maximum potential amount of future payments under its indemnification obligations. The reasons it gives are that the indemnities are unique to each claim or agreement, the exposure depends on future events, and the amounts are not capped or are otherwise not reasonably estimable. Its stated rationale is that it has little history of indemnity claims, and that the potential payments depend on the specific facts and circumstances of each claim.\n\n**Accounting treatment:** NVIDIA says it has not recorded any liability for these indemnities in its Consolidated Financial Statements. The filing says this is because it has not had to make material payments or incur material costs under them, and no losses have been probable or reasonably estimable.\n\n**Context:** The indemnities mainly cover customers, partners, and others, typically for intellectual property infringement claims, and sometimes for other matters, arising from its products or agreements.\n\nI'm working from memory, not the filing text, so the exact wording may differ. For precise language, check the \"Guarantees\" or \"Indemnifications\" section of the Notes in the fiscal 2024 10-K.",
+   "no_context_figures": [
+    "2024",
+    "10",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "As of fiscal year 2024, how does NVIDIA characterize its ability to estimate maximum potential future payments under its indemnities, and how has it accounted for them in its Consolidated Financial Statements?",
+   "answer": "NVIDIA says it cannot estimate the maximum potential future payments because many of the agreements have no maximum stated liability, and it has not recorded any liability for these indemnifications in its Consolidated Financial Statements."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-26-000026:197.0:201.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-K",
+    "I.1"
+   ],
+   "draw_index": 151,
+   "supporting_quote": "(i) if the formulation patent is held invalid or not infringed in future litigation, through appeal, the settled generic companies and any successful future litigant would be permitted to launch on November 21, 2026; or (ii) if both patents are held invalid or not infringed in future litigation, through appeal, the settled generic companies and any successful future litigant could launch products immediately upon such an adverse decision.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know the specific wording of Pfizer's FY2025 10-K on this, so I can't say how the filing itself describes the effect.\n\nFrom general background, not the filing:\n- The Eliquis (apixaban) compound patent was upheld in earlier U.S. litigation. Pfizer and Bristol-Myers Squibb then settled with the generic manufacturers, which set a U.S. entry date of April 1, 2028.\n- The formulation patent, which runs later than the compound patent, was also at issue in that litigation.\n- In general, a ruling that invalidated or found the formulation patent not infringed in later litigation could remove the barrier it creates. A generic maker that is not bound by the settlement could then try to launch before April 1, 2028. Settlements often also contain acceleration provisions that could move the date earlier for the settling generics. I can't confirm that either mechanism appears in Pfizer's filing.\n\nFor the exact language, check the \"Legal Proceedings\" or \"Patent Litigation\" sections of the 10-K, usually in the Contingencies note. Eliquis is typically discussed there under Bristol-Myers Squibb collaboration or product litigation.",
+   "no_context_figures": [
+    "2025",
+    "10",
+    "1,",
+    "2028",
+    "1,",
+    "2028",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Pfizer Inc's 10-K for fiscal year 2025, how could a ruling on the Eliquis formulation patent in future litigation change the date on which generic versions might launch in the U.S. ahead of the settled April 1, 2028 date?",
+   "answer": "If the formulation patent were held invalid or not infringed in future litigation, through appeal, the settled generic companies and any successful future litigant would be allowed to launch earlier, on November 21, 2026. If both the formulation patent and the composition of matter patent were held invalid or not infringed, they could launch immediately upon the adverse decision."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-26-000026:1225.0:1233.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 155,
+   "supporting_quote": "We possess a well-diversified portfolio of hundreds of developed technology rights across therapeutic categories, representing our commercialized products.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't know how Pfizer's FY2025 10-K words this, so I can't give you its characterization of the portfolio's breadth. I don't have reliable recall of that filing's text.\n\nIn earlier Pfizer filings, developed technology rights were described as intangible assets acquired in business combinations or licensing deals. They represent the value of rights to marketed products or technologies, and they are amortized over their estimated useful lives. I can't confirm that the FY2025 10-K uses this language or says anything about how broad or concentrated the portfolio is.\n\nFor the exact wording, check the intangible assets note in the FY2025 10-K, typically titled \"Goodwill and Other Intangible Assets,\" and the critical accounting estimates section.",
+   "no_context_figures": [
+    "2025",
+    "10",
+    "2025",
+    "10",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Pfizer Inc's FY2025 10-K, how does the company characterize the breadth of its developed technology rights portfolio, and what do these rights represent?",
+   "answer": "Pfizer describes its developed technology rights as a well-diversified portfolio of hundreds of rights across therapeutic categories, representing its commercialized products."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-24-000191:396.0:398.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 157,
+   "supporting_quote": "The plaintiffs allege delay in the launch of generic Lipitor, in violation of federal antitrust laws and/or state antitrust, consumer protection and various other laws, resulting from (i) the 2008 agreement pursuant to which Pfizer and Ranbaxy settled certain patent litigation involving Lipitor and Pfizer granted Ranbaxy a license to sell a generic version of Lipitor in various markets beginning on varying dates, and (ii) in certain of the actions, the procurement and/or enforcement of certain patents for Lipitor.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Based on my general knowledge of the Lipitor antitrust litigation (I'm not quoting the Q3 2024 10-Q directly, so treat the wording as a paraphrase):\n\n**Core theory:** The plaintiffs allege that Pfizer unlawfully delayed generic Lipitor (atorvastatin) competition by entering a 2008 settlement/agreement with Ranbaxy (a generic maker) that resolved patent litigation over Lipitor. They contend the agreement was an anticompetitive \"reverse payment\" or pay-for-delay arrangement: Pfizer allegedly gave Ranbaxy value, including terms tied to the patent settlement and licensing and supply arrangements, in exchange for Ranbaxy's agreeing to stay off the market until a negotiated date (November 2011). The plaintiffs say this delayed entry of lower-priced generics, forced purchasers to pay higher brand prices, and violated federal and state antitrust laws (Sherman Act Sections 1 and 2) and related state laws.\n\nThe plaintiffs also assert that Pfizer unlawfully maintained its monopoly by improperly procuring or enforcing the Lipitor patent, including the reissued '995 patent, which they allege was obtained through fraud or was invalid. The Ranbaxy agreement is alleged to be part of the scheme to keep generics out.\n\n**Caveat:** I can't confirm the exact language, current procedural status, or which specific claims remained as of the Q3 2024 filing. For precise details, check the \"Legal Proceedings\" note (Contingencies) in the 10-Q itself.",
+   "no_context_figures": [
+    "3",
+    "2024",
+    "10",
+    "2008",
+    "2011)",
+    "1",
+    "2)",
+    "995",
+    "3",
+    "2024",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Pfizer Inc's 10-Q for Q3 FY2024, what is the core antitrust theory the plaintiffs advance in the Lipitor class actions regarding the 2008 agreement with Ranbaxy?",
+   "answer": "The plaintiffs allege that the 2008 patent litigation settlement and license granted to Ranbaxy, along with (in some actions) the procurement and/or enforcement of certain Lipitor patents, delayed the launch of generic Lipitor in violation of federal and state antitrust, consumer protection and other laws, causing price overcharges."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000078003-26-000095:646.0:651.0",
+   "stratum": [
+    "synthesis",
+    "PFE",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 159,
+   "supporting_quote": "the timing of, and ability to obtain, pricing/reimbursement, approvals and product launches, all of which could impact the availability or commercial potential of our products and product candidates;",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I don't have reliable knowledge of the specific text of Pfizer's Q2 FY2026 10-Q, so I can't quote or confirm what it says. I'd be guessing at its exact wording.\n\nWhat I can say generally is that Pfizer's filings typically flag these regulatory decisions as risks because:\n\n- **Labeling, approval, and authorization:** The timing and outcome of FDA, EMA, and other regulators' decisions determine whether and when a product can be launched, for which indications, and with what warnings or restrictions. Delays, narrow labels, or rejections can reduce or defer expected revenue and affect returns on R&D investment.\n- **Pricing and reimbursement:** Government and payer decisions (e.g., Medicare negotiation under the Inflation Reduction Act, Medicaid rebates, health technology assessments, formulary placement) influence the price a product can command and how widely it's used, which affects revenue and margins.\n\nIf you share the relevant passage from the 10-Q, I can help you interpret it precisely. Otherwise, for the specific rationale in that filing: unknown.",
+   "no_context_figures": [
+    "2",
+    "2026",
+    "10",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Pfizer Inc's Q2 FY2026 10-Q, why does the company flag regulatory decisions on labeling, approval, authorization, and pricing/reimbursement as a business risk?",
+   "answer": "Pfizer says these regulatory and pricing/reimbursement outcomes could affect whether its products and product candidates are available and how commercially valuable they can be."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-24-000032:664.0:670.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-K",
+    "II.8"
+   ],
+   "draw_index": 165,
+   "supporting_quote": "The expense recognized each period is partially dependent upon our estimate of the number of shares that will ultimately be issued. Future compensation expense for unvested awards could reach a maximum of $155 million assuming payout of all unvested awards.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "I can't recall Target's exact FY2023 wording, so I won't quote it.\n\nIn its share-based compensation note, Target reports unrecognized compensation expense for unvested awards (restricted stock units, performance-based share units, and options) and the weighted-average period over which it expects to recognize it. I believe the future expense is only an estimate. It would depend on:\n\n- **Forfeitures:** employees who leave before their awards vest.\n- **Performance outcomes:** for performance-based share units, how actual results compare with the targets.\n- **New grants:** awards made after year-end would add to expense.\n\nI can't confirm that Target describes the uncertainty in these terms or give the dollar amount and recognition period. For those, check the share-based compensation note in the fiscal 2023 Form 10-K (year ended February 3, 2024).",
+   "no_context_figures": [
+    "2023",
+    "2023",
+    "10",
+    "3,",
+    "2024)"
+   ],
+   "no_context_near_figures": [],
+   "question": "As of the end of Target Corporation's fiscal year 2023, how does the company describe the uncertainty in its future compensation expense for unvested awards, and what drives that uncertainty?",
+   "answer": "Target says the expense recognized each period depends partly on its estimate of how many shares will ultimately be issued, so future expense for unvested awards is uncertain. It could reach a maximum of $155 million if all unvested awards pay out."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-25-000101:45.0:47.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-Q",
+    "I.1"
+   ],
+   "draw_index": 167,
+   "supporting_quote": "Preferred Stock Authorized 5,000,000 shares, $0.01 par value; no shares were issued or outstanding during any period presented.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [],
+   "no_context_answer": "Based on my knowledge of Target's filings, preferred stock played no role in its capital structure in the periods presented.\n\n**What the disclosures show**\n- Target's balance sheet shows common stock (par value $0.0833 per share) with roughly 500 million shares authorized and about 455 million outstanding. Its shareholders' investment section is built from common stock, additional paid-in capital, retained earnings, and accumulated other comprehensive loss.\n- Target's articles of incorporation authorize 5 million shares of preferred stock ($0.01 par value), but none have been issued. The 10-K and 10-Q equity disclosures have reflected this for many years.\n- I can't recall the exact Q1 FY2025 figures (quarter ended May 3, 2025) with full confidence, so treat the specific share counts as approximate. The \"no preferred issued\" point is long-standing and I'm confident in it.\n\n**Implications for equity financing**\n- Target's equity is entirely common equity. It has not used preferred stock as a financing source and has no preferred dividend obligations or liquidation preferences ahead of common shareholders.\n- The authorization is unused flexibility. The board could issue preferred shares in the future, but nothing has been issued.\n- Capital needs have been met through retained earnings, operating cash flow, and debt (long-term notes and commercial paper), not hybrid or preferred equity.\n- Shareholder returns have come through common dividends and share repurchases, which fits a simple, conservative capital structure.\n\nIf you need the exact Q1 FY2025 numbers, check the 10-Q's Consolidated Statements of Financial Position and the shareholders' investment note.",
+   "no_context_figures": [
+    "$0.0833",
+    "500 million",
+    "455 million",
+    "5 million",
+    "($0.01",
+    "10",
+    "10",
+    "1",
+    "2025",
+    "3,",
+    "2025)",
+    "1",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "Based on Target Corporation's Q1 FY2025 balance sheet disclosures, did the company's preferred stock play any role in its capital structure during the periods presented, and what does that imply about its equity financing?",
+   "answer": "No. Target had no preferred stock issued or outstanding during any period presented, so its equity capital consisted solely of common stock, even though 5,000,000 preferred shares are authorized."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000027419-25-000118:174.0:195.0",
+   "stratum": [
+    "synthesis",
+    "TGT",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 169,
+   "supporting_quote": "For the six months ended August 2, 2025, our gross margin rate was 28.6 percent compared with 29.4 percent in the comparable prior-year period. The decrease reflected the net impact of\n•merchandising activities, including higher markdown rates and purchase order cancellation costs1, partially offset by growth in advertising and other revenues;",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I can't answer this reliably from memory, so I'd rather not guess.\n\nI recall that Target's gross margin rate fell in the first half of fiscal 2025 compared with the prior year, and that higher markdown rates were a main driver. I don't remember with confidence the other cost factors the filing cited, or which factor it named as a partial offset. Candidates would be things like lower shrink or favorable category mix, but I'm not certain of either.\n\nFor the exact wording, check the \"Gross Margin Rate\" discussion in the MD&A of Target's Q2 2025 Form 10-Q for the period ended August 2, 2025.",
+   "no_context_figures": [
+    "2025",
+    "2",
+    "2025",
+    "10",
+    "2,",
+    "2025"
+   ],
+   "no_context_near_figures": [],
+   "question": "For the six months ended August 2, 2025 (Q2 FY2025 year-to-date), why did Target Corporation's gross margin rate decrease compared with the prior-year period, and which factor was cited as a partial offset?",
+   "answer": "The decrease reflected the net impact of merchandising activities (higher markdown rates and purchase order cancellation costs), higher supply chain and digital fulfillment costs partly due to new supply chain facilities, and changes in category sales mix, with lower inventory shrink also contributing. Growth in advertising and other revenues partially offset the merchandising pressure."
+  },
+  {
+   "item_id": null,
+   "chunk_id": "0000034088-25-000042:247.0:259.0",
+   "stratum": [
+    "synthesis",
+    "XOM",
+    "10-Q",
+    "I.2"
+   ],
+   "draw_index": 179,
+   "supporting_quote": "Expenses – Higher expenses, including China Chemical Complex costs, decreased earnings by $250 million.",
+   "value": null,
+   "magnitude": null,
+   "unit_scale": null,
+   "flags": [
+    "quarter label next to a multi-period span (F-92)"
+   ],
+   "no_context_answer": "I don't know. I can't reliably recall the specific reason ExxonMobil gave for the decrease in earnings from Expenses in its Q2 2025 year-to-date Chemical Products earnings driver analysis. Rather than guess, I'd point you to the earnings drivers table and its footnotes in the Q2 2025 Form 10-Q or the earnings release.",
+   "no_context_figures": [
+    "2",
+    "2025",
+    "2",
+    "2025",
+    "10"
+   ],
+   "no_context_near_figures": [],
+   "question": "In Exxon Mobil Corporation's Q2 FY2025 year-to-date Chemical Products earnings driver analysis, what reason does the company give for the decrease in earnings from Expenses?",
+   "answer": "Higher expenses, including costs from the China Chemical Complex, decreased year-to-date Chemical Products earnings by $250 million."
+  }
+ ]
+}

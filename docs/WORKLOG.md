@@ -4529,3 +4529,23 @@ Correction to F-88 as first written in this commit's predecessor: none of the 4
 near-duplicate drops is against an existing candidate. All four partners are
 seeded chunks, and the highest cosine of a seeded question to an existing
 candidate is 0.909, below 0.92.
+
+## 2026-10-01 — llm_seeded candidates written (83), reserve, review sheet
+
+`eval/generate/seed_items.py` (item fields, manifest entry, scale tag,
+same-filing figure search) and the writer in `scripts/seed_build.py`. Tests:
+`tests/unit/test_seed_items.py` (4). `make test`: 350 passed; `make lint`: 94
+files already formatted. Two rebuilds left every output byte-identical.
+
+`python -m scripts.seed_build` (last lines):
+
+      short strata (7): synthesis AAPL 10-K I.1A 0/1, synthesis COST 10-K I.1A 0/1, synthesis NVDA 10-K I.1A 0/1, synthesis TGT 10-K I.1A 0/1, table AAPL 10-K II.8 1/2, table AAPL 10-K IV.15 0/1, table AAPL 10-Q I.2 0/1
+    wrote eval/candidates/llm_seeded_candidates.jsonl: 83 items {'table': 47, 'synthesis': 36}, validation failures 0, sha256 f1b7849ab81e5299
+    wrote eval/candidates/llm_seeded_manifest.json, eval/seeding/reserve_v1.json (53 reserve), eval/candidates/llm_seeded_review.md
+
+Tag counts over the 83 (ad hoc): kind:factual 47, kind:interpretive 36,
+unit_scale_millions 33, unit_scale_billions 4, unit_scale_unknown 10,
+parenthesized 7, quarter_label_on_span 6, no_context:near_match 2,
+seed_backend:claude_cli 83, seed_model:claude-sonnet-5-5 83. Other same-filing
+chunks printing a table item's figure, items by count: 0: 21, 1: 7, 2: 12, 3: 3,
+4: 2, 5: 2. No email address or "/Users/" in any of the four new files.
