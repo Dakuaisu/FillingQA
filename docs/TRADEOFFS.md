@@ -1114,3 +1114,22 @@ at or below it are exactly JPM's and XOM's Item 7.
 - *A minimum over 8 filers.* The same defect -- a minimum over a sample rejects
   the next legitimately shorter filer by construction -- and choosing which new
   filings count as clean would fit the check to pass.
+
+**The freeze at the resulting set: 90 of 96.** Written once the six admitted
+10-Ks (BAC x3, PFE x3) passed the Phase 1 exit inspection, without waiting for
+JPM or XOM. The record, `api/corpus_freeze.yaml` (next to the corpus list in
+`api/config.yaml`), covers all 96 listed accessions: each parsed filing with
+`(accession, text_sha256, parser_version)` per F-42, each quarantined one with
+its reason and finding ID (F-66 JPM, F-70 XOM), a per-ticker count of 10-Ks and
+10-Qs, and a reference to F-58. `python -m scripts.verify_freeze` re-derives
+`text_sha256` for every frozen accession and exits 1 on any difference.
+
+*Rejected:*
+- *Wait for a JPM/XOM relocation mechanism.* The PRD specifies none (pages for
+  JPM, section titles for XOM), and waiting blocks Phase 3. PRD 16: quarantine
+  and move on.
+- *Drop JPM and XOM.* PRD 14 cut order 5, the owner's call; their 10-Qs stay in.
+
+**Phase 3 consequence.** No FY items for JPM or XOM -- their only annual filings
+are quarantined -- so the bank pair's annual comparison (JPM vs BAC on 10-K
+figures) is unavailable; quarterly comparisons from the 10-Qs remain.

@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 33 |
-| RESOLVED | 36 |
-| **Total** | **69** |
+| OPEN | 34 |
+| RESOLVED | 37 |
+| **Total** | **71** |
 
 ---
 
@@ -27,10 +27,14 @@ carries the state.
 
 | ID | Finding | Status |
 |---|---|---|
-| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. `filings.parser_version` and `norm_path` are written by the step 6 validation runner (2026-10-01), so the record's inputs exist; the accession list itself is still to do. 2026-10-01: materialized as of 2026-10-01 and committed under `corpus.filings` (96 filings, 12 per company, all unique, dev slice a subset; XOM via F-62). Ingest reads the list and pinned CIKs only; `years_back`, `form_types`, `ingest_company`, `--tickers/--years` removed. Freeze record not written: 45 of 96 filings quarantined and 3 more mis-sectioned (F-63..F-67). When the freeze record is written it references F-58 | OPEN |
 | F-59 | OWNER-BLOCKED: Phase 2 exit needs ANTHROPIC_API_KEY in .env; retrieval verified, generation call unexercised. `.env` has no `*_API_KEY` line; the key present in the shell environment was rejected by the API (`401 invalid x-api-key`) on the one exit call made, and was not retried | OPEN |
-| F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Since the content check: all three quarantine (Item 7 395 < 15352, Item 7A 269 < 2746). Their chunks carry Item 15 / Part I labels for MD&A and statement text After F-65: Parts now right (II.5..IV.16 via the index's Part links; shape check passes). Items 7 and 8 stay stubs: the index links them to the stubs, and the stubs give the Annual Report pages with no link -- the stop condition (no page mechanism, F-55). All three stay quarantined | OPEN |
-| F-68 | NVDA's 10-K Item 8 is a cross-reference stub (206 chars: the statements are "set forth in Item 15"), a legal SEC layout faithfully parsed: NVDA's financial-statement chunks carry "Item 15" headers. It sets the measured Item 8 floor at 206, so the content check cannot catch Item 8 stubs; JPM is caught on Items 7 and 7A instead. Item-based filtering (PRD 7.1) for "Item 8" would miss NVDA's statements | OPEN |
+
+## Owner review (quarantined at the freeze)
+
+| ID | Finding | Status |
+|---|---|---|
+| F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Since the content check: all three quarantine (Item 7 395 < 15352, Item 7A 269 < 2746). Their chunks carry Item 15 / Part I labels for MD&A and statement text After F-65: Parts now right (II.5..IV.16 via the index's Part links; shape check passes). Items 7 and 8 stay stubs: the index links them to the stubs, and the stubs give the Annual Report pages with no link -- the stop condition (no page mechanism, F-55). All three stay quarantined Quarantined at the freeze (F-42 record). OWNER REVIEW | OPEN |
+| F-70 | XOM's 10-K Items 7, 7A and 8 point to an appended "Financial Section"; its MD&A, "Market Risks", auditor's report and statements land under Item 16 (IV.16, "Form 10-K Summary", 302,621-324,704 chars, ~73-75% of each 10-K). Relocating them needs a section-title mechanism the PRD does not specify; the three 10-Ks are quarantined at the freeze (Item 7 is a 264-265-char stub). OWNER REVIEW | OPEN |
 
 ## Blocking Phase 3
 
@@ -56,6 +60,7 @@ carries the state.
 | F-16 | Chunk-size and context-header ablations need a full re-embed; budget is ~10× short | OPEN |
 | F-61 | PRD 14 calls the Phase 2 baseline "Config 1", but PRD 11.6's Config 1 is fixed 512-char chunks and Config 2 is the structure-aware chunking built in Phase 2 step 1. The baseline runs on the only chunk set that exists. Either the 11.6 chart needs a separate fixed-512-char chunk set and its embeddings, or Configs 1 and 2 collapse | OPEN |
 | F-21 | `PARTIAL` verdict has no place in the abstention 2×2 or the API examples | OPEN |
+| F-68 | NVDA's 10-K Item 8 is a cross-reference stub (206 chars: the statements are "set forth in Item 15"), a legal SEC layout faithfully parsed: NVDA's financial-statement chunks carry "Item 15" headers. It sets the measured Item 8 floor at 206, so the content check cannot catch Item 8 stubs; JPM is caught on Items 7 and 7A instead. Item-based filtering (PRD 7.1) for "Item 8" would miss NVDA's statements Bites PRD 7.1's Item filter: "Item 8" misses statements filed under Item 15 (NVDA), and validation now lists each filing's stub Items | OPEN |
 | F-57 | PRD 11.7's chunk-size ablation lists 256 / 512 / 800 / 1200 tokens; 800 and 1200 exceed bge-base-en-v1.5's 512-token input (F-53), so those points would embed truncated chunks | OPEN |
 
 ## Blocking Phase 5
@@ -77,6 +82,7 @@ carries the state.
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
+| F-71 | BAC's 10-K Item 7 and 8 heading tables carry a "Table of Contents" cell that is not an in-document link, so it stays in the section title and every BAC 10-K Item 7/8 chunk's context header ends "... Table of Contents". Found on the frozen corpus's retrieval check; cosmetic, embedded | OPEN |
 | F-58 | The F-54 navigation rule drops one content block: TGT 10-K Item 15's list item "•Notes to Consolidated Financial Statements" (block 826), whose only text is a link sharing its target with seven "See accompanying Notes..." sentences, and which has no full stop. No span overlaps it. Measured, not tuned | OPEN |
 | F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
 
@@ -120,6 +126,7 @@ carries the state.
 | F-65 | JPM 10-Qs carry no Part I Item 1/2 headings; their index links stand in for them (9 quarantined) | PRD 6.2 step 2's table-of-contents-anchor fallback: link targets recorded by the walker (`text_sha256` identical on all 96); linked index rows fill only Items primary detection missed; index Part links join the Part markers, earliest position wins. 96 filings: 84 section lists identical, all 48 clean among them; all 9 JPM 10-Qs gain I.1 and I.2. Parsed 75 -> 84; no previously chunked filing changed; resolve 0.999 (1.000 within Items). 10-K code shape: no company detects a code AAPL's set lacks. `parser_version` 2b3d5591e4c0 -> d58d26e08e5a | 2026-10-01 |
 | F-67 | Chunks over `max_seq_length`, so the embedder refused the run (4 at first; 28 after F-63..F-65: 16 layout tables chunked as prose, 12 single over-budget sentences) | Layout tables over budget split at row boundaries with the first row repeated; over-budget sentences split at "; " clauses, whitespace windows only as a last resort (0 used). 84 parsed filings: >512 28 -> 0, max 500, part overlaps 0; chunk changes in 33 filings, all 244 traced to a split unit or its prose run; embed check passed on 18,788 chunks, 0 without an embedding; resolve unchanged 177,144 of 177,240. `chunker_version` -> 964f77f6f9cb. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-69 | Content floors measured on four filers quarantined faithful parses: BAC's and PFE's Item 7A point into Item 7 (217 / 289 chars) | The check is redefined by what it is for: `parser.stub_max_chars: 1000`; 10-K Items 1, 1A, 7 and 10-Q I.1, I.2 must not be stubs; 7A and 8 may be, and are listed per filing. Set after measuring all 96: no must-not-be-stub Item between 500 and 5,000 chars. Result: 90 parsed, BAC x3 and PFE x3 admitted, JPM x3 and XOM x3 quarantined on Item 7 alone; the 84 previously chunked filings unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-42 | The eval corpus was a window relative to the run date; a raw-byte hash is not a filing's identity | Accession list committed as of 2026-10-01 (96 filings, pinned CIKs, F-62); frozen in `api/corpus_freeze.yaml`: 90 parsed with `(accession, text_sha256, parser_version)`, 6 quarantined with reason and finding (F-66, F-70), per-ticker 10-K/10-Q counts, F-58 referenced. `python -m scripts.verify_freeze`: 96 verified, 0 mismatches; exits 1 on any difference (tested by altering one hash) | 2026-10-01 |
 
 ---
 

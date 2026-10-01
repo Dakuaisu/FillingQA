@@ -2504,3 +2504,167 @@ XOM 10-Ks `7,7A,8`.
     newly chunked: 6 ['0000070858-24-000122', '0000070858-25-000139', '0000070858-26-000157', '0000078003-24-000039', '0000078003-25-000054', '0000078003-26-000026'] chunks: {'0000070858-24-000122': 739, '0000070858-25-000139': 722, '0000070858-26-000157': 731, '0000078003-24-000039': 464, '0000078003-25-000054': 451, '0000078003-26-000026': 459}
 
 `make test`: 246 passed, 3 snapshots passed.
+
+## 2026-10-01 — Phase 1 exit inspection of the six admitted 10-Ks; corpus frozen
+
+Stub check committed as `33ae09d`. Embed after admitting the six: checks passed
+on 22,354 chunks, 3,566 embedded, 18,788 from cache, 0 without an embedding.
+Resolve: 209,500 of 209,608 (0.999; 1.000 within Items); the six resolve 1.000
+within Items; PFE's three 10-Ks have 16-23 spans in split paragraphs.
+
+**Inspection** -- sections with lengths, where the cross-referenced market-risk
+section sits, statements under Item 8, sample tables, spans, chunk sizes,
+resolve:
+
+    === BAC 0000070858-24-000122
+      sections: I.1=39555, I.1A=116434, I.1B=39, I.1C=146, I.2=1714, I.3=191, I.4=89, II.5=2795, II.6=37, II.7=302403, II.7A=217, II.8=391853, II.9=97, II.9A=1455, II.9B=2387, II.9C=146, III.10=5805, III.11=366, III.12=1433, III.13=302, III.14=339, IV.15=16856, IV
+      Item 7 [169538:471941]; Item 7A stub: 'Item 7A. Quantitative and Qualitative Disclosures about Market Risk See Market Risk Management on page 73 in the MD&A and the sections referenced ther'
+        market-risk heading @397512: 'Market Risk Management' -> inside Item 7
+        market-risk heading @472010: 'See Market Risk Management on page 73 in the MD&A and the sections referenced th' -> inside II.7A
+      Item 8 [472160:864013] (391853 chars); statement tables:
+        'Consolidated Statement of Income' @489478 -> II.8; scale=millions (caption); header=['2023', '2022', '2021']
+        'Consolidated Balance Sheet' @491605 -> II.8; scale=millions (caption); header=['', 'December 31 2023', 'December 31 2022']
+        'Consolidated Statement of Cash Flows' @497901 -> II.8; scale=millions (caption); header=['2023', '2022', '2021']
+        sample table 'Diversity Metrics as of December 31, 2023' -> I.1; scale=None (None); header=['', 'Total Employees', 'Top Three Management Levels', 'Managers at All Levels']; row1=['Global employees', '', '']
+        sample table None -> II.5; scale=millions (caption); header=['', 'Total Common Shares Purchased (1,2)', 'Weighted-Average Per Share Price', 'Total Shares Purchased as Part of Publicly Announced Programs (2)']; row1=['October 1 - 31, 2023', '10,251', '$26.8
+      spans 7848, mismatches 0; chunks 739, max tokens 500, over 512 0; resolved 7846/7848 (1.000)
+    === BAC 0000070858-25-000139
+      sections: I.1=37553, I.1A=116995, I.1B=39, I.1C=146, I.2=1714, I.3=191, I.4=108, II.5=2392, II.6=37, II.7=292585, II.7A=217, II.8=385743, II.9=97, II.9A=1455, II.9B=2539, II.9C=146, III.10=6045, III.11=366, III.12=1433, III.13=302, III.14=339, IV.15=17148, I
+      Item 7 [167714:460299]; Item 7A stub: 'Item 7A. Quantitative and Qualitative Disclosures about Market Risk See Market Risk Management on page 74 in the MD&A and the sections referenced ther'
+        market-risk heading @389301: 'Market Risk Management' -> inside Item 7
+        market-risk heading @460368: 'See Market Risk Management on page 74 in the MD&A and the sections referenced th' -> inside II.7A
+      Item 8 [460518:846261] (385743 chars); statement tables:
+        'Consolidated Statement of Income' @477837 -> II.8; scale=millions (caption); header=['2024', '2023', '2022']
+        'Consolidated Balance Sheet' @479957 -> II.8; scale=millions (caption); header=['', 'December 31 December 31 2024', 'December 31 December 31 2023']
+        'Consolidated Statement of Cash Flows' @486242 -> II.8; scale=millions (caption); header=['2024', '2023', '2022']
+        sample table 'Workforce data as of December 31, 2024' -> I.1; scale=None (None); header=['', 'Total Employees', 'Top Three Management Levels', 'Managers at All Levels']; row1=['Global employees', '', '']
+        sample table None -> II.5; scale=millions (caption); header=['', 'Total Common Shares Purchased (1,2)', 'Weighted-Average Per Share Price', 'Total Shares Purchased as Part of Publicly Announced Programs (2)']; row1=['October 1 - 31, 2024', '22,058', '$42.8
+      spans 7853, mismatches 0; chunks 722, max tokens 500, over 512 0; resolved 7851/7853 (1.000)
+    === BAC 0000070858-26-000157
+      sections: I.1=37968, I.1A=116929, I.1B=39, I.1C=146, I.2=1714, I.3=191, I.4=108, II.5=2482, II.6=37, II.7=294340, II.7A=217, II.8=385688, II.9=97, II.9A=1455, II.9B=2420, II.9C=146, III.10=5370, III.11=366, III.12=1433, III.13=302, III.14=339, IV.15=17751, I
+      Item 7 [168153:462493]; Item 7A stub: 'Item 7A. Quantitative and Qualitative Disclosures about Market Risk See Market Risk Management on page 75 in the MD&A and the sections referenced ther'
+        market-risk heading @394089: 'Market Risk Management' -> inside Item 7
+        market-risk heading @462562: 'See Market Risk Management on page 75 in the MD&A and the sections referenced th' -> inside II.7A
+      Item 8 [462712:848400] (385688 chars); statement tables:
+        'Consolidated Statement of Income' @477575 -> II.8; scale=millions (caption); header=['2025', '2024', '2023']
+        'Consolidated Balance Sheet' @479673 -> II.8; scale=millions (caption); header=['', 'December 31 2025', 'December 31 2024']
+        'Consolidated Statement of Cash Flows' @485975 -> II.8; scale=millions (caption); header=['2025', '2024', '2023']
+        sample table 'Workforce data as of December 31, 2025' -> I.1; scale=None (None); header=['', 'Total Employees', 'Top Three Management Levels', 'Managers at All Levels']; row1=['Global employees', '', '']
+        sample table None -> II.5; scale=millions (caption); header=['', 'Total Common Shares Purchased (1,2)', 'Weighted-Average Per Share Price', 'Total Shares Purchased as Part of Publicly Announced Programs (2)']; row1=['October 1 - 31, 2025', '30,775', '$52.2
+      spans 7872, mismatches 0; chunks 731, max tokens 500, over 512 0; resolved 7870/7872 (1.000)
+    === PFE 0000078003-24-000039
+      sections: I.1=92316, I.1A=83042, I.1C=6697, I.2=1429, I.3=5523, II.5=2102, II.6=49, II.7=100731, II.7A=289, II.8=293582, II.9=98, II.9A=9972, II.9B=273, III.10=1491, III.11=397, III.12=334, III.13=581, III.14=883, IV.15=19748, IV.16=2156
+      Item 7 [228051:328782]; Item 7A stub: 'ITEM 7A. QUANTITATIVE AND QUALITATIVE DISCLOSURES ABOUT MARKET RISK The information required by this Item is incorporated by reference to the discussi'
+        market-risk heading @328851: 'The information required by this Item is incorporated by reference to the discus' -> inside II.7A
+      Item 8 [329073:622655] (293582 chars); statement tables:
+        'The following provides: (i) an analysis of the changes in ou' @513530 -> II.8; scale=millions (caption); header=['Pension Plans U.S. Year Ended December 31, 2023', 'Pension Plans U.S. Year Ended December 31, 2022', 'Pension Plans International Year Ended 
+        'For operating leases, the ROU assets and liabilities in our ' @544326 -> II.8; scale=millions (caption); header=['Balance Sheet Classification', 'As of December 31, 2023', 'As of December 31, 2022']
+        sample table 'Product Inlyta Xeljanz' -> I.1; scale=None (None); header=['Product Inlyta Xeljanz', 'U.S. Basic Product Patent Expiration Year(1) 2025 2025', 'Major Europe Basic Product Patent Expiration Year(1) 2025 2028(2)', 'Japan Basic Product Patent Ex
+        sample table 'Period' -> II.5; scale=None (None); header=['Period', 'Total Number of Shares Purchased(b)', 'Average Price Paid per Share(b)', 'Total Number of Shares Purchased as Part of Publicly Announced Plan']; row1=['October 2 through October 29, 2023'
+      spans 2979, mismatches 0; chunks 464, max tokens 500, over 512 0; resolved 2977/2979 (0.999)
+    === PFE 0000078003-25-000054
+      sections: I.1=88408, I.1A=78992, I.1C=6991, I.2=1594, I.3=5164, II.5=2103, II.6=49, II.7=105158, II.7A=289, II.8=284850, II.9=98, II.9A=8637, II.9B=273, III.10=1607, III.11=397, III.12=334, III.13=581, III.14=883, IV.15=19512, IV.16=2297
+      Item 7 [220848:326006]; Item 7A stub: 'ITEM 7A. QUANTITATIVE AND QUALITATIVE DISCLOSURES ABOUT MARKET RISK The information required by this Item is incorporated by reference to the discussi'
+        market-risk heading @326075: 'The information required by this Item is incorporated by reference to the discus' -> inside II.7A
+      Item 8 [326297:611147] (284850 chars); statement tables:
+        'ANALYSIS OF THE CONSOLIDATED STATEMENTS OF CASH FLOWS' @313383 -> II.7; scale=millions (caption); header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023', 'Year Ended December 31, 2022']
+        'The following provides: (i) an analysis of the changes in ou' @499141 -> II.8; scale=millions (caption); header=['Pension Plans U.S. Year Ended December 31, 2024', 'Pension Plans U.S. Year Ended December 31, 2023', 'Pension Plans International Year Ended 
+        'For operating leases, the ROU assets and liabilities in our ' @529727 -> II.8; scale=millions (caption); header=['Balance Sheet Classification', 'As of December 31, 2024', 'As of December 31, 2023']
+        sample table 'Product Inlyta Xeljanz' -> I.1; scale=None (None); header=['Product Inlyta Xeljanz', 'U.S. Basic Product Patent Expiration Year(1) 2025 2026', 'Major Europe Basic Product Patent Expiration Year(1) 2025 2028(2)', 'Japan Basic Product Patent Ex
+        sample table None -> I.1; scale=None (None); header=['']; row1=['Product U.S. Basic Product Patent Expiration Year(1) Major Europe Basic Product Patent Expiration Year(1) Japan Basic Product Patent Expiration Year(1)']
+      spans 2905, mismatches 0; chunks 451, max tokens 500, over 512 0; resolved 2903/2905 (0.999)
+    === PFE 0000078003-26-000026
+      sections: I.1=91826, I.1A=87396, I.1C=6997, I.2=1616, I.3=4811, II.5=2102, II.6=49, II.7=105392, II.7A=289, II.8=262601, II.9=130, II.9A=8629, II.9B=273, III.10=1607, III.11=397, III.12=334, III.13=581, III.14=883, IV.15=18700, IV.16=2236
+      Item 7 [235820:341212]; Item 7A stub: 'ITEM 7A. QUANTITATIVE AND QUALITATIVE DISCLOSURES ABOUT MARKET RISK The information required by this Item is incorporated by reference to the discussi'
+        market-risk heading @341281: 'The information required by this Item is incorporated by reference to the discus' -> inside II.7A
+      Item 8 [341503:604104] (262601 chars); statement tables:
+        'ANALYSIS OF THE CONSOLIDATED STATEMENTS OF CASH FLOWS' @328028 -> II.7; scale=millions (caption); header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024', 'Year Ended December 31, 2023']
+        'The following provides: (i) an analysis of the changes in ou' @505071 -> II.8; scale=millions (caption); header=['Pension Plans U.S. Year Ended December 31, 2025', 'Pension Plans U.S. Year Ended December 31, 2024', 'Pension Plans International Year Ended 
+        'For operating leases, the ROU assets and liabilities in our ' @534037 -> II.8; scale=millions (caption); header=['Balance Sheet Classification', 'As of December 31, 2025', 'As of December 31, 2024']
+        sample table 'Product Xeljanz' -> I.1; scale=None (None); header=['Product Xeljanz', 'U.S. Basic Product Patent Expiration Year(1) 2026', 'Major Europe Basic Product Patent Expiration Year(1) 2028(2)', 'Japan Basic Product Patent Expiration Year(1) 2025'];
+        sample table 'Product' -> I.1; scale=None (None); header=['Product', 'U.S. Basic Product Patent Expiration Year(1)', 'Major Europe Basic Product Patent Expiration Year(1)', 'Japan Basic Product Patent Expiration Year(1)']; row1=['Braftovi(11)', '2030 (2031
+      spans 2911, mismatches 0; chunks 459, max tokens 500, over 512 0; resolved 2909/2911 (0.999)
+
+PFE's market-risk section and statement titles, found by their exact headings
+(the first pass searched "Market Risk" and "Statements of Income", which PFE
+words differently):
+
+    === PFE 0000078003-24-000039
+      heading 'ANALYSIS OF FINANCIAL CONDITION, LIQUIDITY, CAPITAL RESOURCES AND MARKET RISK' @316575 -> II.7
+      'Consolidated Statements of Income' heading @342302 -> II.8; next data table @342373 -> II.8, scale=millions (caption), header=['Year Ended December 31, 2023', 'Year Ended December 31, 2022', 'Year Ended December 31, 2021'], row
+      'Consolidated Balance Sheets' heading @346018 -> II.8; next data table @346083 -> II.8, scale=millions (caption), header=['As of December 31, 2023', 'As of December 31, 2022'], row1=['Assets', '', '']
+      'Consolidated Statements of Cash Flows' heading @349991 -> II.8; next data table @350066 -> II.8, scale=millions (caption), header=['Year Ended December 31, 2023', 'Year Ended December 31, 2022', 'Year Ended December 31, 2021'],
+    === PFE 0000078003-25-000054
+      heading 'ANALYSIS OF FINANCIAL CONDITION, LIQUIDITY, CAPITAL RESOURCES AND MARKET RISK' @314487 -> II.7
+      'Consolidated Balance Sheets' heading @343829 -> II.8; next data table @343894 -> II.8, scale=millions (caption), header=['As of December 31, 2024', 'As of December 31, 2023'], row1=['Assets', '', '']
+      'Consolidated Statements of Cash Flows' heading @347641 -> II.8; next data table @347716 -> II.8, scale=millions (caption), header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023', 'Year Ended December 31, 2022'],
+    === PFE 0000078003-26-000026
+      heading 'ANALYSIS OF FINANCIAL CONDITION, LIQUIDITY, CAPITAL RESOURCES AND MARKET RISK' @329151 -> II.7
+      'Consolidated Balance Sheets' heading @355118 -> II.8; next data table @355183 -> II.8, scale=millions (caption), header=['As of December 31, 2025', 'As of December 31, 2024'], row1=['Assets', '', '']
+      'Consolidated Statements of Cash Flows' heading @358824 -> II.8; next data table @358899 -> II.8, scale=millions (caption), header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024', 'Year Ended December 31, 2023'],
+    === PFE 0000078003-25-000054: Item 8 headings starting 'Consolidated Statement(s) of' in its first 30,000 chars:
+      'Consolidated Statements of Operations' @340121 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023'] row1=['Revenues:', '']
+      'Consolidated Statements of Comprehensive Income' @342143 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023'] row1=['Net income before allocation to noncontrolling 
+      'Consolidated Statements of Equity' @345852 (II.8); next table scale=millions (caption) header=['PFIZER INC. SHAREHOLDERS Common Stock Shares', 'PFIZER INC. SHAREHOLDERS Common Stock Par Value'] row1=['Balance, January 1, 2022',
+      'Consolidated Statements of Cash Flows' @347641 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023'] row1=['Operating Activities', '']
+      'Consolidated Statements of Cash Flows' @350883 (II.8); next table scale=millions (ixbrl) header=['Year Ended December 31, 2024', 'Year Ended December 31, 2023'] row1=['Supplemental Cash Flow Information', '']
+    === PFE 0000078003-26-000026: Item 8 headings starting 'Consolidated Statement(s) of' in its first 30,000 chars:
+      'Consolidated Statements of Operations' @351449 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024'] row1=['Revenues:', '']
+      'Consolidated Statements of Comprehensive Income' @353452 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024'] row1=['Net income before allocation to noncontrolling 
+      'Consolidated Statements of Equity' @357102 (II.8); next table scale=millions (caption) header=['PFIZER INC. SHAREHOLDERS Common Stock Shares', 'PFIZER INC. SHAREHOLDERS Common Stock Par Value'] row1=['Balance, January 1, 2023',
+      'Consolidated Statements of Cash Flows' @358824 (II.8); next table scale=millions (caption) header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024'] row1=['Operating Activities', '']
+      'Consolidated Statements of Cash Flows' @361956 (II.8); next table scale=millions (ixbrl) header=['Year Ended December 31, 2025', 'Year Ended December 31, 2024'] row1=['Supplemental Cash Flow Information', '']
+
+All six pass: the market-risk section each 7A points to is inside Item 7 (BAC
+"Market Risk Management"; PFE "Analysis of Financial Condition, Liquidity,
+Capital Resources and Market Risk"); every primary statement is under Item 8
+with scale and period headers; 0 span mismatches; 0 chunks over 512, max 500.
+
+**F-70, where XOM's Financial Section lands:**
+
+    === XOM 0000034088-24-000018: text 415479 chars; last sections: [('III.14', 276), ('IV.15', 205), ('IV.16', 302621)]
+      'MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULT' @244307 -> IV.16 (302621 chars)
+      'MARKET RISKS' @220556 -> IV.16 (302621 chars)
+      'REPORT OF INDEPENDENT REGISTERED PUBLIC ACCOUNTING FIRM' @257893 -> IV.16 (302621 chars)
+      'CONSOLIDATED STATEMENT OF INCOME' @261942 -> IV.16 (302621 chars)
+    === XOM 0000034088-25-000010: text 440229 chars; last sections: [('III.14', 276), ('IV.15', 205), ('IV.16', 324704)]
+      'MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULT' @256051 -> IV.16 (324704 chars)
+      'MARKET RISKS' @227388 -> IV.16 (324704 chars)
+      'REPORT OF INDEPENDENT REGISTERED PUBLIC ACCOUNTING FIRM' @272952 -> IV.16 (324704 chars)
+      'CONSOLIDATED STATEMENT OF INCOME' @274426 -> IV.16 (324704 chars)
+    === XOM 0000034088-26-000045: text 420541 chars; last sections: [('III.14', 276), ('IV.15', 205), ('IV.16', 317816)]
+      'MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULT' @239059 -> IV.16 (317816 chars)
+      'MARKET RISKS' @213909 -> IV.16 (317816 chars)
+      'REPORT OF INDEPENDENT REGISTERED PUBLIC ACCOUNTING FIRM' @251495 -> IV.16 (317816 chars)
+      'CONSOLIDATED STATEMENT OF INCOME' @255988 -> IV.16 (317816 chars)
+
+**Freeze.** `python -m scripts.write_freeze` -> `api/corpus_freeze.yaml`:
+
+    {'frozen_on': '2026-10-01', 'corpus_as_of': '2026-10-01', 'parser_version': 'd58d26e08e5a', 'chunker_version': '964f77f6f9cb', 'totals': {'listed': 96, 'parsed': 90, 'quarantined': 6}}
+      COST  10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+      TGT   10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+      JPM   10-K parsed 0 quarantined 3 | 10-Q parsed 9 quarantined 0
+      BAC   10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+      AAPL  10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+      NVDA  10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+      XOM   10-K parsed 0 quarantined 3 | 10-Q parsed 9 quarantined 0
+      PFE   10-K parsed 3 quarantined 0 | 10-Q parsed 9 quarantined 0
+    [('0000019617-24-000225', 'F-66'), ('0000019617-25-000270', 'F-66'), ('0001628280-26-008131', 'F-66'), ('0000034088-24-000018', 'F-70'), ('0000034088-25-000010', 'F-70'), ('0000034088-26-000045', 'F-70')]
+
+`python -m scripts.verify_freeze`: `verified 96 frozen accessions; mismatches 0`,
+exit 0. With one frozen hash altered (file backed up and restored byte for
+byte): `MISMATCH 0000909832-23-000042 ...`, `mismatches 1`, exit 1.
+
+**Retrieval half of the baseline on the frozen corpus:**
+
+    question: How does Bank of America describe its market risk management in its annual report?
+    plan: ->  Index Scan using chunks_hnsw on chunks  (cost=1181.91..81867.08 rows=22354 width=407)
+      0.2050  0000070858-25-000200:532.0:542.0  [Bank of America Corporation (BAC) | 10-Q | Q1 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.2053  0000070858-26-000249:525.0:535.0  [Bank of America Corporation (BAC) | 10-Q | Q1 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.2069  0000070858-24-000156:546.0:556.0  [Bank of America Corporation (BAC) | 10-Q | Q1 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+      0.2097  0000070858-26-000157:1011.0:1018.0  [Bank of America Corporation (BAC) | 10-K | FY2025 | Item 7: Bank of America Corporation and Subsidiaries Management's Discussion and Analysis of Financial Condition and Results of Operations Table of Contents]
+      0.2105  0000070858-24-000208:585.0:592.0  [Bank of America Corporation (BAC) | 10-Q | Q2 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations]
+
+The fourth result is BAC's FY2025 10-K, Item 7 (`II.7`). Its context header ends
+"Table of Contents" -- a non-link cell in BAC's heading table kept in the section
+title (F-71). Generation stays F-59.
