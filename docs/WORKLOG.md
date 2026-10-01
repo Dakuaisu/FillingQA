@@ -1602,3 +1602,29 @@ spans each, all resolved -- under F-66's wrong Item labels.
 
 No freeze record is written: 45 quarantined filings and 3 mis-sectioned ones would
 be frozen into the corpus. Phase 3 stays closed.
+
+## 2026-10-01 — Content check on required Items (before any parser fix)
+
+Findings committed as `d3d3bc6`.
+
+Required-Item lengths across the 48 clean filings (AAPL, COST, NVDA, TGT):
+
+    48 clean filings (AAPL, COST, NVDA, TGT)
+    form  item    n     min     p10  median     max  smallest (ticker accession)
+    10-K  1      12   15096   15699   19475   54801  AAPL 0000320193-23-000106
+    10-K  1A     12   33805   40040   67872  114868  TGT 0000027419-24-000032
+    10-K  7      12   15352   15499   34192   40282  AAPL 0000320193-24-000123
+    10-K  7A     12    2746    2786    3295    4474  TGT 0000027419-24-000032
+    10-K  8      12     206     206   75077   87036  NVDA 0001045810-24-000029
+    10-Q  I.1    36   18054   20723   29406   58378  TGT 0000027419-24-000129
+    10-Q  I.2    36   15310   17444   28685   38455  AAPL 0000320193-24-000006
+
+Each floor in `parser.min_required_item_chars` is the measured minimum, as is.
+Item 8's 206 is NVDA: its Item 8 points to Item 15, a legal layout (F-68), so the
+Item 8 floor cannot catch stubs; Items 7 and 7A do.
+
+`check` now quarantines any required Item shorter than its floor. Re-validated on
+96 (`validate.py` is outside the parser hash, so `parser_version` stays
+0e417d5495e4): 48 parsed -- every clean filing still passes -- and all three JPM
+10-Ks now quarantine: `required Item too short: Item 7 is 395 chars < 15352;
+Item 7A is 269 chars < 2746`. `make test`: 227 passed, 3 snapshots passed.

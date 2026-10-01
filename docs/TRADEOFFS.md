@@ -1018,3 +1018,34 @@ current mapping differs (XOM) and does not fail.
   (COST 2,569, TGT 2,831, AAPL 2,273 double-stored). The loader now deletes
   unlinked rows whose accession is in `filings`, in the same transaction, after
   checking incoming linked values against those staged copies for drift.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: fix the parse findings before the freeze (F-63..F-67)
+
+Decided by the supervisor on the owner's behalf after 45 of 96 filings
+quarantined and JPM's 10-Ks passed while mis-sectioned.
+
+1. **Fix F-63 to F-67 before the freeze**, as PRD 6.2 section-detection bugs the
+   full corpus exposed. Generic mechanisms only -- no per-ticker paths, no
+   company-specific regexes. A filing that still fails stays quarantined with a
+   finding. One commit per finding, each re-measured on the 48 clean filings
+   (identical section lists, chunk-hash changes explained, resolve rate,
+   snapshots, new `parser_version`). Order: content check, F-63, F-64,
+   F-65/F-66, F-67.
+2. **JPM: build PRD 6.2 step 2's table-of-contents-anchor fallback**, the unbuilt
+   half of the specified mechanism. Primary heading detection stays
+   authoritative; the fallback fills only Items it missed. If JPM's index rows
+   carry page numbers with no hrefs, stop -- no page mechanism (F-55).
+3. **A content check on required Items.** Minimum text length per required Item
+   (10-K 1, 1A, 7, 7A, 8; 10-Q I.1, I.2) in `api/config.yaml` under `parser:`
+   (F-23), each value the measured minimum across the 48 clean filings.
+
+*Rejected:*
+- *Freeze the 51 that parsed now.* Not PRD 4.4's corpus: no financials pair, no
+  pharma, no energy.
+- *Drop companies* (PRD 14 cut order 5). The owner's call, not the builder's.
+- *Keep JPM as-is under Item 15.* Every JPM MD&A and statement chunk would carry
+  an "Item 15" context header, and PRD 6.2 says bad parses do not enter the index
+  silently.
+- *Existence-only validation.* It passed JPM's 10-Ks with 395-char Items 7 and 8.

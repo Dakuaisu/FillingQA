@@ -176,6 +176,13 @@ corpus:
 parser:
   min_sections: 5
   min_data_tables: 10       # data tables, not layout scaffolding (F-35)
+  # Minimum text length (chars) of each required Item. Each value is the measured
+  # minimum across the 48 filings of AAPL, COST, NVDA and TGT that parsed cleanly
+  # on 2026-10-01 (distribution in WORKLOG). An Item shorter than every one of
+  # those is a cross-reference stub or a mis-detected section, not content.
+  min_required_item_chars:
+    10-K: {"1": 15096, "1A": 33805, "7": 15352, "7A": 2746, "8": 206}
+    10-Q: {"I.1": 18054, "I.2": 15310}
   alpha_ratio:              # letters / all characters of the normalized text
     min: 0.4
     max: 0.95

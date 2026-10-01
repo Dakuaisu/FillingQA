@@ -62,6 +62,8 @@ class Measurements:
     missing_items: list[str] = field(default_factory=list)
     required_items: int = 0
     has_item_1a: bool = False
+    # Text length of each required Item found, keyed as in `min_required_item_chars`.
+    item_chars: dict[str, int] = field(default_factory=dict)
     data_tables: int = 0
     scaled_caption: int = 0
     scaled_ixbrl: int = 0
@@ -80,6 +82,17 @@ def _collapsed(cell: str) -> bool:
     return len(parts) > 1 and all(is_value(p) for p in parts)
 
 
+def required_item_chars(sections: list, form_type: str) -> dict[str, int]:
+    """Length of each required Item: 10-K by item code, 10-Q part-qualified."""
+    if form_type == "10-K":
+        wanted = set(REQUIRED_10K_ITEMS)
+        return {s.item_code: s.char_end - s.char_start for s in sections if s.item_code in wanted}
+    wanted = {f"{p}.{i}" for p, i in REQUIRED_10Q_ITEMS}
+    return {
+        s.qualified_code: s.char_end - s.char_start for s in sections if s.qualified_code in wanted
+    }
+
+
 def measure(doc: ExtractedDocument, form_type: str) -> Measurements:
     sections = detect_sections(doc, form_type)
     data = [t for t in extract_tables(doc) if t.kind == "data"]
@@ -91,6 +104,7 @@ def measure(doc: ExtractedDocument, form_type: str) -> Measurements:
         required_items=len(REQUIRED_10K_ITEMS if form_type == "10-K" else REQUIRED_10Q_ITEMS),
         # PRD 6.2: the 1A assertion is 10-K only. A 10-Q's Part II 1A is optional.
         has_item_1a=any(s.item_code == "1A" for s in sections),
+        item_chars=required_item_chars(sections, form_type),
         data_tables=len(data),
         scaled_caption=sum(t.scale_source == "caption" for t in data),
         scaled_ixbrl=sum(t.scale_source == "ixbrl" for t in data),
@@ -112,6 +126,16 @@ def check(m: Measurements, bounds: dict) -> list[str]:
         failures.append(f"{m.sections} sections < {bounds['min_sections']}")
     if m.missing_items:
         failures.append(f"required Items missing: {m.missing_items}")
+    floors = bounds["min_required_item_chars"].get(m.form_type, {})
+    short = [
+        f"Item {code} is {n} chars < {floors[code]}"
+        for code, n in sorted(m.item_chars.items())
+        if code in floors and n < floors[code]
+    ]
+    if short:
+        # Existence is not content: a cross-reference stub or a mis-detected
+        # section passes the required-Items check (F-66).
+        failures.append("required Item too short: " + "; ".join(short))
     if m.form_type == "10-K" and not m.has_item_1a:
         failures.append("10-K has no Item 1A")
     if m.data_tables < bounds["min_data_tables"]:

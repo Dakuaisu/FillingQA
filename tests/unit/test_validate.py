@@ -35,6 +35,7 @@ AAPL_10K_MEASURED = Measurements(
     missing_items=[],
     required_items=5,
     has_item_1a=True,
+    item_chars={"1": 15995, "1A": 68042, "7": 18023, "7A": 3023, "8": 61072},
     data_tables=43,
     scaled_caption=32,
     scaled_ixbrl=5,
@@ -78,8 +79,26 @@ def test_each_assertion_quarantines(change, message):
     assert message in failures[0]
 
 
+def test_a_cross_reference_stub_is_too_short():
+    # JPM's 10-K, as measured: Item 7 and 7A are "refer to the Annual Report" stubs.
+    jpm = replace(
+        AAPL_10K_MEASURED, item_chars={**AAPL_10K_MEASURED.item_chars, "7": 395, "7A": 269}
+    )
+    failures = check(jpm, BOUNDS)
+    assert len(failures) == 1
+    assert "Item 7 is 395 chars" in failures[0] and "Item 7A is 269 chars" in failures[0]
+
+
+def test_item_floors_come_from_config():
+    floors = BOUNDS["min_required_item_chars"]
+    assert set(floors["10-K"]) == {"1", "1A", "7", "7A", "8"}
+    assert set(floors["10-Q"]) == {"I.1", "I.2"}
+
+
 def test_item_1a_is_required_of_a_10k_only():
-    tenq = replace(AAPL_10K_MEASURED, form_type="10-Q", has_item_1a=False, required_items=2)
+    tenq = replace(
+        AAPL_10K_MEASURED, form_type="10-Q", has_item_1a=False, required_items=2, item_chars={}
+    )
     assert check(tenq, BOUNDS) == []
 
 

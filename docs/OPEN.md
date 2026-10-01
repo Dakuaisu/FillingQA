@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 36 |
+| OPEN | 37 |
 | RESOLVED | 31 |
-| **Total** | **67** |
+| **Total** | **68** |
 
 ---
 
@@ -32,8 +32,9 @@ carries the state.
 | F-63 | Item and Part headings rendered as single-cell layout tables are invisible to section detection, which reads only paragraph and heading blocks. PFE 10-K (all Items, 0 sections) x3; XOM 10-K (all Items, 0 sections) x3; BAC 10-K Items 7 and 8 x3; XOM 10-Q Part I Item 1 x9; PFE 10-Q "PART I/II" headings x9, so Part tracking never starts and codes come out unqualified ("1" not "I.1"). 27 quarantined filings | OPEN |
 | F-64 | BAC 10-Qs print MD&A (Item 2) before the financial statements (Item 1), with a "Part II. Other Information" block in between, so Part tracking tags Items 2-4 as Part II and `I.2` is reported missing. 9 quarantined filings | OPEN |
 | F-65 | JPM 10-Qs carry no Part I Item 1 or Item 2 headings: the document is JPM's financial report with a cross-reference index mapping Items to pages; only Items 3 and 4 have "Item" headings, detected without a Part. PRD 6.2's table-of-contents-anchor fallback was never built. 9 quarantined filings | OPEN |
-| F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Their chunks carry Item 15 / Part I labels for MD&A and statement text | OPEN |
+| F-66 | False pass: JPM's three 10-Ks are `parsed` but mis-sectioned. Items 7 and 8 are cross-reference stubs (395 and 368 chars); the embedded Annual Report -- MD&A and financial statements, 1,008,217 of 1,208,667 chars in FY2024 -- lands under Item 15; no Part heading before Item 15 is recognised, so Items 1-14 are all Part I. The validation suite asserts that required Items exist, not that they hold content, so nothing caught it. Since the content check: all three quarantine (Item 7 395 < 15352, Item 7A 269 < 2746). Their chunks carry Item 15 / Part I labels for MD&A and statement text | OPEN |
 | F-67 | Four chunks exceed `max_seq_length` (716-747 and 670 tokens): JPM's 10-K "LOBs and Corporate ... Risk Management VaR" layout table kept as prose (F-46), no sentence punctuation, x3; NVDA FY2026 10-K exhibit index (F-56's shape, no ". " between entries) x1. The embedding pre-write check refused the run, as specified: no corpus chunk is embedded | OPEN |
+| F-68 | NVDA's 10-K Item 8 is a cross-reference stub (206 chars: the statements are "set forth in Item 15"), a legal SEC layout faithfully parsed: NVDA's financial-statement chunks carry "Item 15" headers. It sets the measured Item 8 floor at 206, so the content check cannot catch Item 8 stubs; JPM is caught on Items 7 and 7A instead. Item-based filtering (PRD 7.1) for "Item 8" would miss NVDA's statements | OPEN |
 
 ## Blocking Phase 3
 
