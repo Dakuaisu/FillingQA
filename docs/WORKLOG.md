@@ -3234,3 +3234,52 @@ load would number them differently: F-78, not fixed.
     wrote eval/candidates/xbrl_numeric_candidates.jsonl sha256 19fb355d8134c950
 
 A second run left all three files' sha256 unchanged. `make test`: 272 passed; `make lint` clean.
+
+## 2026-10-01 — Negative and zero candidates; xbrl_fact_id guarded (F-78)
+
+Gold spans of the two zero items, and edge values in the eligible pool (ad hoc
+over `build_pool` and `xbrl_spans`):
+
+    xbrl_0116: Pfizer payments for repurchases of common stock, fiscal 2024: what was the figure? | $0 million for the fiscal year ended December 31, 2024.
+       0000078003-25-000054:788.2:788.2 raw_text='—' scale=6 value=0
+       0000078003-25-000054:788.2:788.2 raw_text='—' scale=6 value=0
+    xbrl_0117: According to its 10-Q for the third quarter of fiscal 2023, what figure did Pfizer report for payments for repurchases of common stock in the nine months ended October 1, 2023? | $0 million for the nine months ended October 1, 2023.
+       0000078003-23-000115:77.1:77.1 raw_text='—' scale=6 value=0
+    eligible keys valued zero: 6 {'share_repurchases': 6}
+    eligible keys valued negative: 32 {'eps_diluted': 2, 'income_tax': 10, 'net_income': 2, 'operating_cash_flow': 15, 'pretax_income': 3}
+    zero keys by ticker: {'TGT': 3, 'PFE': 3} negative by ticker: {'JPM': 9, 'BAC': 5, 'PFE': 18}
+
+`python -m scripts.xbrl_candidates` (candidates file unchanged: sha256
+19fb355d...; manifest gains `flagged` and `facts`; the sheet gains the flagged
+section, 16 + 5 items rendered, xbrl_0115 being both seeded and flagged):
+
+    items: 160 (drawn 160); not generated: 0
+    validation failures: 0
+    items per template: {'dur_figure': 27, 'dur_filing': 14, 'dur_how_much': 29, 'dur_record': 8, 'dur_report': 18, 'ins_balance': 16, 'ins_carry': 11, 'ins_figure': 10, 'ins_filing': 12, 'ins_report': 15}
+    period kinds: {'annual': 35, 'instant': 64, 'quarter': 29, 'ytd': 32}
+    form split per ticker (10-K/10-Q): COST 12/8, TGT 8/12, JPM 0/20, BAC 9/11, AAPL 11/9, NVDA 9/11, XOM 0/20, PFE 11/9
+    form split: {'10-K': 60, '10-Q': 100}
+    evidence sets per item: {1: 54, 2: 45, 3: 23, 4: 11, 5: 9, 6: 13, 7: 2, 8: 1, 10: 2}
+    filing-scoped items: 26, all single-accession: True
+    spot-check (eval/candidates/xbrl_numeric_spot_check.md): 16 seeded items; flagged (value <= 0): ['xbrl_0070', 'xbrl_0113', 'xbrl_0115', 'xbrl_0116', 'xbrl_0117', 'xbrl_0119']; 45 gold chunks shown
+    manifest natural keys: 160
+    wrote eval/candidates/xbrl_numeric_candidates.jsonl sha256 19fb355d8134c950
+
+A second run left all three files' sha256 unchanged:
+
+    19fb355d8134c9504a654282354c13e92a453c450e67b87c9e9a25a9aaf638e7  eval/candidates/xbrl_numeric_candidates.jsonl
+    68b7ac51bd4ee0eb7e04dcb6cb6fa4221d1b906ba40532b7a6a82039309eaabc  eval/candidates/xbrl_numeric_manifest.json
+    8d92d2c92b5533918e34f473c80f1da702facbfe730fce7a46aa7b3220831fba  eval/candidates/xbrl_numeric_spot_check.md
+
+`python -m scripts.xbrl_candidates --verify` (exit 0):
+
+    verify: 160 items, 160 fact ids found in xbrl_facts, 0 mismatches
+
+The same check against a copy of the manifest with xbrl_0001's value set to 1
+(ad hoc, module constant pointed at the copy):
+
+    verify: 160 items, 160 fact ids found in xbrl_facts, 1 mismatches
+      MISMATCH xbrl_0001: fact_id 43544 is {'accession': '0000320193-23-000106', 'concept': 'us-gaap:ResearchAndDevelopmentExpense', 'period_start': '2022-09-25', 'period_end': '2023-09-30', 'unit': 'USD', 'value': '29915000000'}, want {'accession': '0000320193-23-000106', 'concept': 'us-gaap:ResearchAndDevelopmentExpense', 'period_start': '2022-09-25', 'period_end': '2023-09-30', 'unit': 'USD', 'value': '1'}
+    tampered manifest (xbrl_0001 value -> 1): verify returns 1
+
+`make test`: 272 passed (zero cases added to `test_format_value`); `make lint` clean.

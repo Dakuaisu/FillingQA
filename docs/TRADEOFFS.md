@@ -1421,3 +1421,53 @@ manifest.
   versions, the per-ticker form split, the evidence-set distribution, templates,
   the spot-check ids) and the 16-item spot-check sheet. Same seed, byte-identical
   output (tested; re-run checked by sha256).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: negative and zero values keep their line item's wording
+
+The question's label is a function of the line item, never of the value. Four
+candidates are negative: xbrl_0070 (JPM operating cash flow, -$47,257 million),
+xbrl_0113 and xbrl_0119 (PFE income tax), xbrl_0115 (PFE operating cash flow,
+-$691 million). "Net cash provided by" a negative figure reads the same way as a
+negative "expense". In the eligible pool: 32 negative keys (operating cash flow
+15, income tax 10, pretax income 3, net income 2, diluted EPS 2) and 6 zero keys
+(all share repurchases).
+
+Two candidates are zero: xbrl_0116 and xbrl_0117 (PFE share repurchases),
+reference answer "$0 million". Their gold spans print "—" (`value=0`, `scale=6`).
+They stay candidates: PRD 6.5.3 auto-accepts on 1-3 gold, and the value is the
+SEC's. No exclusion rule, no re-draw, seed unchanged.
+
+All six are on the owner's spot-check sheet in a "flagged, outside the seeded
+10%" section, selected by rule (`value <= 0`); the seeded 16 are unchanged.
+How "-$28 million" or "$0 million" compare with an answer worded otherwise is
+F-81, settled before any run, never by rewording gold.
+
+*Alternatives:*
+- *Sign-dependent label* ("income tax benefit", "net cash used in"). Rejected:
+  it puts the sign of the answer in the question and makes question text depend
+  on the gold value.
+- *Sign-neutral caption for every item of those lines* ("income tax expense
+  (benefit)"). Left to the owner at review: it rewords items after the draw was
+  seen and adds filing vocabulary.
+- *Drop negative keys.* Rejected: it selects the pool on the answer.
+- *Exclude zero keys and re-draw.* Rejected: it changes the draw after seeing it.
+- *Word a zero answer as "none".* Rejected: it breaks numeric exact match.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: guard `xbrl_fact_id` instead of fixing it (F-78)
+
+The candidates manifest records each item's fact by natural key (accession,
+concept, period_start, period_end, unit, value).
+`python -m scripts.xbrl_candidates --verify` resolves every `xbrl_fact_id` in
+`xbrl_facts`, compares it to that key and the candidates file to its recorded
+sha256, and exits non-zero on any mismatch. The item schema stays field for
+field PRD 11.1. The ids are still not reproducible by a rebuild; a stale id is
+now caught instead of silently pointing at another fact.
+
+*Alternatives:*
+- *A deterministic `fact_id` via migration.* Rejected: it touches a Phase 1 table
+  under the frozen corpus.
+- *Do nothing.* Rejected: a stale id in a frozen file would go unnoticed.

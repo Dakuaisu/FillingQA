@@ -105,5 +105,1299 @@
    "xbrl_0160"
   ],
   "reviewed": false
+ },
+ "flagged": {
+  "rule": "value <= 0",
+  "outside_spot_check": true,
+  "item_ids": [
+   "xbrl_0070",
+   "xbrl_0113",
+   "xbrl_0115",
+   "xbrl_0116",
+   "xbrl_0117",
+   "xbrl_0119"
+  ]
+ },
+ "facts": {
+  "xbrl_0001": {
+   "accession": "0000320193-23-000106",
+   "concept": "us-gaap:ResearchAndDevelopmentExpense",
+   "period_start": "2022-09-25",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "29915000000"
+  },
+  "xbrl_0002": {
+   "accession": "0000320193-24-000081",
+   "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+   "period_start": "2024-03-31",
+   "period_end": "2024-06-29",
+   "unit": "USD",
+   "value": "85777000000"
+  },
+  "xbrl_0003": {
+   "accession": "0000320193-25-000079",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2025-09-27",
+   "unit": "USD",
+   "value": "147957000000"
+  },
+  "xbrl_0004": {
+   "accession": "0000320193-24-000123",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2023-10-01",
+   "period_end": "2024-09-28",
+   "unit": "USD",
+   "value": "210352000000"
+  },
+  "xbrl_0005": {
+   "accession": "0000320193-25-000008",
+   "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+   "period_start": null,
+   "period_end": "2024-12-28",
+   "unit": "USD",
+   "value": "30299000000"
+  },
+  "xbrl_0006": {
+   "accession": "0000320193-24-000081",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2024-06-29",
+   "unit": "USD",
+   "value": "331612000000"
+  },
+  "xbrl_0007": {
+   "accession": "0000320193-23-000106",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2022-09-25",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "77550000000"
+  },
+  "xbrl_0008": {
+   "accession": "0000320193-25-000073",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2025-03-30",
+   "period_end": "2025-06-28",
+   "unit": "USD",
+   "value": "6650000000"
+  },
+  "xbrl_0009": {
+   "accession": "0000320193-23-000106",
+   "concept": "us-gaap:AccountsReceivableNetCurrent",
+   "period_start": null,
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "29508000000"
+  },
+  "xbrl_0010": {
+   "accession": "0000320193-23-000106",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2022-09-25",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "24932000000"
+  },
+  "xbrl_0011": {
+   "accession": "0000320193-24-000081",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2023-10-01",
+   "period_end": "2024-06-29",
+   "unit": "USD",
+   "value": "159301000000"
+  },
+  "xbrl_0012": {
+   "accession": "0000320193-25-000079",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2025-09-27",
+   "unit": "USD",
+   "value": "285508000000"
+  },
+  "xbrl_0013": {
+   "accession": "0000320193-25-000008",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2024-12-28",
+   "unit": "USD",
+   "value": "277327000000"
+  },
+  "xbrl_0014": {
+   "accession": "0000320193-23-000106",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "95281000000"
+  },
+  "xbrl_0015": {
+   "accession": "0000320193-24-000123",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2024-09-28",
+   "unit": "USD",
+   "value": "7286000000"
+  },
+  "xbrl_0016": {
+   "accession": "0000320193-26-000020",
+   "concept": "us-gaap:OperatingIncomeLoss",
+   "period_start": "2026-03-29",
+   "period_end": "2026-06-27",
+   "unit": "USD",
+   "value": "35695000000"
+  },
+  "xbrl_0017": {
+   "accession": "0000320193-24-000123",
+   "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+   "period_start": null,
+   "period_end": "2024-09-28",
+   "unit": "USD",
+   "value": "29943000000"
+  },
+  "xbrl_0018": {
+   "accession": "0000320193-24-000081",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2024-06-29",
+   "unit": "USD",
+   "value": "66708000000"
+  },
+  "xbrl_0019": {
+   "accession": "0000320193-25-000079",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2024-09-29",
+   "period_end": "2025-09-27",
+   "unit": "USD",
+   "value": "111482000000"
+  },
+  "xbrl_0020": {
+   "accession": "0000320193-26-000006",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-09-28",
+   "period_end": "2025-12-27",
+   "unit": "USD",
+   "value": "24701000000"
+  },
+  "xbrl_0021": {
+   "accession": "0000070858-25-000405",
+   "concept": "us-gaap:InterestIncomeExpenseNet",
+   "period_start": "2025-01-01",
+   "period_end": "2025-09-30",
+   "unit": "USD",
+   "value": "44346000000"
+  },
+  "xbrl_0022": {
+   "accession": "0000070858-25-000268",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-01-01",
+   "period_end": "2025-06-30",
+   "unit": "USD",
+   "value": "9823000000"
+  },
+  "xbrl_0023": {
+   "accession": "0000070858-25-000200",
+   "concept": "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest",
+   "period_start": null,
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "13256000000"
+  },
+  "xbrl_0024": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "3108495000000"
+  },
+  "xbrl_0025": {
+   "accession": "0000070858-26-000249",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2026-01-01",
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "41770000000"
+  },
+  "xbrl_0026": {
+   "accession": "0000070858-24-000156",
+   "concept": "us-gaap:Deposits",
+   "period_start": null,
+   "period_end": "2024-03-31",
+   "unit": "USD",
+   "value": "1946496000000"
+  },
+  "xbrl_0027": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "303243000000"
+  },
+  "xbrl_0028": {
+   "accession": "0000070858-23-000272",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "2866026000000"
+  },
+  "xbrl_0029": {
+   "accession": "0000070858-25-000139",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2024-01-01",
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "13104000000"
+  },
+  "xbrl_0030": {
+   "accession": "0000070858-23-000272",
+   "concept": "us-gaap:NoninterestExpense",
+   "period_start": "2023-07-01",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "15838000000"
+  },
+  "xbrl_0031": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "37695000000"
+  },
+  "xbrl_0032": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "7186000000"
+  },
+  "xbrl_0033": {
+   "accession": "0000070858-26-000249",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "3496186000000"
+  },
+  "xbrl_0034": {
+   "accession": "0000070858-25-000139",
+   "concept": "us-gaap:Deposits",
+   "period_start": null,
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "1965467000000"
+  },
+  "xbrl_0035": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "113097000000"
+  },
+  "xbrl_0036": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:InterestIncomeExpenseNet",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "60096000000"
+  },
+  "xbrl_0037": {
+   "accession": "0000070858-26-000394",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2026-01-01",
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "61830000000"
+  },
+  "xbrl_0038": {
+   "accession": "0000070858-26-000249",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "300668000000"
+  },
+  "xbrl_0039": {
+   "accession": "0000070858-26-000157",
+   "concept": "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest",
+   "period_start": null,
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "13203000000"
+  },
+  "xbrl_0040": {
+   "accession": "0000070858-24-000208",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-04-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "663000000"
+  },
+  "xbrl_0041": {
+   "accession": "0000909832-25-000101",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2024-09-02",
+   "period_end": "2025-08-31",
+   "unit": "USD",
+   "value": "5498000000"
+  },
+  "xbrl_0042": {
+   "accession": "0000909832-24-000049",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2024-09-01",
+   "unit": "USD",
+   "value": "5794000000"
+  },
+  "xbrl_0043": {
+   "accession": "0000909832-24-000049",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2024-09-01",
+   "unit": "USD",
+   "value": "34246000000"
+  },
+  "xbrl_0044": {
+   "accession": "0000909832-26-000029",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2025-09-01",
+   "period_end": "2026-02-15",
+   "unit": "USD/shares",
+   "value": "9.08"
+  },
+  "xbrl_0045": {
+   "accession": "0000909832-25-000015",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-09-02",
+   "period_end": "2025-02-16",
+   "unit": "USD",
+   "value": "1142000000"
+  },
+  "xbrl_0046": {
+   "accession": "0000909832-24-000017",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2024-02-18",
+   "unit": "USD",
+   "value": "66323000000"
+  },
+  "xbrl_0047": {
+   "accession": "0000909832-25-000101",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2025-08-31",
+   "unit": "USD",
+   "value": "29164000000"
+  },
+  "xbrl_0048": {
+   "accession": "0000909832-23-000042",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2022-08-29",
+   "period_end": "2023-09-03",
+   "unit": "USD",
+   "value": "11068000000"
+  },
+  "xbrl_0049": {
+   "accession": "0000909832-23-000042",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2022-08-29",
+   "period_end": "2023-09-03",
+   "unit": "USD",
+   "value": "242290000000"
+  },
+  "xbrl_0050": {
+   "accession": "0000909832-26-000051",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2025-09-01",
+   "period_end": "2026-05-10",
+   "unit": "USD",
+   "value": "4228000000"
+  },
+  "xbrl_0051": {
+   "accession": "0000909832-25-000101",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2024-09-02",
+   "period_end": "2025-08-31",
+   "unit": "USD",
+   "value": "24966000000"
+  },
+  "xbrl_0052": {
+   "accession": "0000909832-25-000101",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2024-09-02",
+   "period_end": "2025-08-31",
+   "unit": "USD/shares",
+   "value": "18.21"
+  },
+  "xbrl_0053": {
+   "accession": "0000909832-25-000101",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2025-08-31",
+   "unit": "USD",
+   "value": "47935000000"
+  },
+  "xbrl_0054": {
+   "accession": "0000909832-24-000049",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2023-09-04",
+   "period_end": "2024-09-01",
+   "unit": "USD",
+   "value": "222358000000"
+  },
+  "xbrl_0055": {
+   "accession": "0000909832-23-000065",
+   "concept": "us-gaap:OperatingIncomeLoss",
+   "period_start": "2023-09-04",
+   "period_end": "2023-11-26",
+   "unit": "USD",
+   "value": "1984000000"
+  },
+  "xbrl_0056": {
+   "accession": "0000909832-24-000049",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2024-09-01",
+   "unit": "USD",
+   "value": "18647000000"
+  },
+  "xbrl_0057": {
+   "accession": "0000909832-26-000029",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-09-01",
+   "period_end": "2026-02-15",
+   "unit": "USD",
+   "value": "419000000"
+  },
+  "xbrl_0058": {
+   "accession": "0000909832-24-000029",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2023-09-04",
+   "period_end": "2024-05-12",
+   "unit": "USD",
+   "value": "6627000000"
+  },
+  "xbrl_0059": {
+   "accession": "0000909832-24-000029",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2024-05-12",
+   "unit": "USD",
+   "value": "5834000000"
+  },
+  "xbrl_0060": {
+   "accession": "0000909832-23-000042",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2022-08-29",
+   "period_end": "2023-09-03",
+   "unit": "USD",
+   "value": "676000000"
+  },
+  "xbrl_0061": {
+   "accession": "0000019617-25-000421",
+   "concept": "us-gaap:Deposits",
+   "period_start": null,
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "2495877000000"
+  },
+  "xbrl_0062": {
+   "accession": "0000019617-23-000524",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "3898333000000"
+  },
+  "xbrl_0063": {
+   "accession": "0001628280-26-054343",
+   "concept": "us-gaap:NoninterestExpense",
+   "period_start": "2026-04-01",
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "27316000000"
+  },
+  "xbrl_0064": {
+   "accession": "0000019617-24-000611",
+   "concept": "us-gaap:NoninterestIncome",
+   "period_start": "2024-07-01",
+   "period_end": "2024-09-30",
+   "unit": "USD",
+   "value": "19249000000"
+  },
+  "xbrl_0065": {
+   "accession": "0001628280-26-029344",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "4536437000000"
+  },
+  "xbrl_0066": {
+   "accession": "0001628280-26-054343",
+   "concept": "us-gaap:InterestIncomeExpenseNet",
+   "period_start": "2026-04-01",
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "25511000000"
+  },
+  "xbrl_0067": {
+   "accession": "0000019617-24-000326",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2024-03-31",
+   "unit": "USD",
+   "value": "336637000000"
+  },
+  "xbrl_0068": {
+   "accession": "0001628280-26-029344",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2026-01-01",
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "8325000000"
+  },
+  "xbrl_0069": {
+   "accession": "0000019617-24-000611",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-07-01",
+   "period_end": "2024-09-30",
+   "unit": "USD",
+   "value": "4080000000"
+  },
+  "xbrl_0070": {
+   "accession": "0000019617-23-000524",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2023-01-01",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "-47257000000"
+  },
+  "xbrl_0071": {
+   "accession": "0000019617-24-000453",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD/shares",
+   "value": "10.56"
+  },
+  "xbrl_0072": {
+   "accession": "0001628280-25-048859",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2025-01-01",
+   "period_end": "2025-09-30",
+   "unit": "USD",
+   "value": "55435000000"
+  },
+  "xbrl_0073": {
+   "accession": "0000019617-24-000453",
+   "concept": "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest",
+   "period_start": null,
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "22991000000"
+  },
+  "xbrl_0074": {
+   "accession": "0001628280-26-029344",
+   "concept": "us-gaap:Deposits",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "2675520000000"
+  },
+  "xbrl_0075": {
+   "accession": "0000019617-24-000611",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2024-09-30",
+   "unit": "USD",
+   "value": "4210048000000"
+  },
+  "xbrl_0076": {
+   "accession": "0000019617-25-000421",
+   "concept": "us-gaap:NoninterestExpense",
+   "period_start": "2025-01-01",
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "23597000000"
+  },
+  "xbrl_0077": {
+   "accession": "0001628280-26-054343",
+   "concept": "us-gaap:NoninterestIncome",
+   "period_start": "2026-01-01",
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "56306000000"
+  },
+  "xbrl_0078": {
+   "accession": "0000019617-25-000421",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "4006436000000"
+  },
+  "xbrl_0079": {
+   "accession": "0000019617-25-000615",
+   "concept": "us-gaap:InterestIncomeExpenseNet",
+   "period_start": "2025-04-01",
+   "period_end": "2025-06-30",
+   "unit": "USD",
+   "value": "23209000000"
+  },
+  "xbrl_0080": {
+   "accession": "0000019617-24-000453",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "340552000000"
+  },
+  "xbrl_0081": {
+   "accession": "0001045810-25-000023",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2025-01-26",
+   "unit": "USD",
+   "value": "111601000000"
+  },
+  "xbrl_0082": {
+   "accession": "0001045810-24-000264",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2024-01-29",
+   "period_end": "2024-07-28",
+   "unit": "USD",
+   "value": "36493000000"
+  },
+  "xbrl_0083": {
+   "accession": "0001045810-26-000021",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2026-01-25",
+   "unit": "USD",
+   "value": "157293000000"
+  },
+  "xbrl_0084": {
+   "accession": "0001045810-25-000023",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2024-01-29",
+   "period_end": "2025-01-26",
+   "unit": "USD",
+   "value": "3491000000"
+  },
+  "xbrl_0085": {
+   "accession": "0001045810-25-000230",
+   "concept": "us-gaap:GrossProfit",
+   "period_start": "2025-07-28",
+   "period_end": "2025-10-26",
+   "unit": "USD",
+   "value": "41849000000"
+  },
+  "xbrl_0086": {
+   "accession": "0001045810-25-000230",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-01-27",
+   "period_end": "2025-10-26",
+   "unit": "USD",
+   "value": "36271000000"
+  },
+  "xbrl_0087": {
+   "accession": "0001045810-24-000316",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2024-10-27",
+   "unit": "USD",
+   "value": "30114000000"
+  },
+  "xbrl_0088": {
+   "accession": "0001045810-26-000075",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2026-07-26",
+   "unit": "USD",
+   "value": "31575000000"
+  },
+  "xbrl_0089": {
+   "accession": "0001045810-26-000021",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2025-01-27",
+   "period_end": "2026-01-25",
+   "unit": "USD",
+   "value": "215938000000"
+  },
+  "xbrl_0090": {
+   "accession": "0001045810-25-000023",
+   "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+   "period_start": null,
+   "period_end": "2025-01-26",
+   "unit": "USD",
+   "value": "8589000000"
+  },
+  "xbrl_0091": {
+   "accession": "0001045810-26-000052",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2026-01-26",
+   "period_end": "2026-04-26",
+   "unit": "USD",
+   "value": "81615000000"
+  },
+  "xbrl_0092": {
+   "accession": "0001045810-24-000264",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2024-07-28",
+   "unit": "USD",
+   "value": "59633000000"
+  },
+  "xbrl_0093": {
+   "accession": "0001045810-26-000021",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-01-27",
+   "period_end": "2026-01-25",
+   "unit": "USD",
+   "value": "40086000000"
+  },
+  "xbrl_0094": {
+   "accession": "0001045810-23-000227",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2023-01-30",
+   "period_end": "2023-10-29",
+   "unit": "USD",
+   "value": "16591000000"
+  },
+  "xbrl_0095": {
+   "accession": "0001045810-24-000029",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2024-01-28",
+   "unit": "USD",
+   "value": "8459000000"
+  },
+  "xbrl_0096": {
+   "accession": "0001045810-25-000230",
+   "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+   "period_start": null,
+   "period_end": "2025-10-26",
+   "unit": "USD",
+   "value": "11486000000"
+  },
+  "xbrl_0097": {
+   "accession": "0001045810-24-000264",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2024-07-28",
+   "unit": "USD",
+   "value": "85227000000"
+  },
+  "xbrl_0098": {
+   "accession": "0001045810-26-000021",
+   "concept": "us-gaap:AccountsReceivableNetCurrent",
+   "period_start": null,
+   "period_end": "2026-01-25",
+   "unit": "USD",
+   "value": "38466000000"
+  },
+  "xbrl_0099": {
+   "accession": "0001045810-25-000023",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-01-29",
+   "period_end": "2025-01-26",
+   "unit": "USD",
+   "value": "11146000000"
+  },
+  "xbrl_0100": {
+   "accession": "0001045810-25-000230",
+   "concept": "us-gaap:OperatingIncomeLoss",
+   "period_start": "2025-07-28",
+   "period_end": "2025-10-26",
+   "unit": "USD",
+   "value": "36010000000"
+  },
+  "xbrl_0101": {
+   "accession": "0000078003-24-000039",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2023-12-31",
+   "unit": "USD",
+   "value": "10189000000"
+  },
+  "xbrl_0102": {
+   "accession": "0000078003-24-000039",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2023-01-01",
+   "period_end": "2023-12-31",
+   "unit": "USD",
+   "value": "24954000000"
+  },
+  "xbrl_0103": {
+   "accession": "0000078003-25-000054",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2024-01-01",
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "8023000000"
+  },
+  "xbrl_0104": {
+   "accession": "0000078003-25-000114",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2025-03-30",
+   "unit": "USD",
+   "value": "57639000000"
+  },
+  "xbrl_0105": {
+   "accession": "0000078003-25-000150",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2025-01-01",
+   "period_end": "2025-09-28",
+   "unit": "USD",
+   "value": "9162000000"
+  },
+  "xbrl_0106": {
+   "accession": "0000078003-24-000039",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2023-01-01",
+   "period_end": "2023-12-31",
+   "unit": "USD",
+   "value": "14771000000"
+  },
+  "xbrl_0107": {
+   "accession": "0000078003-24-000039",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2023-12-31",
+   "unit": "USD",
+   "value": "137213000000"
+  },
+  "xbrl_0108": {
+   "accession": "0000078003-24-000166",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "11447000000"
+  },
+  "xbrl_0109": {
+   "accession": "0000078003-25-000054",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period_start": "2024-01-01",
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "8031000000"
+  },
+  "xbrl_0110": {
+   "accession": "0000078003-26-000026",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "2629000000"
+  },
+  "xbrl_0111": {
+   "accession": "0000078003-24-000166",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "87700000000"
+  },
+  "xbrl_0112": {
+   "accession": "0000078003-23-000115",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2023-01-01",
+   "period_end": "2023-10-01",
+   "unit": "USD",
+   "value": "2863000000"
+  },
+  "xbrl_0113": {
+   "accession": "0000078003-23-000115",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2023-01-01",
+   "period_end": "2023-10-01",
+   "unit": "USD",
+   "value": "-320000000"
+  },
+  "xbrl_0114": {
+   "accession": "0000078003-24-000107",
+   "concept": "us-gaap:AccountsReceivableNetCurrent",
+   "period_start": null,
+   "period_end": "2024-03-31",
+   "unit": "USD",
+   "value": "10989000000"
+  },
+  "xbrl_0115": {
+   "accession": "0000078003-24-000166",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "-691000000"
+  },
+  "xbrl_0116": {
+   "accession": "0000078003-25-000054",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2024-01-01",
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "0"
+  },
+  "xbrl_0117": {
+   "accession": "0000078003-23-000115",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2023-01-01",
+   "period_end": "2023-10-01",
+   "unit": "USD",
+   "value": "0"
+  },
+  "xbrl_0118": {
+   "accession": "0000078003-24-000039",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2023-12-31",
+   "unit": "USD",
+   "value": "43333000000"
+  },
+  "xbrl_0119": {
+   "accession": "0000078003-25-000054",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-01-01",
+   "period_end": "2024-12-31",
+   "unit": "USD",
+   "value": "-28000000"
+  },
+  "xbrl_0120": {
+   "accession": "0000078003-26-000026",
+   "concept": "us-gaap:LongTermDebtNoncurrent",
+   "period_start": null,
+   "period_end": "2025-12-31",
+   "unit": "USD",
+   "value": "61641000000"
+  },
+  "xbrl_0121": {
+   "accession": "0000027419-26-000042",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2026-02-01",
+   "period_end": "2026-08-01",
+   "unit": "USD",
+   "value": "2404000000"
+  },
+  "xbrl_0122": {
+   "accession": "0000027419-24-000032",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2023-01-29",
+   "period_end": "2024-02-03",
+   "unit": "USD",
+   "value": "4806000000"
+  },
+  "xbrl_0123": {
+   "accession": "0000027419-25-000126",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period_start": "2025-08-03",
+   "period_end": "2025-11-01",
+   "unit": "USD",
+   "value": "689000000"
+  },
+  "xbrl_0124": {
+   "accession": "0000027419-25-000118",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2025-02-02",
+   "period_end": "2025-08-02",
+   "unit": "USD",
+   "value": "35031000000"
+  },
+  "xbrl_0125": {
+   "accession": "0000027419-26-000016",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2025-02-02",
+   "period_end": "2026-01-31",
+   "unit": "USD",
+   "value": "4767000000"
+  },
+  "xbrl_0126": {
+   "accession": "0000027419-23-000052",
+   "concept": "us-gaap:InventoryNet",
+   "period_start": null,
+   "period_end": "2023-10-28",
+   "unit": "USD",
+   "value": "14731000000"
+  },
+  "xbrl_0127": {
+   "accession": "0000027419-25-000118",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2025-02-02",
+   "period_end": "2025-08-02",
+   "unit": "USD",
+   "value": "258000000"
+  },
+  "xbrl_0128": {
+   "accession": "0000027419-26-000016",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2025-02-02",
+   "period_end": "2026-01-31",
+   "unit": "USD",
+   "value": "1062000000"
+  },
+  "xbrl_0129": {
+   "accession": "0000027419-25-000126",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2025-02-02",
+   "period_end": "2025-11-01",
+   "unit": "USD",
+   "value": "3485000000"
+  },
+  "xbrl_0130": {
+   "accession": "0000027419-25-000018",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2025-02-01",
+   "unit": "USD",
+   "value": "57769000000"
+  },
+  "xbrl_0131": {
+   "accession": "0000027419-24-000032",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2023-01-29",
+   "period_end": "2024-02-03",
+   "unit": "USD/shares",
+   "value": "8.94"
+  },
+  "xbrl_0132": {
+   "accession": "0000027419-26-000042",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2026-02-01",
+   "period_end": "2026-08-01",
+   "unit": "USD",
+   "value": "11286000000"
+  },
+  "xbrl_0133": {
+   "accession": "0000027419-24-000179",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2024-11-02",
+   "unit": "USD",
+   "value": "14489000000"
+  },
+  "xbrl_0134": {
+   "accession": "0000027419-23-000052",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2023-10-28",
+   "unit": "USD",
+   "value": "18599000000"
+  },
+  "xbrl_0135": {
+   "accession": "0000027419-24-000032",
+   "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+   "period_start": "2023-01-29",
+   "period_end": "2024-02-03",
+   "unit": "USD",
+   "value": "107412000000"
+  },
+  "xbrl_0136": {
+   "accession": "0000027419-25-000018",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period_start": "2024-02-04",
+   "period_end": "2025-02-01",
+   "unit": "USD",
+   "value": "76502000000"
+  },
+  "xbrl_0137": {
+   "accession": "0000027419-24-000179",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2024-02-04",
+   "period_end": "2024-11-02",
+   "unit": "USD/shares",
+   "value": "6.45"
+  },
+  "xbrl_0138": {
+   "accession": "0000027419-24-000032",
+   "concept": "us-gaap:OperatingIncomeLoss",
+   "period_start": "2023-01-29",
+   "period_end": "2024-02-03",
+   "unit": "USD",
+   "value": "5707000000"
+  },
+  "xbrl_0139": {
+   "accession": "0000027419-26-000022",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2026-02-01",
+   "period_end": "2026-05-02",
+   "unit": "USD",
+   "value": "1033000000"
+  },
+  "xbrl_0140": {
+   "accession": "0000027419-23-000052",
+   "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+   "period_start": "2023-07-30",
+   "period_end": "2023-10-28",
+   "unit": "USD",
+   "value": "25398000000"
+  },
+  "xbrl_0141": {
+   "accession": "0000034088-24-000050",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "17460000000"
+  },
+  "xbrl_0142": {
+   "accession": "0000034088-24-000050",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "5063000000"
+  },
+  "xbrl_0143": {
+   "accession": "0000034088-26-000067",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2026-01-01",
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "4868000000"
+  },
+  "xbrl_0144": {
+   "accession": "0000034088-23-000056",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "199703000000"
+  },
+  "xbrl_0145": {
+   "accession": "0000034088-24-000050",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "25224000000"
+  },
+  "xbrl_0146": {
+   "accession": "0000034088-25-000024",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "91233000000"
+  },
+  "xbrl_0147": {
+   "accession": "0000034088-25-000061",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period_start": "2025-07-01",
+   "period_end": "2025-09-30",
+   "unit": "USD/shares",
+   "value": "1.76"
+  },
+  "xbrl_0148": {
+   "accession": "0000034088-26-000093",
+   "concept": "us-gaap:Assets",
+   "period_start": null,
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "464482000000"
+  },
+  "xbrl_0149": {
+   "accession": "0000034088-24-000029",
+   "concept": "us-gaap:Liabilities",
+   "period_start": null,
+   "period_end": "2024-03-31",
+   "unit": "USD",
+   "value": "164866000000"
+  },
+  "xbrl_0150": {
+   "accession": "0000034088-23-000056",
+   "concept": "us-gaap:Revenues",
+   "period_start": "2023-07-01",
+   "period_end": "2023-09-30",
+   "unit": "USD",
+   "value": "90760000000"
+  },
+  "xbrl_0151": {
+   "accession": "0000034088-26-000067",
+   "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+   "period_start": "2026-01-01",
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "6470000000"
+  },
+  "xbrl_0152": {
+   "accession": "0000034088-24-000068",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period_start": "2024-07-01",
+   "period_end": "2024-09-30",
+   "unit": "USD",
+   "value": "4055000000"
+  },
+  "xbrl_0153": {
+   "accession": "0000034088-24-000050",
+   "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+   "period_start": null,
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "26460000000"
+  },
+  "xbrl_0154": {
+   "accession": "0000034088-26-000067",
+   "concept": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "period_start": "2026-01-01",
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "6967000000"
+  },
+  "xbrl_0155": {
+   "accession": "0000034088-25-000024",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period_start": "2025-01-01",
+   "period_end": "2025-03-31",
+   "unit": "USD",
+   "value": "7713000000"
+  },
+  "xbrl_0156": {
+   "accession": "0000034088-24-000029",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period_start": "2024-01-01",
+   "period_end": "2024-03-31",
+   "unit": "USD",
+   "value": "2495000000"
+  },
+  "xbrl_0157": {
+   "accession": "0000034088-24-000050",
+   "concept": "us-gaap:PaymentsForRepurchaseOfCommonStock",
+   "period_start": "2024-01-01",
+   "period_end": "2024-06-30",
+   "unit": "USD",
+   "value": "8337000000"
+  },
+  "xbrl_0158": {
+   "accession": "0000034088-26-000067",
+   "concept": "us-gaap:StockholdersEquity",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "254381000000"
+  },
+  "xbrl_0159": {
+   "accession": "0000034088-26-000093",
+   "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+   "period_start": "2026-01-01",
+   "period_end": "2026-06-30",
+   "unit": "USD",
+   "value": "32260000000"
+  },
+  "xbrl_0160": {
+   "accession": "0000034088-26-000067",
+   "concept": "us-gaap:AssetsCurrent",
+   "period_start": null,
+   "period_end": "2026-03-31",
+   "unit": "USD",
+   "value": "97787000000"
+  }
  }
 }

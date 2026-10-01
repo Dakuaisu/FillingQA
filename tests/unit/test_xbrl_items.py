@@ -81,6 +81,9 @@ def test_format_value():
     assert format_value(Decimal("6.98"), "USD/shares", (0, None)) == ("$6.98", "unit_scale_none")
     assert format_value(Decimal("4.2"), "USD/shares", (0,))[0] == "$4.20"
     assert format_value(Decimal("-0.45"), "USD/shares", (0,))[0] == "-$0.45"
+    # PFE share repurchases: the filing prints "—" (value 0, scale 6).
+    assert format_value(Decimal("0"), "USD", (6,))[0] == "$0 million"
+    assert format_value(Decimal("0E+6"), "USD", (6,))[0] == "$0 million"
 
 
 def test_format_value_reports_instead_of_picking():

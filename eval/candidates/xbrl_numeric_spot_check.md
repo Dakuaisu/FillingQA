@@ -1016,3 +1016,335 @@ right and complete?
 | Total Liabilities |  | 203,414 | 182,354 |
 | Commitments and contingencies | 7 |  |  |
 ```
+
+# Flagged, outside the seeded 10%
+
+Selected by rule (value <= 0), not by the seed: xbrl_0070, xbrl_0113, xbrl_0115, xbrl_0116, xbrl_0117, xbrl_0119. A zero may be
+printed as a dash; a negative sits under a line whose label reads as positive.
+Already shown above in the seeded 10%: xbrl_0115.
+
+## xbrl_0070
+
+- Question: How much net cash provided by operating activities did JPMorgan Chase report for the nine months ended September 30, 2023?
+- Reference answer: -$47,257 million for the nine months ended September 30, 2023.
+- Accessions: 0000019617-23-000524, 0000019617-24-000611
+- xbrl_fact_id: 29291
+- tags: JPM, operating_cash_flow, FY2023, 10-Q, ytd, template:dur_how_much, unit_scale_millions
+
+### 0000019617-23-000524:1402.0:1402.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2023 | Part I, Item 1: Financial Statements.]
+[Table: Consolidated statements of cash flows (unaudited) | JPMorgan Chase & Co | Q3 FY2023 10-Q | Part I, Item 1 | in millions, USD]
+|  | Nine months ended September 30, 2023 | Nine months ended September 30, 2022 |
+|---|---|---|
+| Operating activities |  |  |
+| Net income | $40,245 | $26,668 |
+| Adjustments to reconcile net income to net cash used in operating activities: |  |  |
+| Provision for credit losses | 6,558 | 4,101 |
+| Depreciation and amortization | 4,175 | 5,380 |
+| Deferred tax (benefit)/expense | (4,544) | (3,455) |
+| Bargain purchase gain associated with the First Republic acquisition | (2,812) | — |
+| Other | 3,611 | 3,815 |
+| Originations and purchases of loans held-for-sale | (83,534) | (131,589) |
+| Proceeds from sales, securitizations and paydowns of loans held-for-sale | 83,169 | 149,420 |
+| Net change in: |  |  |
+| Trading assets | (151,151) | (114,006) |
+| Securities borrowed | (2,852) | 12,347 |
+| Accrued interest and accounts receivable | (166) | (41,621) |
+| Other assets | 39,371 | (17,114) |
+| Trading liabilities | 30,787 | 34,950 |
+| Accounts payable and other liabilities | (11,955) | 75,961 |
+| Other operating adjustments | 1,841 | 1,040 |
+| Net cash provided by/(used in) operating activities | (47,257) | 5,897 |
+| Investing activities |  |  |
+| Net change in: |  |  |
+| Federal funds sold and securities purchased under resale agreements | (34,101) | (40,741) |
+| Held-to-maturity securities: |  |  |
+```
+
+### 0000019617-24-000611:1281.0:1281.0
+
+```
+[JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2024 | Part I, Item 1: Financial Statements.]
+[Table: Consolidated statements of cash flows (unaudited) | JPMorgan Chase & Co | Q3 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Nine months ended September 30, 2024 | Nine months ended September 30, 2023 |
+|---|---|---|
+| Operating activities |  |  |
+| Net income | $44,466 | $40,245 |
+| Adjustments to reconcile net income to net cash used in operating activities: |  |  |
+| Provision for credit losses | 8,047 | 6,558 |
+| Depreciation and amortization | 5,973 | 4,175 |
+| Deferred tax benefit | (243) | (4,544) |
+| Estimated bargain purchase gain associated with the First Republic acquisition | (103) | (2,812) |
+| Initial gain on the Visa share exchange | (7,990) | — |
+| Other | 1,716 | 3,611 |
+| Originations and purchases of loans held-for-sale | (160,573) | (83,534) |
+| Proceeds from sales, securitizations and paydowns of loans held-for-sale | 148,287 | 83,169 |
+| Net change in: |  |  |
+| Trading assets | (237,756) | (151,151) |
+| Securities borrowed | (51,688) | (2,852) |
+| Accrued interest and accounts receivable | (15,491) | (166) |
+| Other assets | (1,470) | 39,371 |
+| Trading liabilities | 53,495 | 30,787 |
+| Accounts payable and other liabilities | 17,399 | (11,955) |
+| Other operating adjustments | 6,161 | 1,841 |
+| Net cash (used in) operating activities | (189,770) | (47,257) |
+| Investing activities |  |  |
+| Net change in: |  |  |
+| Federal funds sold and securities purchased under resale agreements | (114,402) | (34,101) |
+```
+
+## xbrl_0113
+
+- Question: How much income tax expense did Pfizer report for the nine months ended October 1, 2023?
+- Reference answer: -$320 million for the nine months ended October 1, 2023.
+- Accessions: 0000078003-23-000115, 0000078003-24-000191
+- xbrl_fact_id: 55168
+- tags: PFE, income_tax, FY2023, 10-Q, ytd, template:dur_how_much, unit_scale_millions
+
+### 0000078003-23-000115:49.0:49.0
+
+```
+[PFIZER INC (PFE) | 10-Q | Q3 FY2023 | Part I, Item 1: FINANCIAL STATEMENTS]
+[Table: CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS | PFIZER INC | Q3 FY2023 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended October 1, 2023 | Three Months Ended October 2, 2022 | Nine Months Ended October 1, 2023 | Nine Months Ended October 2, 2022 |
+|---|---|---|---|---|
+| Revenues | $13,232 | $22,638 | $44,247 | $76,040 |
+| Costs and expenses: |  |  |  |  |
+| Cost of sales(a), (b) | 9,269 | 6,063 | 17,391 | 24,696 |
+| Selling, informational and administrative expenses(a) | 3,281 | 3,391 | 10,196 | 9,032 |
+| Research and development expenses(a) | 2,711 | 2,696 | 7,864 | 7,813 |
+| Acquired in-process research and development expenses | 67 | 524 | 122 | 880 |
+| Amortization of intangible assets | 1,179 | 822 | 3,466 | 2,478 |
+| Restructuring charges and certain acquisition-related costs | 155 | 199 | 377 | 580 |
+| Other (income)/deductions––net | (79) | (59) | (356) | 1,063 |
+| Income/(loss) from continuing operations before provision/(benefit) for taxes on income/(loss) | (3,352) | 9,001 | 5,187 | 29,498 |
+| Provision/(benefit) for taxes on income/(loss) | (964) | 356 | (320) | 3,098 |
+| Income/(loss) from continuing operations | (2,388) | 8,645 | 5,507 | 26,400 |
+| Discontinued operations––net of tax | 12 | (21) | 11 | 4 |
+```
+
+### 0000078003-24-000191:50.0:50.0
+
+```
+[PFIZER INC (PFE) | 10-Q | Q3 FY2024 | Part I, Item 1: FINANCIAL STATEMENTS]
+[Table: CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS | PFIZER INC | Q3 FY2024 10-Q | Part I, Item 1 | in millions, USD]
+|  | Three Months Ended September 29, 2024 | Three Months Ended October 1, 2023 | Nine Months Ended September 29, 2024 | Nine Months Ended October 1, 2023 |
+|---|---|---|---|---|
+| Revenues: |  |  |  |  |
+| Product revenues(a) | $15,417 | $11,587 | $38,731 | $38,575 |
+| Alliance revenues(a) | 1,900 | 1,645 | 6,140 | 5,672 |
+| Royalty revenues(a) | 384 | 260 | 992 | 737 |
+| Total revenues | 17,702 | 13,491 | 45,864 | 44,984 |
+| Costs and expenses: |  |  |  |  |
+| Cost of sales(b), (c) | 5,263 | 9,269 | 11,942 | 17,391 |
+| Selling, informational and administrative expenses(b) | 3,244 | 3,281 | 10,456 | 10,196 |
+| Research and development expenses(b) | 2,598 | 2,711 | 7,787 | 7,864 |
+| Acquired in-process research and development expenses | 13 | 67 | 20 | 122 |
+| Amortization of intangible assets | 1,312 | 1,179 | 3,927 | 3,466 |
+| Restructuring charges and certain acquisition-related costs | 313 | 155 | 1,669 | 377 |
+| Other (income)/deductions––net | 243 | 181 | 2,030 | 381 |
+| Income/(loss) from continuing operations before provision/(benefit) for taxes on income/(loss) | 4,715 | (3,352) | 8,033 | 5,187 |
+| Provision/(benefit) for taxes on income/(loss) | 234 | (964) | 393 | (320) |
+```
+
+## xbrl_0116
+
+- Question: Pfizer payments for repurchases of common stock, fiscal 2024: what was the figure?
+- Reference answer: $0 million for the fiscal year ended December 31, 2024.
+- Accessions: 0000078003-25-000054
+- xbrl_fact_id: 57303
+- tags: PFE, share_repurchases, FY2024, 10-K, annual, template:dur_figure, unit_scale_millions
+
+### 0000078003-25-000054:788.2:788.2
+
+```
+[PFIZER INC (PFE) | 10-K | FY2024 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+[Table: Pfizer Inc. and Subsidiary Companies | PFIZER INC | FY2024 10-K | Item 8 | in millions, USD]
+|  | Year Ended December 31, 2024 | Year Ended December 31, 2023 | Year Ended December 31, 2022 |
+|---|---|---|---|
+| Proceeds from short-term borrowings | 8,907 | 4,525 | 3,891 |
+| Payments on short-term borrowings | (11,226) | (3) | (3,887) |
+| Net (payments on)/proceeds from short-term borrowings with original maturities of three months or less | (2,590) | 3,161 | (222) |
+| Proceeds from issuance of long-term debt | — | 30,831 | — |
+| Payments on long-term debt | (2,250) | (2,569) | (3,298) |
+| Purchases of common stock | — | — | (2,000) |
+| Cash dividends paid | (9,512) | (9,247) | (8,983) |
+| Other financing activities, net | (469) | (631) | (335) |
+| Net cash provided by/(used in) financing activities | (17,140) | 26,066 | (14,834) |
+| Effect of exchange-rate changes on cash and cash equivalents and restricted cash and cash equivalents | (66) | (40) | (165) |
+| Net increase/(decrease) in cash and cash equivalents and restricted cash and cash equivalents | (1,810) | 2,448 | (1,515) |
+| Cash and cash equivalents and restricted cash and cash equivalents, at beginning of period | 2,917 | 468 | 1,983 |
+| Cash and cash equivalents and restricted cash and cash equivalents, at end of period | $1,107 | $2,917 | $468 |
+|  | - Continued - |  |  |
+```
+
+## xbrl_0117
+
+- Question: According to its 10-Q for the third quarter of fiscal 2023, what figure did Pfizer report for payments for repurchases of common stock in the nine months ended October 1, 2023?
+- Reference answer: $0 million for the nine months ended October 1, 2023.
+- Accessions: 0000078003-23-000115
+- xbrl_fact_id: 57300
+- tags: PFE, share_repurchases, FY2023, 10-Q, ytd, template:dur_filing, unit_scale_millions
+
+### 0000078003-23-000115:77.1:77.1
+
+```
+[PFIZER INC (PFE) | 10-Q | Q3 FY2023 | Part I, Item 1: FINANCIAL STATEMENTS]
+[Table: CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS | PFIZER INC | Q3 FY2023 10-Q | Part I, Item 1 | in millions, USD]
+|  | Nine Months Ended October 1, 2023 | Nine Months Ended October 2, 2022 |
+|---|---|---|
+| Purchases of long-term investments | (166) | (1,627) |
+| Proceeds from redemptions/sales of long-term investments | 189 | 446 |
+| Acquisitions of businesses, net of cash acquired | (25) | (6,225) |
+| Dividend received from the Consumer Healthcare JV | — | 3,960 |
+| Other investing activities, net | (193) | (200) |
+| Net cash provided by/(used in) investing activities | (21,282) | (11,373) |
+| Financing Activities |  |  |
+| Proceeds from short-term borrowings | 14 | 3,887 |
+| Payments on short-term borrowings | — | (3,887) |
+| Net (payments on)/proceeds from short-term borrowings with original maturities of three months or less | (106) | 870 |
+| Proceeds from issuance of long-term debt | 30,831 | — |
+| Payments on long-term debt | (2,569) | (1,609) |
+| Purchases of common stock | — | (2,000) |
+| Cash dividends paid | (6,932) | (6,738) |
+| Other financing activities, net | (613) | (342) |
+| Net cash provided by/(used in) financing activities | 20,624 | (9,819) |
+| Effect of exchange-rate changes on cash and cash equivalents and restricted cash and cash equivalents | (39) | (139) |
+| Net increase/(decrease) in cash and cash equivalents and restricted cash and cash equivalents | 2,764 | (646) |
+| Cash and cash equivalents and restricted cash and cash equivalents, at beginning of period | 468 | 1,983 |
+```
+
+## xbrl_0119
+
+- Question: Pfizer income tax expense, fiscal 2024: what was the figure?
+- Reference answer: -$28 million for the fiscal year ended December 31, 2024.
+- Accessions: 0000078003-25-000054, 0000078003-26-000026
+- xbrl_fact_id: 55185
+- tags: PFE, income_tax, FY2024, 10-K, annual, template:dur_figure, unit_scale_millions
+
+### 0000078003-25-000054:1070.0:1070.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2024 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+[Table: Components of Provision/(benefit) for taxes on income based on the location of the taxing authorities include: | PFIZER INC | FY2024 10-K | Item 8 | in millions, USD]
+|  | Year Ended December 31, 2024 | Year Ended December 31, 2023 | Year Ended December 31, 2022 |
+|---|---|---|---|
+| United States |  |  |  |
+| Current income taxes: |  |  |  |
+| Federal | $453 | $1,321 | $2,744 |
+| State and local | 32 | (135) | (20) |
+| Deferred income taxes: |  |  |  |
+| Federal | (1,909) | (2,606) | (3,271) |
+| State and local | (293) | (184) | (310) |
+| Total U.S. tax provision/(benefit) | (1,717) | (1,605) | (857) |
+| International |  |  |  |
+| Current income taxes | 1,588 | 1,142 | 4,368 |
+| Deferred income taxes | 100 | (652) | (183) |
+| Total international tax provision/(benefit) | 1,689 | 490 | 4,185 |
+| Provision/(benefit) for taxes on income | $(28) | $(1,115) | $3,328 |
+```
+
+### 0000078003-25-000054:1074.0:1080.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2024 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+The changes in Provision/(benefit) for taxes on income impacting the effective tax rate year-over-year are summarized below:
+The tax benefit of $28 million for 2024 compared to the tax benefit of $1.1 billion for 2023 was primarily a result of changes in the jurisdictional mix of earnings partially offset by a tax benefit related to the Transition Tax liability under the TCJA.
+The tax benefit of $1.1 billion for 2023 compared to the tax provision of $3.3 billion for 2022 was primarily a result of changes in the jurisdictional mix of earnings and the resolution of uncertain tax positions in various markets. The 2023 pre-tax income included a greater percentage of expenses taxed at higher rates as compared to the 2022 pre-tax income, resulting in a 2023 tax benefit compared to the 2022 tax provision. These expenses included amortization expense, acquisition-related costs, restructuring charges and intangible asset impairment charges. The tax benefit for 2023 and the tax provision for 2022 included tax benefits related to global income tax resolutions in multiple tax jurisdictions spanning multiple tax years. The tax provision for 2022 also included the closing of U.S. IRS audits covering five tax years.
+In all years, federal, state and international net tax liabilities assumed or established as part of a business acquisition are not included in Provision/(benefit) for taxes on income (see Note 2A).
+We elected, with the filing of our 2018 U.S. Federal Consolidated Income Tax Return, to pay our initial estimated $15 billion repatriation tax liability on accumulated post-1986 foreign earnings (Transition Tax liability) over eight years through 2026. The sixth annual installment was paid by its April 15, 2024 due date. The seventh annual installment is due April 15, 2025 and is reported in current Income taxes payable as of December 31, 2024. The remaining liability is reported in noncurrent Other taxes payable. Our obligations may vary due to the availability of attributes such as foreign tax and other credit carryforwards or carrybacks.
+```
+
+### 0000078003-25-000054:763.0:763.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2024 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+[Table: Pfizer Inc. and Subsidiary Companies | PFIZER INC | FY2024 10-K | Item 8 | in millions, USD]
+|  | Year Ended December 31, 2024 | Year Ended December 31, 2023 | Year Ended December 31, 2022 |
+|---|---|---|---|
+| Revenues: |  |  |  |
+| Product revenues | $53,816 | $50,914 | $91,793 |
+| Alliance revenues | 8,388 | 7,582 | 8,537 |
+| Royalty revenues(a) | 1,423 | 1,058 | 845 |
+| Total revenues | 63,627 | 59,553 | 101,175 |
+| Costs and expenses: |  |  |  |
+| Cost of sales(b), (c) | 17,851 | 24,954 | 34,344 |
+| Selling, informational and administrative expenses(b) | 14,730 | 14,771 | 13,677 |
+| Research and development expenses(b) | 10,822 | 10,679 | 11,428 |
+| Acquired in-process research and development expenses | 108 | 194 | 953 |
+| Amortization of intangible assets | 5,286 | 4,733 | 3,609 |
+| Restructuring charges and certain acquisition-related costs | 2,419 | 2,943 | 1,375 |
+| Other (income)/deductions––net | 4,388 | 222 | 1,062 |
+| Income from continuing operations before provision/(benefit) for taxes on income | 8,023 | 1,058 | 34,729 |
+| Provision/(benefit) for taxes on income | (28) | (1,115) | 3,328 |
+| Income from continuing operations | 8,051 | 2,172 | 31,401 |
+| Discontinued operations––net of tax | 11 | (15) | 6 |
+| Net income before allocation to noncontrolling interests | 8,062 | 2,158 | 31,407 |
+```
+
+### 0000078003-26-000026:1054.0:1054.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2025 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+[Table: Components of Provision/(benefit) for taxes on income based on the location of the taxing authorities include: | PFIZER INC | FY2025 10-K | Item 8 | in millions, USD]
+|  | Year Ended December 31, 2025 | Year Ended December 31, 2024 | Year Ended December 31, 2023 |
+|---|---|---|---|
+| Current tax expense (benefit): |  |  |  |
+| U.S. Federal | $384 | $453 | $1,321 |
+| U.S. State and local | 172 | 32 | (135) |
+| Foreign | 1,310 | 1,588 | 1,142 |
+| Total current tax expense (benefit) | $1,866 | $2,074 | $2,328 |
+| Deferred tax expense (benefit): |  |  |  |
+| U.S. Federal | $(1,826) | $(1,909) | $(2,606) |
+| U.S. State and local | (61) | (293) | (184) |
+| Foreign | (246) | 100 | (652) |
+| Total deferred tax expense (benefit) | $(2,133) | $(2,102) | $(3,442) |
+| Total income tax expense (benefit) |  |  |  |
+| U.S. Federal | $(1,442) | $(1,456) | $(1,285) |
+| U.S. State and local | 112 | (261) | (319) |
+| Foreign | 1,064 | 1,689 | 490 |
+| Provision/(benefit) for taxes on income | $(266) | $(28) | $(1,115) |
+```
+
+### 0000078003-26-000026:1058.0:1065.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2025 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+The changes in Provision/(benefit) for taxes on income impacting the effective tax rate year-over-year are summarized below:
+2025 v. 2024
+The tax benefit of $266 million for 2025 compared to the tax benefit of $28 million for 2024 was primarily due to a favorable change in the jurisdictional mix of earnings, tax benefits related to global income tax resolutions in multiple tax jurisdictions spanning multiple tax years, and the remeasurement of deferred tax liabilities due to the enactment of the OBBBA on July 4, 2025.
+2024 v. 2023
+The tax benefit of $28 million for 2024 compared to the tax benefit of $1.1 billion for 2023 was primarily a result of changes in the jurisdictional mix of earnings partially offset by a tax benefit related to the Transition Tax liability under the TCJA.
+In all years, federal, state and international net tax liabilities assumed or established as part of a business acquisition are not included in Provision/(benefit) for taxes on income (see Note 2A).
+We elected, with the filing of our 2018 U.S. Federal Consolidated Income Tax Return, to pay our initial estimated $15 billion repatriation tax liability on accumulated post-1986 foreign earnings (Transition Tax liability) over eight years through 2026. The seventh annual installment was paid by its April 15, 2025 due date. The eighth and final annual installment is due April 15, 2026 and is reported in current Income taxes payable as of December 31, 2025. Our obligations may vary due to the availability of attributes such as foreign tax and other credit carryforwards or carrybacks.
+Consistent with the disclosure requirements of ASU 2023-09, the table below summarizes income taxes paid (net of refunds received): Year Ended December 31, (MILLIONS) 2025 U.S. Federal taxes $ 2,729 U.S. State and local taxes 101 Foreign taxes Ireland 1,016 Other foreign jurisdictions 842 Total income taxes paid $ 4,688
+```
+
+### 0000078003-26-000026:760.0:760.0
+
+```
+[PFIZER INC (PFE) | 10-K | FY2025 | Item 8: FINANCIAL STATEMENTS AND SUPPLEMENTARY DATA]
+[Table: Pfizer Inc. and Subsidiary Companies | PFIZER INC | FY2025 10-K | Item 8 | in millions, USD]
+|  | Year Ended December 31, 2025 | Year Ended December 31, 2024 | Year Ended December 31, 2023 |
+|---|---|---|---|
+| Revenues: |  |  |  |
+| Product revenues | $51,663 | $53,816 | $50,914 |
+| Alliance revenues | 9,266 | 8,388 | 7,582 |
+| Royalty revenues | 1,650 | 1,423 | 1,058 |
+| Total revenues | 62,579 | 63,627 | 59,553 |
+| Costs and expenses: |  |  |  |
+| Cost of sales(a), (b) | 16,067 | 17,851 | 24,954 |
+| Selling, informational and administrative expenses(a) | 13,794 | 14,730 | 14,771 |
+| Research and development expenses(a) | 10,437 | 10,822 | 10,679 |
+| Acquired in-process research and development expenses | 1,613 | 108 | 194 |
+| Amortization of intangible assets | 4,874 | 5,286 | 4,733 |
+| Restructuring charges and certain acquisition-related costs | 1,550 | 2,419 | 2,943 |
+| Other (income)/deductions––net | 6,724 | 4,388 | 222 |
+| Income from continuing operations before provision/(benefit) for taxes on income | 7,520 | 8,023 | 1,058 |
+| Provision/(benefit) for taxes on income | (266) | (28) | (1,115) |
+| Income from continuing operations | 7,787 | 8,051 | 2,172 |
+| Discontinued operations––net of tax | 25 | 11 | (15) |
+| Net income before allocation to noncontrolling interests | 7,812 | 8,062 | 2,158 |
+```
