@@ -14,6 +14,7 @@ minimum; and the proportional allocation per ticker (TRADEOFFS, LLM seeding) at
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from itertools import pairwise
@@ -23,11 +24,16 @@ import yaml
 from api.chunk.tokens import count_tokens
 from api.config import REPO_ROOT, eval_seeding
 from api.db import connect
-from eval.generate.seeding import allocate, pick_extra
+from eval.generate.seeding import (
+    PER_SHARE_EXCEPTION,
+    SCALE_EXCEPTION,
+    allocate,
+    mixed_signals,
+    pick_extra,
+)
 from scripts.write_freeze import FREEZE_FILE
 
 MDNA = {("10-K", "II.7"), ("10-Q", "I.2")}
-PROPOSED_MIN_BODY_TOKENS = 40  # the proposal under review; config holds the decision
 FIXTURE_FILE = REPO_ROOT / "tests" / "fixtures" / "seed_chunks.json"
 # Real chunks for tests/unit/test_seeding.py: a millions table, two NULL-scale
 # tables (percentages, per-share), two prose chunks, two sharing a sentence.
@@ -39,6 +45,7 @@ FIXTURE_CHUNKS = (
     "0000027419-23-000052:273.0:274.0",
     "0001045810-24-000029:742.0:746.0",
     "0001045810-24-000029:748.0:752.0",
+    "0000019617-24-000326:1892.0:1892.0",  # JPM Note 18, EPS, unit_scale millions (F-90)
 )
 CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
 
@@ -49,20 +56,40 @@ def quantiles(xs: list[int]) -> str:
     return f"min {xs[0]}, p25 {q(0.25)}, median {q(0.5)}, p75 {q(0.75)}, max {xs[-1]}"
 
 
+def span_scales(conn, chunk_ids: list[str]) -> dict[str, list[int | None]]:
+    """chunk_id -> the ix scale of every tagged span resolved into it, in span order."""
+    out: dict[str, list[int | None]] = defaultdict(list)
+    for cid, scale in conn.execute(
+        "SELECT chunk_id, scale FROM xbrl_spans WHERE chunk_id = ANY(%s) ORDER BY span_id",
+        (chunk_ids,),
+    ):
+        out[cid].append(scale)
+    return out
+
+
 def write_fixture() -> None:
     record = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
     with connect() as conn:
         rows = conn.execute(
-            "SELECT chunk_id, ticker, chunk_type, unit_scale, text, raw_text FROM chunks "
-            "WHERE chunk_id = ANY(%s) ORDER BY chunk_id",
+            "SELECT chunk_id, ticker, form_type, item_code, chunk_type, unit_scale, text, raw_text "
+            "FROM chunks WHERE chunk_id = ANY(%s) ORDER BY chunk_id",
             (list(FIXTURE_CHUNKS),),
         ).fetchall()
-    keys = ("chunk_id", "ticker", "chunk_type", "unit_scale", "text", "raw_text")
+        spans = span_scales(conn, list(FIXTURE_CHUNKS))
+    keys = ("chunk_id", "ticker", "form_type", "item_code", "chunk_type", "unit_scale", "text",
+            "raw_text")  # fmt: skip
     doc = {
         "source": "python -m scripts.seed_supply --write-fixture",
         "parser_version": record["parser_version"],
         "chunker_version": record["chunker_version"],
-        "chunks": [dict(zip(keys, r, strict=True)) for r in rows],
+        "chunks": [
+            {
+                **dict(zip(keys, r, strict=True)),
+                "body_tokens": count_tokens(r[7]),
+                "span_scales": spans.get(r[0], []),
+            }
+            for r in rows
+        ],
     }
     FIXTURE_FILE.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"wrote {len(rows)} chunks to {FIXTURE_FILE.relative_to(REPO_ROOT)}")
@@ -76,10 +103,13 @@ def main() -> None:
     parsed = [e["accession"] for e in record["filings"] if e["status"] == "parsed"]
     with connect() as conn:
         rows = conn.execute(
-            "SELECT chunk_id, ticker, form_type, item_code, chunk_type, token_count, raw_text "
-            "FROM chunks WHERE accession = ANY(%s) ORDER BY chunk_id",
+            "SELECT chunk_id, ticker, form_type, item_code, chunk_type, token_count, raw_text, "
+            "unit_scale, accession, char_start FROM chunks WHERE accession = ANY(%s) "
+            "ORDER BY chunk_id",
             (parsed,),
         ).fetchall()
+        scaled = [r[0] for r in rows if r[4] == "table" and r[7] is not None]
+        spans = span_scales(conn, scaled)
     gold: dict[str, set[str]] = defaultdict(set)  # chunk -> candidate files using it
     for path in CANDIDATES:
         for line in path.read_text(encoding="utf-8").splitlines():
@@ -93,6 +123,9 @@ def main() -> None:
     by_tf = defaultdict(list)
     body = {r[0]: count_tokens(r[6]) for r in rows if r[4] == "prose"}
     text = {r[0]: r[6] for r in rows}
+    unit = {r[0]: r[7] for r in rows}
+    order = sorted(rows, key=lambda r: (r[8], r[9] if r[9] is not None else -1, r[0]))
+    next_type = {a[0]: b[4] for a, b in pairwise(order) if a[8] == b[8]}
     rows = [r[:6] for r in rows]
     for cid, _, form, _, ctype, tok in rows:
         by_tf[(ctype, form)].append((cid, tok))
@@ -161,19 +194,52 @@ def main() -> None:
     )
     print(f"\nprose body tokens (header excluded), {len(prose)} chunks: "
           f"{ {name: bands[name] for name in names} }")  # fmt: skip
-    cut = PROPOSED_MIN_BODY_TOKENS
+    cut = cfg["synthesis"]["min_body_tokens"]
     below = [x for x in prose if x[0] < cut]
-    print(f"  below the proposed {cut}: {len(below)}; at or above: {len(prose) - len(below)}")
+    above = len(prose) - len(below)
+    print(f"  below min_body_tokens {cut} (config): {len(below)}; at or above: {above}")
+    print(
+        "  per ticker: prose / below the floor (share) / of which one-line headings / "
+        "headings followed by a table chunk"
+    )
+    for t in tickers:
+        mine = [cid for cid, tk, _, _, c, _ in rows if tk == t and c == "prose"]
+        low = [cid for cid in mine if body[cid] < cut]
+        heads = [cid for cid in low if text[cid].strip().count("\n") == 0
+                 and not re.search(r"[.:;?!]$", text[cid].strip())]  # fmt: skip
+        then_table = sum(1 for cid in heads if next_type.get(cid) == "table")
+        print(f"    {t:5} {len(mine):5} {len(low):4} ({len(low) / len(mine):.0%}) "
+              f"{len(heads):4} {then_table:4}")  # fmt: skip
     for label, band in (("just below", [x for x in prose if cut - 5 <= x[0] < cut]),
                         ("just above", [x for x in prose if cut <= x[0] < cut + 5])):  # fmt: skip
         print(f"  {label} the cut ({len(band)} chunks; every {max(1, len(band) // 6)}th shown):")
         for n, cid in band[:: max(1, len(band) // 6)][:6]:
             print(f"    {n:3} {cid}: {text[cid][:150]!r}")
 
+    print(f"\nscale signals (F-90), table chunks with a unit_scale: {len(scaled)}")
+    print(
+        "  per ticker: 'except ... per share' / scale-exception clause / tagged span at "
+        "another ix scale / union"
+    )
+    tot = Counter()
+    for t in tickers:
+        mine = [cid for cid, tk, *_ in rows if tk == t and cid in set(scaled)]
+        a = {c for c in mine if PER_SHARE_EXCEPTION.search(text[c])}
+        b = {c for c in mine if SCALE_EXCEPTION.search(text[c])}
+        m = {
+            c
+            for c in mine
+            if any("tagged spans" in r for r in mixed_signals("", unit[c], spans.get(c, [])))
+        }
+        u = a | b | m
+        tot.update({"a": len(a), "b": len(b), "m": len(m), "u": len(u), "n": len(mine)})
+        print(f"    {t:5} {len(mine):5}: {len(a):4} {len(b):4} {len(m):5} {len(u):5}")
+    print(f"    total {tot['n']:5}: {tot['a']:4} {tot['b']:4} {tot['m']:5} {tot['u']:5}")
+
     eligible = [r for r in rows if r[0] not in gold]
     for kind, ctype in (("table", "table"), ("synthesis", "prose")):
         c = cfg[kind]
-        floors = [None] if ctype == "table" else [None, cut]
+        floors = [None] if ctype == "table" else [cut]
         for floor in floors:
             pool = [r for r in eligible if r[4] == ctype and (floor is None or body[r[0]] >= floor)]
             title = f"{kind} ({ctype} chunks, gold excluded" + (

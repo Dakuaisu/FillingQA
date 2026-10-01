@@ -1,0 +1,14 @@
+Given this chunk, write 2 questions answerable ONLY from it. One factual/numeric, one interpretive. Provide the exact answer and quote the supporting sentence.
+
+Requirements:
+1. Each question names the company.
+2. Each question states the fiscal period it asks about.
+3. The supporting quote is copied verbatim from the chunk.
+4. Figures are copied exactly as printed in the chunk, including parentheses, "$" and "%". The factual answer is the printed figure only.
+
+Return only a JSON object in this format, with no other text:
+{"questions": [{"kind": "factual", "question": "...", "answer": "...", "supporting_quote": "..."}, {"kind": "interpretive", "question": "...", "answer": "...", "supporting_quote": "..."}]}
+
+The chunk follows. Its first line, in brackets, gives the company, form, fiscal period and section.
+
+<<CHUNK>>

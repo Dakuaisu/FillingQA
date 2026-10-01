@@ -6,6 +6,7 @@ to their eligible chunk counts, by largest remainder.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 import re
@@ -55,6 +56,7 @@ DEICTIC = re.compile(
 class Drop:
     filter: str
     reason: str
+    sign_only: bool = False  # answer_in_quote: |answer| is in the quote with the other sign
 
 
 def normalize_verbatim(text: str) -> str:
@@ -88,14 +90,60 @@ def figures(text: str) -> list[Decimal]:
     return out
 
 
-def attach_scale(figure: str, unit_scale: str | None) -> tuple[Decimal, str | None]:
-    """(value, flag). The chunk's caption scale; a percent is not scaled; NULL is flagged."""
+MAGNITUDE = {"thousands": 3, "millions": 6, "billions": 9}
+SCALE_EXCEPTION = re.compile(r"\b(thousands|millions|billions)\b[^|\n]{0,40}?\bexcept\b", re.I)
+PER_SHARE_EXCEPTION = re.compile(r"\bexcept\b[^|\n]{0,40}?\bper share\b", re.I)
+
+
+def mixed_signals(
+    raw_text: str, unit_scale: str | None, span_scales: list[int | None]
+) -> list[str]:
+    """Why a table's caption scale may not apply to every figure in it (F-90).
+
+    Either signal marks the table mixed: a scale-exception clause in the chunk
+    text ("In millions, except per share data" -- in filings it sits in a column
+    header cell, not the caption line), or a tagged span in the chunk whose ix
+    scale is not the caption's magnitude (an absent scale counts as 0). Neither
+    covers an untagged per-share, percent or count row, so scale is confirmed at
+    review for every table item.
+    """
+    reasons = []
+    m = SCALE_EXCEPTION.search(raw_text)
+    if m:
+        reasons.append(f"scale exception clause {m.group(0)!r}")
+    if unit_scale is not None:
+        want = MAGNITUDE[unit_scale.strip().lower()]
+        other = sorted({0 if sc is None else sc for sc in span_scales} - {want})
+        if other:
+            reasons.append(f"tagged spans at ix scale {other}, caption {unit_scale} ({want})")
+    return reasons
+
+
+def attach_scale(
+    figure: str, unit_scale: str | None, mixed: list[str], span_scale: int | None = None
+) -> tuple[Decimal, list[str]]:
+    """(value, flags). The caption scale is applied only to a figure from a table
+    nothing marks as mixed; a percent is never scaled. NULL or mixed: the printed
+    value and a flag, never a guess. `span_scale` (the answer's own tagged span,
+    if any) is reported for the reviewer, not applied."""
     value = parse_figure(figure)
+    flags = []
+    if span_scale is not None:
+        flags.append(f"answer is a tagged span at ix scale {span_scale} (review aid, not applied)")
     if figure.strip().endswith("%"):
-        return value, None
+        return value, flags
     if unit_scale is None:
-        return value, "scale unknown: chunk has no unit_scale"
-    return to_base_units(value, unit_scale), None
+        return value, ["scale unknown: chunk has no unit_scale", *flags]
+    if mixed:
+        return value, [f"scale not applied, mixed table: {'; '.join(mixed)}", *flags]
+    return to_base_units(value, unit_scale), flags
+
+
+def answer_flags(answer: str) -> list[str]:
+    """Sheet flags on a stored answer. A parenthesized figure is kept as printed:
+    code does not decide whether "(2,815)" is -2,815 or an outflow of 2,815 (F-87)."""
+    a = answer.strip().removeprefix("$").strip()
+    return ["parenthesized figure: sign wording set at review (F-87)"] if a.startswith("(") else []
 
 
 def unanchored_pronoun(question: str, company_names: list[str]) -> str | None:
@@ -153,8 +201,12 @@ def filter_question(
             value = parse_figure(q["answer"])
         except NumberFormatError:
             return Drop("answer_figure", f"answer {q['answer']!r} is not a printed figure")
-        if value not in figures(q["supporting_quote"]):
-            return Drop("answer_in_quote", f"figure {q['answer']!r} not in the supporting quote")
+        quoted = figures(q["supporting_quote"])
+        if value not in quoted:
+            sign_only = value != 0 and -value in quoted
+            why = "only with the opposite sign" if sign_only else "not"
+            return Drop("answer_in_quote", f"figure {q['answer']!r} {why} in the supporting quote",
+                        sign_only)  # fmt: skip
         if value in figures(q["question"]):
             return Drop("question_leaks_answer", f"figure {q['answer']!r} appears in the question")
     if not any(n in q["question"] for n in company_names if n):
@@ -200,3 +252,19 @@ def same_number_elsewhere(
 def quote_elsewhere(quote: str, chunk_texts: dict[str, str]) -> list[str]:
     """Review aid: chunks containing the supporting quote verbatim (normalized)."""
     return sorted(c for c, t in chunk_texts.items() if quote_in_chunk(quote, t))
+
+
+# --- Stage 1 prompt ---------------------------------------------------------------
+
+CHUNK_SLOT = "<<CHUNK>>"
+
+
+def render_prompt(template: str, chunk_text: str) -> str:
+    """The seeding prompt for one chunk: the template with its single slot filled."""
+    if template.count(CHUNK_SLOT) != 1:
+        raise ValueError(f"template must hold {CHUNK_SLOT} exactly once")
+    return template.replace(CHUNK_SLOT, chunk_text)
+
+
+def prompt_sha(template: str) -> str:
+    return hashlib.sha256(template.encode("utf-8")).hexdigest()

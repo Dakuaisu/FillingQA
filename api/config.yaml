@@ -298,5 +298,5 @@ eval_seeding:
       XOM: 5
       PFE: 5
     overdraw: 2
-    min_body_tokens: null   # proposed 40 (TRADEOFFS); not decided, so not applied
+    min_body_tokens: 40     # body tokens, header excluded (TRADEOFFS: seeding scale, floor, prompt)
   near_duplicate_cosine: 0.92   # PRD 11.1 Stage 2

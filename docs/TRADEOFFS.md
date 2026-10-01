@@ -1658,3 +1658,51 @@ allocation would then send slots to headings), or a percentile (not a reason).
 - F-81 extended to seeded numeric answers (percentages, per-share, counts).
 - Filter tests use real fixture chunk text (`tests/fixtures/seed_chunks.json`);
   question and answer strings stay inline in the tests, never under `eval/`.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding scale, floor, prompt
+
+**1. F-90: flag, never scale a mixed table.** `attach_scale` applies the chunk's
+`unit_scale` only when nothing marks the table as mixed (`mixed_signals`). Mixed
+means a scale-exception clause in the chunk text, or a tagged span in the chunk
+whose ix scale is not the caption's magnitude (absent counts as 0). In filings
+the clause sits in a column header cell ("Three Months Ended ... (In millions,
+except per share data)"): 400 scaled table chunks hold one, none in the caption
+line. A mixed table gets no scale and a flag, as NULL does. If the answer is
+itself a tagged span, its ix scale is printed on the sheet as a review aid, not
+applied. No signal covers an untagged per-share, percent or count row, so the
+sheet shows printed figure, row label, caption scale and its source for all 50
+table items, and scale is confirmed at review for every one. Measured by
+`python -m scripts.seed_supply`: "except ... per share" 153, scale-exception
+clause 400, tagged span at another ix scale 1,135, union 1,386 of 9,221.
+*Alternatives:* the "except ... per share" text match alone (a lower bound:
+misses other exceptions and split captions, F-67); a parser fix to keep the
+clause (a new `parser_version` and a new freeze); trusting `unit_scale` (per-share
+answers off by 10^6).
+
+**2. Minimum prose length: 40 body tokens** (`min_body_tokens: 40`), a
+sampling-frame rule fixed before any draw or model output, not a metric, and not
+revisited after model output: drops clustering above the cut are reported, not
+tuned away. The manifest records floor exclusions per stratum beside gold
+exclusions. A report of the synthesis slice states its population: prose of at
+least 40 body tokens, 11,254 of 12,487 eligible. XOM loses 141 of 463 (30%):
+mostly one-line table titles emitted as their own prose chunk just before the
+table (F-91). The floor stays. *Alternatives:* no floor (slots on headings and
+pointers); a percentile (not a reason).
+
+**3. Prompt: figures exactly as printed, with parentheses, `$` and `%`.** The
+`answer_in_quote` filter stays exact: no absolute-value matching and no
+re-generation. A drop where the answer's absolute value is in the quote with the
+other sign is marked `sign_only`, counted apart in the manifest, so a loss of
+outflow lines shows. A parenthesized answer is stored as printed and flagged;
+code does not decide whether "(2,815)" is -2,815 or an outflow of 2,815 (F-87);
+the reference answer's sign wording is set at review; scoring stays with F-81.
+The prompt (`eval/generate/prompts/seed_v1.txt`, sha in the manifest) holds PRD
+Stage 1's instruction, the format `parse_response` expects, and four
+requirements: name the company, state the fiscal period, quote verbatim, copy
+figures as printed. No example question or answer from the corpus. *Which
+question becomes the item:* a table chunk gives its factual question, a prose
+chunk its interpretive one; the other stays in the raw responses file and never
+fills a slot. *Alternatives:* magnitude matching (hides sign errors); letting the
+model normalize figures (the filter could no longer check them).

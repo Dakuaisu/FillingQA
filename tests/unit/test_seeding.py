@@ -17,9 +17,11 @@ import yaml
 from api.config import eval_seeding
 from eval.generate.seeding import (
     allocate,
+    answer_flags,
     attach_scale,
     figures,
     filter_question,
+    mixed_signals,
     near_duplicates,
     parse_response,
     pick_extra,
@@ -41,6 +43,7 @@ AAPL_GM = CH["0000320193-23-000106:327.0:327.0"]  # gross margin %, unit_scale N
 AAPL_EPS = CH["0000320193-23-000106:458.0:458.0"]  # per-share note, unit_scale NULL
 PFE_PROSE = CH["0000078003-24-000039:343.0:344.0"]
 NVDA_A, NVDA_B = CH["0001045810-24-000029:742.0:746.0"], CH["0001045810-24-000029:748.0:752.0"]
+JPM_EPS = CH["0000019617-24-000326:1892.0:1892.0"]  # Note 18, EPS (F-90)
 NAMES = ["Costco", "COST", "Apple", "AAPL", "Pfizer", "PFE"]
 
 
@@ -100,8 +103,11 @@ def test_numeric_answer_must_be_in_the_quote_and_not_in_the_question():
     # Exact after normalization: "(117)" is -117, so an answer of 117 is not in the quote.
     fx = "| EFFECT OF EXCHANGE RATE CHANGES ON CASH AND CASH EQUIVALENTS | (117) | 15 |"
     q2 = "What was the effect of exchange rates on Costco's cash in the first half of fiscal 2025?"
-    assert filter_question(factual(q2, "117", fx), COST_CF["text"], NAMES, True).filter == (
-        "answer_in_quote"
+    drop = filter_question(factual(q2, "117", fx), COST_CF["text"], NAMES, True)
+    assert (drop.filter, drop.sign_only) == ("answer_in_quote", True)
+    assert (
+        filter_question(factual(q, "13,700", quote), COST_CF["text"], NAMES, True).sign_only
+        is False
     )
     assert filter_question(factual(q2, "(117)", fx), COST_CF["text"], NAMES, True) is None
     assert filter_question(
@@ -109,12 +115,32 @@ def test_numeric_answer_must_be_in_the_quote_and_not_in_the_question():
     ).filter == ("answer_figure")
 
 
+def scale_of(chunk, figure, span_scale=None):
+    mixed = mixed_signals(chunk["raw_text"], chunk["unit_scale"], chunk["span_scales"])
+    return attach_scale(figure, chunk["unit_scale"], mixed, span_scale)
+
+
 def test_scale_comes_from_the_chunk_and_null_is_flagged():
-    assert attach_scale("12,356", COST_CF["unit_scale"]) == (Decimal("12356000000"), None)
-    assert attach_scale("44.1%", AAPL_GM["unit_scale"]) == (Decimal("44.1"), None)
+    assert scale_of(COST_CF, "12,356") == (Decimal("12356000000"), [])
+    assert scale_of(AAPL_GM, "44.1%") == (Decimal("44.1"), [])
     # The per-share note prints net income in millions but carries no unit_scale.
-    value, flag = attach_scale("96,995", AAPL_EPS["unit_scale"])
-    assert value == Decimal("96995") and flag.startswith("scale unknown")
+    value, flags = scale_of(AAPL_EPS, "96,995")
+    assert value == Decimal("96995") and flags[0].startswith("scale unknown")
+
+
+def test_mixed_table_is_not_scaled_f90():
+    # JPM Note 18, Earnings per share: caption "in millions", EPS spans tagged at ix scale 0.
+    assert JPM_EPS["unit_scale"] == "millions" and 0 in JPM_EPS["span_scales"]
+    value, flags = scale_of(JPM_EPS, "$4.44", span_scale=0)
+    assert value == Decimal("4.44")
+    assert any("mixed table" in f for f in flags) and any("ix scale 0" in f for f in flags)
+    # The same table's net income is not scaled either: the table is mixed.
+    assert scale_of(JPM_EPS, "$13,419")[0] == Decimal("13419")
+
+
+def test_parenthesized_answer_is_flagged_not_signed():
+    assert answer_flags("(117)") and answer_flags("$ (2,815)")
+    assert answer_flags("12,356") == []
 
 
 def test_unanchored_pronoun_rule():
@@ -187,3 +213,17 @@ def test_review_aids_on_real_chunks():
         "See accompanying notes to the consolidated financial statements.", texts
     )
     assert hits == [NVDA_A["chunk_id"], NVDA_B["chunk_id"]]
+
+
+def test_prompt_file_carries_stage_1_the_format_and_four_requirements():
+    from api.config import REPO_ROOT
+    from eval.generate.seeding import render_prompt
+
+    template = (REPO_ROOT / "eval/generate/prompts/seed_v1.txt").read_text(encoding="utf-8")
+    assert "write 2 questions answerable ONLY from it" in template
+    for need in ("names the company", "fiscal period", "verbatim", "exactly as printed"):
+        assert need in template
+    shape = json.loads(template.split("no other text:\n", 1)[1].split("\n", 1)[0])
+    assert [q["kind"] for q in shape["questions"]] == ["factual", "interpretive"]
+    rendered = render_prompt(template, PFE_PROSE["text"])
+    assert rendered.endswith(PFE_PROSE["text"] + "\n") and "<<CHUNK>>" not in rendered
