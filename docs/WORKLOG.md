@@ -4985,3 +4985,32 @@ run meta records `hnsw_ef_search` and `k_dense`. Tests: `tests/unit/test_bm25.py
 Rerun from the cached index (key 5a33c360...): metrics identical (`diff` empty);
 its duplicate run file was deleted. F-110 logged: the llm_seeded gain is BM25's
 lexical overlap with seeded questions.
+
+## 2026-10-01 — Cross-encoder reranking, measured post-rerank (F-13, F-111, F-112)
+
+`api/query/rerank.py`, config `rerank` (bge-reranker-base @2cfc18c9, top-n 8 /
+10 synthesis, floor 0.30 pending, timeout 800 ms), `scripts/rerank_run.py`.
+Tests: `tests/unit/test_rerank.py` (3). `make test`: 422 passed. Model smoke
+check: an Apple net-sales sentence scored 0.9995 against a bank-deposits one at
+0.00004 for the exit question.
+
+`python -m scripts.rerank_run 01019ff395ec` (detached, about 7 min;
+`eval/runs/4aef651ade44.rerank.json`):
+
+    rerank run 4aef651ade44 of retrieval run 01019ff395ec: 283 items; BAAI/bge-reranker-base@2cfc18c9415c; floor 0.3 (pending)
+    metric                                 xbrl_auto    llm_seeded   handwritten     aggregate
+    items                                        200            83             -           283
+    pre_suff@8                                 0.330         0.867             -         0.488
+    pre_suff@10                                0.365         0.892             -         0.519
+    post_suff@top_n                            0.450         0.831             -         0.562
+    post_recall@top_n                          0.465         0.831             -         0.572
+    post_mrr                                   0.256         0.523             -         0.334
+    post_ndcg@top_n                            0.305         0.597             -         0.390
+    post_floor_suff@top_n (pending)            0.450         0.831             -         0.562
+    floor_empties (abstain)                        0             0             -             0
+    over_timeout                                 200            83             -           283
+    latency per item (one pass of up to 50 pairs, this machine): {'p50': 1.403, 'p95': 1.792, 'max': 2.471}
+
+The floor at 0.30 changes nothing; every item is over the 800 ms timeout on this
+machine (F-111). The llm_seeded slice drops slightly after reranking, consistent
+with F-110 (BM25's lexical advantage on seeded questions).

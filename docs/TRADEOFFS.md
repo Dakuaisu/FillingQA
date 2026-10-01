@@ -2286,3 +2286,27 @@ neighbours by sequential scan over all 22,354 chunk embeddings against HNSW at
 response to any metric. *Alternatives:* pgvector's default 40 (HNSW returned a
 different top-10 on 10 of 283 items between 40 and 50, F-109); exact search
 always (fine at this size; the PRD specifies HNSW).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: cross-encoder reranking as first built (PRD 7.3)
+
+- `api/query/rerank.py`: `BAAI/bge-reranker-base` pinned at revision
+  2cfc18c9415c912f9d8155881c133215df768a70 (config `rerank`), over the fused
+  top-50 in one forward pass; scores are the logit through a sigmoid (0-1), so
+  the floor is on PRD 7.3's "normalized" scale. Output top-8, top-10 for
+  synthesis items (PRD 7.3; there is no `lookup` type, F-76). Ties to the
+  smaller chunk id.
+- Score floor 0.30 (PRD 7.3's "~0.3 normalized"), `floor_calibration: pending`:
+  it is calibrated only on reviewed items (F-104, F-112), never on the
+  candidates; an item whose every chunk falls below it abstains.
+- Timeout 800 ms with fall-through to RRF order, as PRD 7.3. Not applied in the
+  offline measurement, which records the latency instead (F-111).
+- Measured by `python -m scripts.rerank_run <retrieval run>` on the stored
+  pre-rerank lists, reported as post-rerank sufficiency at the item's top-n
+  beside pre-rerank sufficiency at 8 and 10 (F-13). Run files:
+  `eval/runs/<run_id>.rerank.json`.
+
+*Alternatives:* `cross-encoder/ms-marco-MiniLM-L-6-v2` (PRD 7.3's other option;
+smaller and faster, not measured); raw logits for the floor (no fixed scale for
+"0.3").

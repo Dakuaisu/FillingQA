@@ -229,6 +229,16 @@ retrieval:
     k1: 1.2
     b: 0.75
 
+# Cross-encoder reranking (PRD 7.3, Appendix A) over the fused top-50.
+rerank:
+  model: BAAI/bge-reranker-base
+  revision: 2cfc18c9415c912f9d8155881c133215df768a70
+  top_n: 8                  # PRD 7.3; synthesis items take top_n_synthesis
+  top_n_synthesis: 10
+  score_floor: 0.30         # sigmoid-normalized; calibration PENDING: on reviewed items only (F-104)
+  floor_calibration: pending
+  timeout_ms: 800           # over it, fall through to RRF order (PRD 7.3)
+
 span_resolution:
   min_rate: 0.80
 
