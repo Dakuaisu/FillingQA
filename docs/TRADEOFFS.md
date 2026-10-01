@@ -1326,3 +1326,28 @@ F-75 stays OPEN until the generator enforces this under test.
 *Alternatives:* proportional to supply (over-weights AAPL and NVDA, starves
 JPM and XOM); stratifying by line item first (bank supplements have only two
 tickers); per-fact sampling (repeats keys, F-75).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: pool and sampler code, config and validator rules
+
+- **Location:** `eval/generate/` (PRD 13.4); `scripts/xbrl_pool.py` imports from
+  it. `build_pool` takes fact rows, so `eval/generate` imports nothing from
+  `scripts/`.
+- **Config:** seed, total (160) and per-ticker allocation live in an
+  `eval_sampler:` block of `api/config.yaml`, read by `api.config.eval_sampler()`
+  like every other block. *Alternative:* a separate `eval/sampler.yaml` (a second
+  config file and loader for three keys).
+- **Allocation is explicit per ticker** (8 x 20) and must sum to `total`; the
+  sampler raises `Shortfall` instead of backfilling. *Alternative:* a derived
+  `total / n_tickers` (hides the allocation the owner may want to change).
+- **Validator rules beyond the field list:** an `xbrl_auto` item names its
+  `xbrl_fact_id`; `natural_phrasing` is `source = handwritten` (F-11); an abstain
+  item has `reference_answer` null (PRD 8); an answerable non-`unanswerable` item
+  has at least one evidence set. `question_type` follows PRD 11.1, not PRD 8
+  (F-76).
+- **A fact in the 0 bucket** sends its key to `no_gold` (PRD 6.5.3 human labeling),
+  ahead of mixed/gt3. None exists on the frozen list.
+- **Round-robin order:** per ticker, keys shuffled within each stratum and the
+  strata order shuffled, both from one seeded `random.Random`; input sorted first
+  so the draw does not depend on row order (tested).

@@ -230,3 +230,19 @@ generation:
   # parameters, so Appendix A's 0.0 cannot be applied (F-60). A key here that
   # is not sent would claim a setting the run does not have.
   max_tokens: 1024        # the Messages API requires a cap; not in Appendix A
+
+# xbrl_auto sampler (PRD 11.1: 160 `xbrl_numeric` items). Equal allocation per
+# ticker, no backfill across tickers (TRADEOFFS, sampler design). The seed is
+# recorded with the dataset.
+eval_sampler:
+  seed: 20261001
+  total: 160
+  per_ticker:
+    COST: 20
+    TGT: 20
+    JPM: 20
+    BAC: 20
+    AAPL: 20
+    NVDA: 20
+    XOM: 20
+    PFE: 20

@@ -3101,3 +3101,63 @@ So a comparative row carries the later filing's label; the period label must
 come from the own-period filing. Over `classify_facts` rows: keys by number of
 own-period accessions `{0: 655, 1: 1898}`; own-period facts with a NULL filing
 fiscal year: 0.
+
+## 2026-10-01 — xbrl_auto pool and sampler as tested code (no item, no dataset)
+
+`eval/generate/schema.py` (PRD 11.1 item format + validator), `eval/generate/pool.py`
+(`build_pool`, `sample`; pure), `scripts/xbrl_pool.py` (driver). Sampler config:
+`eval_sampler:` in `api/config.yaml`. `scripts/item_supply.py` no longer writes
+the review queue; `xbrl_pool` does, with a `reason` column. Its other output is
+unchanged (`diff` shows only the removed queue line).
+
+`python -m scripts.xbrl_pool`:
+
+    facts: 4335; by category: {'comparative_only': 801, 'eligible': 3089, 'gt3': 226, 'mixed_key': 63, 'value_differs': 156}; sum 4335
+    keys: 2553; by category: {'comparative_only': 602, 'eligible': 1713, 'gt3': 153, 'mixed_key': 24, 'value_differs': 61}
+    review queue (eval/review_queue.csv): 445 facts, {'gt3': 226, 'mixed_key': 63, 'value_differs': 156}
+    
+    eligible keys and strata per ticker (strata = line item x own-period form):
+      COST  keys  234  strata  34  10-K  51  10-Q  183
+      TGT   keys  209  strata  29  10-K  40  10-Q  169
+      JPM   keys  153  strata  13  10-K   0  10-Q  153
+      BAC   keys  161  strata  26  10-K  26  10-Q  135
+      AAPL  keys  297  strata  40  10-K  57  10-Q  240
+      NVDA  keys  268  strata  38  10-K  54  10-Q  214
+      XOM   keys  162  strata  14  10-K   0  10-Q  162
+      PFE   keys  229  strata  34  10-K  48  10-Q  181
+    
+    line items a filer has facts for but no eligible key, and why (fact categories):
+      BAC   net_income               {'gt3': 28, 'value_differs': 11}
+      BAC   noninterest_income       {'gt3': 28, 'value_differs': 11}
+      COST  net_income               {'comparative_only': 7, 'gt3': 19, 'mixed_key': 13}
+      JPM   net_income               {'gt3': 30}
+      NVDA  net_income               {'gt3': 39}
+      PFE   revenue                  {'gt3': 30, 'value_differs': 9}
+      emptied by (c) alone: none
+    
+    draw: seed 20261001, total 160, per ticker {'COST': 20, 'TGT': 20, 'JPM': 20, 'BAC': 20, 'AAPL': 20, 'NVDA': 20, 'XOM': 20, 'PFE': 20}
+    drawn keys: 160; distinct: 160
+      COST  capex/10-K 1, capex/10-Q 1, cost_of_revenue/10-K 1, current_assets/10-K 1, eps_diluted/10-K 1, eps_diluted/10-Q 1, income_tax/10-Q 1, inventory/10-K 1, long_term_debt_noncurrent/10-K 1, long_term_debt_noncurrent/10-Q 1, operating_cash_flow/10-K 1, operating_income/10-Q 1, pretax_income/10-Q 1, revenue/10-K 1, sga/10-K 1, share_repurchases/10-K 1, share_repurchases/10-Q 1, stockholders_equity/10-K 1, total_assets/10-Q 1, total_liabilities/10-K 1
+      TGT   capex/10-K 1, capex/10-Q 1, cost_of_revenue/10-K 1, cost_of_revenue/10-Q 1, current_assets/10-Q 1, eps_diluted/10-K 1, eps_diluted/10-Q 1, income_tax/10-K 1, inventory/10-Q 1, net_income/10-Q 1, operating_cash_flow/10-Q 1, operating_income/10-K 1, pretax_income/10-K 1, pretax_income/10-Q 1, revenue/10-K 1, revenue/10-Q 1, sga/10-Q 1, share_repurchases/10-Q 1, stockholders_equity/10-Q 1, total_assets/10-K 1
+      JPM   credit_loss_allowance/10-Q 1, deposits/10-Q 2, eps_diluted/10-Q 1, income_tax/10-Q 1, net_interest_income/10-Q 2, noninterest_expense/10-Q 2, noninterest_income/10-Q 2, operating_cash_flow/10-Q 1, pretax_income/10-Q 1, share_repurchases/10-Q 1, stockholders_equity/10-Q 2, total_assets/10-Q 2, total_liabilities/10-Q 2
+      BAC   credit_loss_allowance/10-K 1, credit_loss_allowance/10-Q 1, deposits/10-K 1, deposits/10-Q 1, income_tax/10-K 1, income_tax/10-Q 1, net_interest_income/10-K 1, net_interest_income/10-Q 1, noninterest_expense/10-Q 1, operating_cash_flow/10-Q 1, pretax_income/10-K 1, revenue/10-K 1, revenue/10-Q 1, share_repurchases/10-K 1, share_repurchases/10-Q 1, stockholders_equity/10-K 1, stockholders_equity/10-Q 1, total_assets/10-Q 1, total_liabilities/10-K 1, total_liabilities/10-Q 1
+      AAPL  accounts_receivable/10-K 1, cash_and_equivalents/10-K 1, cash_and_equivalents/10-Q 1, cost_of_revenue/10-K 1, cost_of_revenue/10-Q 1, current_assets/10-K 1, inventory/10-K 1, long_term_debt_noncurrent/10-K 1, operating_cash_flow/10-K 1, operating_income/10-Q 1, research_and_development/10-K 1, revenue/10-Q 1, sga/10-K 1, sga/10-Q 1, share_repurchases/10-K 1, share_repurchases/10-Q 1, stockholders_equity/10-Q 1, total_assets/10-Q 1, total_liabilities/10-K 1, total_liabilities/10-Q 1
+      NVDA  accounts_receivable/10-K 1, cash_and_equivalents/10-K 1, cash_and_equivalents/10-Q 1, current_assets/10-Q 1, gross_profit/10-Q 1, income_tax/10-K 1, inventory/10-Q 1, long_term_debt_noncurrent/10-K 1, operating_cash_flow/10-Q 1, operating_income/10-Q 1, pretax_income/10-Q 1, revenue/10-K 1, revenue/10-Q 1, sga/10-K 1, share_repurchases/10-K 1, share_repurchases/10-Q 1, stockholders_equity/10-K 1, total_assets/10-K 1, total_assets/10-Q 1, total_liabilities/10-Q 1
+      XOM   capex/10-Q 1, cash_and_equivalents/10-Q 1, current_assets/10-Q 2, eps_diluted/10-Q 1, income_tax/10-Q 1, net_income/10-Q 2, operating_cash_flow/10-Q 2, pretax_income/10-Q 1, revenue/10-Q 1, sga/10-Q 2, share_repurchases/10-Q 2, stockholders_equity/10-Q 2, total_assets/10-Q 1, total_liabilities/10-Q 1
+      PFE   accounts_receivable/10-Q 1, capex/10-K 1, capex/10-Q 1, cost_of_revenue/10-K 1, current_assets/10-K 1, income_tax/10-K 1, income_tax/10-Q 1, inventory/10-K 1, inventory/10-Q 1, long_term_debt_noncurrent/10-K 1, long_term_debt_noncurrent/10-Q 1, net_income/10-K 1, operating_cash_flow/10-Q 1, pretax_income/10-K 1, pretax_income/10-Q 1, sga/10-K 1, share_repurchases/10-K 1, share_repurchases/10-Q 1, stockholders_equity/10-Q 1, total_liabilities/10-K 1
+    draw by form: {'10-K': 60, '10-Q': 100}; distinct line items: 26
+
+Ad hoc over `build_pool` on the same rows:
+
+    eligible keys by number of gold evidence sets: {1: 527, 2: 646, 3: 162, 4: 186, 5: 86, 6: 56, 7: 13, 8: 13, 9: 6, 10: 9, 11: 1, 12: 2, 14: 2, 15: 1, 16: 2, 17: 1}
+    eligible keys by number of gold accessions: {1: 767, 2: 750, 3: 79, 4: 35, 5: 68, 6: 4, 7: 3, 8: 3, 9: 4}
+    eligible keys by own-filing label: {('10-K', 'FY'): 276, ('10-Q', 'Q1'): 364, ('10-Q', 'Q2'): 535, ('10-Q', 'Q3'): 538}
+
+Every fact is 1-3 within its own filing, but 378 eligible keys have more than 3
+evidence sets once gold is the union over every accession carrying the key
+(question in the report). No ticker is short of its 20.
+
+Tests: `tests/unit/test_pool.py` on `tests/fixtures/xbrl_pool_rows.json` (234
+real rows, `python -m scripts.xbrl_pool --write-fixture`, covering all five
+categories), `tests/unit/test_item_schema.py` on PRD 11.1's example item.
+`make test`: 259 passed.

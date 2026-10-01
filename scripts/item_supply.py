@@ -9,18 +9,14 @@ No eval item is generated. Reads the same facts as scripts/concept_coverage.py
   value across accessions;
 - sampler strata: ticker x line item x form over the 1-3 bucket only;
 - line items entirely in the >3 bucket for a filer.
-Writes eval/review_queue.csv: every fact in the >3 bucket (PRD 6.5.3 review).
+The review queue is written by scripts/xbrl_pool.py.
 """
 
 from __future__ import annotations
 
-import csv
 from collections import Counter, defaultdict
 
-from api.config import REPO_ROOT
 from scripts.concept_coverage import classify_facts
-
-REVIEW_FILE = REPO_ROOT / "eval" / "review_queue.csv"
 
 
 def main() -> None:
@@ -83,20 +79,6 @@ def main() -> None:
     for (t, item), c in sorted(by.items()):
         if c[">3"] and not c["1-3"] and not c["0"]:
             print(f"  {t:5} {item}: {c['>3']} facts, all >3")
-
-    review = [r for r in rows if r["bucket"] == ">3"]
-    REVIEW_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with REVIEW_FILE.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
-        w.writerow(["fact_id", "accession", "ticker", "form", "line_item", "concept",
-                    "period_start", "period_end", "value", "unit", "gold_chunks"])  # fmt: skip
-        for r in sorted(
-            review, key=lambda r: (r["ticker"], r["accession"], r["line_item"], r["period"][1])
-        ):
-            w.writerow([r["fact_id"], r["accession"], r["ticker"], r["form"], r["line_item"],
-                        r["concept"], r["period"][0], r["period"][1], r["value"], r["unit"],
-                        len(r["gold"])])  # fmt: skip
-    print(f"\nreview queue ({REVIEW_FILE.relative_to(REPO_ROOT)}): {len(review)} facts")
 
 
 if __name__ == "__main__":

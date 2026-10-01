@@ -82,6 +82,11 @@ def embedding(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["embedding"]
 
 
+def eval_sampler(path: Path = CORPUS_FILE) -> dict:
+    """The `eval_sampler:` block of api/config.yaml: seed, total, per-ticker allocation."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_sampler"]
+
+
 def parser_bounds(path: Path = CORPUS_FILE) -> dict:
     """The `parser:` block of api/config.yaml: validation-suite bounds."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["parser"]

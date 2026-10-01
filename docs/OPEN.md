@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 37 |
+| OPEN | 38 |
 | RESOLVED | 38 |
-| **Total** | **75** |
+| **Total** | **76** |
 
 ---
 
@@ -41,9 +41,10 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
-| F-73 | 284 facts in the >3 bucket need PRD 6.5.3 review before any can be an item; listed in `eval/review_queue.csv`. OWNER-BLOCKED | OPEN |
-| F-74 | Some line items have no 1-3 fact for a filer, so the sampler cannot draw them: JPM, BAC, NVDA net income; PFE revenue; BAC noninterest income (`python -m scripts.item_supply`) | OPEN |
+| F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
+| F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |
 | F-75 | Of 2,553 (cik, concept, period) keys, 1,234 appear in more than one parsed accession and 61 differ in value -- always a later filing's comparative vs the original (TGT, BAC, NVDA EPS, PFE) | Decided 2026-10-01 (TRADEOFFS): one item per key; eligible = one value, all facts 1-3, an own-period filing; gold = every exact-value chunk in every accession; label from the own-period filing's dei labels. The 61 go to review, OWNER-BLOCKED. Stays OPEN until the generator enforces it under test | OPEN |
+| F-76 | PRD 8's `eval_items.question_type` comment lists `lookup\|comparison\|synthesis\|table\|unanswerable\|adversarial`; PRD 11.1's Type column has `xbrl_numeric` and `natural_phrasing` and no `lookup`. `eval/generate/schema.py` follows 11.1; no migration yet | OPEN |
 | F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Decided 2026-10-01: gold is exact-value spans only; buckets on exact-value gold. On the final list, 68 of 4,335 facts have a smaller gold set, no bucket changes, none left without gold. Stays OPEN until the generator enforces it under test (TRADEOFFS) | OPEN |
 | F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
 | F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 28 listed tags (`python -m scripts.concept_coverage`: human-label queue 0). Queue: `eval/human_label_queue.csv`. Labeling OWNER-BLOCKED | OPEN |

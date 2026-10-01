@@ -1,0 +1,114 @@
+"""The xbrl_auto pool and a seeded draw over it. No question text, no dataset file.
+
+python -m scripts.xbrl_pool                  # accounting, review queue, draw
+python -m scripts.xbrl_pool --write-fixture  # real pool rows for tests/unit/test_pool.py
+
+Writes eval/review_queue.csv: every fact whose key is routed to review, with the
+reason (value_differs, mixed_key, gt3).
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import sys
+from collections import Counter, defaultdict
+
+from api.config import REPO_ROOT, eval_sampler
+from eval.generate.pool import ELIGIBLE, NOT_SAMPLED, REVIEW_REASONS, Shortfall, build_pool, sample
+from scripts.concept_coverage import classify_facts
+
+REVIEW_FILE = REPO_ROOT / "eval" / "review_queue.csv"
+FIXTURE_FILE = REPO_ROOT / "tests" / "fixtures" / "xbrl_pool_rows.json"
+FIXTURE_FIELDS = (
+    "fact_id", "cik", "accession", "ticker", "form", "line_item", "concept", "period",
+    "value", "unit", "is_comparative", "filing_fiscal_year", "filing_fiscal_quarter",
+    "gold", "bucket",
+)  # fmt: skip
+# (ticker, line item) pairs whose rows cover every pool category.
+FIXTURE_SLICE = {
+    ("TGT", "cost_of_revenue"), ("TGT", "sga"), ("JPM", "net_income"),
+    ("BAC", "total_assets"), ("PFE", "income_tax"), ("XOM", "eps_diluted"),
+    ("AAPL", "inventory"),
+}  # fmt: skip
+
+
+def write_fixture(rows: list[dict]) -> None:
+    out = [
+        {k: (str(r[k]) if k == "value" else r[k]) for k in FIXTURE_FIELDS}
+        for r in rows
+        if (r["ticker"], r["line_item"]) in FIXTURE_SLICE
+    ]
+    out.sort(key=lambda r: r["fact_id"])
+    doc = {"source": "python -m scripts.xbrl_pool --write-fixture", "rows": out}
+    FIXTURE_FILE.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print(f"wrote {len(out)} rows to {FIXTURE_FILE.relative_to(REPO_ROOT)}")
+
+
+def main() -> None:
+    _, tickers, _, rows, _ = classify_facts()
+    if "--write-fixture" in sys.argv:
+        write_fixture(rows)
+        return
+    pool = build_pool(rows)
+    cats = Counter(pool.category[r["fact_id"]] for r in rows)
+    print(f"facts: {len(rows)}; by category: {dict(sorted(cats.items()))}; "
+          f"sum {sum(cats.values())}")  # fmt: skip
+    assert sum(cats.values()) == len(rows) == len(pool.category)
+    key_cats = Counter()
+    seen = set()
+    for r in rows:
+        k = (r["cik"], r["concept"], *r["period"])
+        if k not in seen:
+            seen.add(k)
+            key_cats[pool.category[r["fact_id"]]] += 1
+    print(f"keys: {len(seen)}; by category: {dict(sorted(key_cats.items()))}")
+
+    review = [r for r in rows if pool.category[r["fact_id"]] in REVIEW_REASONS]
+    with REVIEW_FILE.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["reason", "fact_id", "accession", "ticker", "form", "line_item", "concept",
+                    "period_start", "period_end", "value", "unit", "is_comparative",
+                    "gold_chunks"])  # fmt: skip
+        for r in sorted(review, key=lambda r: (pool.category[r["fact_id"]], r["fact_id"])):
+            w.writerow([pool.category[r["fact_id"]], r["fact_id"], r["accession"], r["ticker"],
+                        r["form"], r["line_item"], r["concept"], r["period"][0], r["period"][1],
+                        r["value"], r["unit"], r["is_comparative"], len(r["gold"])])  # fmt: skip
+    reasons = dict(sorted(Counter(pool.category[r["fact_id"]] for r in review).items()))
+    print(f"review queue ({REVIEW_FILE.relative_to(REPO_ROOT)}): {len(review)} facts, {reasons}")
+
+    print("\neligible keys and strata per ticker (strata = line item x own-period form):")
+    for t in tickers:
+        ks = [k for k in pool.eligible if k.ticker == t]
+        forms = Counter(k.own_form for k in ks)
+        print(f"  {t:5} keys {len(ks):4}  strata {len({k.stratum for k in ks}):3}  "
+              f"10-K {forms['10-K']:3}  10-Q {forms['10-Q']:4}")  # fmt: skip
+
+    print("\nline items a filer has facts for but no eligible key, and why (fact categories):")
+    has = defaultdict(Counter)
+    for r in rows:
+        has[(r["ticker"], r["line_item"])][pool.category[r["fact_id"]]] += 1
+    for (t, item), c in sorted(has.items()):
+        if not c[ELIGIBLE]:
+            print(f"  {t:5} {item:24} {dict(sorted(c.items()))}")
+    only_c = sorted(k for k, c in has.items() if not c[ELIGIBLE] and set(c) == {NOT_SAMPLED})
+    print(f"  emptied by (c) alone: {only_c or 'none'}")
+
+    cfg = eval_sampler()
+    print(f"\ndraw: seed {cfg['seed']}, total {cfg['total']}, per ticker {cfg['per_ticker']}")
+    try:
+        draw = sample(pool.eligible, cfg["seed"], cfg["total"], cfg["per_ticker"])
+    except Shortfall as e:
+        print(f"SHORTFALL, no draw: {e}")
+        sys.exit(1)
+    print(f"drawn keys: {len(draw)}; distinct: {len({k.key for k in draw})}")
+    dist = Counter(k.stratum for k in draw)
+    for t in tickers:
+        cells = sorted((item, form, n) for (tt, item, form), n in dist.items() if tt == t)
+        print(f"  {t:5} " + ", ".join(f"{item}/{form} {n}" for item, form, n in cells))
+    print(f"draw by form: {dict(Counter(k.own_form for k in draw))}; "
+          f"distinct line items: {len({k.line_item for k in draw})}")  # fmt: skip
+
+
+if __name__ == "__main__":
+    main()

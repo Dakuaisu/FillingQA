@@ -1,0 +1,5355 @@
+{
+ "source": "python -m scripts.xbrl_pool --write-fixture",
+ "rows": [
+  {
+   "fact_id": 482,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000079",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-09-28"
+   ],
+   "value": "7286000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-25-000079:402.0:402.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 483,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000079",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-09-27"
+   ],
+   "value": "5718000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-25-000079:402.0:402.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 484,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000006",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-09-27"
+   ],
+   "value": "5718000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-26-000006:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 485,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000013",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-09-27"
+   ],
+   "value": "5718000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-26-000013:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 486,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000020",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-09-27"
+   ],
+   "value": "5718000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-26-000020:108.0:108.0",
+    "0000320193-26-000020:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 487,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000006",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-12-27"
+   ],
+   "value": "5875000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-26-000006:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 488,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000013",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2026-03-28"
+   ],
+   "value": "6747000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-26-000013:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 489,
+   "cik": "0000320193",
+   "accession": "0000320193-26-000020",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2026-06-27"
+   ],
+   "value": "11092000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-26-000020:108.0:108.0",
+    "0000320193-26-000020:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2750,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "77828000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2751,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "53700000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2752,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-08-04",
+    "2024-11-02"
+   ],
+   "value": "18402000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2753,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "76502000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2754,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "17128000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2755,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "35031000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2756,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-05-04",
+    "2025-08-02"
+   ],
+   "value": "17903000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2757,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2025-11-01"
+   ],
+   "value": "53168000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2758,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-08-03",
+    "2025-11-01"
+   ],
+   "value": "18137000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2759,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2026-01-31"
+   ],
+   "value": "75511000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2760,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2026-02-01",
+    "2026-05-02"
+   ],
+   "value": "18061000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2761,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2026-02-01",
+    "2026-08-01"
+   ],
+   "value": "35664000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 2762,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2026-05-03",
+    "2026-08-01"
+   ],
+   "value": "17603000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3608,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "21462000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3609,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "15969000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3610,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-08-04",
+    "2024-11-02"
+   ],
+   "value": "5459000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3611,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "21969000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3612,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "4591000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3613,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "9950000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3614,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-05-04",
+    "2025-08-02"
+   ],
+   "value": "5359000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3615,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2025-11-01"
+   ],
+   "value": "15486000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3616,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000126",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-08-03",
+    "2025-11-01"
+   ],
+   "value": "5536000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-25-000126:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3617,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000016",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2026-01-31"
+   ],
+   "value": "21535000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-26-000016:494.0:494.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3618,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000022",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2026-02-01",
+    "2026-05-02"
+   ],
+   "value": "5562000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-26-000022:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3619,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2026-02-01",
+    "2026-08-01"
+   ],
+   "value": "11286000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 3620,
+   "cik": "0000027419",
+   "accession": "0000027419-26-000042",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2026-05-03",
+    "2026-08-01"
+   ],
+   "value": "5725000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-26-000042:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12486,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2021-01-31",
+    "2022-01-29"
+   ],
+   "value": "74963000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12487,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2022-01-30",
+    "2022-10-29"
+   ],
+   "value": "58283000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12488,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2022-07-31",
+    "2022-10-29"
+   ],
+   "value": "19680000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12489,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "82229000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12490,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "82306000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12491,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000129",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2023-04-29"
+   ],
+   "value": "18386000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-24-000129:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12492,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2023-07-29"
+   ],
+   "value": "36184000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12493,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-04-30",
+    "2023-07-29"
+   ],
+   "value": "17798000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12494,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "54333000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12495,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "54333000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12496,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-07-30",
+    "2023-10-28"
+   ],
+   "value": "18149000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12497,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-07-30",
+    "2023-10-28"
+   ],
+   "value": "18149000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12498,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "77736000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12499,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "77828000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12501,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000129",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-05-04"
+   ],
+   "value": "17449000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-24-000129:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12502,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-05-04"
+   ],
+   "value": "17471000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12503,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "35248000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12504,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "35297000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12505,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-05-05",
+    "2024-08-03"
+   ],
+   "value": "17799000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12506,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-05-05",
+    "2024-08-03"
+   ],
+   "value": "17826000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12507,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "53623000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12509,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-08-04",
+    "2024-11-02"
+   ],
+   "value": "18375000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12511,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "76502000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12513,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "17128000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12515,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "35031000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 12517,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "cost_of_revenue",
+   "concept": "us-gaap:CostOfGoodsAndServicesSold",
+   "period": [
+    "2025-05-04",
+    "2025-08-02"
+   ],
+   "value": "17903000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15068,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2021-01-31",
+    "2022-01-29"
+   ],
+   "value": "19752000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15069,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2022-01-30",
+    "2022-10-29"
+   ],
+   "value": "14983000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15070,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2022-07-31",
+    "2022-10-29"
+   ],
+   "value": "5219000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15071,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "20658000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15072,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2022-01-30",
+    "2023-01-28"
+   ],
+   "value": "20581000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15073,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000129",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2023-04-29"
+   ],
+   "value": "5025000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-24-000129:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15074,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2023-07-29"
+   ],
+   "value": "10209000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15075,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-04-30",
+    "2023-07-29"
+   ],
+   "value": "5184000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15076,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "15525000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15077,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2023-10-28"
+   ],
+   "value": "15525000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15078,
+   "cik": "0000027419",
+   "accession": "0000027419-23-000052",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-07-30",
+    "2023-10-28"
+   ],
+   "value": "5316000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-23-000052:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15079,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-07-30",
+    "2023-10-28"
+   ],
+   "value": "5316000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15080,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000032",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "21554000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-24-000032:468.0:468.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15081,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2023-01-29",
+    "2024-02-03"
+   ],
+   "value": "21462000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15083,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000129",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-05-04"
+   ],
+   "value": "5168000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-24-000129:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15084,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-05-04"
+   ],
+   "value": "5146000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15085,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "10560000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15086,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-08-03"
+   ],
+   "value": "10511000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15087,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000152",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-05-05",
+    "2024-08-03"
+   ],
+   "value": "5392000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-24-000152:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15088,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-05-05",
+    "2024-08-03"
+   ],
+   "value": "5365000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15089,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2024-11-02"
+   ],
+   "value": "16046000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15091,
+   "cik": "0000027419",
+   "accession": "0000027419-24-000179",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-08-04",
+    "2024-11-02"
+   ],
+   "value": "5486000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000027419-24-000179:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15093,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000018",
+   "ticker": "TGT",
+   "form": "10-K",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2024-02-04",
+    "2025-02-01"
+   ],
+   "value": "21969000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000027419-25-000018:477.0:477.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15095,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000101",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2025-05-03"
+   ],
+   "value": "4591000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000027419-25-000101:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15097,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-02-02",
+    "2025-08-02"
+   ],
+   "value": "9950000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 15099,
+   "cik": "0000027419",
+   "accession": "0000027419-25-000118",
+   "ticker": "TGT",
+   "form": "10-Q",
+   "line_item": "sga",
+   "concept": "us-gaap:SellingGeneralAndAdministrativeExpense",
+   "period": [
+    "2025-05-04",
+    "2025-08-02"
+   ],
+   "value": "5359000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000027419-25-000118:36.0:36.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 29313,
+   "cik": "0000019617",
+   "accession": "0000019617-23-000524",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2022-01-01",
+    "2022-09-30"
+   ],
+   "value": "26668000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-23-000524:1379.1:1379.1",
+    "0000019617-23-000524:1384.0:1384.0",
+    "0000019617-23-000524:1402.0:1402.0",
+    "0000019617-23-000524:2282.0:2282.0",
+    "0000019617-23-000524:2447.0:2447.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29314,
+   "cik": "0000019617",
+   "accession": "0000019617-23-000524",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2022-07-01",
+    "2022-09-30"
+   ],
+   "value": "9737000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-23-000524:1379.1:1379.1",
+    "0000019617-23-000524:1384.0:1384.0",
+    "0000019617-23-000524:2282.0:2282.0",
+    "0000019617-23-000524:2442.0:2442.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29317,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000326",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-01-01",
+    "2023-03-31"
+   ],
+   "value": "12622000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000019617-24-000326:1120.0:1120.0",
+    "0000019617-24-000326:1125.0:1125.0",
+    "0000019617-24-000326:1142.0:1142.0",
+    "0000019617-24-000326:1892.0:1892.0",
+    "0000019617-24-000326:2054.0:2054.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29318,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000453",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-01-01",
+    "2023-06-30"
+   ],
+   "value": "27094000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-24-000453:1249.1:1249.1",
+    "0000019617-24-000453:1254.0:1254.0",
+    "0000019617-24-000453:1271.0:1271.0",
+    "0000019617-24-000453:2073.0:2073.0",
+    "0000019617-24-000453:2240.0:2240.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29319,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000453",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-04-01",
+    "2023-06-30"
+   ],
+   "value": "14472000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-24-000453:1249.1:1249.1",
+    "0000019617-24-000453:1254.0:1254.0",
+    "0000019617-24-000453:2073.0:2073.0",
+    "0000019617-24-000453:2234.0:2234.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29320,
+   "cik": "0000019617",
+   "accession": "0000019617-23-000524",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-01-01",
+    "2023-09-30"
+   ],
+   "value": "40245000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-23-000524:1379.1:1379.1",
+    "0000019617-23-000524:1384.0:1384.0",
+    "0000019617-23-000524:1402.0:1402.0",
+    "0000019617-23-000524:2282.0:2282.0",
+    "0000019617-23-000524:2447.0:2447.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29321,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000611",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-01-01",
+    "2023-09-30"
+   ],
+   "value": "40245000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-24-000611:1259.1:1259.1",
+    "0000019617-24-000611:1264.0:1264.0",
+    "0000019617-24-000611:1281.0:1281.0",
+    "0000019617-24-000611:2076.0:2076.0",
+    "0000019617-24-000611:2240.0:2240.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29322,
+   "cik": "0000019617",
+   "accession": "0000019617-23-000524",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-07-01",
+    "2023-09-30"
+   ],
+   "value": "13151000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-23-000524:1379.1:1379.1",
+    "0000019617-23-000524:1384.0:1384.0",
+    "0000019617-23-000524:2282.0:2282.0",
+    "0000019617-23-000524:2442.0:2442.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29323,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000611",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2023-07-01",
+    "2023-09-30"
+   ],
+   "value": "13151000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-24-000611:1259.1:1259.1",
+    "0000019617-24-000611:1264.0:1264.0",
+    "0000019617-24-000611:2076.0:2076.0",
+    "0000019617-24-000611:2236.0:2236.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29327,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000326",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "13419000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000019617-24-000326:1120.0:1120.0",
+    "0000019617-24-000326:1125.0:1125.0",
+    "0000019617-24-000326:1142.0:1142.0",
+    "0000019617-24-000326:1892.0:1892.0",
+    "0000019617-24-000326:2054.0:2054.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29328,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000421",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "13419000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000019617-25-000421:1023.0:1023.0",
+    "0000019617-25-000421:1028.0:1028.0",
+    "0000019617-25-000421:1045.0:1045.0",
+    "0000019617-25-000421:1793.0:1793.0",
+    "0000019617-25-000421:1959.0:1959.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29329,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000453",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "31568000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-24-000453:1249.1:1249.1",
+    "0000019617-24-000453:1254.0:1254.0",
+    "0000019617-24-000453:1271.0:1271.0",
+    "0000019617-24-000453:2073.0:2073.0",
+    "0000019617-24-000453:2240.0:2240.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29330,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000615",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "31568000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-25-000615:1187.1:1187.1",
+    "0000019617-25-000615:1192.0:1192.0",
+    "0000019617-25-000615:1209.0:1209.0",
+    "0000019617-25-000615:1990.0:1990.0",
+    "0000019617-25-000615:2154.0:2154.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29331,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000453",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "18149000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-24-000453:1249.1:1249.1",
+    "0000019617-24-000453:1254.0:1254.0",
+    "0000019617-24-000453:2073.0:2073.0",
+    "0000019617-24-000453:2234.0:2234.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29332,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000615",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "18149000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-25-000615:1187.1:1187.1",
+    "0000019617-25-000615:1192.0:1192.0",
+    "0000019617-25-000615:1990.0:1990.0",
+    "0000019617-25-000615:2151.0:2151.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29333,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000611",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-09-30"
+   ],
+   "value": "44466000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-24-000611:1259.1:1259.1",
+    "0000019617-24-000611:1264.0:1264.0",
+    "0000019617-24-000611:1281.0:1281.0",
+    "0000019617-24-000611:2076.0:2076.0",
+    "0000019617-24-000611:2240.0:2240.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29334,
+   "cik": "0000019617",
+   "accession": "0001628280-25-048859",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-01-01",
+    "2024-09-30"
+   ],
+   "value": "44466000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001628280-25-048859:1192.1:1192.1",
+    "0001628280-25-048859:1197.0:1197.0",
+    "0001628280-25-048859:1214.0:1214.0",
+    "0001628280-25-048859:2007.0:2007.0",
+    "0001628280-25-048859:2173.0:2173.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29335,
+   "cik": "0000019617",
+   "accession": "0000019617-24-000611",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-07-01",
+    "2024-09-30"
+   ],
+   "value": "12898000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000019617-24-000611:1259.1:1259.1",
+    "0000019617-24-000611:1264.0:1264.0",
+    "0000019617-24-000611:2076.0:2076.0",
+    "0000019617-24-000611:2236.0:2236.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29336,
+   "cik": "0000019617",
+   "accession": "0001628280-25-048859",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2024-07-01",
+    "2024-09-30"
+   ],
+   "value": "12898000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001628280-25-048859:1192.1:1192.1",
+    "0001628280-25-048859:1197.0:1197.0",
+    "0001628280-25-048859:2007.0:2007.0",
+    "0001628280-25-048859:2170.0:2170.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29339,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000421",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-01-01",
+    "2025-03-31"
+   ],
+   "value": "14643000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000019617-25-000421:1023.0:1023.0",
+    "0000019617-25-000421:1028.0:1028.0",
+    "0000019617-25-000421:1045.0:1045.0",
+    "0000019617-25-000421:1793.0:1793.0",
+    "0000019617-25-000421:1959.0:1959.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29340,
+   "cik": "0000019617",
+   "accession": "0001628280-26-029344",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-01-01",
+    "2025-03-31"
+   ],
+   "value": "14643000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001628280-26-029344:1021.0:1021.0",
+    "0001628280-26-029344:1026.0:1026.0",
+    "0001628280-26-029344:1043.0:1043.0",
+    "0001628280-26-029344:1782.0:1782.0",
+    "0001628280-26-029344:1941.0:1941.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29341,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000615",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-01-01",
+    "2025-06-30"
+   ],
+   "value": "29630000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-25-000615:1187.1:1187.1",
+    "0000019617-25-000615:1192.0:1192.0",
+    "0000019617-25-000615:1209.0:1209.0",
+    "0000019617-25-000615:1990.0:1990.0",
+    "0000019617-25-000615:2154.0:2154.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29342,
+   "cik": "0000019617",
+   "accession": "0001628280-26-054343",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-01-01",
+    "2025-06-30"
+   ],
+   "value": "29630000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001628280-26-054343:1146.1:1146.1",
+    "0001628280-26-054343:1151.0:1151.0",
+    "0001628280-26-054343:1168.0:1168.0",
+    "0001628280-26-054343:1946.0:1946.0",
+    "0001628280-26-054343:2105.0:2105.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29343,
+   "cik": "0000019617",
+   "accession": "0000019617-25-000615",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-04-01",
+    "2025-06-30"
+   ],
+   "value": "14987000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000019617-25-000615:1187.1:1187.1",
+    "0000019617-25-000615:1192.0:1192.0",
+    "0000019617-25-000615:1990.0:1990.0",
+    "0000019617-25-000615:2151.0:2151.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29344,
+   "cik": "0000019617",
+   "accession": "0001628280-26-054343",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-04-01",
+    "2025-06-30"
+   ],
+   "value": "14987000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001628280-26-054343:1146.1:1146.1",
+    "0001628280-26-054343:1151.0:1151.0",
+    "0001628280-26-054343:1946.0:1946.0",
+    "0001628280-26-054343:2102.0:2102.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29345,
+   "cik": "0000019617",
+   "accession": "0001628280-25-048859",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-01-01",
+    "2025-09-30"
+   ],
+   "value": "44023000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001628280-25-048859:1192.1:1192.1",
+    "0001628280-25-048859:1197.0:1197.0",
+    "0001628280-25-048859:1214.0:1214.0",
+    "0001628280-25-048859:2007.0:2007.0",
+    "0001628280-25-048859:2173.0:2173.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29346,
+   "cik": "0000019617",
+   "accession": "0001628280-25-048859",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2025-07-01",
+    "2025-09-30"
+   ],
+   "value": "14393000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0001628280-25-048859:1192.1:1192.1",
+    "0001628280-25-048859:1197.0:1197.0",
+    "0001628280-25-048859:2007.0:2007.0",
+    "0001628280-25-048859:2170.0:2170.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29348,
+   "cik": "0000019617",
+   "accession": "0001628280-26-029344",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2026-01-01",
+    "2026-03-31"
+   ],
+   "value": "16494000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0001628280-26-029344:1021.0:1021.0",
+    "0001628280-26-029344:1026.0:1026.0",
+    "0001628280-26-029344:1043.0:1043.0",
+    "0001628280-26-029344:1782.0:1782.0",
+    "0001628280-26-029344:1941.0:1941.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29349,
+   "cik": "0000019617",
+   "accession": "0001628280-26-054343",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2026-01-01",
+    "2026-06-30"
+   ],
+   "value": "37649000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001628280-26-054343:1146.1:1146.1",
+    "0001628280-26-054343:1151.0:1151.0",
+    "0001628280-26-054343:1168.0:1168.0",
+    "0001628280-26-054343:1946.0:1946.0",
+    "0001628280-26-054343:2105.0:2105.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 29350,
+   "cik": "0000019617",
+   "accession": "0001628280-26-054343",
+   "ticker": "JPM",
+   "form": "10-Q",
+   "line_item": "net_income",
+   "concept": "us-gaap:NetIncomeLoss",
+   "period": [
+    "2026-04-01",
+    "2026-06-30"
+   ],
+   "value": "21155000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0001628280-26-054343:1146.1:1146.1",
+    "0001628280-26-054343:1151.0:1151.0",
+    "0001628280-26-054343:1946.0:1946.0",
+    "0001628280-26-054343:2102.0:2102.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33581,
+   "cik": "0000070858",
+   "accession": "0000070858-23-000272",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2022-09-30"
+   ],
+   "value": "3072953000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-23-000272:1274.0:1274.0",
+    "0000070858-23-000272:1276.0:1276.0",
+    "0000070858-23-000272:1286.1:1286.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33582,
+   "cik": "0000070858",
+   "accession": "0000070858-23-000272",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2022-12-31"
+   ],
+   "value": "3051375000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-23-000272:710.1:710.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33583,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000122",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2022-12-31"
+   ],
+   "value": "3051375000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-24-000122:1269.1:1269.1",
+    "0000070858-24-000122:2218.0:2218.0",
+    "0000070858-24-000122:2226.0:2226.0",
+    "0000070858-24-000122:2238.1:2238.1"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33584,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000156",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-03-31"
+   ],
+   "value": "3194657000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-24-000156:1142.0:1142.0",
+    "0000070858-24-000156:1150.0:1150.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33585,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000208",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-06-30"
+   ],
+   "value": "3123198000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-24-000208:1233.0:1233.0",
+    "0000070858-24-000208:1235.0:1235.0",
+    "0000070858-24-000208:1246.1:1246.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33586,
+   "cik": "0000070858",
+   "accession": "0000070858-23-000272",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "3153090000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-23-000272:1274.0:1274.0",
+    "0000070858-23-000272:1276.0:1276.0",
+    "0000070858-23-000272:1286.1:1286.1",
+    "0000070858-23-000272:710.1:710.1"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33587,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000280",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "3153090000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-24-000280:1231.0:1231.0",
+    "0000070858-24-000280:1233.0:1233.0",
+    "0000070858-24-000280:1244.1:1244.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33588,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000122",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-12-31"
+   ],
+   "value": "3180151000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-24-000122:1269.1:1269.1",
+    "0000070858-24-000122:2218.0:2218.0",
+    "0000070858-24-000122:2226.0:2226.0",
+    "0000070858-24-000122:2238.0:2238.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33589,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000156",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-12-31"
+   ],
+   "value": "3180151000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-24-000156:638.1:638.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33590,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000208",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-12-31"
+   ],
+   "value": "3180151000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-24-000208:708.1:708.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33591,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000280",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-12-31"
+   ],
+   "value": "3180151000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-24-000280:701.1:701.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33592,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000139",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2023-12-31"
+   ],
+   "value": "3180151000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-25-000139:1237.1:1237.1",
+    "0000070858-25-000139:2171.1:2171.1",
+    "0000070858-25-000139:2188.1:2188.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33593,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000156",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-03-31"
+   ],
+   "value": "3273803000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-24-000156:1142.0:1142.0",
+    "0000070858-24-000156:1150.0:1150.0",
+    "0000070858-24-000156:638.1:638.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33594,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000200",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-03-31"
+   ],
+   "value": "3273803000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-25-000200:1128.1:1128.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33595,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000208",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-06-30"
+   ],
+   "value": "3257996000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-24-000208:1233.0:1233.0",
+    "0000070858-24-000208:1235.0:1235.0",
+    "0000070858-24-000208:1246.1:1246.1",
+    "0000070858-24-000208:708.1:708.1"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33596,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000268",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-06-30"
+   ],
+   "value": "3257996000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-25-000268:1210.1:1210.1",
+    "0000070858-25-000268:1215.1:1215.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33597,
+   "cik": "0000070858",
+   "accession": "0000070858-24-000280",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-09-30"
+   ],
+   "value": "3324293000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-24-000280:1231.0:1231.0",
+    "0000070858-24-000280:1233.0:1233.0",
+    "0000070858-24-000280:1244.1:1244.1",
+    "0000070858-24-000280:701.1:701.1"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 33598,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000405",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-09-30"
+   ],
+   "value": "3324293000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-25-000405:1202.1:1202.1",
+    "0000070858-25-000405:1207.1:1207.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33599,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000139",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-12-31"
+   ],
+   "value": "3261519000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-25-000139:1237.1:1237.1",
+    "0000070858-25-000139:2171.1:2171.1",
+    "0000070858-25-000139:2188.1:2188.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33600,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000200",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-12-31"
+   ],
+   "value": "3261519000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-25-000200:616.1:616.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33601,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000268",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-12-31"
+   ],
+   "value": "3261519000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-25-000268:683.1:683.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33602,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000405",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-12-31"
+   ],
+   "value": "3261519000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-25-000405:673.1:673.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33603,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000157",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2024-12-31"
+   ],
+   "value": "3261299000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-26-000157:1223.1:1223.1",
+    "0000070858-26-000157:2165.1:2165.1",
+    "0000070858-26-000157:2183.1:2183.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33604,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000200",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-03-31"
+   ],
+   "value": "3349424000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-25-000200:1128.1:1128.1",
+    "0000070858-25-000200:616.1:616.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33605,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000249",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-03-31"
+   ],
+   "value": "3349039000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-26-000249:1105.1:1105.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33606,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000268",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-06-30"
+   ],
+   "value": "3441142000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-25-000268:1210.1:1210.1",
+    "0000070858-25-000268:1215.1:1215.1",
+    "0000070858-25-000268:683.1:683.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33607,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000394",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-06-30"
+   ],
+   "value": "3440798000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-26-000394:1171.1:1171.1",
+    "0000070858-26-000394:1176.1:1176.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33608,
+   "cik": "0000070858",
+   "accession": "0000070858-25-000405",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-09-30"
+   ],
+   "value": "3403716000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000070858-25-000405:1202.1:1202.1",
+    "0000070858-25-000405:1207.1:1207.1",
+    "0000070858-25-000405:673.1:673.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33609,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000157",
+   "ticker": "BAC",
+   "form": "10-K",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-12-31"
+   ],
+   "value": "3411738000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000070858-26-000157:1223.1:1223.1",
+    "0000070858-26-000157:2165.1:2165.1",
+    "0000070858-26-000157:2183.1:2183.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33610,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000249",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-12-31"
+   ],
+   "value": "3411738000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-26-000249:600.1:600.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33611,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000394",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2025-12-31"
+   ],
+   "value": "3411738000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-26-000394:653.1:653.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33612,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000249",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2026-03-31"
+   ],
+   "value": "3496186000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000070858-26-000249:1105.1:1105.1",
+    "0000070858-26-000249:600.1:600.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 33613,
+   "cik": "0000070858",
+   "accession": "0000070858-26-000394",
+   "ticker": "BAC",
+   "form": "10-Q",
+   "line_item": "total_assets",
+   "concept": "us-gaap:Assets",
+   "period": [
+    null,
+    "2026-06-30"
+   ],
+   "value": "3499191000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000070858-26-000394:1171.1:1171.1",
+    "0000070858-26-000394:1176.1:1176.1",
+    "0000070858-26-000394:653.1:653.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42170,
+   "cik": "0000320193",
+   "accession": "0000320193-23-000106",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2022-09-24"
+   ],
+   "value": "4946000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-23-000106:401.0:401.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42171,
+   "cik": "0000320193",
+   "accession": "0000320193-23-000106",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "6331000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-23-000106:401.0:401.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42172,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000006",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "6331000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-24-000006:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42173,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000069",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "6331000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-24-000069:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42174,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000081",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "6331000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-24-000081:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42175,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000123",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-09-30"
+   ],
+   "value": "6331000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-24-000123:416.0:416.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42176,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000006",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2023-12-30"
+   ],
+   "value": "6511000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-24-000006:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42177,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000069",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-03-30"
+   ],
+   "value": "6232000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-24-000069:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42178,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000081",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-06-29"
+   ],
+   "value": "6165000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-24-000081:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42179,
+   "cik": "0000320193",
+   "accession": "0000320193-24-000123",
+   "ticker": "AAPL",
+   "form": "10-K",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-09-28"
+   ],
+   "value": "7286000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000320193-24-000123:416.0:416.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42180,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000008",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-09-28"
+   ],
+   "value": "7286000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-25-000008:111.0:111.0",
+    "0000320193-25-000008:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42181,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000057",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-09-28"
+   ],
+   "value": "7286000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-25-000057:110.0:110.0",
+    "0000320193-25-000057:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42182,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000073",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-09-28"
+   ],
+   "value": "7286000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-25-000073:110.0:110.0",
+    "0000320193-25-000073:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42184,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000008",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2024-12-28"
+   ],
+   "value": "6911000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000320193-25-000008:111.0:111.0",
+    "0000320193-25-000008:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42185,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000057",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-03-29"
+   ],
+   "value": "6269000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000320193-25-000057:110.0:110.0",
+    "0000320193-25-000057:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 42186,
+   "cik": "0000320193",
+   "accession": "0000320193-25-000073",
+   "ticker": "AAPL",
+   "form": "10-Q",
+   "line_item": "inventory",
+   "concept": "us-gaap:InventoryNet",
+   "period": [
+    null,
+    "2025-06-28"
+   ],
+   "value": "5925000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000320193-25-000073:110.0:110.0",
+    "0000320193-25-000073:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50103,
+   "cik": "0000034088",
+   "accession": "0000034088-23-000056",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-01-01",
+    "2022-09-30"
+   ],
+   "value": "10.17",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-23-000056:39.1:39.1",
+    "0000034088-23-000056:83.0:83.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50104,
+   "cik": "0000034088",
+   "accession": "0000034088-23-000056",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2022-07-01",
+    "2022-09-30"
+   ],
+   "value": "4.68",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-23-000056:39.1:39.1",
+    "0000034088-23-000056:83.0:83.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50107,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000029",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-03-31"
+   ],
+   "value": "2.79",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-24-000029:39.0:39.0",
+    "0000034088-24-000029:79.0:79.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50108,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000050",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-06-30"
+   ],
+   "value": "4.73",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-24-000050:39.1:39.1",
+    "0000034088-24-000050:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50109,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000050",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-04-01",
+    "2023-06-30"
+   ],
+   "value": "1.94",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-24-000050:39.1:39.1",
+    "0000034088-24-000050:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50110,
+   "cik": "0000034088",
+   "accession": "0000034088-23-000056",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-09-30"
+   ],
+   "value": "6.98",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-23-000056:39.1:39.1",
+    "0000034088-23-000056:83.0:83.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50111,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000068",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-01-01",
+    "2023-09-30"
+   ],
+   "value": "6.98",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-24-000068:39.1:39.1",
+    "0000034088-24-000068:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50112,
+   "cik": "0000034088",
+   "accession": "0000034088-23-000056",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-07-01",
+    "2023-09-30"
+   ],
+   "value": "2.25",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-23-000056:39.1:39.1",
+    "0000034088-23-000056:83.0:83.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50113,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000068",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2023-07-01",
+    "2023-09-30"
+   ],
+   "value": "2.25",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-24-000068:39.1:39.1",
+    "0000034088-24-000068:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50117,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000029",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "2.06",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-24-000029:39.0:39.0",
+    "0000034088-24-000029:79.0:79.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50118,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000024",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "2.06",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-25-000024:40.0:40.0",
+    "0000034088-25-000024:93.0:93.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50119,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000050",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "4.2",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-24-000050:39.1:39.1",
+    "0000034088-24-000050:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50120,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000042",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "4.2",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-25-000042:107.0:107.0",
+    "0000034088-25-000042:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50121,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000050",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "2.14",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-24-000050:39.1:39.1",
+    "0000034088-24-000050:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50122,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000042",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "2.14",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-25-000042:107.0:107.0",
+    "0000034088-25-000042:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50123,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000068",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-09-30"
+   ],
+   "value": "6.12",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-24-000068:39.1:39.1",
+    "0000034088-24-000068:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50124,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000061",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-01-01",
+    "2024-09-30"
+   ],
+   "value": "6.12",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-25-000061:108.0:108.0",
+    "0000034088-25-000061:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50125,
+   "cik": "0000034088",
+   "accession": "0000034088-24-000068",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-07-01",
+    "2024-09-30"
+   ],
+   "value": "1.92",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-24-000068:39.1:39.1",
+    "0000034088-24-000068:95.0:95.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50126,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000061",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2024-07-01",
+    "2024-09-30"
+   ],
+   "value": "1.92",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-25-000061:108.0:108.0",
+    "0000034088-25-000061:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50129,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000024",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-03-31"
+   ],
+   "value": "1.76",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-25-000024:40.0:40.0",
+    "0000034088-25-000024:93.0:93.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50130,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000067",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-03-31"
+   ],
+   "value": "1.76",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-26-000067:50.0:50.0",
+    "0000034088-26-000067:78.0:78.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50131,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000042",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-06-30"
+   ],
+   "value": "3.4",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-25-000042:107.0:107.0",
+    "0000034088-25-000042:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50132,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000042",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-04-01",
+    "2025-06-30"
+   ],
+   "value": "1.64",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-25-000042:107.0:107.0",
+    "0000034088-25-000042:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50133,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000061",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-09-30"
+   ],
+   "value": "5.16",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-25-000061:108.0:108.0",
+    "0000034088-25-000061:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50134,
+   "cik": "0000034088",
+   "accession": "0000034088-25-000061",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-07-01",
+    "2025-09-30"
+   ],
+   "value": "1.76",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000034088-25-000061:108.0:108.0",
+    "0000034088-25-000061:40.1:40.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 50136,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000067",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-01-01",
+    "2026-03-31"
+   ],
+   "value": "1",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000034088-26-000067:50.0:50.0",
+    "0000034088-26-000067:78.0:78.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 52637,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000093",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-01-01",
+    "2025-06-30"
+   ],
+   "value": "3.4",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-26-000093:103.0:103.0",
+    "0000034088-26-000093:55.1:55.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 52638,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000093",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2025-04-01",
+    "2025-06-30"
+   ],
+   "value": "1.64",
+   "unit": "USD/shares",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-26-000093:103.0:103.0",
+    "0000034088-26-000093:55.1:55.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 52639,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000093",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-01-01",
+    "2026-06-30"
+   ],
+   "value": "4.47",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-26-000093:103.0:103.0",
+    "0000034088-26-000093:55.1:55.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 52640,
+   "cik": "0000034088",
+   "accession": "0000034088-26-000093",
+   "ticker": "XOM",
+   "form": "10-Q",
+   "line_item": "eps_diluted",
+   "concept": "us-gaap:EarningsPerShareDiluted",
+   "period": [
+    "2026-04-01",
+    "2026-06-30"
+   ],
+   "value": "3.48",
+   "unit": "USD/shares",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000034088-26-000093:103.0:103.0",
+    "0000034088-26-000093:55.1:55.1"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55160,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2021-01-01",
+    "2021-12-31"
+   ],
+   "value": "1852000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:1144.0:1144.0",
+    "0000078003-24-000039:823.0:823.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55161,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-01",
+    "2022-10-02"
+   ],
+   "value": "3098000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.0:49.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55162,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-07-04",
+    "2022-10-02"
+   ],
+   "value": "356000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.0:49.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55163,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "3328000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:1144.0:1144.0",
+    "0000078003-24-000039:823.0:823.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55164,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2022-01-01",
+    "2022-12-31"
+   ],
+   "value": "3328000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:1070.0:1070.0",
+    "0000078003-25-000054:763.0:763.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55165,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000107",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-04-02"
+   ],
+   "value": "715000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-24-000107:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55166,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-07-02"
+   ],
+   "value": "644000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55167,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-04-03",
+    "2023-07-02"
+   ],
+   "value": "-71000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55168,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-10-01"
+   ],
+   "value": "-320000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.0:49.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55169,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-10-01"
+   ],
+   "value": "-320000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55170,
+   "cik": "0000078003",
+   "accession": "0000078003-23-000115",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-07-03",
+    "2023-10-01"
+   ],
+   "value": "-964000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-23-000115:49.0:49.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55171,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-07-03",
+    "2023-10-01"
+   ],
+   "value": "-964000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55172,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000039",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "-1115000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2023,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-24-000039:1144.0:1144.0",
+    "0000078003-24-000039:823.0:823.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55173,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "-1115000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:1070.0:1070.0",
+    "0000078003-25-000054:763.0:763.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55174,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2023-01-01",
+    "2023-12-31"
+   ],
+   "value": "-1115000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:1054.0:1054.0",
+    "0000078003-26-000026:760.0:760.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55175,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000107",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "293000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-24-000107:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55176,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000114",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-03-31"
+   ],
+   "value": "293000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-25-000114:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55177,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "159000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55178,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-06-30"
+   ],
+   "value": "159000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55179,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000166",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "-134000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-24-000166:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55180,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-04-01",
+    "2024-06-30"
+   ],
+   "value": "-134000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55181,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-09-29"
+   ],
+   "value": "393000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55182,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-09-29"
+   ],
+   "value": "393000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55183,
+   "cik": "0000078003",
+   "accession": "0000078003-24-000191",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-07-01",
+    "2024-09-29"
+   ],
+   "value": "234000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-24-000191:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55184,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-07-01",
+    "2024-09-29"
+   ],
+   "value": "234000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55185,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000054",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-12-31"
+   ],
+   "value": "-28000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2024,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-25-000054:1070.0:1070.0",
+    "0000078003-25-000054:1074.0:1080.0",
+    "0000078003-25-000054:763.0:763.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55186,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2024-01-01",
+    "2024-12-31"
+   ],
+   "value": "-28000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:1054.0:1054.0",
+    "0000078003-26-000026:1058.0:1065.0",
+    "0000078003-26-000026:760.0:760.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55187,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000114",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-03-30"
+   ],
+   "value": "-189000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-25-000114:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55188,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000054",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-03-30"
+   ],
+   "value": "-189000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-26-000054:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55189,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-06-29"
+   ],
+   "value": "-48000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55190,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-06-29"
+   ],
+   "value": "-48000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.0:51.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55191,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000138",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-03-31",
+    "2025-06-29"
+   ],
+   "value": "141000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-25-000138:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55192,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-03-31",
+    "2025-06-29"
+   ],
+   "value": "141000000",
+   "unit": "USD",
+   "is_comparative": true,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.0:51.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55193,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-09-28"
+   ],
+   "value": "-264000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55194,
+   "cik": "0000078003",
+   "accession": "0000078003-25-000150",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-06-30",
+    "2025-09-28"
+   ],
+   "value": "-216000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": 3,
+   "gold": [
+    "0000078003-25-000150:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55195,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000026",
+   "ticker": "PFE",
+   "form": "10-K",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2025-01-01",
+    "2025-12-31"
+   ],
+   "value": "-266000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2025,
+   "filing_fiscal_quarter": null,
+   "gold": [
+    "0000078003-26-000026:1054.0:1054.0",
+    "0000078003-26-000026:1058.0:1065.0",
+    "0000078003-26-000026:1071.1:1071.1",
+    "0000078003-26-000026:760.0:760.0"
+   ],
+   "bucket": ">3"
+  },
+  {
+   "fact_id": 55196,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000054",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-01-01",
+    "2026-03-29"
+   ],
+   "value": "461000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 1,
+   "gold": [
+    "0000078003-26-000054:50.0:50.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55197,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-01-01",
+    "2026-06-28"
+   ],
+   "value": "54000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.0:51.0"
+   ],
+   "bucket": "1-3"
+  },
+  {
+   "fact_id": 55198,
+   "cik": "0000078003",
+   "accession": "0000078003-26-000095",
+   "ticker": "PFE",
+   "form": "10-Q",
+   "line_item": "income_tax",
+   "concept": "us-gaap:IncomeTaxExpenseBenefit",
+   "period": [
+    "2026-03-30",
+    "2026-06-28"
+   ],
+   "value": "-407000000",
+   "unit": "USD",
+   "is_comparative": false,
+   "filing_fiscal_year": 2026,
+   "filing_fiscal_quarter": 2,
+   "gold": [
+    "0000078003-26-000095:51.0:51.0"
+   ],
+   "bucket": "1-3"
+  }
+ ]
+}
