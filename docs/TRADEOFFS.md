@@ -1133,3 +1133,24 @@ its reason and finding ID (F-66 JPM, F-70 XOM), a per-ticker count of 10-Ks and
 **Phase 3 consequence.** No FY items for JPM or XOM -- their only annual filings
 are quarantined -- so the bank pair's annual comparison (JPM vs BAC on 10-K
 figures) is unavailable; quarterly comparisons from the 10-Qs remain.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-71 left as a known residual of the frozen corpus
+
+BAC's 10-K Item 7 and 8 heading tables carry a "Table of Contents" cell that is
+not a link, so it stays in the section title; Item 7's title also carries the
+"Bank of America Corporation and Subsidiaries" prefix from the same table.
+Measured on the stored chunks of the 90: exactly BAC 10-K Items 7 and 8, three
+filings, 1,822 chunks. Company, form, period and Item in those headers are
+correct; normalized text, offsets and span resolution are untouched. No parser
+change and no re-freeze: the fix would be a literal-string rule for one filer's
+heading table, would still leave the company-name prefix, and the freeze is
+where parser work stops (PRD 14: timebox hard).
+
+*Alternatives:*
+- *Fix now and re-freeze.* Cheap today: no eval item or run depends on the freeze.
+- *Fix after the golden set exists.* The header counts against the token budget,
+  so BAC 10-K chunk IDs can shift: a re-freeze plus a dataset version bump.
+
+**The cheap window closes when the first gold evidence set is written.**

@@ -5,7 +5,9 @@ chunker_version: 964f77f6f9cb
 notes: 'PRD 4.4 corpus, frozen at the end of Phase 2 (F-42); not to be re-ingested (PRD 11.4). Comparability
   is judged on text_sha256 under parser_version; a raw-byte hash difference alone is logged, not a failure
   (F-43). Known residual: one content block dropped as navigation, TGT 10-K Item 15''s ''Notes to Consolidated
-  Financial Statements'' list item (F-58). Verify with python -m scripts.verify_freeze.'
+  Financial Statements'' list item (F-58); BAC 10-K Items 7 and 8 section titles end ''Table of Contents'',
+  and Item 7''s carries the ''Bank of America Corporation and Subsidiaries'' prefix, in 1,822 chunk context
+  headers (F-71). Verify with python -m scripts.verify_freeze.'
 totals:
   listed: 96
   parsed: 90

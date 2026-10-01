@@ -2668,3 +2668,45 @@ byte): `MISMATCH 0000909832-23-000042 ...`, `mismatches 1`, exit 1.
 The fourth result is BAC's FY2025 10-K, Item 7 (`II.7`). Its context header ends
 "Table of Contents" -- a non-link cell in BAC's heading table kept in the section
 title (F-71). Generation stays F-59.
+
+## 2026-10-01 — Phase 2 close-out: F-71 scope, freeze notes, chunker check in the verifier
+
+Freeze committed as `a21ab6c`.
+
+**F-71 scope** -- every stored chunk of the 90 whose `section_title` contains
+"Table of Contents":
+
+     ticker |      accession       | form_type | item_code | chunks |                                                                    section_title                                                                     
+    --------+----------------------+-----------+-----------+--------+------------------------------------------------------------------------------------------------------------------------------------------------------
+     BAC    | 0000070858-24-000122 | 10-K      | II.7      |    245 | Bank of America Corporation and Subsidiaries Management's Discussion and Analysis of Financial Condition and Results of Operations Table of Contents
+     BAC    | 0000070858-24-000122 | 10-K      | II.8      |    370 | Financial Statements and Supplementary Data Table of Contents
+     BAC    | 0000070858-25-000139 | 10-K      | II.7      |    242 | Bank of America Corporation and Subsidiaries Management's Discussion and Analysis of Financial Condition and Results of Operations Table of Contents
+     BAC    | 0000070858-25-000139 | 10-K      | II.8      |    358 | Financial Statements and Supplementary Data Table of Contents
+     BAC    | 0000070858-26-000157 | 10-K      | II.7      |    242 | Bank of America Corporation and Subsidiaries Management's Discussion and Analysis of Financial Condition and Results of Operations Table of Contents
+     BAC    | 0000070858-26-000157 | 10-K      | II.8      |    365 | Financial Statements and Supplementary Data Table of Contents
+    (6 rows)
+
+Only BAC 10-K Items 7 and 8: 3 filings, 1,822 chunks. Left as a known residual
+(TRADEOFFS F-71).
+
+**Freeze notes.** `scripts/write_freeze.py` names F-71 beside F-58; re-run.
+`git diff api/corpus_freeze.yaml` changes the `notes` value only (3 insertions,
+1 deletion, all inside it).
+
+**Verifier.** `verify_freeze` now compares `chunker_version()` with the record
+and requires every stored chunk of every parsed filing to carry the frozen value.
+Passing run (exit 0):
+
+    verified 96 frozen accessions; mismatches 0
+    chunks of 90 parsed filings: 22354; not on chunker_version 964f77f6f9cb: 0; filings with no chunks: 0
+
+Failing run, `chunking.target_tokens` temporarily 499, no re-chunk (exit 1;
+`api/config.yaml` reverted, `git diff` empty):
+
+    verified 96 frozen accessions; mismatches 0
+    chunker_version 89d4e49a7f45 != frozen 964f77f6f9cb
+    chunks of 90 parsed filings: 22354; not on chunker_version 964f77f6f9cb: 0; filings with no chunks: 0
+
+**Phase 2 owes nothing except F-59**, OWNER-BLOCKED: no valid `ANTHROPIC_API_KEY`,
+so the generation call is unexercised. No mocked or canned answer stands in for
+it; the Phase 2 exit's "plausible answer out" waits on the key.

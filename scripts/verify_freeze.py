@@ -6,6 +6,11 @@ Reads api/corpus_freeze.yaml, re-parses each filing's raw document from disk, an
 compares the normalized text's sha256 with the frozen value. A different
 `parser_version` is reported first: under a new parser, a text change may be the
 parser's, which the F-42 rule treats differently from the filing's.
+
+The chunk set is frozen too. Gold evidence sets are chunk IDs, so a chunker or
+`chunking:` change must fail here as a parser change does: the current
+`chunker_version()` must equal the record's, and every stored chunk of every
+parsed filing must carry it.
 """
 
 from __future__ import annotations
@@ -16,6 +21,7 @@ from pathlib import Path
 
 import yaml
 
+from api.chunk.store import chunker_version
 from api.db import connect
 from api.parse.ixbrl import extract
 from api.parse.validate import parser_version
@@ -39,7 +45,32 @@ def main() -> int:
                 failures.append(entry["accession"])
                 print(f"MISMATCH {entry['accession']}: {digest} != {entry['text_sha256']}")
     print(f"verified {len(record['filings'])} frozen accessions; mismatches {len(failures)}")
-    return 1 if failures or current != record["parser_version"] else 0
+
+    frozen_chunker = record["chunker_version"]
+    current_chunker = chunker_version()
+    if current_chunker != frozen_chunker:
+        print(f"chunker_version {current_chunker} != frozen {frozen_chunker}")
+    parsed = [e["accession"] for e in record["filings"] if e["status"] == "parsed"]
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT f.accession, count(c.chunk_id),
+                   count(c.chunk_id) FILTER (WHERE c.chunker_version IS DISTINCT FROM %s)
+              FROM filings f LEFT JOIN chunks c ON c.accession = f.accession
+             WHERE f.accession = ANY(%s)
+             GROUP BY f.accession
+            """,
+            (frozen_chunker, parsed),
+        ).fetchall()
+    no_chunks = [a for a, n, _ in rows if n == 0]
+    off_version = sum(bad for _, _, bad in rows)
+    total = sum(n for _, n, _ in rows)
+    print(
+        f"chunks of {len(rows)} parsed filings: {total}; not on chunker_version "
+        f"{frozen_chunker}: {off_version}; filings with no chunks: {len(no_chunks)}"
+    )
+    chunk_failure = current_chunker != frozen_chunker or off_version or no_chunks
+    return 1 if failures or current != record["parser_version"] or chunk_failure else 0
 
 
 if __name__ == "__main__":
