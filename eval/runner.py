@@ -14,6 +14,7 @@ from eval.metrics.abstention import rates, two_by_two
 from eval.metrics.generation import NA, generation_metrics
 from eval.metrics.numeric import aggregate, score_item
 from eval.metrics.retrieval import mrr, ndcg_at_k, precision_at_k, recall_at_k, sufficiency_at_k
+from eval.pipeline import depth_disagreements
 
 SOURCES = ("xbrl_auto", "llm_seeded", "handwritten")
 COLUMNS = (*SOURCES, "aggregate")
@@ -102,6 +103,9 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "k": k,
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
+        "meta_disagreements": depth_disagreements(meta, results, items)
+        if "retrieve_depth" in meta and "generator_top_k" in meta
+        else None,
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "columns": {
             **{
@@ -205,4 +209,9 @@ def format_report(report: dict) -> str:
     lines.append(f"figures per numeric answer (aggregate): {agg['figure_count_distribution']}")
     lines.append(f"excluded from numeric accuracy (aggregate): {agg['excluded']}")
     lines.append(f"anomalies: {report['anomalies']}")
+    md = report.get("meta_disagreements")
+    if md is not None:
+        lines.append(f"meta: retrieve_depth {report['retrieve_depth']}, generator_top_k "
+                     f"{report['generator_top_k']}; items whose stored lists disagree: "
+                     f"{len(md)}{' ' + str(md[:10]) if md else ''}")  # fmt: skip
     return "\n".join(lines)

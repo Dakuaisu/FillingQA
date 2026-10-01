@@ -46,3 +46,34 @@ def context_for(
         post = [c for c, _ in apply_floor(reranked, rerank_cfg["score_floor"])[:top]]
     return {"retrieved": fused, "retrieved_post_rerank": post, "generator_input": post,
             "fell_back": fell_back, "abstain": not post}  # fmt: skip
+
+
+def depths(pipeline: str, *, retrieve_depth: int, retrieval_cfg: dict, rerank_cfg: dict,
+           baseline_top_k: int) -> dict:  # fmt: skip
+    """What a run stores and feeds the generator, from config: the length of
+    `retrieved` and the generator's top-k (per question type after fusion)."""
+    if pipeline == "config_1_dense":
+        return {"retrieve_depth": retrieve_depth, "generator_top_k": baseline_top_k}
+    if pipeline not in PIPELINES:
+        raise ValueError(f"unknown pipeline {pipeline!r}; one of {PIPELINES}")
+    return {"retrieve_depth": max(retrieval_cfg["k_dense"], retrieval_cfg["k_sparse"]),
+            "generator_top_k": {"default": rerank_cfg["top_n"],
+                                "synthesis": rerank_cfg["top_n_synthesis"]}}  # fmt: skip
+
+
+def depth_disagreements(meta: dict, results: list[dict], items: dict) -> list[str]:
+    """Item ids whose stored lists contradict the run meta: `retrieved` not of
+    length retrieve_depth, or a generator input longer than its top-k, or shorter
+    where only the score floor may shorten it (Config 4, not fallen back)."""
+    want, top = meta["retrieve_depth"], meta["generator_top_k"]
+    out = []
+    for r in results:
+        k = top if isinstance(top, int) else top.get(items[r["item_id"]]["question_type"],
+                                                     top["default"])  # fmt: skip
+        n = len(r.get("generator_input") or [])
+        floor_may_shorten = meta.get("pipeline") == "config_4_rerank" and not r.get(
+            "rerank_fell_back"
+        )
+        if len(r["retrieved"]) != want or n > k or (n < k and not floor_may_shorten):
+            out.append(r["item_id"])
+    return out

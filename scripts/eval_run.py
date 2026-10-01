@@ -3,6 +3,7 @@
 python -m scripts.eval_run                     # plan only: no retrieval, no model call
 python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
+python -m scripts.eval_run --report RUN_ID     # rebuild a finished run's report from its saved meta
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
 
 The pipeline is `eval_run.pipeline` (PRD 11.6 configs: config_1_dense,
@@ -34,6 +35,7 @@ import yaml
 from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval
 from api.generate import claude_cli
 from api.generate.generator import generate, refuse_dev_baseline
+from eval.pipeline import depths
 from eval.runner import build_report, format_report
 from scripts.write_freeze import FREEZE_FILE
 
@@ -77,7 +79,8 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
     meta = {
         "backend": gen["backend"], "model_requested": gen[TIER], "tier": TIER,
         "pipeline": pipeline, "retrieval_stage": STAGES[pipeline],
-        "retrieve_depth": run_cfg["retrieve_depth"], "generator_top_k": baseline()["top_k"],
+        **depths(pipeline, retrieve_depth=run_cfg["retrieve_depth"], retrieval_cfg=rc,
+                 rerank_cfg=rerank(), baseline_top_k=baseline()["top_k"]),
         "hnsw_ef_search": rc["hnsw_ef_search"], "k_dense": rc["k_dense"],
         "parser_version": freeze["parser_version"], "chunker_version": freeze["chunker_version"],
         "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
@@ -124,14 +127,21 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
     t0 = time.monotonic()
     pipeline, rc = run_cfg["pipeline"], ctx.rcfg
     vec = embed_question(ctx.model, ctx.emb, it["question"])
-    depth = run_cfg["retrieve_depth"] if pipeline == "config_1_dense" else rc["k_dense"]
-    dense = [r.chunk_id for r in dense_top_k(conn, vec, depth, rc["hnsw_ef_search"])[0]]
+    d = depths(
+        pipeline,
+        retrieve_depth=run_cfg["retrieve_depth"],
+        retrieval_cfg=rc,
+        rerank_cfg=ctx.rrcfg,
+        baseline_top_k=baseline()["top_k"],
+    )
+    k_dense = run_cfg["retrieve_depth"] if pipeline == "config_1_dense" else rc["k_dense"]
+    dense = [r.chunk_id for r in dense_top_k(conn, vec, k_dense, rc["hnsw_ef_search"])[0]]
     fused, reranked, secs = [], None, None
     if pipeline != "config_1_dense":
         sp = sparse(conn, it["question"], rc["k_sparse"], rc["sparse"], ctx.index)
         w = rc["weights"]
         fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])
-        fused = fused[: max(rc["k_dense"], rc["k_sparse"])]
+        fused = fused[: d["retrieve_depth"]]
     if pipeline == "config_4_rerank":
         texts = texts_for(conn, fused)
         reranked, secs = rerank_one(ctx.reranker, it["question"], [(c, texts[c]) for c in fused])
@@ -202,6 +212,17 @@ def main() -> None:
     runs = REPO_ROOT / run_cfg["runs_dir"]
     meta = current_meta(gen, run_cfg)
 
+    if arg("--report"):
+        run_id = arg("--report")
+        saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
+        results = read_jsonl(runs / f"{run_id}.results.jsonl")
+        if len(results) != len(saved["item_order"]):
+            raise SystemExit(f"run {run_id} has {len(results)} of {len(saved['item_order'])} items")
+        report_meta = {k: v for k, v in saved.items() if k != "item_order"}
+        report = build_report(items, results, report_meta, saved["k"], run_cfg["nli_threshold"])
+        (runs / f"{run_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+        print(format_report(report))
+        return
     if arg("--resume"):
         run_id = arg("--resume")
         saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
