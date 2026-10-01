@@ -4,8 +4,9 @@ python -m scripts.seed_build
 
 Writes eval/seeding/dropped_v1.jsonl (key-free drops with filter, reason and
 sign_only) and prints the key-free survivors per stratum in draw order with
-counts per filter. Refuses to write candidates or the reserve while any
-survivor lacks a no-context record. Never reads the verification file.
+counts per filter; with no-context records for every survivor, applies the
+no-context stage (drops appended to the same file) and prints its counts per
+stratum. Writes no candidates or reserve. Never reads the verification file.
 """
 
 from __future__ import annotations
@@ -21,15 +22,18 @@ from api.config import REPO_ROOT
 from api.db import connect
 from eval.generate.seed_build import (
     Blocked,
+    check_no_context,
     key_free,
+    no_context_stage,
     redacted_responses,
-    require_no_context,
     stratum_table,
 )
+from eval.generate.seeding import prompt_sha
 from scripts.seed_run import DRAW, RAW, TEMPLATES, load_chunk, read_jsonl
 
 DROPPED = REPO_ROOT / "eval" / "seeding" / "dropped_v1.jsonl"
 NO_CONTEXT = REPO_ROOT / "eval" / "seeding" / "no_context_v1.jsonl"
+NC_PROMPT = REPO_ROOT / "eval" / "generate" / "prompts" / "no_context_v1.txt"
 
 
 def main() -> None:
@@ -56,15 +60,30 @@ def main() -> None:
         print(f"  {' '.join(key)}: {ids}")
     if not survivors:
         print("  none")
-    no_context = {r["chunk_id"]: r for r in read_jsonl(NO_CONTEXT)}
+    nc_sha = prompt_sha(NC_PROMPT.read_text(encoding="utf-8"))
+    records = check_no_context(survivors, read_jsonl(NO_CONTEXT), nc_sha)
     try:
-        require_no_context(survivors, no_context)
+        kept, nc_drops, nc_counts = no_context_stage(survivors, records)
     except Blocked as e:
         print(f"stopped after the key-free stage: {e}")
         return
-    if survivors:
-        raise SystemExit("no-context match rule not decided (TRADEOFFS); nothing written")
-    print("no survivors: no candidates or reserve to write")
+    with Path(DROPPED).open("a", encoding="utf-8") as fh:
+        fh.write("".join(json.dumps(d) + "\n" for d in nc_drops))
+    print(f"\nno-context stage: {len(nc_drops)} dropped, appended to "
+          f"{DROPPED.relative_to(REPO_ROOT)}")  # fmt: skip
+    print(
+        "slotted strata: survivors / slots_1x / no-context dropped / near-matches / "
+        "digits-only / sign-only"
+    )
+    tot = Counter()
+    for key, _, slots, _, _ in stratum_table(draw, survivors, raw):
+        c = nc_counts.get(key, Counter())
+        tot.update(c)
+        n = len(kept.get(key, []))
+        print(f"  {' '.join(key):34} {n:2} / {slots} / {c['dropped']} / {c['near']} / "
+              f"{c['digits_only']} / {c['sign_only']}")  # fmt: skip
+    print(f"  totals: kept {sum(len(v) for v in kept.values())}; {dict(tot)}")
+    print("next: near-duplicate stage (not run here); no candidates or reserve written")
 
 
 if __name__ == "__main__":

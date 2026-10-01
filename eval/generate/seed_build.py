@@ -157,3 +157,60 @@ def redacted_responses(raw: list[dict]) -> list[str]:
     """Records whose response was redacted: a redacted quote fails quote_verbatim,
     which must not be read as a filter drop."""
     return [r["chunk_id"] for r in raw if "response" in r.get("scrubbed_fields", [])]
+
+
+def check_no_context(survivors: dict, records: list[dict], prompt_sha: str) -> dict[str, dict]:
+    """chunk_id -> no-context record, after refusing duplicates, records for chunks
+    that are not key-free survivors, and records under another prompt."""
+    ids = {s["chunk_id"] for ss in survivors.values() for s in ss}
+    out: dict[str, dict] = {}
+    for r in records:
+        cid = r["chunk_id"]
+        if cid in out:
+            raise ValueError(f"duplicate no-context record for {cid}")
+        if cid not in ids:
+            raise ValueError(f"no-context record for {cid}, which is not a key-free survivor")
+        if r.get("no_context_prompt_sha256") != prompt_sha:
+            raise ValueError(f"{cid}: no-context prompt sha differs from the prompt file's")
+        out[cid] = r
+    return out
+
+
+def no_context_stage(survivors: dict, records: dict[str, dict]):
+    """(kept per stratum, drops, per-stratum counts). Table items: `no_context.match`
+    against the item's figure; a digits-only comparison when the scale is unknown or
+    the table is mixed. Interpretive items are kept with their no-context answer."""
+    from decimal import Decimal
+
+    from eval.generate.no_context import match
+    from eval.generate.seeding import parse_figure
+
+    require_no_context(survivors, records)
+    kept: dict[tuple, list[dict]] = defaultdict(list)
+    drops, counts = [], defaultdict(Counter)
+    for key, ss in survivors.items():
+        for s in ss:
+            answer = records[s["chunk_id"]]["response"]
+            item = {**s, "no_context_answer": answer}
+            if key[0] != "table":
+                kept[key].append(item)
+                continue
+            unscaled = any(f.startswith(("scale unknown", "scale not applied")) for f in s["flags"])
+            value = None
+            if not unscaled:
+                value = Decimal(s["value"] if s["value"] is not None else s["magnitude"])
+            m = match(answer, parse_figure(s["question"]["answer"]), value)
+            counts[key]["near"] += m.near
+            counts[key]["sign_only"] += m.sign_only
+            if m.dropped:
+                counts[key]["dropped"] += 1
+                counts[key]["digits_only"] += m.digits_only
+                figure = s["question"]["answer"]
+                why = f"no-context answer {m.matched_text!r} within 0.5% of {figure!r}"
+                drops.append({"chunk_id": s["chunk_id"], "stratum": list(key),
+                              "filter": "no_context:digits_only" if m.digits_only else "no_context",
+                              "reason": why, "sign_only": m.sign_only})  # fmt: skip
+                continue
+            flags = list(s["flags"]) + (["no-context near-match (within 5%)"] if m.near else [])
+            kept[key].append({**item, "flags": flags})
+    return dict(kept), drops, counts

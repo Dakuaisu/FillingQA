@@ -75,12 +75,17 @@ def now() -> str:
 
 
 def call(chunk: dict, meta: dict, cfg: dict, template: str, shas: dict, cli_version) -> dict:
+    """The seeding call for one chunk; see `call_prompt`."""
+    return call_prompt(render_prompt(template, chunk["text"]), meta, cfg, shas, cli_version)
+
+
+def call_prompt(prompt: str, meta: dict, cfg: dict, shas: dict, cli_version) -> dict:
     """A record with the model's response, or CallFailed with every failed attempt.
 
     Transport errors are retried up to TRANSPORT_RETRIES; any other CLI error
-    (is_error, non-JSON output, no modelUsage) fails at once.
+    (is_error, non-JSON output, no modelUsage) and a served model other than the
+    requested one fail at once.
     """
-    prompt = render_prompt(template, chunk["text"])
     attempts = []
     for _ in range(TRANSPORT_RETRIES):
         called_at = now()

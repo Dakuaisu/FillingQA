@@ -1903,3 +1903,49 @@ Decided by the supervisor before any drawn call; recorded for the owner.
   is CLI/API error text: stop and report. Filter drops, parse drops of real model
   output and shortfalls are findings, not stop conditions. *Alternative:* one
   180-call process (a tool kill loses a call unrecorded).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: no-context filter rule
+
+Proposed by the builder, adopted by the supervisor with one change (tolerance).
+
+- **Rule** (`eval/generate/no_context.py`): a table item is answerable without its
+  chunk, and dropped, when any figure in the no-context answer, normalized by its
+  own scale word (thousand, million, billion, trillion), is within **0.5%** of the
+  item's value in magnitude. Percentages, per-share figures and counts compare as
+  plain values. Within 5% but not 0.5% is a near-match: kept and flagged for the
+  review sheet. "unknown", or an answer with no figure, is not a match.
+- **Why 0.5%:** PRD 11.1 Stage 2 drops an item if the model "answers correctly"
+  without the chunk, and the PRD's own definition of two figures being the same
+  number is the 0.5% tolerance of 6.5.4 and 7.5. An answer the PRD would accept as
+  the same figure at runtime is a correct answer here; exact-only would keep
+  items the model knows to the PRD's tolerance, which is the leak the filter
+  exists to stop. Shortfall pressure (F-95) is not a reason to keep them.
+  Example: "$1.4 billion" against 1,434 million is 2.4% off: a near-match, not a
+  drop.
+- **Scale unknown or mixed table:** printed values are compared with the same
+  tolerance; a match drops and is filtered as `no_context:digits_only`. An item
+  is not kept because its scale is unresolved.
+- **Sign:** magnitude only (F-87); a magnitude match whose sign disagrees with
+  the item's printed sign still drops and is counted as `sign_only`.
+- **Interpretive items:** code judges nothing; the no-context answer is printed
+  beside the item on the review sheet (F-96, OWNER-BLOCKED).
+- **Calls:** one per key-free survivor (158), in draw order, on `tier_large`; the
+  prompt is the question plus "Answer from your own knowledge; if you do not
+  know, say unknown." (`eval/generate/prompts/no_context_v1.txt`, sha in each
+  record); raw to `eval/seeding/no_context_v1.jsonl`, errors to
+  `no_context_errors_v1.jsonl`; same halt, resume and batch-and-commit rules as
+  seeding. From the first call: no edits to the prompt, the rule or the
+  extractor.
+- **Rebuild:** `seed_build`'s no-context stage (added before the first
+  no-context call; the key-free code and its output are unchanged, checked by
+  diff) refuses duplicate records, records for non-survivors and a different
+  prompt sha; drops are appended to `dropped_v1.jsonl`.
+- **Known bias (F-14):** the same model family seeds the questions and answers
+  them without context, so the filter measures what this model knows, not what
+  any model knows.
+
+*Alternatives:* exact match (keeps items the model knows to the PRD's own
+tolerance); matching with sign (treats a correct magnitude as wrong over
+accounting presentation, F-87); a judge model for numbers (no kappa exists).

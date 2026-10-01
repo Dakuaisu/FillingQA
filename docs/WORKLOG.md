@@ -4366,3 +4366,19 @@ Findings, not filter changes (the filters are frozen from the first drawn call):
 "ExxonMobil Holdings Corporation", which the names list does not hold (F-93). At
 the key-free stage four synthesis strata have no survivor: 10-K I.1A for AAPL,
 COST, NVDA and TGT, 0 of 1 slot each (F-95). F-92's count, 13, is a lower bound.
+
+## 2026-10-01 — No-context filter built (before any no-context call)
+
+`eval/generate/no_context.py` (extractor, 0.5% rule, near-match, digits-only,
+sign-only), `eval/generate/prompts/no_context_v1.txt`,
+`scripts/no_context_run.py` (on `seed_run`'s halt-and-resume loop; `call` now
+delegates to `call_prompt`, seeding behaviour unchanged, its tests pass),
+`seed_build`'s no-context stage. Tests: `test_no_context.py` (9), three more in
+`test_seed_build.py`. `make test`: 346 passed; `make lint`: 91 files already
+formatted. `seed_build`'s key-free output is identical to the committed post-run
+output (`diff` empty) and `dropped_v1.jsonl` is unchanged.
+
+`python -m scripts.seed_build` with no no-context records:
+
+      table XOM 10-Q I.2: ['0000034088-24-000050:154.0:154.0 [flags]', '0000034088-25-000061:180.1:180.1 [flags]', '0000034088-25-000061:266.0:266.0', '0000034088-24-000029:190.0:190.0', '0000034088-24-000068:224.0:224.0', '0000034088-24-000068:242.0:242.0']
+    stopped after the key-free stage: 158 key-free survivors lack a no-context record; no candidates or reserve written

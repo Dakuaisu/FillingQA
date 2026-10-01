@@ -138,3 +138,49 @@ def test_every_slotted_stratum_is_listed_even_with_no_survivor():
 def test_redacted_responses_are_listed():
     recs = [{**raw()[0], "scrubbed_fields": ["response"]}, {**raw()[2], "scrubbed_fields": []}]
     assert redacted_responses(recs) == [COST_CF["chunk_id"]]
+
+
+def nc(chunk_id, response):
+    return {"chunk_id": chunk_id, "response": response, "no_context_prompt_sha256": "n"}
+
+
+def test_no_context_stage_drops_known_figures_and_keeps_interpretive():
+    from eval.generate.seed_build import check_no_context, no_context_stage
+
+    survivors, _, _ = key_free(raw(), DRAW, DRAW_SHA, chunks(), NAMES)
+    recs = check_no_context(survivors, [
+        nc(COST_CF["chunk_id"], "About $12.36 billion."),  # 12,360 vs 12,356 million: 0.03%
+        nc(PFE_PROSE["chunk_id"], "Unknown."),
+    ], "n")  # fmt: skip
+    kept, drops, counts = no_context_stage(survivors, recs)
+    (d,) = drops
+    assert (d["chunk_id"], d["filter"]) == (COST_CF["chunk_id"], "no_context")
+    assert counts[("table", "COST", "10-Q", "I.1")]["dropped"] == 1
+    (p,) = kept[("synthesis", "PFE", "10-K", "I.1A")]
+    assert p["no_context_answer"] == "Unknown."
+
+
+def test_no_context_near_match_is_kept_and_flagged():
+    from eval.generate.seed_build import check_no_context, no_context_stage
+
+    survivors, _, _ = key_free(raw(), DRAW, DRAW_SHA, chunks(), NAMES)
+    recs = check_no_context(survivors, [
+        nc(COST_CF["chunk_id"], "Roughly $12 billion."),  # 2.9% off
+        nc(PFE_PROSE["chunk_id"], "Unknown."),
+    ], "n")  # fmt: skip
+    kept, drops, counts = no_context_stage(survivors, recs)
+    assert drops == [] and counts[("table", "COST", "10-Q", "I.1")]["near"] == 1
+    (c,) = kept[("table", "COST", "10-Q", "I.1")]
+    assert "no-context near-match (within 5%)" in c["flags"]
+
+
+def test_no_context_records_are_checked():
+    from eval.generate.seed_build import check_no_context
+
+    survivors, _, _ = key_free(raw(), DRAW, DRAW_SHA, chunks(), NAMES)
+    with pytest.raises(ValueError, match="duplicate"):
+        check_no_context(survivors, [nc(COST_CF["chunk_id"], "x")] * 2, "n")
+    with pytest.raises(ValueError, match="not a key-free survivor"):
+        check_no_context(survivors, [nc(JPM, "x")], "n")
+    with pytest.raises(ValueError, match="prompt sha"):
+        check_no_context(survivors, [nc(COST_CF["chunk_id"], "x")], "other")
