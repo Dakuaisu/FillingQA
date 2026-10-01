@@ -3988,3 +3988,50 @@ A second run left `eval/seeding/draw_v1.json` byte-identical (sha256
 25e1bfc1...). The 2x is allocated per ticker, so 13 strata hold exactly their 1x
 slots: one drop there is a `Shortfall` (question in the report). `make test`: 304
 passed; `make lint` clean.
+
+## 2026-10-01 — Seeding re-draw: overdraw per stratum (draw_v2)
+
+From `draw_v1.json` (read before removal):
+
+    draw_v1 table: draws in strata with zero 1x slots 6 (strata 6); slotted strata with no spare 2; total drawn 100
+    draw_v1 synthesis: draws in strata with zero 1x slots 10 (strata 10); slotted strata with no spare 11; total drawn 80
+
+`python -m scripts.seed_draw`:
+
+    table: eligible 9426; excluded gold 439, floor 0
+      slotted strata 24; slots 1x 50; draw target 100; drawn 100
+      strata drawing fewer than their target: none
+      AAPL  (1x/drawn) 10-K II.8 2/4, 10-K IV.15 1/2, 10-Q I.1 3/6, 10-Q I.2 1/2
+      BAC   (1x/drawn) 10-K II.7 1/2, 10-K II.8 1/2, 10-Q I.1 2/4, 10-Q I.2 2/4
+      COST  (1x/drawn) 10-K II.8 2/4, 10-Q I.1 3/6, 10-Q I.2 1/2
+      JPM   (1x/drawn) 10-Q I.1 4/8, 10-Q I.2 2/4
+      NVDA  (1x/drawn) 10-K IV.15 2/4, 10-Q I.1 3/6, 10-Q I.2 1/2
+      PFE   (1x/drawn) 10-K II.8 2/4, 10-Q I.1 3/6, 10-Q I.2 1/2
+      TGT   (1x/drawn) 10-K II.8 2/4, 10-Q I.1 2/4, 10-Q I.2 2/4
+      XOM   (1x/drawn) 10-Q I.1 4/8, 10-Q I.2 3/6
+    synthesis: eligible 11254; excluded gold 2, floor 1233
+      slotted strata 33; slots 1x 40; draw target 80; drawn 80
+      strata drawing fewer than their target: none
+      AAPL  (1x/drawn) 10-K I.1A 1/2, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2, 10-Q II.1A 1/2
+      BAC   (1x/drawn) 10-K II.7 1/2, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 2/4
+      COST  (1x/drawn) 10-K I.1A 1/2, 10-K II.7 1/2, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2
+      JPM   (1x/drawn) 10-Q I.1 3/6, 10-Q I.2 2/4
+      NVDA  (1x/drawn) 10-K I.1A 1/2, 10-K IV.15 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2, 10-Q II.1A 1/2
+      PFE   (1x/drawn) 10-K I.1 1/2, 10-K II.7 1/2, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2
+      TGT   (1x/drawn) 10-K I.1A 1/2, 10-K II.7 1/2, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2
+      XOM   (1x/drawn) 10-Q I.1 2/4, 10-Q I.2 3/6
+    distinct drawn chunks: 180 of 180; gold among them: 0
+    prompt sha256 0dac2295c1cd2a20; wrote eval/seeding/draw_v2.json sha256 1c23e9f6511a554e
+
+A second run left `draw_v2.json` byte-identical:
+
+    1c23e9f6511a554eebab64a25e07117d3e2c099cd504ad1948239d46c4028313  eval/seeding/draw_v2.json
+
+Order check against `draw_v1` (ad hoc, both files in the tree before removal):
+
+    strata in draw_v2 whose order agrees with draw_v1 on the common prefix: 57; disagree: 0
+
+`draw_v1.json` (sha256 25e1bfc1d21eeef0353d281e19ebeb9ccaa4830ac69634b48bc791e37176b147,
+commit 8e6854d) removed. `scripts.seed_supply` now prints 1x slots and each
+stratum's draw (`overdraw` x slots), the rule `seed_draw` applies; its 2x
+largest-remainder lines are gone.

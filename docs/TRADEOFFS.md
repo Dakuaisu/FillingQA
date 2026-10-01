@@ -1593,7 +1593,8 @@ the `eval_seeding` config block. No model call has been made (F-59).
    seeded (439 table, 2 prose, in 16 strata), for the same reason as the
    comparison no-reuse rule. The manifest records the excluded count per
    stratum. *Alternative:* seed them (statement tables tested twice).
-4. **Overdraw 2x, one draw.** `overdraw` is config. The draw order is fixed; the
+4. **Overdraw 2x, one draw** (amended: the overdraw applies per stratum, see
+   "seeding overdraw is per stratum (draw_v2)" below). `overdraw` is config. The draw order is fixed; the
    first survivors in draw order fill each stratum's slots; a short stratum is a
    `Shortfall`, with no backfill and no second draw. One model call per chunk: an
    unparseable or filtered output is a drop, never a re-generation; only
@@ -1752,3 +1753,41 @@ through the `claude` CLI. This partly unblocks F-59.
 - *Alternatives (owner's):* wait for an API key (Phase 2 exit and all model-based
   Phase 3 work stay blocked); `--bare` with the shell key (rejected: 401, and
   `--bare` cannot use the Max login).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding overdraw is per stratum (draw_v2)
+
+Decided by the supervisor; recorded here for the owner. Amends item 4 of "LLM
+seeding".
+
+- **Rule:** each slotted stratum draws `overdraw` x its 1x slots (`draw_target`);
+  a stratum with no 1x slot draws nothing. The 1x allocation is unchanged, so the
+  composition of the 90 is the same; only where the spares sit moves.
+- **Why:** slots fill per stratum, so a spare helps only in its own stratum. In
+  `draw_v1` (per-ticker 2x by largest remainder), read from its manifest: 16 of
+  the 180 draws (6 table, 10 synthesis) sat in strata with zero 1x slots and could
+  only reach the reserve, while 13 slotted strata (2 table, 11 synthesis) had no
+  spare, so one Stage 2 drop there would be a shortfall.
+- **Mechanics:** the per-stratum shuffle seed is kept, so each stratum's order is
+  unchanged and only the cut length moves (checked: all 57 `draw_v2` strata agree
+  with `draw_v1` on their common prefix). Totals stay 100 and 80. A stratum with
+  fewer eligible chunks than its target draws what exists and is listed (none).
+- **Files:** `eval/seeding/draw_v2.json` (sha256 1c23e9f6...). `draw_v1.json`
+  (sha256 25e1bfc1d21eeef0353d281e19ebeb9ccaa4830ac69634b48bc791e37176b147,
+  commit 8e6854d) is removed in the same commit so nothing can read it.
+  `scripts.seed_supply` prints the same rule, so the two scripts never print
+  different allocations.
+- **This is the only re-draw.** It is legitimate because no seeding output
+  exists. After the first call on a drawn chunk the draw is frozen. A stratum
+  where every draw drops is a shortfall against PRD 11.1's 50/40, reported per
+  stratum and logged as a finding: no third draw, no overdraw change, no
+  backfill, and the surviving candidates are still written.
+
+*Alternatives:*
+- *Keep per-ticker 2x* (draw_v1): 16 draws unusable for any slot, 13 slotted
+  strata without a spare.
+- *Raise the overdraw:* more calls, and per-ticker allocation still guarantees
+  no spare per stratum.
+- *Backfill across strata after Stage 2:* the composition would then depend on
+  model output.

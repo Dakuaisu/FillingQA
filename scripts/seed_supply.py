@@ -8,7 +8,7 @@ parsed accessions by PRD 11.1's strata (ticker, form_type, item_code,
 chunk_type); how many are already gold for a candidate (eval/candidates/*.jsonl)
 and so excluded; prose body tokens (header excluded) around the proposed
 minimum; and the proportional allocation per ticker (TRADEOFFS, LLM seeding) at
-1x and at the configured overdraw.
+1x, with each slotted stratum's draw (`overdraw` x its slots, as scripts.seed_draw).
 """
 
 from __future__ import annotations
@@ -244,19 +244,24 @@ def main() -> None:
             pool = [r for r in eligible if r[4] == ctype and (floor is None or body[r[0]] >= floor)]
             title = f"{kind} ({ctype} chunks, gold excluded" + (
                 f", body tokens >= {floor})" if floor else ")")  # fmt: skip
-            print(f"\nallocation, {title}: {len(pool)} chunks")
-            no_mdna = {1: [], c["overdraw"]: []}
+            print(
+                f"\nallocation, {title}: {len(pool)} chunks; per stratum 1x slots / "
+                f"draw (overdraw {c['overdraw']} x slots, capped at the stratum's chunks)"
+            )
+            no_mdna = []
             for t in tickers:
                 counts = Counter((r[2], r[3]) for r in pool if r[1] == t)
-                for mult in sorted(no_mdna):
-                    slots = allocate(counts, c["per_ticker"][t] * mult)
-                    cells = ", ".join(f"{f} {i} {n}" for (f, i), n in slots.items())
-                    size = f"{sum(slots.values()):2} of {sum(counts.values()):5}"
-                    print(f"  {t:5} x{mult} ({size}): {cells}")
-                    if not any(k in MDNA for k in slots):
-                        no_mdna[mult].append(t)
-            for mult, ts in no_mdna.items():
-                print(f"  tickers with zero MD&A slots at x{mult}: {ts or 'none'}")
+                slots = allocate(counts, c["per_ticker"][t])
+                cells = ", ".join(
+                    f"{f} {i} {n}/{min(n * c['overdraw'], counts[(f, i)])}"
+                    for (f, i), n in slots.items()
+                )
+                print(
+                    f"  {t:5} ({sum(slots.values()):2} slots of {sum(counts.values()):5}): {cells}"
+                )
+                if not any(k in MDNA for k in slots):
+                    no_mdna.append(t)
+            print(f"  tickers with zero MD&A slots: {no_mdna or 'none'}")
 
 
 if __name__ == "__main__":

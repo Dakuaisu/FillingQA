@@ -275,13 +275,14 @@ def prompt_sha(template: str) -> str:
 
 
 def draw_chunks(rows: list[dict], per_ticker: dict[str, int], overdraw: int, seed: int) -> dict:
-    """ticker -> strata, each with its eligible count, slots at 1x and at `overdraw`x,
-    and the chunk ids drawn at `overdraw`x in draw order.
+    """ticker -> slotted strata, each with its eligible count, 1x slots, draw target
+    (`overdraw` x slots) and the chunk ids drawn, in draw order (draw_v2).
 
     `rows` are eligible chunks (gold and floor exclusions already applied), each
-    with chunk_id, ticker, form, item. Within a stratum the order is a shuffle of
-    the sorted ids seeded by (seed, ticker, form, item), so it does not depend on
-    any other stratum. The first survivors in this order fill the 1x slots.
+    with chunk_id, ticker, form, item. Slots are allocated per ticker at 1x by
+    largest remainder; a stratum with no slot draws nothing. Within a stratum the
+    order is a shuffle of the sorted ids seeded by (seed, ticker, form, item); a
+    stratum with fewer eligible chunks than its target draws what exists.
     """
     out = {}
     for t in sorted(per_ticker):
@@ -289,17 +290,15 @@ def draw_chunks(rows: list[dict], per_ticker: dict[str, int], overdraw: int, see
         for r in rows:
             if r["ticker"] == t:
                 ids[(r["form"], r["item"])].append(r["chunk_id"])
-        counts = {k: len(v) for k, v in ids.items()}
-        one = allocate(counts, per_ticker[t])
-        many = allocate(counts, per_ticker[t] * overdraw)
+        slots = allocate({k: len(v) for k, v in ids.items()}, per_ticker[t])
         strata = []
-        for k in sorted(set(one) | set(many)):
+        for k, n in slots.items():
             order = sorted(ids[k])
             random.Random(f"{seed}:{t}:{k[0]}:{k[1]}").shuffle(order)
+            target = overdraw * n
             strata.append({
-                "form": k[0], "item_code": k[1], "eligible": counts[k],
-                "slots_1x": one.get(k, 0), f"slots_{overdraw}x": many.get(k, 0),
-                "drawn": order[: many.get(k, 0)],
+                "form": k[0], "item_code": k[1], "eligible": len(ids[k]),
+                "slots_1x": n, "draw_target": target, "drawn": order[:target],
             })  # fmt: skip
         out[t] = strata
     return out

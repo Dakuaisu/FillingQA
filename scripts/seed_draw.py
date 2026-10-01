@@ -2,8 +2,9 @@
 
 python -m scripts.seed_draw
 
-Key-free: no model call. Writes eval/seeding/draw_v1.json -- chunk ids per
-stratum in draw order at the configured overdraw, the 1x slots they fill,
+Key-free: no model call. Writes eval/seeding/draw_v2.json -- per slotted
+stratum, `overdraw` x its 1x slots chunk ids in draw order (TRADEOFFS: seeding
+overdraw is per stratum),
 per-stratum exclusion counts (gold, floor), seeds, freeze versions and the
 prompt sha. A re-draw is legitimate only before any model call and only on a
 config change recorded in TRADEOFFS.
@@ -23,7 +24,7 @@ from api.db import connect
 from eval.generate.seeding import draw_chunks, prompt_sha
 from scripts.write_freeze import FREEZE_FILE
 
-OUT = REPO_ROOT / "eval" / "seeding" / "draw_v1.json"
+OUT = REPO_ROOT / "eval" / "seeding" / "draw_v2.json"
 PROMPT = REPO_ROOT / "eval" / "generate" / "prompts" / "seed_v1.txt"
 CANDIDATES = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
 KINDS = (("table", "table"), ("synthesis", "prose"))
@@ -91,25 +92,18 @@ def main() -> None:
     text = json.dumps(manifest, indent=1) + "\n"
     OUT.write_text(text, encoding="utf-8")
 
-    od = f"slots_{cfg['table']['overdraw']}x"
     for kind, k in manifest["kinds"].items():
-        n1 = sum(s["slots_1x"] for st in k["per_ticker"].values() for s in st)
-        n2 = sum(len(s["drawn"]) for st in k["per_ticker"].values() for s in st)
-        short = [
-            (t, s["form"], s["item_code"], s["slots_1x"], s[od])
-            for t, st in k["per_ticker"].items() for s in st if s[od] < s["slots_1x"]
-        ]  # fmt: skip
+        strata = [(t, s) for t, st in k["per_ticker"].items() for s in st]
+        n1 = sum(s["slots_1x"] for _, s in strata)
+        target = sum(s["draw_target"] for _, s in strata)
+        n2 = sum(len(s["drawn"]) for _, s in strata)
+        short = [f"{t} {s['form']} {s['item_code']} ({len(s['drawn'])} of {s['draw_target']})"
+                 for t, s in strata if len(s["drawn"]) < s["draw_target"]]  # fmt: skip
         gold_x = sum(e["gold"] for e in k["excluded"])
         floor_x = sum(e["floor"] for e in k["excluded"])
-        no_spare = [
-            f"{t} {s['form']} {s['item_code']}"
-            for t, st in k["per_ticker"].items() for s in st
-            if s["slots_1x"] and len(s["drawn"]) == s["slots_1x"]
-        ]  # fmt: skip
-        print(f"{kind}: eligible {k['eligible']}; excluded gold {gold_x}, floor {floor_x}; "
-              f"slots 1x {n1}; drawn {n2}")  # fmt: skip
-        print(f"  strata with fewer draws than 1x slots: {short or 'none'}")
-        print(f"  strata with no spare draw (drawn == 1x slots): {len(no_spare)} {no_spare}")
+        print(f"{kind}: eligible {k['eligible']}; excluded gold {gold_x}, floor {floor_x}")
+        print(f"  slotted strata {len(strata)}; slots 1x {n1}; draw target {target}; drawn {n2}")
+        print(f"  strata drawing fewer than their target: {short or 'none'}")
         for t, st in k["per_ticker"].items():
             cells = ", ".join(
                 f"{s['form']} {s['item_code']} {s['slots_1x']}/{len(s['drawn'])}" for s in st

@@ -229,7 +229,7 @@ def test_prompt_file_carries_stage_1_the_format_and_four_requirements():
     assert rendered.endswith(PFE_PROSE["text"] + "\n") and "<<CHUNK>>" not in rendered
 
 
-def test_draw_is_seeded_per_stratum_and_fills_the_allocation():
+def test_draw_is_overdraw_times_slots_per_stratum():
     from eval.generate.seeding import draw_chunks
 
     rows = [
@@ -242,10 +242,18 @@ def test_draw_is_seeded_per_stratum_and_fills_the_allocation():
     assert a == draw_chunks(list(reversed(rows)), per_ticker, 2, 7)
     for t, strata in a.items():
         assert sum(s["slots_1x"] for s in strata) == per_ticker[t]
-        assert sum(len(s["drawn"]) for s in strata) == 2 * per_ticker[t]
+        assert all(s["slots_1x"] > 0 for s in strata)  # zero-slot strata draw nothing
+        for s in strata:
+            assert s["draw_target"] == 2 * s["slots_1x"]
+            assert len(s["drawn"]) == min(s["draw_target"], s["eligible"])
         drawn = [c for s in strata for c in s["drawn"]]
-        assert len(drawn) == len(set(drawn))
         assert all(r["ticker"] == t for r in rows if r["chunk_id"] in drawn)
-    # NVDA's two fixture chunks share one stratum: both drawn, in a seed-dependent order.
-    orders = {tuple(draw_chunks(rows, {"NVDA": 1}, 2, s)["NVDA"][0]["drawn"]) for s in range(8)}
-    assert len(orders) == 2
+    # NVDA's two fixture chunks sit in one stratum (10-K IV.15): target 2, both drawn;
+    # AAPL's two are in different strata, so its one slot goes to one of them.
+    (nvda,) = a["NVDA"]
+    assert (nvda["eligible"], len(nvda["drawn"])) == (2, 2)
+    (aapl,) = a["AAPL"]
+    assert (aapl["eligible"], aapl["draw_target"], len(aapl["drawn"])) == (1, 2, 1)
+    # A stratum with fewer chunks than its target draws what exists, in the same order.
+    (short,) = draw_chunks(rows, {"NVDA": 1}, 3, 7)["NVDA"]
+    assert (short["draw_target"], short["drawn"]) == (3, nvda["drawn"])
