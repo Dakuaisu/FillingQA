@@ -4147,3 +4147,54 @@ splits on "\n" only (the candidates and verify readers use it too); the rebuild
 refuses duplicates, undrawn chunks and stale shas and prints every slotted
 stratum, `model_served` and redacted responses; `--limit N` on `--run`. Tests
 added for each. `make test`: 334 passed; `make lint`: 88 files already formatted.
+
+## 2026-10-01 — Prose verification outside the draw
+
+Target, per the run protocol (ad hoc, eligibility recomputed as `seed_draw` does):
+
+    largest synthesis stratum by eligible: JPM 10-Q I.1 (1421 eligible, 6 drawn)
+    recomputed eligible: 1421 (manifest 1421)
+    lowest chunk_id not drawn and not gold: 0000019617-23-000524:1390.0:1390.0
+
+`python -m scripts.seed_run --verify 0000019617-23-000524:1390.0:1390.0` (exit 0):
+
+    backend claude_cli, model claude-sonnet-5-5 (tier_large); prompt 0dac2295c1cd2a20, draw 1c23e9f6511a554e
+    drawn chunks 180; recorded 0; pending 180
+    verify 0000019617-23-000524:1390.0:1390.0: in draw_v2 False, gold False; scrubbed fields []
+    {
+     "chunk_id": "0000019617-23-000524:1390.0:1390.0",
+     "kind": "synthesis",
+     "ticker": "JPM",
+     "verification": true,
+     "called_at": "2026-10-01T18:40:01+00:00",
+     "backend": "claude_cli",
+     "model_requested": "claude-sonnet-5-5",
+     "model_served": "claude-sonnet-5-5",
+     "prompt_sha256": "0dac2295c1cd2a201df6efaac17917d8be07fda4e48156833b163759341d03f6",
+     "draw_sha256": "1c23e9f6511a554eebab64a25e07117d3e2c099cd504ad1948239d46c4028313",
+     "cli_version": "2.1.286 (Claude Code)",
+     "usage": {
+      "input_tokens": 2,
+      "output_tokens": 635,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 969
+     },
+     "response": "{\"questions\": [{\"kind\": \"factual\", \"question\": \"In JPMorgan Chase & Co's 10-Q for Q3 FY2023, as of which two dates does the table present information on assets and liabilities related to consolidated VIEs?\", \"answer\": \"September 30, 2023 and December 31, 2022\", \"supporting_quote\": \"The following table presents information on assets and liabilities related to VIEs that are consolidated by the Firm at September 30, 2023 and December 31, 2022.\"}, {\"kind\": \"interpretive\", \"question\": \"In JPMorgan Chase & Co's Q3 FY2023 10-Q, what do the disclosures imply about whether JPMorgan Chase's general credit backs the liabilities of its consolidated VIEs, and what are the VIE assets used for?\", \"answer\": \"The VIE assets are used to settle the VIEs' liabilities, and holders of the beneficial interests generally have no recourse to JPMorgan Chase's general credit, so the firm's general credit does not generally back those liabilities.\", \"supporting_quote\": \"The assets of the consolidated VIEs are used to settle the liabilities of those entities. The holders of the beneficial interests generally do not have recourse to the general credit of JPMorgan Chase.\"}]}",
+     "scrubbed_fields": []
+    }
+    outcome: {
+     "status": "kept",
+     "question": {
+      "kind": "interpretive",
+      "question": "In JPMorgan Chase & Co's Q3 FY2023 10-Q, what do the disclosures imply about whether JPMorgan Chase's general credit backs the liabilities of its consolidated VIEs, and what are the VIE assets used for?",
+      "answer": "The VIE assets are used to settle the VIEs' liabilities, and holders of the beneficial interests generally have no recourse to JPMorgan Chase's general credit, so the firm's general credit does not generally back those liabilities.",
+      "supporting_quote": "The assets of the consolidated VIEs are used to settle the liabilities of those entities. The holders of the beneficial interests generally do not have recourse to the general credit of JPMorgan Chase."
+     },
+     "flags": [],
+     "value": null,
+     "magnitude": null
+    }
+
+Kept. Both questions name the filing and its quarter ("In JPMorgan Chase & Co's
+10-Q for Q3 FY2023"), copied from the header: the same tendency as F-92, here
+on a prose item. `verify_v1.jsonl`: no email address, no "/Users/".
