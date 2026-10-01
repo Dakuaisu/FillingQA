@@ -10,6 +10,7 @@ import hashlib
 import json
 import random
 import re
+from collections import defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
 from fractions import Fraction
@@ -268,3 +269,37 @@ def render_prompt(template: str, chunk_text: str) -> str:
 
 def prompt_sha(template: str) -> str:
     return hashlib.sha256(template.encode("utf-8")).hexdigest()
+
+
+# --- The chunk draw (key-free) --------------------------------------------------
+
+
+def draw_chunks(rows: list[dict], per_ticker: dict[str, int], overdraw: int, seed: int) -> dict:
+    """ticker -> strata, each with its eligible count, slots at 1x and at `overdraw`x,
+    and the chunk ids drawn at `overdraw`x in draw order.
+
+    `rows` are eligible chunks (gold and floor exclusions already applied), each
+    with chunk_id, ticker, form, item. Within a stratum the order is a shuffle of
+    the sorted ids seeded by (seed, ticker, form, item), so it does not depend on
+    any other stratum. The first survivors in this order fill the 1x slots.
+    """
+    out = {}
+    for t in sorted(per_ticker):
+        ids: dict[tuple, list[str]] = defaultdict(list)
+        for r in rows:
+            if r["ticker"] == t:
+                ids[(r["form"], r["item"])].append(r["chunk_id"])
+        counts = {k: len(v) for k, v in ids.items()}
+        one = allocate(counts, per_ticker[t])
+        many = allocate(counts, per_ticker[t] * overdraw)
+        strata = []
+        for k in sorted(set(one) | set(many)):
+            order = sorted(ids[k])
+            random.Random(f"{seed}:{t}:{k[0]}:{k[1]}").shuffle(order)
+            strata.append({
+                "form": k[0], "item_code": k[1], "eligible": counts[k],
+                "slots_1x": one.get(k, 0), f"slots_{overdraw}x": many.get(k, 0),
+                "drawn": order[: many.get(k, 0)],
+            })  # fmt: skip
+        out[t] = strata
+    return out

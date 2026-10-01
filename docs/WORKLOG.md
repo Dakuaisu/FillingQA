@@ -3951,3 +3951,40 @@ The headline figure matches `xbrl_facts` (AAPL
 0000320193-25-000079: 416161000000); the product breakdown was not checked. This
 is a development run on `claude_cli`: not a baseline, not publishable (F-59 stays
 open for `anthropic_api`).
+
+## 2026-10-01 — Seeding chunk draw (key-free, no model call)
+
+`draw_chunks` (pure, `eval/generate/seeding.py`): per ticker, slots at 1x and at
+the configured 2x by largest remainder over (form, item_code); within a stratum
+a shuffle of the sorted ids seeded by (seed, ticker, form, item). Tested on the
+fixture chunks. `python -m scripts.seed_draw`:
+
+    table: eligible 9426; excluded gold 439, floor 0; slots 1x 50; drawn 100
+      strata with fewer draws than 1x slots: none
+      strata with no spare draw (drawn == 1x slots): 2 ['AAPL 10-K IV.15', 'BAC 10-K II.7']
+      AAPL  (1x/drawn) 10-K II.7 0/1, 10-K II.8 2/4, 10-K IV.15 1/1, 10-Q I.1 3/6, 10-Q I.2 1/2
+      BAC   (1x/drawn) 10-K II.7 1/1, 10-K II.8 1/2, 10-Q I.1 2/5, 10-Q I.2 2/4
+      COST  (1x/drawn) 10-K I.1 0/1, 10-K II.7 0/1, 10-K II.8 2/3, 10-Q I.1 3/5, 10-Q I.2 1/2
+      JPM   (1x/drawn) 10-Q I.1 4/8, 10-Q I.2 2/4
+      NVDA  (1x/drawn) 10-K II.7 0/1, 10-K IV.15 2/3, 10-Q I.1 3/6, 10-Q I.2 1/2
+      PFE   (1x/drawn) 10-K II.7 0/1, 10-K II.8 2/3, 10-Q I.1 3/5, 10-Q I.2 1/3
+      TGT   (1x/drawn) 10-K II.7 0/1, 10-K II.8 2/3, 10-Q I.1 2/4, 10-Q I.2 2/4
+      XOM   (1x/drawn) 10-Q I.1 4/9, 10-Q I.2 3/5
+    synthesis: eligible 11254; excluded gold 2, floor 1233; slots 1x 40; drawn 80
+      strata with fewer draws than 1x slots: none
+      strata with no spare draw (drawn == 1x slots): 11 ['AAPL 10-Q II.1A', 'BAC 10-K II.7', 'COST 10-K I.1A', 'COST 10-K II.7', 'NVDA 10-K IV.15', 'NVDA 10-Q I.2', 'PFE 10-K I.1', 'PFE 10-K II.7', 'TGT 10-K I.1A', 'TGT 10-K II.7', 'TGT 10-Q I.1']
+      AAPL  (1x/drawn) 10-K I.1A 1/2, 10-K II.7 0/1, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/2, 10-Q II.1A 1/1
+      BAC   (1x/drawn) 10-K I.1A 0/1, 10-K II.7 1/1, 10-K II.8 1/2, 10-Q I.1 1/3, 10-Q I.2 2/3
+      COST  (1x/drawn) 10-K I.1 0/1, 10-K I.1A 1/1, 10-K II.7 1/1, 10-K II.8 1/2, 10-Q I.1 1/2, 10-Q I.2 1/3
+      JPM   (1x/drawn) 10-Q I.1 3/5, 10-Q I.2 2/5
+      NVDA  (1x/drawn) 10-K I.1 0/1, 10-K I.1A 1/2, 10-K II.7 0/1, 10-K IV.15 1/1, 10-Q I.1 1/2, 10-Q I.2 1/1, 10-Q II.1A 1/2
+      PFE   (1x/drawn) 10-K I.1 1/1, 10-K I.1A 0/1, 10-K II.7 1/1, 10-K II.8 1/2, 10-Q I.1 1/3, 10-Q I.2 1/2
+      TGT   (1x/drawn) 10-K I.1 0/1, 10-K I.1A 1/1, 10-K II.7 1/1, 10-K II.8 1/2, 10-K IV.15 0/1, 10-Q I.1 1/1, 10-Q I.2 1/2, 10-Q II.6 0/1
+      XOM   (1x/drawn) 10-Q I.1 2/3, 10-Q I.2 3/6, 10-Q II.6 0/1
+    distinct drawn chunks: 180 of 180; gold among them: 0
+    prompt sha256 0dac2295c1cd2a20; wrote eval/seeding/draw_v1.json sha256 25e1bfc1d21eeef0
+
+A second run left `eval/seeding/draw_v1.json` byte-identical (sha256
+25e1bfc1...). The 2x is allocated per ticker, so 13 strata hold exactly their 1x
+slots: one drop there is a `Shortfall` (question in the report). `make test`: 304
+passed; `make lint` clean.

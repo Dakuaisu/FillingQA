@@ -227,3 +227,25 @@ def test_prompt_file_carries_stage_1_the_format_and_four_requirements():
     assert [q["kind"] for q in shape["questions"]] == ["factual", "interpretive"]
     rendered = render_prompt(template, PFE_PROSE["text"])
     assert rendered.endswith(PFE_PROSE["text"] + "\n") and "<<CHUNK>>" not in rendered
+
+
+def test_draw_is_seeded_per_stratum_and_fills_the_allocation():
+    from eval.generate.seeding import draw_chunks
+
+    rows = [
+        {"chunk_id": c["chunk_id"], "ticker": c["ticker"], "form": c["form_type"],
+         "item": c["item_code"]}
+        for c in DOC["chunks"]
+    ]  # fmt: skip
+    per_ticker = {"NVDA": 1, "AAPL": 1}
+    a = draw_chunks(rows, per_ticker, 2, 7)
+    assert a == draw_chunks(list(reversed(rows)), per_ticker, 2, 7)
+    for t, strata in a.items():
+        assert sum(s["slots_1x"] for s in strata) == per_ticker[t]
+        assert sum(len(s["drawn"]) for s in strata) == 2 * per_ticker[t]
+        drawn = [c for s in strata for c in s["drawn"]]
+        assert len(drawn) == len(set(drawn))
+        assert all(r["ticker"] == t for r in rows if r["chunk_id"] in drawn)
+    # NVDA's two fixture chunks share one stratum: both drawn, in a seed-dependent order.
+    orders = {tuple(draw_chunks(rows, {"NVDA": 1}, 2, s)["NVDA"][0]["drawn"]) for s in range(8)}
+    assert len(orders) == 2

@@ -1,0 +1,1772 @@
+{
+ "source": "python -m scripts.seed_draw",
+ "eval_seeding": {
+  "table": {
+   "seed": 20261003,
+   "total": 50,
+   "per_ticker": {
+    "COST": 6,
+    "TGT": 6,
+    "JPM": 6,
+    "BAC": 6,
+    "AAPL": 7,
+    "NVDA": 6,
+    "XOM": 7,
+    "PFE": 6
+   },
+   "overdraw": 2
+  },
+  "synthesis": {
+   "seed": 20261004,
+   "total": 40,
+   "per_ticker": {
+    "COST": 5,
+    "TGT": 5,
+    "JPM": 5,
+    "BAC": 5,
+    "AAPL": 5,
+    "NVDA": 5,
+    "XOM": 5,
+    "PFE": 5
+   },
+   "overdraw": 2,
+   "min_body_tokens": 40
+  },
+  "near_duplicate_cosine": 0.92
+ },
+ "parser_version": "d58d26e08e5a",
+ "chunker_version": "964f77f6f9cb",
+ "prompt_file": "eval/generate/prompts/seed_v1.txt",
+ "prompt_sha256": "0dac2295c1cd2a201df6efaac17917d8be07fda4e48156833b163759341d03f6",
+ "gold_exclusion_source": {
+  "eval/candidates/comparison_candidates.jsonl": "e8f78af34061ba4fe05c10facc6f9dcab2d4e30219dcad40806616614dbb0eef",
+  "eval/candidates/xbrl_numeric_candidates.jsonl": "19fb355d8134c9504a654282354c13e92a453c450e67b87c9e9a25a9aaf638e7"
+ },
+ "kinds": {
+  "table": {
+   "chunk_type": "table",
+   "eligible": 9426,
+   "excluded": [
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 118,
+     "gold": 15,
+     "floor": 0
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 206,
+     "gold": 47,
+     "floor": 0
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 548,
+     "gold": 15,
+     "floor": 0
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 1308,
+     "gold": 60,
+     "floor": 0
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 107,
+     "gold": 15,
+     "floor": 0
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 202,
+     "gold": 36,
+     "floor": 0
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 2101,
+     "gold": 59,
+     "floor": 0
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "IV.15",
+     "chunks": 151,
+     "gold": 15,
+     "floor": 0
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 324,
+     "gold": 31,
+     "floor": 0
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 285,
+     "gold": 20,
+     "floor": 0
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 453,
+     "gold": 29,
+     "floor": 0
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 140,
+     "gold": 14,
+     "floor": 0
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 174,
+     "gold": 41,
+     "floor": 0
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 307,
+     "gold": 41,
+     "floor": 0
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 159,
+     "gold": 1,
+     "floor": 0
+    }
+   ],
+   "per_ticker": {
+    "AAPL": [
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 18,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000320193-24-000123:305.0:305.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 103,
+      "slots_1x": 2,
+      "slots_2x": 4,
+      "drawn": [
+       "0000320193-24-000123:512.0:512.0",
+       "0000320193-24-000123:416.1:416.1",
+       "0000320193-25-000079:462.0:462.0",
+       "0000320193-24-000123:410.0:410.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "IV.15",
+      "eligible": 28,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000320193-23-000106:682.1:682.1"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 159,
+      "slots_1x": 3,
+      "slots_2x": 6,
+      "drawn": [
+       "0000320193-25-000073:112.0:112.0",
+       "0000320193-24-000006:62.0:62.0",
+       "0000320193-26-000013:38.1:38.1",
+       "0000320193-26-000013:85.0:85.0",
+       "0000320193-26-000006:56.0:56.0",
+       "0000320193-25-000008:73.0:73.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 54,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000320193-24-000081:194.0:194.0",
+       "0000320193-25-000057:175.0:175.0"
+      ]
+     }
+    ],
+    "BAC": [
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 295,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000070858-26-000157:580.0:580.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 533,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000070858-26-000157:2172.3:2172.3",
+       "0000070858-25-000139:1474.1:1474.1"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 1248,
+      "slots_1x": 2,
+      "slots_2x": 5,
+      "drawn": [
+       "0000070858-24-000208:1148.1:1148.1",
+       "0000070858-25-000200:750.2:750.2",
+       "0000070858-24-000156:646.2:646.2",
+       "0000070858-25-000405:710.2:710.2",
+       "0000070858-24-000208:1221.0:1221.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 816,
+      "slots_1x": 2,
+      "slots_2x": 4,
+      "drawn": [
+       "0000070858-24-000280:570.0:570.0",
+       "0000070858-24-000156:288.1:288.1",
+       "0000070858-25-000268:138.4:138.4",
+       "0000070858-25-000200:546.1:546.1"
+      ]
+     }
+    ],
+    "COST": [
+     {
+      "form": "10-K",
+      "item_code": "I.1",
+      "eligible": 12,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000909832-23-000042:107.1:107.1"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 24,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000909832-23-000042:302.0:302.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 92,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0000909832-25-000101:686.0:686.0",
+       "0000909832-23-000042:411.0:411.0",
+       "0000909832-23-000042:504.0:504.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 166,
+      "slots_1x": 3,
+      "slots_2x": 5,
+      "drawn": [
+       "0000909832-26-000029:174.0:174.0",
+       "0000909832-24-000017:33.1:33.1",
+       "0000909832-24-000079:95.0:95.0",
+       "0000909832-24-000029:61.0:61.0",
+       "0000909832-26-000029:177.0:177.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 72,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000909832-23-000065:211.0:211.0",
+       "0000909832-24-000079:210.0:210.0"
+      ]
+     }
+    ],
+    "JPM": [
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 2042,
+      "slots_1x": 4,
+      "slots_2x": 8,
+      "drawn": [
+       "0000019617-25-000615:1344.0:1344.0",
+       "0000019617-24-000611:1549.0:1549.0",
+       "0000019617-25-000615:1270.0:1270.0",
+       "0001628280-26-054343:1819.1:1819.1",
+       "0000019617-25-000615:1706.0:1706.0",
+       "0000019617-24-000326:1130.1:1130.1",
+       "0001628280-26-054343:1228.0:1228.0",
+       "0001628280-26-029344:1299.0:1299.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 1205,
+      "slots_1x": 2,
+      "slots_2x": 4,
+      "drawn": [
+       "0000019617-25-000421:752.0:752.0",
+       "0000019617-24-000453:415.1:415.1",
+       "0001628280-25-048859:475.0:475.0",
+       "0001628280-26-029344:535.0:535.0"
+      ]
+     }
+    ],
+    "NVDA": [
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 25,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0001045810-24-000029:569.0:569.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "IV.15",
+      "eligible": 136,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0001045810-26-000021:1010.0:1010.0",
+       "0001045810-25-000023:1122.0:1122.0",
+       "0001045810-26-000021:778.0:778.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 293,
+      "slots_1x": 3,
+      "slots_2x": 6,
+      "drawn": [
+       "0001045810-24-000124:178.0:178.0",
+       "0001045810-24-000316:43.1:43.1",
+       "0001045810-24-000264:117.0:117.0",
+       "0001045810-24-000316:71.1:71.1",
+       "0001045810-24-000316:192.0:192.0",
+       "0001045810-26-000052:116.0:116.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 76,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0001045810-24-000316:327.0:327.0",
+       "0001045810-26-000075:378.0:378.0"
+      ]
+     }
+    ],
+    "PFE": [
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 66,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000078003-24-000039:616.3:616.3"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 265,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0000078003-26-000026:1124.0:1124.0",
+       "0000078003-26-000026:1261.0:1261.0",
+       "0000078003-26-000026:1261.1:1261.1"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 424,
+      "slots_1x": 3,
+      "slots_2x": 5,
+      "drawn": [
+       "0000078003-26-000054:236.0:236.0",
+       "0000078003-26-000054:209.1:209.1",
+       "0000078003-25-000138:70.1:70.1",
+       "0000078003-25-000114:153.0:153.0",
+       "0000078003-25-000150:70.0:70.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 212,
+      "slots_1x": 1,
+      "slots_2x": 3,
+      "drawn": [
+       "0000078003-23-000115:586.3:586.3",
+       "0000078003-24-000166:593.3:593.3",
+       "0000078003-26-000054:468.0:468.0"
+      ]
+     }
+    ],
+    "TGT": [
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 42,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-26-000016:328.0:328.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 126,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0000027419-24-000032:480.0:480.0",
+       "0000027419-26-000016:688.0:688.0",
+       "0000027419-25-000018:716.0:716.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 133,
+      "slots_1x": 2,
+      "slots_2x": 4,
+      "drawn": [
+       "0000027419-24-000129:75.0:75.0",
+       "0000027419-23-000052:128.0:128.0",
+       "0000027419-25-000118:123.0:123.0",
+       "0000027419-24-000152:50.0:50.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 131,
+      "slots_1x": 2,
+      "slots_2x": 4,
+      "drawn": [
+       "0000027419-26-000042:213.0:213.0",
+       "0000027419-25-000101:169.0:169.0",
+       "0000027419-25-000101:203.0:203.0",
+       "0000027419-25-000118:158.0:158.0"
+      ]
+     }
+    ],
+    "XOM": [
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 266,
+      "slots_1x": 4,
+      "slots_2x": 9,
+      "drawn": [
+       "0000034088-26-000093:131.1:131.1",
+       "0000034088-25-000042:83.0:83.0",
+       "0000034088-26-000093:67.1:67.1",
+       "0000034088-24-000050:122.0:122.0",
+       "0000034088-24-000050:117.2:117.2",
+       "0000034088-26-000093:117.0:117.0",
+       "0000034088-26-000067:104.0:104.0",
+       "0000034088-24-000068:97.1:97.1",
+       "0000034088-25-000042:115.0:115.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 158,
+      "slots_1x": 3,
+      "slots_2x": 5,
+      "drawn": [
+       "0000034088-24-000050:154.0:154.0",
+       "0000034088-25-000061:180.1:180.1",
+       "0000034088-25-000061:266.0:266.0",
+       "0000034088-24-000029:190.0:190.0",
+       "0000034088-24-000068:224.0:224.0"
+      ]
+     }
+    ]
+   }
+  },
+  "synthesis": {
+   "chunk_type": "prose",
+   "eligible": 11254,
+   "excluded": [
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "I.1B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "I.1C",
+     "chunks": 5,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "I.4",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 121,
+     "gold": 0,
+     "floor": 27
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "II.9C",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "III.11",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "III.13",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-K",
+     "item_code": "III.14",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 151,
+     "gold": 0,
+     "floor": 45
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 104,
+     "gold": 0,
+     "floor": 2
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "II.3",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "II.4",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "II.5",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "AAPL",
+     "form": "10-Q",
+     "item_code": "II.6",
+     "chunks": 10,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.1",
+     "chunks": 60,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.1A",
+     "chunks": 174,
+     "gold": 0,
+     "floor": 2
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.1B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.1C",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.3",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "I.4",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.7",
+     "chunks": 434,
+     "gold": 0,
+     "floor": 2
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 545,
+     "gold": 0,
+     "floor": 31
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-K",
+     "item_code": "II.9C",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 893,
+     "gold": 0,
+     "floor": 76
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 862,
+     "gold": 0,
+     "floor": 11
+    },
+    {
+     "ticker": "BAC",
+     "form": "10-Q",
+     "item_code": "II.6",
+     "chunks": 18,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "I.1B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "I.2",
+     "chunks": 6,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "I.3",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "I.4",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 168,
+     "gold": 0,
+     "floor": 35
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "II.9C",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "COST",
+     "form": "10-K",
+     "item_code": "III.11",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 209,
+     "gold": 0,
+     "floor": 63
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 181,
+     "gold": 0,
+     "floor": 7
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "II.1",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "II.3",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "II.4",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "COST",
+     "form": "10-Q",
+     "item_code": "II.5",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 8
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 1546,
+     "gold": 0,
+     "floor": 125
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 1339,
+     "gold": 0,
+     "floor": 66
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "II.2",
+     "chunks": 18,
+     "gold": 0,
+     "floor": 4
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "II.3",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "JPM",
+     "form": "10-Q",
+     "item_code": "II.4",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "I.1A",
+     "chunks": 176,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "I.1B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "I.4",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "II.7",
+     "chunks": 68,
+     "gold": 0,
+     "floor": 7
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-K",
+     "item_code": "IV.15",
+     "chunks": 197,
+     "gold": 0,
+     "floor": 28
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 352,
+     "gold": 0,
+     "floor": 75
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 186,
+     "gold": 0,
+     "floor": 16
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-Q",
+     "item_code": "II.1A",
+     "chunks": 187,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "NVDA",
+     "form": "10-Q",
+     "item_code": "II.6",
+     "chunks": 18,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "I.1A",
+     "chunks": 129,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "II.7",
+     "chunks": 181,
+     "gold": 0,
+     "floor": 8
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 448,
+     "gold": 2,
+     "floor": 33
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 582,
+     "gold": 0,
+     "floor": 75
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 444,
+     "gold": 0,
+     "floor": 20
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-Q",
+     "item_code": "II.1",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "PFE",
+     "form": "10-Q",
+     "item_code": "II.2",
+     "chunks": 18,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "I.1B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "I.2",
+     "chunks": 6,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "I.4",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.6",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.7",
+     "chunks": 69,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.8",
+     "chunks": 151,
+     "gold": 0,
+     "floor": 20
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.9",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 3
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "II.9B",
+     "chunks": 3,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-K",
+     "item_code": "IV.15",
+     "chunks": 35,
+     "gold": 0,
+     "floor": 1
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 129,
+     "gold": 0,
+     "floor": 55
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 135,
+     "gold": 0,
+     "floor": 10
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "II.3",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "II.4",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "TGT",
+     "form": "10-Q",
+     "item_code": "II.5",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 9
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.1",
+     "chunks": 180,
+     "gold": 0,
+     "floor": 87
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.2",
+     "chunks": 217,
+     "gold": 0,
+     "floor": 32
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.3",
+     "chunks": 9,
+     "gold": 0,
+     "floor": 2
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "I.7A",
+     "chunks": 2,
+     "gold": 0,
+     "floor": 2
+    },
+    {
+     "ticker": "XOM",
+     "form": "10-Q",
+     "item_code": "II.2",
+     "chunks": 18,
+     "gold": 0,
+     "floor": 18
+    }
+   ],
+   "per_ticker": {
+    "AAPL": [
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 102,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000320193-25-000079:216.0:221.0",
+       "0000320193-25-000079:127.0:131.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 30,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000320193-23-000106:311.0:325.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 94,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000320193-24-000123:508.0:511.0",
+       "0000320193-25-000079:478.0:485.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 106,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000320193-24-000069:105.0:112.0",
+       "0000320193-24-000081:81.0:84.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 102,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000320193-25-000008:189.0:196.0",
+       "0000320193-26-000006:140.0:144.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "II.1A",
+      "eligible": 38,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000320193-25-000057:262.0:264.0"
+      ]
+     }
+    ],
+    "BAC": [
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 172,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000070858-25-000139:325.0:328.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 432,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000070858-24-000122:1193.0:1195.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 514,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000070858-24-000122:1445.0:1453.0",
+       "0000070858-26-000157:1268.0:1273.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 817,
+      "slots_1x": 1,
+      "slots_2x": 3,
+      "drawn": [
+       "0000070858-25-000268:991.0:993.0",
+       "0000070858-24-000208:1135.0:1138.0",
+       "0000070858-25-000200:1045.0:1051.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 851,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0000070858-25-000405:253.0:260.0",
+       "0000070858-25-000200:433.0:438.0",
+       "0000070858-25-000405:328.0:331.0"
+      ]
+     }
+    ],
+    "COST": [
+     {
+      "form": "10-K",
+      "item_code": "I.1",
+      "eligible": 25,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000909832-23-000042:85.0:92.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 57,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000909832-24-000049:162.0:166.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 55,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000909832-24-000049:271.0:273.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 133,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000909832-24-000049:704.0:704.0",
+       "0000909832-24-000049:512.0:514.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 146,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000909832-23-000065:143.0:146.0",
+       "0000909832-25-000033:152.0:156.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 174,
+      "slots_1x": 1,
+      "slots_2x": 3,
+      "drawn": [
+       "0000909832-26-000051:204.0:215.0",
+       "0000909832-25-000033:221.0:227.0",
+       "0000909832-24-000029:252.0:252.0"
+      ]
+     }
+    ],
+    "JPM": [
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 1421,
+      "slots_1x": 3,
+      "slots_2x": 5,
+      "drawn": [
+       "0000019617-24-000611:2453.0:2461.0",
+       "0000019617-24-000611:1673.0:1678.0",
+       "0001628280-25-048859:1284.0:1301.0",
+       "0000019617-23-000524:2434.0:2440.0",
+       "0000019617-23-000524:2571.0:2595.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 1273,
+      "slots_1x": 2,
+      "slots_2x": 5,
+      "drawn": [
+       "0001628280-26-029344:908.0:908.0",
+       "0001628280-26-054343:948.0:953.0",
+       "0000019617-23-000524:864.0:871.0",
+       "0000019617-25-000615:813.0:821.0",
+       "0000019617-23-000524:332.0:334.0"
+      ]
+     }
+    ],
+    "NVDA": [
+     {
+      "form": "10-K",
+      "item_code": "I.1",
+      "eligible": 80,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0001045810-25-000023:104.0:107.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 175,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0001045810-26-000021:330.0:330.0",
+       "0001045810-25-000023:289.0:289.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 61,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0001045810-24-000029:502.0:507.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "IV.15",
+      "eligible": 169,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0001045810-25-000023:1199.0:1205.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 277,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0001045810-25-000230:188.0:191.0",
+       "0001045810-24-000316:197.0:198.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 170,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0001045810-23-000227:307.0:314.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "II.1A",
+      "eligible": 184,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0001045810-25-000209:462.0:465.0",
+       "0001045810-26-000075:497.0:498.0"
+      ]
+     }
+    ],
+    "PFE": [
+     {
+      "form": "10-K",
+      "item_code": "I.1",
+      "eligible": 137,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000078003-24-000039:239.0:246.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 126,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000078003-26-000026:399.0:400.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 173,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000078003-24-000039:743.0:746.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 413,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000078003-26-000026:1365.0:1366.0",
+       "0000078003-26-000026:1225.0:1233.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 507,
+      "slots_1x": 1,
+      "slots_2x": 3,
+      "drawn": [
+       "0000078003-26-000095:107.0:110.0",
+       "0000078003-24-000191:396.0:398.0",
+       "0000078003-24-000191:128.0:135.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 424,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000078003-25-000114:498.0:503.0",
+       "0000078003-26-000095:646.0:651.0"
+      ]
+     }
+    ],
+    "TGT": [
+     {
+      "form": "10-K",
+      "item_code": "I.1",
+      "eligible": 30,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-26-000016:61.0:75.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "I.1A",
+      "eligible": 71,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-26-000016:185.0:189.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.7",
+      "eligible": 68,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-24-000032:392.0:395.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "II.8",
+      "eligible": 131,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000027419-25-000018:704.0:708.0",
+       "0000027419-24-000032:664.0:670.0"
+      ]
+     },
+     {
+      "form": "10-K",
+      "item_code": "IV.15",
+      "eligible": 34,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-25-000018:804.1000:804.1000"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 74,
+      "slots_1x": 1,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-26-000022:131.0:131.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 125,
+      "slots_1x": 1,
+      "slots_2x": 2,
+      "drawn": [
+       "0000027419-24-000179:214.0:224.0",
+       "0000027419-25-000118:174.0:195.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "II.6",
+      "eligible": 18,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000027419-23-000052:285.0:286.0"
+      ]
+     }
+    ],
+    "XOM": [
+     {
+      "form": "10-Q",
+      "item_code": "I.1",
+      "eligible": 93,
+      "slots_1x": 2,
+      "slots_2x": 3,
+      "drawn": [
+       "0000034088-26-000067:147.0:171.0",
+       "0000034088-23-000056:75.0:77.0",
+       "0000034088-26-000093:147.0:168.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "I.2",
+      "eligible": 185,
+      "slots_1x": 3,
+      "slots_2x": 6,
+      "drawn": [
+       "0000034088-23-000056:132.0:133.0",
+       "0000034088-26-000093:527.0:536.0",
+       "0000034088-26-000093:305.0:334.0",
+       "0000034088-24-000029:168.0:177.0",
+       "0000034088-26-000067:231.0:253.0",
+       "0000034088-25-000042:247.0:259.0"
+      ]
+     },
+     {
+      "form": "10-Q",
+      "item_code": "II.6",
+      "eligible": 10,
+      "slots_1x": 0,
+      "slots_2x": 1,
+      "drawn": [
+       "0000034088-24-000050:316.0:324.0"
+      ]
+     }
+    ]
+   }
+  }
+ }
+}
