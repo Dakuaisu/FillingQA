@@ -571,3 +571,28 @@ per filing -- is a number for the parse-quality score in the validation step, no
 something to paper over. Much of it is genuinely unscaled (store counts,
 percentages). Phase 3's unit-scale accuracy by `scale_source` is what says
 whether the rest matters.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 5, companyfacts decisions taken while building
+
+Taken while building, each following from an earlier decision; all four
+accepted by the supervisor on the owner's behalf.
+
+1. **`xbrl_facts_unlinked.fiscal_year` nullable (migration 0004).** companyfacts
+   reports no `fy` for 618 facts in non-periodic forms (8-K, DEF 14A, S-3ASR,
+   S-8). Same reasoning as 0003: the column follows the source, and inventing a
+   year is the derivation finding #5 rejected. `xbrl_facts` stays NOT NULL, so a
+   linked fact without a year fails loudly. *Rejected:* skipping those facts,
+   which drops history the unlinked table exists to keep.
+2. **`is_comparative = fact.period_end < filing.period_end`.** PRD 6.5.2 says
+   "reported as a prior-year column" and gives no rule. This catches the prior
+   year in a 10-K and last year-end's balance in a 10-Q. Facts dated after the
+   period (cover-page share counts) are not comparative. Unlinked facts have no
+   filing row, so no flag.
+3. **Value drift is an error, not an update.** A re-run that finds a stored
+   fact's value changed in companyfacts raises. Overwriting would change the
+   ground truth under any eval already run against it (PRD 11.4).
+4. **All taxonomies are stored** (`us-gaap`, `dei`, `srt`, `ecd`, `ffd`), not only
+   us-gaap. `CURATED_CONCEPTS` selects later; filtering at load would decide now
+   what Phase 3 may ask about.

@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import time
 from collections.abc import Callable
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -171,8 +172,13 @@ class EdgarClient:
         tmp.replace(cache_path)
         return body
 
-    def fetch_json(self, url: str, cache_path: Path, *, refresh: bool = False) -> Any:
-        return json.loads(self.fetch_bytes(url, cache_path, refresh=refresh))
+    def fetch_json(
+        self, url: str, cache_path: Path, *, refresh: bool = False, exact: bool = False
+    ) -> Any:
+        """`exact` parses non-integer numbers as Decimal: companyfacts values feed
+        NUMERIC columns, and a float does not hold 7.46 exactly."""
+        body = self.fetch_bytes(url, cache_path, refresh=refresh)
+        return json.loads(body, parse_float=Decimal) if exact else json.loads(body)
 
     # ------------------------------------------------------------- endpoints
 
@@ -208,6 +214,7 @@ class EdgarClient:
             COMPANYFACTS_URL.format(cik=cik),
             self.cache_dir / "companyfacts" / f"CIK{cik}.json",
             refresh=refresh,
+            exact=True,
         )
 
     def download_document(self, url: str, dest: Path, *, refresh: bool = False) -> bytes:

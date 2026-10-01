@@ -11,23 +11,35 @@
 -- key_sanity.sql to test the key itself.
 --
 -- Reads both fact tables -- see docs/TRADEOFFS.md finding #3.
+--
+-- Groups on period_start and unit as well as period_end. Without period_start, a
+-- quarter and the year-to-date figure ending the same day count as two "values"
+-- of one fact -- finding #1's collision again -- and the dev slice reported 5,146
+-- restatements instead of 1,390 (2026-10-01).
+--
+-- Not yet a restatement count fit for the README: companyfacts drops the iXBRL
+-- `decimals` attribute, so one figure tagged exactly in a statement and rounded
+-- in a note (AAPL LongTermDebt 90,678M vs 90,700M) is indistinguishable here
+-- from a real restatement (TGT 2016 equity, 12,957M -> 12,965M). F-47.
 
 WITH all_facts AS (
-    SELECT cik, accession, concept, period_start, period_end, value
+    SELECT cik, accession, concept, unit, period_start, period_end, value
       FROM xbrl_facts
     UNION ALL
-    SELECT cik, accession, concept, period_start, period_end, value
+    SELECT cik, accession, concept, unit, period_start, period_end, value
       FROM xbrl_facts_unlinked
 )
 SELECT
     cik,
     concept,
+    unit,
+    period_start,
     period_end,
     count(DISTINCT value)     AS variants,
     count(DISTINCT accession) AS filings_reporting,
     min(value)                AS min_value,
     max(value)                AS max_value
 FROM all_facts
-GROUP BY cik, concept, period_end
+GROUP BY cik, concept, unit, period_start, period_end
 HAVING count(DISTINCT value) > 1
-ORDER BY variants DESC, cik, concept, period_end;
+ORDER BY variants DESC, cik, concept, period_end, period_start;

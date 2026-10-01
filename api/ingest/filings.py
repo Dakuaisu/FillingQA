@@ -21,7 +21,7 @@ from typing import Any
 
 import psycopg
 
-from api.config import data_dir
+from api.config import ConfigError, data_dir, sectors
 from api.ingest.edgar import EdgarClient
 
 FORM_TYPES = ("10-K", "10-Q")
@@ -204,25 +204,35 @@ def select_accessions(
     return selected
 
 
-def upsert_company(conn: psycopg.Connection, cik: str, ticker: str, submissions: dict) -> None:
-    """Register the company. `sector` is left NULL -- see note below.
+def sector_of(ticker: str) -> str:
+    """Fails rather than leaving NULL: an unlabelled company is a config error."""
+    try:
+        return sectors()[ticker.upper()]
+    except KeyError:
+        raise ConfigError(f"{ticker} has no sector in api/config.yaml") from None
 
-    PRD 4.4 assigns each company a sector for corpus-design reasons (four
-    sectors, two confusable pairs), but that is our label, not SEC data, and the
-    PRD names no source for it. Left NULL rather than guessed; SIC code and
-    description come straight from submissions and carry the real signal.
+
+def upsert_company(
+    conn: psycopg.Connection, cik: str, ticker: str, submissions: dict, sector: str
+) -> None:
+    """Register the company.
+
+    `sector` is our corpus-design label from api/config.yaml (PRD 4.4: four
+    sectors, two confusable pairs), not SEC data; `sic_code` carries SEC's own
+    classification alongside it, unmodified.
     """
     with conn.cursor() as cur:
         cur.execute(
             """
-            INSERT INTO companies (cik, ticker, name, sic_code)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO companies (cik, ticker, name, sic_code, sector)
+            VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (cik) DO UPDATE
                 SET ticker = EXCLUDED.ticker,
                     name = EXCLUDED.name,
-                    sic_code = EXCLUDED.sic_code
+                    sic_code = EXCLUDED.sic_code,
+                    sector = EXCLUDED.sector
             """,
-            (cik, ticker.upper(), submissions["name"], submissions.get("sic") or None),
+            (cik, ticker.upper(), submissions["name"], submissions.get("sic") or None, sector),
         )
 
 
@@ -279,7 +289,7 @@ def ingest_company(
     submissions = client.fetch_submissions(cik)
     assert_recent_covers_window(submissions, start)
 
-    upsert_company(conn, cik, ticker, submissions)
+    upsert_company(conn, cik, ticker, submissions, sector_of(ticker))
     filings, skipped = discover(submissions, cik, start)
 
     report = IngestReport(
@@ -307,7 +317,7 @@ def ingest_accessions(
     submissions = client.fetch_submissions(cik)
     filings = select_accessions(submissions, cik, wanted)
 
-    upsert_company(conn, cik, ticker, submissions)
+    upsert_company(conn, cik, ticker, submissions, sector_of(ticker))
     report = IngestReport(ticker=ticker.upper(), cik=cik, discovered=len(filings))
     _store(conn, client, filings, root, report)
     return report

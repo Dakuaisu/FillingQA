@@ -7,6 +7,7 @@ is tested exactly, and the fake sleep records delays instead of spending them.
 from __future__ import annotations
 
 import json
+from decimal import Decimal
 
 import httpx
 import pytest
@@ -274,3 +275,20 @@ def test_unknown_ticker_is_named_in_the_error(tmp_path):
     client, _ = make_client(handler, tmp_path)
     with pytest.raises(EdgarError, match="NOTATICKER"):
         client.resolve_cik("NOTATICKER")
+
+
+def test_companyfacts_values_are_parsed_exactly(tmp_path):
+    # Real AAPL row, accession 0000320193-25-000079: diluted EPS for FY2025.
+    body = (
+        b'{"facts": {"us-gaap": {"EarningsPerShareDiluted": {"units": {"USD/shares": '
+        b'[{"end": "2025-09-27", "val": 7.46}]}}}}}'
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=body)
+
+    client, _ = make_client(handler, tmp_path)
+    facts = client.fetch_companyfacts("320193")
+    val = facts["facts"]["us-gaap"]["EarningsPerShareDiluted"]["units"]["USD/shares"][0]["val"]
+    assert val == Decimal("7.46")
+    assert isinstance(val, Decimal)

@@ -312,3 +312,66 @@ tables with no scale = `mixed` + `untagd` (no caption and no tagged magnitude).
 COST `miss` fell from 24/13/13/13 to 2/2/2/2. Caption vs iXBRL: still 0
 disagreements. `parse_summary` unchanged; no snapshot re-blessed. `make test`:
 121 passed, 3 snapshots passed.
+
+## 2026-10-01 — Step 5: companyfacts ingestion; sector wiring (F-39)
+
+F-45 committed as `47260a5`.
+
+`api/ingest/xbrl_facts.py`: `flatten` turns companyfacts into one `Fact` per
+`facts/{taxonomy}/{concept}/units/{unit}` row, concept written `us-gaap:X` like an
+ix `name` so facts and spans join. Values in base units as reported, never
+rescaled. `load_companyfacts` raises on any key carrying two values in the
+payload, and on any stored fact whose value companyfacts has since changed -- ON
+CONFLICT DO NOTHING alone would hide that drift. Linked facts get
+`is_comparative = period_end < filing.period_end`. Wired into the ingest CLI after
+each company's filings, so facts can link to them.
+
+`EdgarClient.fetch_json(exact=True)` for companyfacts parses decimals as
+`Decimal`; plain `json.loads` would have stored 7.46 as a float.
+
+Profiled before loading (AAPL / COST / TGT): 25,135 / 24,426 / 25,319 facts over
+72 / 67 / 73 accessions. `fy` is null on 569 / 0 / 49 facts, all from 8-K, DEF
+14A, S-3ASR or S-8, none in the slice -> migration 0004 makes
+`xbrl_facts_unlinked.fiscal_year` nullable; `xbrl_facts` keeps NOT NULL. `fp`
+includes `Q4` (601 COST facts) and null, which the PRD's enumeration does not
+list. Taxonomies beyond us-gaap/dei: `srt`, `ecd`, `ffd`. **0 key conflicts**
+under the period_start-inclusive key across ~75k facts.
+
+Run 1: linked 1,186 / 1,287 / 1,408 (exactly the per-accession counts profiled:
+AAPL 427+203+273+283), unlinked 23,949 / 23,139 / 23,911. Run 2: 0 inserted,
+everything present. `companies.sector`: AAPL tech, COST retail, TGT retail;
+`sector_of` raises on a ticker with no label rather than writing NULL.
+
+`key_sanity.sql`: 50 rows, periods reported by up to 12 accessions -- only
+possible with accession in the key.
+
+`restatements.sql` bug: grouped on `(cik, concept, period_end)` only, so a quarter
+and the YTD figure ending the same day were two "values" -- 5,146 rows. Now
+groups on unit and period_start too: 1,390 rows. Still not a restatement count
+(F-47): TGT 2016 equity 12,957M -> 12,965M from the FY2018 10-K is a real
+restatement; AAPL LongTermDebt 90,678M vs 90,700M is one balance printed exactly
+and rounded, and companyfacts drops `decimals`.
+
+**Trap 2 cross-check.** For each linked fact, the filing's own non-dimensional
+iXBRL span with the same concept and period:
+
+    ticker accession              facts match mismat nospan
+    AAPL   0000320193-25-000079     427   427      0      0
+    AAPL   0000320193-26-000006     203   203      0      0
+    AAPL   0000320193-26-000013     273   273      0      0
+    AAPL   0000320193-26-000020     283   283      0      0
+    COST   0000909832-25-000101     489   477      0     12
+    COST   0000909832-25-000169     225   208      0     17
+    COST   0000909832-26-000029     289   272      0     17
+    COST   0000909832-26-000051     284   267      0     17
+    TGT    0000027419-25-000126     323   314      0      9
+    TGT    0000027419-26-000016     533   520      0     13
+    TGT    0000027419-26-000022     241   233      0      8
+    TGT    0000027419-26-000042     311   303      0      8
+
+3,780 match exactly in base units, 0 mismatch. The 101 `nospan` facts were
+checked in the raw XML: tagged only inside `ix:hidden` (shares authorized, par
+value, segment counts), which has no rendered position (F-48).
+
+Tests: `tests/unit/test_xbrl_facts.py` (11, real AAPL rows), one Decimal test in
+`test_edgar.py`. `make test`: 133 passed, 3 snapshots passed.

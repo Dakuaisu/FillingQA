@@ -57,6 +57,12 @@ def data_dir() -> Path:
 CORPUS_FILE = REPO_ROOT / "api" / "config.yaml"
 
 
+def sectors(path: Path = CORPUS_FILE) -> dict[str, str]:
+    """Ticker -> our corpus-design sector label (PRD 4.4), not SEC data."""
+    companies = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]["companies"]
+    return {c["ticker"].upper(): c["sector"] for c in companies}
+
+
 def dev_slice(path: Path = CORPUS_FILE) -> list[dict[str, str]]:
     """The dev slice as [{ticker, accession, form}], in file order."""
     corpus = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]

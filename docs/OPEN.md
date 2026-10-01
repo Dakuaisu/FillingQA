@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 23 |
-| RESOLVED | 23 |
-| **Total** | **46** |
+| OPEN | 25 |
+| RESOLVED | 24 |
+| **Total** | **49** |
 
 ---
 
@@ -22,7 +22,6 @@ carries the state.
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
 | F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures | Phase 3 | OPEN |
-| F-39 | `api/config.yaml` sector labels exist but nothing reads them; `companies.sector` is still NULL | Phase 1 step 5 | OPEN |
 
 ## Blocking Phase 2
 
@@ -35,6 +34,8 @@ carries the state.
 | ID | Finding | Status |
 |---|---|---|
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | OPEN |
+| F-47 | `restatements.sql` cannot yet give the README's restatement count: companyfacts drops iXBRL `decimals`, so a figure printed exactly in one place and rounded in another (AAPL LongTermDebt 90,678M vs 90,700M) counts like a real restatement (TGT 2016 equity 12,957M -> 12,965M). 1,390 groups on the slice | OPEN |
+| F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
 | F-07 | All seven gated thresholds have drifted between §11.2 prose and `thresholds.yaml` | OPEN |
 | F-08 | `faithfulness_pre` is undefined for Configs 1–4, yet §11.6 plots it there | OPEN |
@@ -64,6 +65,7 @@ carries the state.
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-46 | Some `layout` tables carry prose content, not scaffolding: TGT's critical audit matters and cybersecurity-oversight tables, AAPL's audit-matter tables. Phase 2 must chunk layout tables as prose rather than drop them | OPEN |
+| F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
 
 ## Resolved
 
@@ -71,7 +73,7 @@ carries the state.
 |---|---|---|---|
 | F-01 | `xbrl_facts` key collides on QTD vs YTD facts in Q2/Q3 10-Qs | `period_start` added to the key; `UNIQUE NULLS NOT DISTINCT` so instant facts still dedupe | 2026-08-30 |
 | F-02 | iXBRL offsets and chunk offsets are different coordinate systems; normalized text had nowhere to live | Extraction and flattening made one traversal; `filings.norm_path` added; verified 0 mismatches across 12 filings on an independent lxml check | 2026-08-30 |
-| F-03 | `companyfacts` returns accessions outside `filings`, violating the FK | `xbrl_facts_unlinked` staging table, kept for restatement history. **Schema only — not yet exercised; companyfacts ingestion is step 5** | 2026-08-30 |
+| F-03 | `companyfacts` returns accessions outside `filings`, violating the FK | `xbrl_facts_unlinked` staging table, kept for restatement history. Exercised 2026-10-01: 70,999 unlinked facts across 3 companies, restatement query reads both tables | 2026-08-30 |
 | F-04 | 10-Q Part I and Part II each have an Item 1 and Item 1A | `Section.part` tracked; `qualified_code` yields `I.1` vs `II.1`. Verified on 8 real 10-Qs | 2026-08-30 |
 | F-05 | `fiscal_year` cannot be read from submissions — no such field exists | Migration 0003 makes it nullable; populated at parse time from `dei:DocumentFiscalYearFocus`. Verified: TGT 10-K = FY2025 with `period_end` 2026-01-31 | 2026-08-30 |
 | F-06 | Corpus scope contradicted itself across Phases 1/2/3/5 and §11.4's freeze rule | Eval corpus is 8 companies × 3 years, frozen at end of Phase 2; the 3×1 dev slice is parser development only | 2026-08-30 |
@@ -92,6 +94,7 @@ carries the state.
 | F-44 | `make lint` failed: `ruff format --check` would reformat `tools/bridge.py` | `[tool.ruff.format] exclude = ["tools"]`; `ruff check` still covers it; file untouched. Verified: `23 files already formatted`. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | `classify()`: data iff some row holds two or more figures. TGT 10-K: 64 data / 186 layout, layout inspected by text (80 page footers, ~70 running headers, cover/signature/TOC). Split for all 12 filings in WORKLOG | 2026-10-01 |
 | F-45 | COST states units once per section, so the 500-char caption window found no scale for 13-24 iXBRL-scaled tables per COST filing | Caption, else the single magnitude `scale` on the table's tagged figures, else None; never section inheritance. `scale_source` on Table and Block. Mixed-magnitude tables stay None (AAPL 1, COST 2 per filing). Residual with no caption and no tagged magnitude, per filing: AAPL 10-K 4, 10-Qs 0/0/0; COST 10-K 12, 10-Qs 8/8/8; TGT 10-K 14, 10-Qs 9/8/9 (mostly genuinely unscaled: counts, percentages). AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-39 | `api/config.yaml` sector labels existed but nothing read them; `companies.sector` was NULL | `upsert_company` writes the label via `sector_of`, which raises on an unlabelled ticker. Verified: AAPL tech, COST retail, TGT retail | 2026-10-01 |
 
 ---
 
@@ -113,9 +116,12 @@ filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
 candidates, review them, and commit the resulting accessions under `corpus` in
 `api/config.yaml`. Ingest reads the list, never the window.
 
-**F-39 — sector labels.** Wire `api/config.yaml` into `upsert_company` so
-`companies.sector` is populated. Currently the file exists and nothing reads it,
-which is worse than not having written it.
+**F-47 — restatement count.** Separate rounding from restatement before the
+number is published: use the `decimals` on the filing's own ix spans for linked
+facts, or compare within a tolerance that lives in config, not code.
+
+**F-48 — hidden-only facts.** Exclude them from `xbrl_auto` generation or
+accept them into the human-labeling queue; at 2.6% either is affordable.
 
 **F-11 — source taxonomy.** Settle before generating any item. Carve
 `natural_phrasing` out via `tags`, decide whether it sits inside or outside the
