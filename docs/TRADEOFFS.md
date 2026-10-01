@@ -2081,6 +2081,12 @@ values-only accuracy is reported separately. A percent change earns nothing.
 denominator, and the excluded count is printed on every report that shows the
 metric. Parenthesized seeded answers ("(1,434)") match by magnitude.
 
+**Abstained numeric items** stay in the denominator as incorrect, and the
+abstention count among numeric items is reported beside the metric. F-09's
+answered-only rule is for faithfulness_pre, where the unit is a claim; it does
+not transfer to an item-level accuracy, where excluding abstentions would reward
+abstaining on hard numbers. The figure-count distribution is reported too.
+
 *Alternatives:* 0.5% as the gated number (credits rounded answers PRD 11.2 calls
 wrong); signed match (scores a correct magnitude as wrong over presentation,
 F-87); first figure only as the gated rule (brittle to answers that restate the
@@ -2124,10 +2130,33 @@ whatever list the generator receives (moves with `top_k` and the score floor).
 - The Phase 2 generator returns free text, no claims and no verdict: every
   result is `PASS` with `claims: []`, so numeric accuracy uses the counted
   free-text fallback until PRD 7.4's structured output exists.
-- Run output: `eval/runs/<run_id>.json` (report and per-item results). Not
-  git-ignored; whether dev runs are committed is open.
-- PARTIAL raises in the 2x2 until F-21 is placed.
+- Run output (amended before the first run): `eval/runs/<run_id>.meta.json`
+  (backend, models, freeze versions, dataset shas, item order),
+  `<run_id>.results.jsonl` (one record per item, appended and fsynced as it
+  completes), `<run_id>.errors.jsonl`, and `<run_id>.json` (the report). `--resume
+  RUN_ID` skips recorded items after checking backend, datasets and freeze
+  versions are unchanged; a call with no usable response (or a model other than
+  the requested one) halts with exit 1, the item unrecorded. Run files are
+  committed, not git-ignored; the code refuses to promote a dev run to a
+  baseline.
+- PARTIAL counts as answered in the 2x2 (F-21, entry below).
 
 *Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
 migration exists yet; JSON keeps the run reproducible without one); one column
 for all sources (PRD 11.2 forbids it).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: PARTIAL counts as answered in the abstention 2x2 (F-21)
+
+Decided by the supervisor. A PARTIAL verdict (PRD 7.5: supported claims only,
+with a partial-verification notice) lands in the "answered" column: on an
+unanswerable item it is a failure to abstain (a false answer), on an answerable
+one the user received an answer (not over-abstention). Its rate is reported as
+its own row. The conservative placement is the one that can score against the
+system. `eval/metrics/abstention.py` implements it, tested. The API response
+shape part of F-21 stays open for Phase 4.
+
+*Alternatives:* PARTIAL as abstained (an unanswerable item answered partially
+would score as correct abstention); a third column (the 2x2 stops being one, and
+false-answer rate stops counting partial answers).

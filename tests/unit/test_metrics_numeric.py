@@ -131,3 +131,5 @@ def test_aggregate_prints_exclusions_and_variants():
     assert a["n"] == 3 and a["excluded"] == {"unit_scale_unknown": 1}
     assert a["numeric_accuracy"] == pytest.approx(1 / 3)
     assert a["tolerant_0_5pct"] == pytest.approx(2 / 3)
+    assert a["abstained"] == 1  # stays in the denominator as incorrect (F-81)
+    assert a["figure_count_distribution"] == {"0": 1, "1": 2}

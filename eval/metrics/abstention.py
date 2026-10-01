@@ -1,8 +1,9 @@
 """The abstention 2x2 (PRD 11.2). Pure.
 
 Rows: should the system abstain (`expected_abstain`); columns: did it (verdict
-ABSTAIN) or did it answer (PASS). A PARTIAL verdict has no cell yet (F-21): it
-raises until its placement is decided.
+ABSTAIN) or did it answer (PASS or PARTIAL). PARTIAL counts as answered (F-21):
+on an unanswerable item it is a failure to abstain, on an answerable one the user
+received an answer. Its rate is reported on its own.
 """
 
 from __future__ import annotations
@@ -18,19 +19,20 @@ class TwoByTwo:
     abstained_answerable: int  # over-abstention
     answered_unanswerable: int  # false answer, the worst outcome
     abstained_unanswerable: int
+    partial: int = 0  # PARTIAL verdicts, already counted as answered
 
 
 def two_by_two(rows: list[tuple[bool, str]]) -> TwoByTwo:
     """`rows`: (expected_abstain, verdict) per item."""
     c = {"aa": 0, "ba": 0, "au": 0, "bu": 0}
+    partial = 0
     for expected, verdict in rows:
         if verdict not in VERDICTS:
             raise ValueError(f"unknown verdict {verdict!r}")
-        if verdict == "PARTIAL":
-            raise NotImplementedError("PARTIAL has no cell in the 2x2 yet (F-21)")
+        partial += verdict == "PARTIAL"
         abstained = verdict == "ABSTAIN"
         c[("b" if abstained else "a") + ("u" if expected else "a")] += 1
-    return TwoByTwo(c["aa"], c["ba"], c["au"], c["bu"])
+    return TwoByTwo(c["aa"], c["ba"], c["au"], c["bu"], partial)
 
 
 def _div(a: int, b: int) -> float | None:
@@ -46,7 +48,9 @@ def rates(t: TwoByTwo) -> dict:
     f1 = None
     if precision is not None and recall is not None and precision + recall:
         f1 = 2 * precision * recall / (precision + recall)
+    total = unanswerable + answerable
     return {
+        "partial_rate": _div(t.partial, total),
         "false_answer_rate": _div(t.answered_unanswerable, unanswerable),
         "over_abstention_rate": _div(t.abstained_answerable, answerable),
         "abstention_precision": precision,

@@ -68,10 +68,31 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int) -> dict:
         "development_run": meta["backend"] in DEV_BACKENDS,
         "k": k,
         "served_models": dict(Counter(r["model_served"] for r in results)),
+        "anomalies": anomalies(results),
         "columns": {
             **{s: _slice(items, rs, k) if rs else None for s, rs in by_source.items()},
             "aggregate": _slice(items, results, k),
         },
+    }
+
+
+def anomalies(results: list[dict]) -> dict:
+    """Things that look off, reported as findings: empty retrieval or answer, slow items."""
+    lat = sorted(r["latency_s"] for r in results if r.get("latency_s") is not None)
+    p50 = lat[len(lat) // 2] if lat else None
+    return {
+        "empty_retrieval": [r["item_id"] for r in results if not r["retrieved"]],
+        "empty_answer": [r["item_id"] for r in results if not (r["answer"]["text"] or "").strip()],
+        "latency_s": {
+            "p50": p50,
+            "p95": lat[int(0.95 * (len(lat) - 1))] if lat else None,
+            "max": lat[-1] if lat else None,
+        },
+        "slow_items_over_3x_p50": [
+            (r["item_id"], r["latency_s"])
+            for r in results
+            if p50 and r.get("latency_s") is not None and r["latency_s"] > 3 * p50
+        ],
     }
 
 
@@ -101,8 +122,10 @@ def format_report(report: dict) -> str:
             ("  within 0.5% (reported)", lambda c: c["numeric"]["tolerant_0_5pct"]),
             ("  comparison values only", lambda c: c["numeric"]["comparison_values_only"]),
             ("  sign agreement", lambda c: c["numeric"]["sign_agreement"]),
+            ("  abstained (in denominator)", lambda c: c["numeric"]["abstained"]),
             ("  free-text fallback used", lambda c: c["numeric"]["fallback_used"]),
             ("  mean figures per answer", lambda c: c["numeric"]["mean_figure_count"]),
+            ("PARTIAL rate", lambda c: c["abstention"]["partial_rate"]),
             ("False-answer rate", lambda c: c["abstention"]["false_answer_rate"]),
             ("Over-abstention rate", lambda c: c["abstention"]["over_abstention_rate"]),
             ("Abstention F1", lambda c: c["abstention"]["abstention_f1"])]  # fmt: skip
@@ -111,4 +134,8 @@ def format_report(report: dict) -> str:
     for name, get in rows:
         cells = [_fmt(get(cols[c])) if cols[c] else "-" for c in COLUMNS]
         lines.append(f"{name:32}" + "".join(f"{x:>14}" for x in cells))
+    agg = cols["aggregate"]["numeric"]
+    lines.append(f"figures per numeric answer (aggregate): {agg['figure_count_distribution']}")
+    lines.append(f"excluded from numeric accuracy (aggregate): {agg['excluded']}")
+    lines.append(f"anomalies: {report['anomalies']}")
     return "\n".join(lines)

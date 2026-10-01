@@ -55,7 +55,28 @@ def test_every_report_is_stamped_and_dev_runs_carry_the_banner():
     assert "excluded unit_scale_unknown" in dev and "served models" in dev
 
 
-def test_partial_verdict_is_refused_until_placed():
-    bad = [{**RESULTS[0], "verdict": "PARTIAL"}]
-    with pytest.raises(NotImplementedError, match="F-21"):
-        build_report(ITEMS, bad, meta("claude_cli"), 10)
+def test_partial_verdict_counts_as_answered():
+    r = build_report(ITEMS, [{**RESULTS[0], "verdict": "PARTIAL"}], meta("claude_cli"), 10)
+    assert r["columns"]["aggregate"]["abstention"]["partial_rate"] == 1.0
+
+
+def test_results_are_appended_per_item_and_a_failed_call_halts(tmp_path):
+    from api.generate.claude_cli import CliError
+    from scripts.eval_run import read_jsonl, run_items
+
+    results, errors = tmp_path / "r.jsonl", tmp_path / "e.jsonl"
+
+    def answer(iid):
+        if iid == "x3":
+            raise CliError("claude CLI error (error_during_execution): 'usage limit'")
+        return {"item_id": iid, "latency_s": 1.0}
+
+    assert run_items(["x1", "x2", "x3", "x4"], answer, results, errors) == 1
+    assert [r["item_id"] for r in read_jsonl(results)] == ["x1", "x2"]  # x3 unrecorded
+    (err,) = read_jsonl(errors)
+    assert err["item_id"] == "x3" and "usage limit" in err["error"] and err["at"]
+    # Resume: only what is not recorded is answered again.
+    done = {r["item_id"] for r in read_jsonl(results)}
+    todo = [i for i in ["x1", "x2", "x3", "x4"] if i not in done]
+    assert run_items(todo, lambda iid: {"item_id": iid, "latency_s": 1.0}, results, errors) == 0
+    assert [r["item_id"] for r in read_jsonl(results)] == ["x1", "x2", "x3", "x4"]

@@ -13,6 +13,7 @@ years before it reads a figure.
 from __future__ import annotations
 
 import re
+from collections import Counter
 from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -158,6 +159,7 @@ class ItemScore:
     sign_agree: bool | None = None  # None when the matched figure states no sign
     figure_count: int = 0
     fallback: bool = False
+    abstained: bool = False
     matched: list[str] = field(default_factory=list)
 
 
@@ -168,7 +170,8 @@ def score_item(item: dict, answer: dict) -> ItemScore:
     if refs is None:
         return s
     if answer.get("abstained"):
-        return s  # in the denominator, not correct; zero words never count (F-09)
+        s.abstained = True  # in the denominator, not correct; zero words never count (F-81)
+        return s
     figs, s.fallback = answer_figures(answer)
     if not figs and all(r.value == 0 for r in refs) and ZERO_WORDS.search(answer.get("text") or ""):
         figs = [Fig(Decimal(0), False, "zero word")]
@@ -207,6 +210,10 @@ def aggregate(scores: list[ItemScore]) -> dict:
         "comparison_values_only": rate(comp),
         "sign_agreement": rate(signs),
         "sign_agreement_n": len(signs),
+        "abstained": sum(s.abstained for s in scored),
         "fallback_used": sum(s.fallback for s in scored),
         "mean_figure_count": rate([s.figure_count for s in scored]),
+        "figure_count_distribution": {
+            str(k): v for k, v in sorted(Counter(s.figure_count for s in scored).items())
+        },
     }
