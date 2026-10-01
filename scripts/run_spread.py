@@ -2,9 +2,11 @@
 
 python -m scripts.run_spread RUN_A RUN_B
 
-Prints, per metric and source column, run B minus run A, and per item: whether
-the retrieved list is identical and whether numeric correctness flips. The spread
-is reported noise, never a reason to move a threshold.
+Prints, per metric and source column, run A, run B and B minus A, and per item:
+whether the retrieved list is identical and whether numeric correctness flips.
+The spread is reported noise, never a reason to move a threshold. When the runs'
+pipelines or ef_search differ the table is labelled direction only: a difference
+between them is not attributed to any one component.
 """
 
 from __future__ import annotations
@@ -23,6 +25,7 @@ METRICS = [
     ("Recall@10", lambda c: c["recall@10"]),
     ("MRR", lambda c: c["mrr"]),
     ("nDCG@10", lambda c: c["ndcg@10"]),
+    ("Sufficiency post-rerank", lambda c: c.get("sufficiency@10_post_rerank")),
     ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
     ("  strict first figure", lambda c: c["numeric"]["strict_first_figure"]),
     ("  within 0.5%", lambda c: c["numeric"]["tolerant_0_5pct"]),
@@ -41,15 +44,24 @@ def main() -> None:
     keys = ("backend", "model_requested", "datasets", "parser_version", "chunker_version", "k")
     same = {k: a.get(k) == b.get(k) for k in keys}
     print(f"run A {a_id} vs run B {b_id}; same config: {same}")
+    cfg = {r: (d.get("pipeline", "config_1_dense"), d.get("hnsw_ef_search"))
+           for r, d in ((a_id, a), (b_id, b))}  # fmt: skip
+    for r, (pl, ef) in cfg.items():
+        efs = ef if ef is not None else "not recorded (pgvector default 40, F-109)"
+        print(f"  {r}: pipeline {pl}, hnsw ef_search {efs}")
+    if cfg[a_id] != cfg[b_id]:
+        print("DIRECTION ONLY: the pipelines differ; no difference is attributed to a component")
     print(f"served models A {a['served_models']} B {b['served_models']}")
-    print(f"{'metric (B - A)':30}" + "".join(f"{c:>14}" for c in COLUMNS))
+    print(f"{'metric: A / B (B - A)':30}" + "".join(f"{c:>24}" for c in COLUMNS))
     for name, get in METRICS:
         cells = []
         for c in COLUMNS:
             ca, cb = a["columns"].get(c), b["columns"].get(c)
             va, vb = (get(ca) if ca else None), (get(cb) if cb else None)
-            cells.append("-" if va is None or vb is None else f"{vb - va:+.3f}")
-        print(f"{name:30}" + "".join(f"{x:>14}" for x in cells))
+            fa, fb = ("-" if v is None else f"{v:.3f}" for v in (va, vb))
+            diff = "" if va is None or vb is None else f" ({vb - va:+.3f})"
+            cells.append("-" if va is None and vb is None else f"{fa} / {fb}{diff}")
+        print(f"{name:30}" + "".join(f"{x:>24}" for x in cells))
     items = {it["item_id"]: it for p in CANDIDATES for it in read_jsonl(p)}
     ra = {r["item_id"]: r for r in read_jsonl(RUNS / f"{a_id}.results.jsonl")}
     rb = {r["item_id"]: r for r in read_jsonl(RUNS / f"{b_id}.results.jsonl")}
