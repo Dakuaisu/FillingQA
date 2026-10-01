@@ -4551,3 +4551,19 @@ chunks printing a table item's figure, items by count: 0: 21, 1: 7, 2: 12, 3: 3,
 4: 2, 5: 2. No email address or "/Users/" in any of the four new files.
 
 Gold-exclusion globs in `seed_draw`, `seed_supply` and `seed_run` now take the 200 auto candidates only (the seeded file would otherwise widen the exclusion). `python -m scripts.seed_draw` then reproduces `draw_v2.json` byte-identical (sha256 1c23e9f6...): a reproducibility check, not a re-draw.
+
+## 2026-10-01 — Metrics as pure functions (nothing computed on answers)
+
+`eval/metrics/retrieval.py` (Sufficiency@k, Recall@k, Precision@k, MRR, nDCG@k
+per F-77), `eval/metrics/numeric.py` (F-81: new extractor masking dates, period
+labels, form names, item numbers, period lengths and bare years; claim figure
+objects first; exact at printed precision, magnitude; strict, tolerant, sign,
+values-only reported), `eval/metrics/abstention.py` (2x2; PARTIAL raises, F-21).
+Tests: `test_metrics_retrieval.py` (7), `test_metrics_numeric.py` (27, including
+F-97's "Unknown ... Q2 FY2026 ... March 28, 2026" answer, which yields no figure),
+`test_metrics_abstention.py` (3). `make test`: 387 passed.
+
+The reference reader alone, run over the candidates' reference answers (ad hoc;
+no answer was scored):
+
+    reference figures parsed: {'xbrl': 160, 'comparison': 40, 'seeded:scored': 37, 'seeded:unit_scale_unknown': 10, 'seeded:not numeric': 36}; disagreements with the manifests: 0

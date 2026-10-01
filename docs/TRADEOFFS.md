@@ -1976,6 +1976,8 @@ scripts.seed_build` from the committed raw files.
   its extracted figures (all, and those within 5%), and the stratum go in the
   manifest (`eval/candidates/llm_seeded_manifest.json`), not the item.
 - `dataset_version`: `llm_seeded_candidates_v1` (config `eval_seeded_items`).
+  Accepted by the supervisor. These candidate versions are pre-freeze labels: at
+  PRD 11.1 Stage 6 the frozen dataset gets a single `golden_v1`.
   The instruction was "the same as the existing 200 candidates", but those carry
   two values (`xbrl_candidates_v1`, `comparison_candidates_v1`); this follows
   their shared pattern. `eval_seeding` is frozen, so the value lives in a new
@@ -2000,10 +2002,10 @@ inflates recall).
 
 ---
 
-## 2026-10-01 — AUTONOMOUS DECISION - owner to review: nDCG over alternative evidence sets (F-77) -- PROPOSED, not applied
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: nDCG over alternative evidence sets (F-77) -- decided
 
-Status: proposed to the supervisor; no metric code exists and nothing has been
-computed against the candidates.
+Status: proposed by the builder, adopted by the supervisor as written. F-77
+resolves when the code and its tests exist (`eval/metrics/retrieval.py`).
 
 **Definition.** nDCG@k is computed per evidence set and the item takes the best:
 
@@ -2035,44 +2037,69 @@ Gold is not shaped around the metric: the evidence-set counts in F-77 stand.
 
 ---
 
-## 2026-10-01 — AUTONOMOUS DECISION - owner to review: numeric accuracy normalization (F-81) -- PROPOSED, not applied
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: numeric accuracy normalization (F-81) -- decided
 
-Status: proposed to the supervisor; no metric code; nothing computed.
+Status: proposed by the builder, adopted by the supervisor with changes. F-81
+resolves when the code and its tests exist (`eval/metrics/numeric.py`).
 
 **Scope.** Items whose reference answer is a figure: `xbrl_numeric` (160),
 `comparison` (40), `llm_seeded` table items (47, `kind:factual`). Synthesis and
 abstain items are outside it.
 
-**Extraction and normalization** (one extractor, shared with the no-context
-filter's figure reader once F-97 is fixed in a new version): every figure in the
-answer, scaled by its own scale word ("$7,286 million", "$7.286 billion"),
-percentages and per-share figures as plain values. Zero words ("none", "nil",
-"zero", a dash) read as 0, so "none" or "-" matches a "$0 million" reference.
+**Figures from the answer.** From the generator's claim `figure` objects first
+(PRD 7.4 makes them required on numeric claims; value scaled by its `unit`);
+free-text extraction is the fallback, and every use of it is counted. The
+free-text extractor is new code, not the frozen no-context one: it does not read
+figures out of period labels, dates, form names or item numbers ("Q2", "FY2026",
+"10-Q", "March 28, 2026", "Item 7"), so F-97's defect cannot exist in the
+scorer; tested on those strings before any run. Each figure is scaled by its own
+scale word; percentages and per-share figures are plain values.
 
-**Match: exact at the reference's printed precision, magnitude only.**
-- Exact, as PRD 11.2 writes it: "$7.286 billion" matches 7,286 million; "$7.3
-  billion" does not. A 0.5%-tolerant accuracy is reported beside it, not gated.
-  The asymmetry with the no-context filter is deliberate: there 0.5% drops
-  items, here exactness withholds credit; both err against inflating the score.
-- Magnitude only: "a benefit of $28 million", "(28)" and "-$28 million" all
-  match a "-$28 million" reference; "net cash used of $691 million" matches
-  "-$691 million". Sign presentation differs by filing (F-87) and is carried in
-  words code cannot read reliably. Sign is reported separately as sign
-  agreement over answers that state a sign explicitly (minus or parentheses);
-  sign errors in words fall to answer correctness (the LLM judge).
-- An item is correct if any extracted figure matches. The count of figures per
-  answer is reported, to watch for answers that list many numbers.
-- **Comparison items:** correct only if the difference and both values match
-  (all three figures in the reference). Values-only accuracy is reported
-  separately. A percent change earns nothing: the reference has none.
-- **Scale unknown or mixed** (`unit_scale_unknown`, 10 seeded items): left out
-  of the denominator until review records the scale, and counted in the report.
-  Parenthesized seeded answers ("(1,434)") match by magnitude.
+**Gated figure: exact at the reference's printed precision, magnitude only.**
+The answer's figure is rounded to the reference's last printed digit (in base
+units) and must equal it: "$7.286 billion" and "$7,286.4 million" match a
+"$7,286 million" reference; "$7.3 billion" does not. Magnitude only: "a benefit
+of $28 million", "(28)" and "-$28 million" all match a "-$28 million" reference
+(sign presentation differs by filing, F-87). Reported beside it, never gated:
+0.5%-tolerant accuracy, and sign agreement over answers that state a sign
+explicitly (minus or parentheses). The asymmetry with the no-context filter is
+deliberate: there 0.5% drops items, here exactness withholds credit; both err
+against inflating the score.
 
-*Alternatives:*
-- *0.5% tolerance as the gated number* (consistent with 6.5.4/7.5 and the
-  no-context filter): credits rounded answers PRD 11.2 calls wrong.
-- *Signed match:* scores a correct magnitude as wrong over presentation (F-87).
-- *First figure only:* brittle to answers that restate the question's period
-  or context before the figure.
-- *Comparison: difference only:* credits a right difference from wrong values.
+**Which figure.** The gated rule is "any figure matches". Reported beside it:
+the strict variant, where only the answer's first claim figure (or first
+extracted figure) is compared, and the figure count per answer. If the two
+diverge materially on a run, that is a finding, not a reason to pick the higher.
+
+**Zero.** "none", "nil", "zero" or a dash count as 0 only when the reference is 0
+and the item was answered, not abstained (F-09).
+
+**Comparison items:** correct only if both values and the difference match;
+values-only accuracy is reported separately. A percent change earns nothing.
+
+**Scale unknown** (`unit_scale_unknown`, 10 seeded items): out of the
+denominator, and the excluded count is printed on every report that shows the
+metric. Parenthesized seeded answers ("(1,434)") match by magnitude.
+
+*Alternatives:* 0.5% as the gated number (credits rounded answers PRD 11.2 calls
+wrong); signed match (scores a correct magnitude as wrong over presentation,
+F-87); first figure only as the gated rule (brittle to answers that restate the
+question's period or context first); comparison by difference only (credits a
+right difference from wrong values); reusing the no-context extractor (carries
+F-97 into scoring).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: retrieval metrics are measured post-fusion, pre-rerank (F-13)
+
+As OPEN's recommendation for F-13 already states. Retrieval metrics
+(Sufficiency@k, Recall@k, MRR, nDCG@k, Precision@k) are computed on the ordered
+post-fusion, pre-rerank list, stored per item as `retrieved` (PRD 8's
+`eval_results.retrieved`). Reranker quality is measured separately as
+`sufficiency@k_post_rerank` on the post-rerank list, stored beside it. Until a
+reranker exists (Phase 4) the stored list is the dense top-k of the baseline and
+the post-rerank field is empty. Why: a reranker that drops gold chunks would
+otherwise show up as a retrieval regression, and one that only reorders would
+hide recall lost at fusion; measuring at one fixed point keeps the two apart.
+*Alternatives:* post-rerank only (mixes reranker and retriever errors);
+whatever list the generator receives (moves with `top_k` and the score floor).
