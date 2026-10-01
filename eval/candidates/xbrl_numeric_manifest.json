@@ -1,0 +1,109 @@
+{
+ "dataset_version": "xbrl_candidates_v1",
+ "candidates_file": "eval/candidates/xbrl_numeric_candidates.jsonl",
+ "candidates_sha256": "19fb355d8134c9504a654282354c13e92a453c450e67b87c9e9a25a9aaf638e7",
+ "eval_sampler": {
+  "seed": 20261001,
+  "total": 160,
+  "per_ticker": {
+   "COST": 20,
+   "TGT": 20,
+   "JPM": 20,
+   "BAC": 20,
+   "AAPL": 20,
+   "NVDA": 20,
+   "XOM": 20,
+   "PFE": 20
+  },
+  "dataset_version": "xbrl_candidates_v1",
+  "spot_check_n": 16
+ },
+ "parser_version": "d58d26e08e5a",
+ "chunker_version": "964f77f6f9cb",
+ "items": 160,
+ "validation_failures": {},
+ "not_generated": [],
+ "items_per_template": {
+  "dur_figure": 27,
+  "dur_filing": 14,
+  "dur_how_much": 29,
+  "dur_record": 8,
+  "dur_report": 18,
+  "ins_balance": 16,
+  "ins_carry": 11,
+  "ins_figure": 10,
+  "ins_filing": 12,
+  "ins_report": 15
+ },
+ "period_kinds": {
+  "annual": 35,
+  "instant": 64,
+  "quarter": 29,
+  "ytd": 32
+ },
+ "form_split_per_ticker": {
+  "COST": {
+   "10-K": 12,
+   "10-Q": 8
+  },
+  "TGT": {
+   "10-K": 8,
+   "10-Q": 12
+  },
+  "JPM": {
+   "10-Q": 20
+  },
+  "BAC": {
+   "10-K": 9,
+   "10-Q": 11
+  },
+  "AAPL": {
+   "10-K": 11,
+   "10-Q": 9
+  },
+  "NVDA": {
+   "10-K": 9,
+   "10-Q": 11
+  },
+  "XOM": {
+   "10-Q": 20
+  },
+  "PFE": {
+   "10-K": 11,
+   "10-Q": 9
+  }
+ },
+ "evidence_sets_per_item": {
+  "1": 54,
+  "2": 45,
+  "3": 23,
+  "4": 11,
+  "5": 9,
+  "6": 13,
+  "7": 2,
+  "8": 1,
+  "10": 2
+ },
+ "spot_check": {
+  "n": 16,
+  "item_ids": [
+   "xbrl_0031",
+   "xbrl_0032",
+   "xbrl_0033",
+   "xbrl_0040",
+   "xbrl_0044",
+   "xbrl_0061",
+   "xbrl_0082",
+   "xbrl_0087",
+   "xbrl_0104",
+   "xbrl_0107",
+   "xbrl_0110",
+   "xbrl_0115",
+   "xbrl_0130",
+   "xbrl_0146",
+   "xbrl_0158",
+   "xbrl_0160"
+  ],
+  "reviewed": false
+ }
+}

@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 38 |
-| RESOLVED | 38 |
-| **Total** | **76** |
+| OPEN | 39 |
+| RESOLVED | 41 |
+| **Total** | **80** |
 
 ---
 
@@ -21,7 +21,7 @@ carries the state.
 
 | ID | Finding | Blocks | Status |
 |---|---|---|---|
-| F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures Decision 2026-10-01: `xbrl_auto` draws on non-dimensional facts only, and gold chunks count only spans on non-dimensional contexts; stays OPEN until the generator enforces it under test | Phase 3 | OPEN |
+| F-77 | PRD 11.2 defines neither `rel_i` nor IDCG over alternative evidence sets. With union-as-relevant, an item with 8 single-chunk alternatives scores nDCG@10 of about 0.25 (1 / 3.95) for one gold chunk at rank 1 and nothing else; sufficiency gets easier as alternatives grow. Candidates have 1 to 10 sets per item (manifest). Settle the definition when metrics are built, before any run; gold is not shaped around it | Phase 3 metrics | OPEN |
 
 ## Blocking Phase 2
 
@@ -43,9 +43,10 @@ carries the state.
 | F-11 | `xbrl_auto` is 49% of the eval set, not the 39% §11.2 argues from; `natural_phrasing` has no home in the `source` enum | Decided 2026-10-01 (TRADEOFFS): three `source` values; natural_phrasing is a `question_type` with `source = handwritten`, inside the handwritten gate, also reported as its own row feeding `natural_phrasing_gap`; the share is printed from the frozen dataset. Carve-out from the gate rejected. Stays OPEN until the share is printed from a real dataset | OPEN |
 | F-73 | Facts whose period key cannot be an auto item need PRD 6.5.3 review: 445 facts in `eval/review_queue.csv` with a reason -- gt3 226, mixed_key 63, value_differs 156 (the 61 F-75 keys) (`python -m scripts.xbrl_pool`). OWNER-BLOCKED | OPEN |
 | F-74 | Line items with facts for a filer but no eligible key, so the sampler cannot draw them (`python -m scripts.xbrl_pool`): JPM and NVDA net income (all gt3); BAC net income and noninterest income, PFE revenue (gt3 + value_differs); COST net income (gt3 + mixed_key + comparative_only). None is emptied by rule (c) alone | OPEN |
-| F-75 | Of 2,553 (cik, concept, period) keys, 1,234 appear in more than one parsed accession and 61 differ in value -- always a later filing's comparative vs the original (TGT, BAC, NVDA EPS, PFE) | Decided 2026-10-01 (TRADEOFFS): one item per key; eligible = one value, all facts 1-3, an own-period filing; gold = every exact-value chunk in every accession; label from the own-period filing's dei labels. The 61 go to review, OWNER-BLOCKED. Stays OPEN until the generator enforces it under test | OPEN |
-| F-76 | PRD 8's `eval_items.question_type` comment lists `lookup\|comparison\|synthesis\|table\|unanswerable\|adversarial`; PRD 11.1's Type column has `xbrl_numeric` and `natural_phrasing` and no `lookup`. `eval/generate/schema.py` follows 11.1; no migration yet | OPEN |
-| F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Decided 2026-10-01: gold is exact-value spans only; buckets on exact-value gold. On the final list, 68 of 4,335 facts have a smaller gold set, no bucket changes, none left without gold. Stays OPEN until the generator enforces it under test (TRADEOFFS) | OPEN |
+| F-76 | PRD 8's `eval_items.question_type` comment lists `lookup\|comparison\|synthesis\|table\|unanswerable\|adversarial`; PRD 11.1's Type column has `xbrl_numeric` and `natural_phrasing` and no `lookup`. `eval/generate/schema.py` follows 11.1; no migration yet. Also: `difficulty` has no assignment rule in the PRD and no metric reads it; xbrl_numeric items take `easy` from PRD 11.1's example | OPEN |
+| F-78 | `xbrl_fact_id` is a DB serial (`xbrl_facts.fact_id`), filled with `ON CONFLICT DO NOTHING`; the stored ids have gaps (43,122 rows over 1..58,979), so a rebuild from the freeze would not reproduce them and the candidates' `xbrl_fact_id` would point elsewhere. Not verified by a rebuild; not fixed | OPEN |
+| F-79 | PRD 11.1's 10% spot-check of XBRL items: `eval/candidates/xbrl_numeric_spot_check.md`, 16 of 160 candidates (seed 20261001), with each gold chunk's text. Nothing marked reviewed. OWNER-BLOCKED | OPEN |
+| F-80 | NVDA income tax, six months ended 2026-07-26 (0001045810-26-000075): the exact-value spans print "23,400" (scale 6) and "23.4" (scale 9), so `format_value` reports the key instead of picking a scale. The only such key among the 1,713 eligible; not drawn | OPEN |
 | F-60 | Appendix A's `generation.temperature: 0.0` cannot be applied: `Messages.create` at the pinned `anthropic==1.11.0` takes no sampling parameters. Generation is therefore not pinned to greedy decoding, which matters for PRD 11.4 run-to-run comparability and for the LLM judge's kappa in Phase 3. Resolution path: generation runs without a temperature (nothing else to send; no SDK downgrade, no seed exists). Phase 3's runner records `response.model` per item and repeats the fast subset at least 3 times on identical config, reporting the spread of every gated metric beside its value; kappa on one fixed run against the owner's hand labels. The spread is reported noise, never a reason to widen a threshold; a threshold inside it is an F-07 input. TRADEOFFS, Phase 2 baseline | OPEN |
 | F-48 | 101 of 3,881 linked facts (2.6%) are tagged only in `ix:hidden` (shares authorized, par value, segment counts), so they have no span and no gold chunk; PRD 6.5.3 routes them to human labeling Measured on the frozen 90: 476 linked facts with no visible non-dimensional span, across 33 concepts (preferred/common share counts, segment counts, zero write-offs ...), none among the 28 listed tags (`python -m scripts.concept_coverage`: human-label queue 0). Queue: `eval/human_label_queue.csv`. Labeling OWNER-BLOCKED | OPEN |
 | F-13 | `sufficiency@10` has no defined measurement point — post-rerank vs post-fusion | OPEN |
@@ -86,7 +87,7 @@ carries the state.
 | F-26 | PRD §4.4 says four sectors but its company table describes PFE as "Pharma" | OPEN |
 | F-33 | 4–5 word-form numbers per filing ("one", "two") don't parse | OPEN |
 | F-49 | companyfacts `fp` carries `Q4` (601 facts) and null (618), contradicting PRD 6.5.2's `'FY' \| 'Q1' \| 'Q2' \| 'Q3'`; all in `xbrl_facts_unlinked` -- 0 linked facts have either | OPEN |
-| F-71 | BAC's 10-K Item 7 and 8 heading tables carry a "Table of Contents" cell that is not an in-document link, so it stays in the section title and every BAC 10-K Item 7/8 chunk's context header ends "... Table of Contents". Found on the frozen corpus's retrieval check; cosmetic, embedded Measured scope over the 90's stored chunks: BAC 10-K Items 7 and 8 only -- 0000070858-24-000122 II.7 245 / II.8 370, -25-000139 II.7 242 / II.8 358, -26-000157 II.7 242 / II.8 365; 1,822 chunks in 3 filings. Item 7's title also keeps the "Bank of America Corporation and Subsidiaries" prefix. Left as a known residual of the freeze, named in its notes; the cheap fix window closes when the first gold evidence set is written (TRADEOFFS) | OPEN |
+| F-71 | BAC's 10-K Item 7 and 8 heading tables carry a "Table of Contents" cell that is not an in-document link, so it stays in the section title and every BAC 10-K Item 7/8 chunk's context header ends "... Table of Contents". Found on the frozen corpus's retrieval check; cosmetic, embedded Measured scope over the 90's stored chunks: BAC 10-K Items 7 and 8 only -- 0000070858-24-000122 II.7 245 / II.8 370, -25-000139 II.7 242 / II.8 358, -26-000157 II.7 242 / II.8 365; 1,822 chunks in 3 filings. Item 7's title also keeps the "Bank of America Corporation and Subsidiaries" prefix. Left as a known residual of the freeze, named in its notes; the cheap fix window closes when the first gold evidence set is written (TRADEOFFS) Window closed 2026-10-01 when the first gold was written: 15 of the 326 distinct gold chunks in the 160 candidates carry the header, in 9 candidates, 5 of which have no other evidence set | OPEN |
 | F-58 | The F-54 navigation rule drops one content block: TGT 10-K Item 15's list item "•Notes to Consolidated Financial Statements" (block 826), whose only text is a link sharing its target with seven "See accompanying Notes..." sentences, and which has no full stop. No span overlaps it. Measured, not tuned | OPEN |
 | F-52 | A table with no label column (TGT 10-K "Net Sales" chart: `$107.4 | $106.6 | $104.8`) puts its first value column in the label slot, so "2023 (53 weeks)" is missing from `fiscal_periods`. Markdown alignment is still right. 1 of 404 tables (AAPL's exhibit indexes look similar but correctly use exhibit numbers as row labels) | OPEN |
 
@@ -132,6 +133,9 @@ carries the state.
 | F-69 | Content floors measured on four filers quarantined faithful parses: BAC's and PFE's Item 7A point into Item 7 (217 / 289 chars) | The check is redefined by what it is for: `parser.stub_max_chars: 1000`; 10-K Items 1, 1A, 7 and 10-Q I.1, I.2 must not be stubs; 7A and 8 may be, and are listed per filing. Set after measuring all 96: no must-not-be-stub Item between 500 and 5,000 chars. Result: 90 parsed, BAC x3 and PFE x3 admitted, JPM x3 and XOM x3 quarantined on Item 7 alone; the 84 previously chunked filings unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 | F-42 | The eval corpus was a window relative to the run date; a raw-byte hash is not a filing's identity | Accession list committed as of 2026-10-01 (96 filings, pinned CIKs, F-62); frozen in `api/corpus_freeze.yaml`: 90 parsed with `(accession, text_sha256, parser_version)`, 6 quarantined with reason and finding (F-66, F-70), per-ticker 10-K/10-Q counts, F-58 referenced. `python -m scripts.verify_freeze`: 96 verified, 0 mismatches; exits 1 on any difference (tested by altering one hash) | 2026-10-01 |
 | F-15 | `CURATED_CONCEPTS` named in PRD 6.5.3 yields near-zero items for JPM and BAC | `eval/concepts.yaml`: 26 line items, 28 tags -- all 19 named concepts, 7 bank supplements chosen by PRD 6.5.3's analyst-relevance criterion, and two variants used only by filers with no fact under the named tag. On the frozen 90 (`python -m scripts.concept_coverage`): 4,335 facts, 4,051 in the 1-3 bucket, 284 in >3, 0 in 0; every ticker supplied, JPM and XOM by 10-Qs only. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts, segment/product breakdowns, not company-level figures | Gold excludes dimensional spans in `eval/generate/gold.select_gold`, which the candidate generator goes through; tested on a real AAPL net-income span at the same value on an equity-statement context (`tests/unit/test_gold.py`). 479 facts have such a same-value dimensional span in a chunk | 2026-10-01 |
+| F-72 | PRD 6.5.3 keys gold chunks on `(accession, concept, context)`, so a rounded mention of a fact (PFE "$201 billion" for total assets 201,131 million) counted as gold | Gold is exact-value spans only, in `select_gold`, which the candidate generator goes through; tested on the real PFE spans (`tests/unit/test_gold.py`) | 2026-10-01 |
+| F-75 | Of 2,553 (cik, concept, period) keys, 1,234 appear in more than one parsed accession and 61 differ in value | One item per key, eligibility (a)-(c), gold over every accession, label from the own-period filing's dei labels: enforced by `build_pool` / `build_items` under test (`test_pool.py`, `test_xbrl_items.py`). The 61 stay in review (F-73) | 2026-10-01 |
 
 ---
 
@@ -140,7 +144,7 @@ carries the state.
 Kept separate from the tables so the tables stay scannable.
 
 **F-32 — dimensional contexts.** Record `is_dimensional` on every context (done)
-and require Phase 3's auto-generation to filter on it. A segment revenue line is
+and require Phase 3's auto-generation to filter on it (done: `select_gold`, tested). A segment revenue line is
 not "revenue"; templating a question from one produces a wrong answer with a
 correct-looking citation.
 
@@ -160,9 +164,10 @@ captured now, by decision.
 **F-48 — hidden-only facts.** Exclude them from `xbrl_auto` generation or
 accept them into the human-labeling queue; at 2.6% either is affordable.
 
-**F-11 — source taxonomy.** Settle before generating any item. Carve
-`natural_phrasing` out via `tags`, decide whether it sits inside or outside the
-handwritten gate, and recompute §11.2's share from actual generated counts.
+**F-11 — source taxonomy.** Settled 2026-10-01 (TRADEOFFS): three `source`
+values; `natural_phrasing` is a `question_type` with `source = handwritten`,
+inside the handwritten gate and also reported as its own row; carving it out of
+the gate was rejected. Remaining: print §11.2's share from the frozen dataset.
 
 **F-13 — sufficiency measurement point.** Store the post-fusion, pre-rerank
 ordered list in `eval_results.retrieved` and compute sufficiency / recall / MRR /
@@ -181,9 +186,8 @@ items only, and never publish it without `answer_rate` beside it.
 to CI, or accept same-family judging and state it in the README next to the
 figure.
 
-**F-15 — curated concepts.** Derive `eval/concepts.yaml` empirically via
-`scripts/concept_coverage.py` once companyfacts is loaded, with per-sector
-supplements for the banks.
+**F-15 — curated concepts.** Done 2026-10-01: `eval/concepts.yaml`, measured by
+`scripts/concept_coverage.py`, with bank supplements.
 
 **F-20 — natural_phrasing_gap.** Define the formula in Appendix B — which metric,
 against which comparison population — before it can be gated.

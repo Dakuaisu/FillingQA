@@ -3161,3 +3161,76 @@ Tests: `tests/unit/test_pool.py` on `tests/fixtures/xbrl_pool_rows.json` (234
 real rows, `python -m scripts.xbrl_pool --write-fixture`, covering all five
 categories), `tests/unit/test_item_schema.py` on PRD 11.1's example item.
 `make test`: 259 passed.
+
+## 2026-10-01 — Large evidence sets listed; xbrl_numeric candidates generated
+
+The 18 eligible keys with 10 or more evidence sets (ad hoc over `build_pool`;
+accession and exact-value chunks per accession):
+
+    eligible keys with >= 10 evidence sets: 18
+      TGT   stockholders_equity              ..2024-02-03 own 10-K sets 17: 0000027419-24-000032 2, 0000027419-24-000129 3, 0000027419-24-000152 3, 0000027419-24-000179 3, 0000027419-25-000018 2, 0000027419-25-000101 1, 0000027419-25-000118 1, 0000027419-25-000126 1, 0000027419-26-000016 1
+      AAPL  stockholders_equity              ..2023-09-30 own 10-K sets 16: 0000320193-23-000106 2, 0000320193-24-000006 2, 0000320193-24-000069 2, 0000320193-24-000081 2, 0000320193-24-000123 3, 0000320193-25-000008 1, 0000320193-25-000057 1, 0000320193-25-000073 1, 0000320193-25-000079 2
+      BAC   credit_loss_allowance            ..2023-12-31 own 10-K sets 16: 0000070858-24-000122 2, 0000070858-24-000156 2, 0000070858-24-000208 2, 0000070858-24-000280 2, 0000070858-25-000139 3, 0000070858-25-000200 1, 0000070858-25-000268 1, 0000070858-25-000405 1, 0000070858-26-000157 2
+      TGT   stockholders_equity              ..2025-02-01 own 10-K sets 15: 0000027419-25-000018 2, 0000027419-25-000101 3, 0000027419-25-000118 3, 0000027419-25-000126 3, 0000027419-26-000016 2, 0000027419-26-000022 1, 0000027419-26-000042 1
+      AAPL  stockholders_equity              ..2024-09-28 own 10-K sets 14: 0000320193-24-000123 2, 0000320193-25-000008 2, 0000320193-25-000057 2, 0000320193-25-000073 2, 0000320193-25-000079 3, 0000320193-26-000006 1, 0000320193-26-000013 1, 0000320193-26-000020 1
+      NVDA  stockholders_equity              ..2024-01-28 own 10-K sets 14: 0001045810-24-000029 2, 0001045810-24-000124 2, 0001045810-24-000264 2, 0001045810-24-000316 2, 0001045810-25-000023 2, 0001045810-25-000116 1, 0001045810-25-000209 1, 0001045810-25-000230 1, 0001045810-26-000021 1
+      BAC   credit_loss_allowance            ..2024-12-31 own 10-K sets 12: 0000070858-25-000139 2, 0000070858-25-000200 2, 0000070858-25-000268 2, 0000070858-25-000405 2, 0000070858-26-000157 2, 0000070858-26-000249 1, 0000070858-26-000394 1
+      NVDA  stockholders_equity              ..2025-01-26 own 10-K sets 12: 0001045810-25-000023 2, 0001045810-25-000116 2, 0001045810-25-000209 2, 0001045810-25-000230 2, 0001045810-26-000021 2, 0001045810-26-000052 1, 0001045810-26-000075 1
+      COST  stockholders_equity              ..2024-09-01 own 10-K sets 11: 0000909832-24-000049 1, 0000909832-24-000079 2, 0000909832-25-000015 2, 0000909832-25-000033 2, 0000909832-25-000101 1, 0000909832-25-000169 1, 0000909832-26-000029 1, 0000909832-26-000051 1
+      AAPL  cash_and_equivalents             ..2023-09-30 own 10-K sets 10: 0000320193-23-000106 2, 0000320193-24-000006 2, 0000320193-24-000069 2, 0000320193-24-000081 2, 0000320193-24-000123 2
+      AAPL  cash_and_equivalents             ..2024-09-28 own 10-K sets 10: 0000320193-24-000123 2, 0000320193-25-000008 2, 0000320193-25-000057 2, 0000320193-25-000073 2, 0000320193-25-000079 2
+      COST  long_term_debt_noncurrent           ..2023-09-03 own 10-K sets 10: 0000909832-23-000042 2, 0000909832-23-000065 2, 0000909832-24-000017 2, 0000909832-24-000029 2, 0000909832-24-000049 2
+      COST  long_term_debt_noncurrent           ..2024-09-01 own 10-K sets 10: 0000909832-24-000049 2, 0000909832-24-000079 2, 0000909832-25-000015 2, 0000909832-25-000033 2, 0000909832-25-000101 2
+      NVDA  inventory                        ..2024-01-28 own 10-K sets 10: 0001045810-24-000029 2, 0001045810-24-000124 2, 0001045810-24-000264 2, 0001045810-24-000316 2, 0001045810-25-000023 2
+      NVDA  inventory                        ..2025-01-26 own 10-K sets 10: 0001045810-25-000023 2, 0001045810-25-000116 2, 0001045810-25-000209 2, 0001045810-25-000230 2, 0001045810-26-000021 2
+      NVDA  long_term_debt_noncurrent           ..2024-01-28 own 10-K sets 10: 0001045810-24-000029 2, 0001045810-24-000124 2, 0001045810-24-000264 2, 0001045810-24-000316 2, 0001045810-25-000023 2
+      PFE   inventory                        ..2023-12-31 own 10-K sets 10: 0000078003-24-000039 2, 0000078003-24-000107 2, 0000078003-24-000166 2, 0000078003-24-000191 2, 0000078003-25-000054 2
+      PFE   inventory                        ..2024-12-31 own 10-K sets 10: 0000078003-25-000054 2, 0000078003-25-000114 2, 0000078003-25-000138 2, 0000078003-25-000150 2, 0000078003-26-000026 2
+
+Gold rule moved to `eval/generate/gold.select_gold`; `classify_facts` keeps
+dimensional spans (flagged) and calls it. Re-run: `concept_coverage` and
+`xbrl_pool` output byte-identical to the committed runs; both queue files
+unchanged. (A first attempt looked spans up by date objects against string keys:
+every fact came out 0-gold. Caught by the diff, fixed before anything was
+committed.) Facts with a same-value dimensional span in a chunk: 479.
+
+Generator over every eligible key, not only the draw (ad hoc):
+
+    all 1713 eligible keys: period kinds {'annual': 162, 'instant': 557, 'quarter': 547, 'ytd': 447}
+    keys the generator would report, not generate: 1 {"value: own filing's exact-value spans print scales [6, 9]": 1}
+    units: {'USD': 1583, 'USD/shares': 130} own scales: {(6,): 1582, (0,): 115, (None,): 3, (0, None): 12, (6, 9): 1}
+
+The one key reported (F-80):
+
+    NVDA income_tax 2026-01-26 2026-07-26 0001045810-26-000075 23400000000 [('0001045810-26-000075:45.0:45.0', '23,400'), ('0001045810-26-000075:273.0:281.0', '23.4')] (6, 9)
+
+Two wording gaps found on the way and fixed before the final run: Costco's
+12-week quarters (84 / 168 / 252 days) were first rejected as not month-length
+and are now worded in weeks; Pfizer's 88- and 179-day periods (fixture rows, not
+drawn) needed the month ranges widened. The draw did not change (seed 20261001,
+no re-draw).
+
+F-71 residual in the candidates' gold (ad hoc over the candidates and `chunks`):
+
+    distinct gold chunks in the 160 candidates: 326; with an F-71 'Table of Contents' context header: 15
+    candidates with at least one such gold chunk: 9; whose every evidence set is one: 5
+
+`xbrl_fact_id`: a rebuild from the freeze was not run. `xbrl_facts.fact_id` is a
+serial filled with `ON CONFLICT DO NOTHING`, and the stored ids run 1..58,979
+over 43,122 rows (`SELECT min(fact_id), max(fact_id), count(*)`), so a fresh
+load would number them differently: F-78, not fixed.
+
+`python -m scripts.xbrl_candidates`:
+
+    items: 160 (drawn 160); not generated: 0
+    validation failures: 0
+    items per template: {'dur_figure': 27, 'dur_filing': 14, 'dur_how_much': 29, 'dur_record': 8, 'dur_report': 18, 'ins_balance': 16, 'ins_carry': 11, 'ins_figure': 10, 'ins_filing': 12, 'ins_report': 15}
+    period kinds: {'annual': 35, 'instant': 64, 'quarter': 29, 'ytd': 32}
+    form split per ticker (10-K/10-Q): COST 12/8, TGT 8/12, JPM 0/20, BAC 9/11, AAPL 11/9, NVDA 9/11, XOM 0/20, PFE 11/9
+    form split: {'10-K': 60, '10-Q': 100}
+    evidence sets per item: {1: 54, 2: 45, 3: 23, 4: 11, 5: 9, 6: 13, 7: 2, 8: 1, 10: 2}
+    filing-scoped items: 26, all single-accession: True
+    spot-check (eval/candidates/xbrl_numeric_spot_check.md): 16 items, 33 gold chunks
+    wrote eval/candidates/xbrl_numeric_candidates.jsonl sha256 19fb355d8134c950
+
+A second run left all three files' sha256 unchanged. `make test`: 272 passed; `make lint` clean.

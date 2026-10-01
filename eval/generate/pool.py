@@ -35,6 +35,7 @@ class PoolKey:
     fiscal_year: int
     fiscal_quarter: int | None
     evidence: tuple[tuple[str, tuple[str, ...]], ...]  # (accession, exact-value chunk ids)
+    own_scales: tuple[int | None, ...]  # ix scale of the own filing's exact-value spans
 
     @property
     def key(self) -> tuple:
@@ -46,11 +47,11 @@ class PoolKey:
 
     @property
     def gold_accessions(self) -> list[str]:
-        return [acc for acc, _ in self.evidence]
+        return evidence_for(self)[1]
 
     @property
     def gold_evidence_sets(self) -> list[list[str]]:
-        return [[c] for c in sorted({c for _, chunks in self.evidence for c in chunks})]
+        return evidence_for(self)[0]
 
 
 @dataclass
@@ -109,6 +110,7 @@ def build_pool(rows: list[dict]) -> Pool:
                 fiscal_year=o["filing_fiscal_year"],
                 fiscal_quarter=o["filing_fiscal_quarter"],
                 evidence=tuple((a, tuple(sorted(c))) for a, c in sorted(evidence.items())),
+                own_scales=tuple(o["exact_scales"]),
             )
         )
     return pool
@@ -152,3 +154,9 @@ def sample(eligible: list[PoolKey], seed: int, total: int, per_ticker: dict[str,
                     taken.append(keys.pop())
         draw.extend(taken)
     return draw
+
+
+def evidence_for(key: PoolKey, accession: str | None = None) -> tuple[list[list[str]], list[str]]:
+    """(gold_evidence_sets, gold_accessions): every accession, or one filing's only."""
+    ev = [(a, c) for a, c in key.evidence if accession is None or a == accession]
+    return [[c] for c in sorted({c for _, cs in ev for c in cs})], [a for a, _ in ev]

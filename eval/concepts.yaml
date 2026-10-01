@@ -14,34 +14,35 @@
 # - variants: only where a filer tags the named line under another tag.
 # No retrieval result was consulted.
 
+# `label`: the line item's name in xbrl_auto question text (eval/templates.yaml).
 line_items:
-  - {id: revenue, group: named, tag: "us-gaap:Revenues",
+  - {id: revenue, label: "total revenue", group: named, tag: "us-gaap:Revenues",
      variant: "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax"}
-  - {id: cost_of_revenue, group: named, tag: "us-gaap:CostOfRevenue",
+  - {id: cost_of_revenue, label: "cost of revenue", group: named, tag: "us-gaap:CostOfRevenue",
      variant: "us-gaap:CostOfGoodsAndServicesSold"}
-  - {id: gross_profit, group: named, tag: "us-gaap:GrossProfit"}
-  - {id: operating_income, group: named, tag: "us-gaap:OperatingIncomeLoss"}
-  - {id: net_income, group: named, tag: "us-gaap:NetIncomeLoss"}
-  - {id: research_and_development, group: named, tag: "us-gaap:ResearchAndDevelopmentExpense"}
-  - {id: sga, group: named, tag: "us-gaap:SellingGeneralAndAdministrativeExpense"}
-  - {id: eps_diluted, group: named, tag: "us-gaap:EarningsPerShareDiluted"}
-  - {id: total_assets, group: named, tag: "us-gaap:Assets"}
-  - {id: current_assets, group: named, tag: "us-gaap:AssetsCurrent"}
-  - {id: total_liabilities, group: named, tag: "us-gaap:Liabilities"}
-  - {id: stockholders_equity, group: named, tag: "us-gaap:StockholdersEquity"}
-  - {id: cash_and_equivalents, group: named, tag: "us-gaap:CashAndCashEquivalentsAtCarryingValue"}
-  - {id: inventory, group: named, tag: "us-gaap:InventoryNet"}
-  - {id: accounts_receivable, group: named, tag: "us-gaap:AccountsReceivableNetCurrent"}
-  - {id: long_term_debt_noncurrent, group: named, tag: "us-gaap:LongTermDebtNoncurrent"}
-  - {id: operating_cash_flow, group: named, tag: "us-gaap:NetCashProvidedByUsedInOperatingActivities"}
-  - {id: capex, group: named, tag: "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment"}
-  - {id: share_repurchases, group: named, tag: "us-gaap:PaymentsForRepurchaseOfCommonStock"}
-  - {id: net_interest_income, group: bank_supplement, tag: "us-gaap:InterestIncomeExpenseNet"}
-  - {id: noninterest_income, group: bank_supplement, tag: "us-gaap:NoninterestIncome"}
-  - {id: noninterest_expense, group: bank_supplement, tag: "us-gaap:NoninterestExpense"}
-  - {id: credit_loss_allowance, group: bank_supplement,
+  - {id: gross_profit, label: "gross profit", group: named, tag: "us-gaap:GrossProfit"}
+  - {id: operating_income, label: "operating income", group: named, tag: "us-gaap:OperatingIncomeLoss"}
+  - {id: net_income, label: "net income", group: named, tag: "us-gaap:NetIncomeLoss"}
+  - {id: research_and_development, label: "research and development expense", group: named, tag: "us-gaap:ResearchAndDevelopmentExpense"}
+  - {id: sga, label: "selling, general and administrative expense", group: named, tag: "us-gaap:SellingGeneralAndAdministrativeExpense"}
+  - {id: eps_diluted, label: "diluted earnings per share", group: named, tag: "us-gaap:EarningsPerShareDiluted"}
+  - {id: total_assets, label: "total assets", group: named, tag: "us-gaap:Assets"}
+  - {id: current_assets, label: "total current assets", group: named, tag: "us-gaap:AssetsCurrent"}
+  - {id: total_liabilities, label: "total liabilities", group: named, tag: "us-gaap:Liabilities"}
+  - {id: stockholders_equity, label: "total stockholders' equity", group: named, tag: "us-gaap:StockholdersEquity"}
+  - {id: cash_and_equivalents, label: "cash and cash equivalents", group: named, tag: "us-gaap:CashAndCashEquivalentsAtCarryingValue"}
+  - {id: inventory, label: "inventories", group: named, tag: "us-gaap:InventoryNet"}
+  - {id: accounts_receivable, label: "accounts receivable, net", group: named, tag: "us-gaap:AccountsReceivableNetCurrent"}
+  - {id: long_term_debt_noncurrent, label: "long-term debt, excluding the current portion", group: named, tag: "us-gaap:LongTermDebtNoncurrent"}
+  - {id: operating_cash_flow, label: "net cash provided by operating activities", group: named, tag: "us-gaap:NetCashProvidedByUsedInOperatingActivities"}
+  - {id: capex, label: "payments for property, plant and equipment", group: named, tag: "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment"}
+  - {id: share_repurchases, label: "payments for repurchases of common stock", group: named, tag: "us-gaap:PaymentsForRepurchaseOfCommonStock"}
+  - {id: net_interest_income, label: "net interest income", group: bank_supplement, tag: "us-gaap:InterestIncomeExpenseNet"}
+  - {id: noninterest_income, label: "noninterest income", group: bank_supplement, tag: "us-gaap:NoninterestIncome"}
+  - {id: noninterest_expense, label: "noninterest expense", group: bank_supplement, tag: "us-gaap:NoninterestExpense"}
+  - {id: credit_loss_allowance, label: "allowance for credit losses on loans", group: bank_supplement,
      tag: "us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest"}
-  - {id: deposits, group: bank_supplement, tag: "us-gaap:Deposits"}
-  - {id: pretax_income, group: bank_supplement,
+  - {id: deposits, label: "total deposits", group: bank_supplement, tag: "us-gaap:Deposits"}
+  - {id: pretax_income, label: "income before income taxes", group: bank_supplement,
      tag: "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"}
-  - {id: income_tax, group: bank_supplement, tag: "us-gaap:IncomeTaxExpenseBenefit"}
+  - {id: income_tax, label: "income tax expense", group: bank_supplement, tag: "us-gaap:IncomeTaxExpenseBenefit"}

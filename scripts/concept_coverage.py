@@ -30,6 +30,7 @@ from lxml import etree
 from api.config import REPO_ROOT
 from api.db import connect
 from api.parse.ixbrl import parse_contexts
+from eval.generate.gold import Span, select_gold
 from scripts.write_freeze import FREEZE_FILE
 
 CONCEPTS_FILE = REPO_ROOT / "eval" / "concepts.yaml"
@@ -56,12 +57,11 @@ def resolve_tags(line_items: list[dict], tagged: set[tuple[str, str]], tickers: 
     return out
 
 
-def classify_facts():
-    """Every listed fact with its resolved line item and gold chunks; the one loader.
+def load_spans_and_facts():
+    """(line_items, tickers, spans, facts) for the frozen parsed accessions.
 
-    Returns (line_items, tickers, resolved, rows, unresolved). `rows` are the facts
-    under the tag their filer resolves to; `unresolved` the facts under a listed
-    tag the filer does not resolve to (kept for the two-revenue-tag check).
+    `spans` maps (accession, concept, period_start, period_end) to every span of
+    a listed tag on that period, dimensional ones flagged, in table order.
     """
     line_items = load_line_items()
     record = yaml.safe_load(FREEZE_FILE.read_text(encoding="utf-8"))
@@ -70,7 +70,7 @@ def classify_facts():
     all_tags = {i["tag"] for i in line_items} | {
         i["variant"] for i in line_items if i.get("variant")
     }
-    spans: dict[tuple, list[tuple]] = defaultdict(list)  # key -> [(chunk_id, value, raw_text)]
+    spans: dict[tuple, list[Span]] = defaultdict(list)
     with connect() as conn:
         for accession, raw_path in conn.execute(
             "SELECT accession, raw_path FROM filings WHERE accession = ANY(%s)", (list(parsed),)
@@ -80,18 +80,20 @@ def classify_facts():
                     Path(raw_path).read_bytes(), etree.XMLParser(recover=True, huge_tree=True)
                 )
             )
-            for concept, ref, chunk_id, value, raw_text in conn.execute(
-                "SELECT concept, context_ref, chunk_id, value, raw_text FROM xbrl_spans "
-                "WHERE accession = %s AND concept = ANY(%s)",
+            for concept, ref, chunk_id, value, raw_text, scale in conn.execute(
+                "SELECT concept, context_ref, chunk_id, value, raw_text, scale FROM xbrl_spans "
+                "WHERE accession = %s AND concept = ANY(%s) ORDER BY span_id",
                 (accession, list(all_tags)),
             ).fetchall():
                 ctx = contexts.get(ref)
-                if ctx is None or ctx.is_dimensional:
-                    continue  # F-32: a segment figure is not the company-level fact
+                if ctx is None:
+                    continue
                 start, end = (
                     (None, ctx.instant) if ctx.instant else (ctx.period_start, ctx.period_end)
                 )
-                spans[(accession, concept, start, end)].append((chunk_id, value, raw_text))
+                spans[(accession, concept, start, end)].append(
+                    Span(chunk_id, value, raw_text, scale, ctx.is_dimensional)
+                )
         facts = conn.execute(
             """
             SELECT x.fact_id, x.cik, x.accession, c.ticker, f.form_type, x.concept,
@@ -99,24 +101,37 @@ def classify_facts():
                    f.fiscal_year, f.fiscal_quarter
               FROM xbrl_facts x JOIN filings f USING (accession) JOIN companies c ON c.cik = f.cik
              WHERE x.accession = ANY(%s) AND x.concept = ANY(%s)
+             ORDER BY x.fact_id
             """,
             (list(parsed), list(all_tags)),
         ).fetchall()
+    return line_items, tickers, spans, facts
+
+
+def classify_facts():
+    """Every listed fact with its resolved line item and gold chunks; the one loader.
+
+    Returns (line_items, tickers, resolved, rows, unresolved). `rows` are the facts
+    under the tag their filer resolves to; `unresolved` the facts under a listed
+    tag the filer does not resolve to (kept for the two-revenue-tag check). Gold
+    is `eval.generate.gold.select_gold`.
+    """
+    line_items, tickers, spans, facts = load_spans_and_facts()
     resolved = resolve_tags(line_items, {(f[3], f[5]) for f in facts}, tickers)
     by_tag = {(t, tag): item_id for (item_id, t), (tag, _) in resolved.items()}
     rows, unresolved = [], []
-    for fid, cik, acc, ticker, form, concept, start, end, value, unit, comp, fy, fp in facts:
+    for fid, cik, acc, ticker, form, concept, start, end, value, unit, comp, fy, fq in facts:
         period = (start.isoformat() if start else None, end.isoformat())
-        found = spans.get((acc, concept, *period), [])
-        exact = [(cid, raw) for cid, v, raw in found if cid and v == value]
-        gold = sorted({cid for cid, _ in exact})
+        sel = select_gold(value, spans.get((acc, concept, *period), []))
         row = {
             "fact_id": fid, "cik": cik, "accession": acc, "ticker": ticker, "form": form,
             "line_item": by_tag.get((ticker, concept)), "concept": concept, "period": period,
             "value": value, "unit": unit, "is_comparative": comp,
-            "filing_fiscal_year": fy, "filing_fiscal_quarter": fp,
-            "gold": gold, "bucket": bucket(len(gold)), "exact_spans": exact,
-            "prd_gold_count": len({cid for cid, _, _ in found if cid}), "has_span": bool(found),
+            "filing_fiscal_year": fy, "filing_fiscal_quarter": fq,
+            "gold": list(sel.gold), "bucket": bucket(len(sel.gold)),
+            "exact_spans": [(s.chunk_id, s.raw_text) for s in sel.exact],
+            "exact_scales": sorted({s.scale for s in sel.exact}, key=lambda x: (x is None, x)),
+            "prd_gold_count": sel.prd_key_count, "has_span": sel.has_span,
         }  # fmt: skip
         (rows if row["line_item"] else unresolved).append(row)
     return line_items, tickers, resolved, rows, unresolved

@@ -1,0 +1,35 @@
+# xbrl_numeric surface forms (PRD 6.5.3, extended: TRADEOFFS). A line item uses
+# the five forms of its period type -- `duration` (annual, three-month,
+# year-to-date) or `instant` (balance as of a date) -- so every line item has
+# five forms. The draw's seeded RNG picks one per item; the form id goes in tags.
+#
+# Placeholders: {company}; {label} (eval/concepts.yaml); {period}, the own-period
+# filing's dei label ("fiscal 2024", "the second quarter of fiscal 2024", "the
+# first two quarters of fiscal 2024", "the end of fiscal 2024"); {dates}, worded
+# from period_start/period_end ("the three months ended August 3, 2024"); {date},
+# an instant's date; {filing}, the own-period filing ("fiscal 2024 10-K").
+# scope `filing`: the question names the filing, so gold is that filing only.
+
+company_names:
+  COST: Costco
+  TGT: Target
+  JPM: JPMorgan Chase
+  BAC: Bank of America
+  AAPL: Apple
+  NVDA: NVIDIA
+  XOM: Exxon Mobil
+  PFE: Pfizer
+
+forms:
+  duration:
+    - {id: dur_report, scope: corpus, text: "What did {company} report as its {label} for {period}?"}
+    - {id: dur_how_much, scope: corpus, text: "How much {label} did {company} report for {dates}?"}
+    - {id: dur_figure, scope: corpus, text: "{company} {label}, {period}: what was the figure?"}
+    - {id: dur_record, scope: corpus, text: "What amount of {label} did {company} record in {period}?"}
+    - {id: dur_filing, scope: filing, text: "According to its {filing}, what figure did {company} report for {label} in {dates}?"}
+  instant:
+    - {id: ins_report, scope: corpus, text: "What did {company} report as its {label} as of {date}?"}
+    - {id: ins_carry, scope: corpus, text: "How much did {company} carry in {label} at {period}?"}
+    - {id: ins_figure, scope: corpus, text: "{company} {label} at {period}: what was the figure?"}
+    - {id: ins_balance, scope: corpus, text: "What was the balance of {company}'s {label} on {date}?"}
+    - {id: ins_filing, scope: filing, text: "According to its {filing}, what figure did {company} report for {label} as of {date}?"}

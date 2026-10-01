@@ -246,3 +246,6 @@ eval_sampler:
     NVDA: 20
     XOM: 20
     PFE: 20
+  # xbrl_numeric candidates (scripts/xbrl_candidates.py). Not a golden_* file.
+  dataset_version: xbrl_candidates_v1
+  spot_check_n: 16          # PRD 11.1: spot-check 10% of XBRL items

@@ -1351,3 +1351,73 @@ tickers); per-fact sampling (repeats keys, F-75).
 - **Round-robin order:** per ticker, keys shuffled within each stratum and the
   strata order shuffled, both from one seeded `random.Random`; input sorted first
   so the draw does not depend on row order (tested).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the 1-3 rule stays per fact, per filing; no per-form split
+
+**1-3 rule.** PRD 6.5.3's loop is per `(accession, concept, context)`, and its
+reason for review is a value repeating inside one filing. Rule (b) of F-75
+already applies it to every filing carrying a key. The size of the union over
+filings counts how many later filings reprint the period, not ambiguity: 378 of
+1,713 eligible keys have more than 3 evidence sets, the 18 largest listed in
+WORKLOG.
+
+*Alternatives:*
+- *Cap the union at 3.* Sends 378 keys to review, selected by how often a period
+  is reprinted: year-end balances and annual figures first, PRD 11.1's own
+  example among them (AAPL inventory, 8 sets across 5 filings). Biases the pool
+  and cuts the 10-K supply further.
+- *Own-filing-only gold.* Rejected under F-75: scores an exact comparative-column
+  hit as a miss.
+
+How metrics score many alternative sets is undefined in PRD 11.2 (F-77). It is
+settled when metrics are built; gold is not shaped around it.
+
+**No per-form split.** The PRD sets none, and form is already a stratum, which
+is why the draw is 60/160 from 10-Ks against 276/1,713 in the pool. A quota could
+not hold anyway: JPM and XOM have no parsed 10-K (F-66, F-70). A split chosen
+after seeing the draw would be tuning the dataset: the seed stays 20261001 and
+there is no re-draw. The per-ticker form split is recorded in the candidates
+manifest.
+
+*Alternatives:* a per-form quota in config; a draw proportional to the pool.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_numeric candidates (templates, values, fields)
+
+- **Gold** comes from one pure function, `eval/generate/gold.select_gold`
+  (non-dimensional, exact value, in a chunk), which the loader calls; tested on
+  committed real span rows. *Alternative:* keep the rule inline in the script
+  (untested).
+- **Templates extend PRD 6.5.3's four annual-only forms.** 100 of the 160 keys
+  are quarterly. `eval/templates.yaml` has five forms per period type --
+  `duration` (annual, quarter, year-to-date) and `instant` -- so every line item
+  has five; one per type names the filing (`scope: filing`) and takes gold from
+  that filing only. The seeded RNG picks the form; its id is a tag.
+  - Period label: the own-period filing's dei label ("fiscal 2024", "the second
+    quarter of fiscal 2024", "the first two quarters of fiscal 2024", "the end of
+    fiscal 2024"). Year-to-date is worded in quarters, which is true for every
+    filer.
+  - Dates: from `period_start`/`period_end`. Month wording for month-length
+    periods (85-98, 175-189, 262-280 days); otherwise whole weeks, as Costco
+    prints its 12-week quarters ("the 24 weeks ended February 16, 2025").
+  - *Alternatives:* PRD 6.5.3's four forms only (no wording for 100 of 160
+    keys); month wording for every quarter ("six months" for Costco's 24 weeks,
+    wrong); calendar-year labels from dates (wrong for TGT, AAPL, NVDA, COST).
+- **`format_value`.** USD at the one ix `scale` the own-period filing's
+  exact-value spans print ("$7,286 million"); EPS unscaled at its printed places,
+  minimum two ("$4.20"); a negative is "-$320 million". If those spans disagree
+  on scale the key is reported and not generated: one key in the whole eligible
+  pool (NVDA, F-80), none in the draw. *Alternatives:* always millions; the
+  chunk's `unit_scale`; the majority scale (picks one).
+- **Fields.** `question_type = xbrl_numeric`, `source = xbrl_auto`,
+  `reviewed_by_human = false`, `difficulty = easy` (PRD 11.1's example; no rule
+  in the PRD and no metric reads it, F-76). `item_id` is `xbrl_NNNN` in draw
+  order. `dataset_version` is `xbrl_candidates_v1` (config).
+- **Output** goes to `eval/candidates/`, never a `golden_*` file: the candidates,
+  a manifest (seed and the `eval_sampler` block, the freeze's parser and chunker
+  versions, the per-ticker form split, the evidence-set distribution, templates,
+  the spot-check ids) and the 16-item spot-check sheet. Same seed, byte-identical
+  output (tested; re-run checked by sha256).
