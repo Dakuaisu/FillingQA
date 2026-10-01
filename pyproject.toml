@@ -31,6 +31,11 @@ target-version = "py311"
 # must not be reformatted by a linter.
 extend-exclude = ["docs", "data"]
 
+[tool.ruff.format]
+# tools/ is operator tooling owned by the project owner, not project code: never
+# reformat it. Format-only, so `ruff check` still lints it.
+exclude = ["tools"]
+
 [tool.ruff.lint]
 select = [
     "E",    # pycodestyle errors

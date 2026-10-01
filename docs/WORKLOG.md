@@ -161,3 +161,39 @@ committed baselines, no snapshot files modified.
 
 `data/` does not survive the move (gitignored), so the dev slice must be
 re-ingested from EDGAR.
+
+## 2026-10-01 — Dev slice pinned to an accession list; re-ingested
+
+`sec_user_agent()` passes with the `.env` on this machine.
+
+`corpus.dev_slice` in `api/config.yaml` is now 12 explicit `{ticker, accession,
+form}` entries instead of `tickers` + `years_back: 1`. `api.config.dev_slice()`
+reads it. `api.ingest.filings.select_accessions` picks exactly those accessions
+from `filings.recent` and raises on a missing accession (naming any paginated
+files not searched), on a form that disagrees with SEC's, and on a missing
+`reportDate`. `ingest_accessions` wraps it; the download/insert loop is shared
+with `ingest_company` via `_store`. CLI: `python -m api.ingest.cli --dev-slice`,
+mutually exclusive with `--tickers/--years`, which is kept for the eval corpus
+until F-42. 5 new unit tests.
+
+Ingest: 12 inserted (AAPL 4.1 MB, COST 3.7 MB, TGT 5.0 MB). Second run: 0
+inserted, 12 already present, 0.0 MB downloaded.
+
+Fixture comparison, all three MISMATCH on both `filings.content_hash` and the
+on-disk sha256; DB and disk agree with each other; the committed `.gz` fixtures
+still match the manifest. Each fresh download is exactly 114 bytes longer: SEC's
+edge now appends `<script type="text/javascript" src="/jGPwwufxbVNjftpB5QEsfCYc/...">`
+before `</body>`. `parse_summary` (the snapshot function) is identical between
+fixture and fresh bytes for all three, because `script` is in `SKIP_TAGS`. F-43;
+nothing changed.
+
+`make test`: 64 passed, 3 snapshots passed. `make lint`: `ruff check` clean,
+`ruff format --check` fails on `tools/bridge.py` only (F-44).
+
+`.serena/` and `.omo/` added to `.gitignore`. Four files under them were already
+committed and remain tracked.
+
+F-43 and F-44 resolved by supervisor decision (TRADEOFFS 2026-10-01, AUTONOMOUS
+DECISION). `[tool.ruff.format] exclude = ["tools"]` added; `make lint` now
+`23 files already formatted`. `git rm -r --cached .omo .serena` removed 4 files
+from the index; they remain on disk.

@@ -37,6 +37,21 @@ corpus:
       sector: pharma        # dense footnotes and complex risk-factor prose
 
   # The parser-development slice. NOT an eval corpus -- see docs/TRADEOFFS.md.
+  #
+  # An explicit accession list, never a window relative to today: a window
+  # makes the corpus a function of the run date, which breaks PRD 11.4. Ingest
+  # fails if any accession is missing from the company's submissions; it never
+  # substitutes a nearby filing. `form` is checked against SEC's own value.
   dev_slice:
-    tickers: [COST, TGT, AAPL]
-    years_back: 1
+    - {ticker: AAPL, accession: 0000320193-25-000079, form: 10-K}
+    - {ticker: AAPL, accession: 0000320193-26-000006, form: 10-Q}
+    - {ticker: AAPL, accession: 0000320193-26-000013, form: 10-Q}
+    - {ticker: AAPL, accession: 0000320193-26-000020, form: 10-Q}
+    - {ticker: COST, accession: 0000909832-25-000101, form: 10-K}
+    - {ticker: COST, accession: 0000909832-25-000169, form: 10-Q}
+    - {ticker: COST, accession: 0000909832-26-000029, form: 10-Q}
+    - {ticker: COST, accession: 0000909832-26-000051, form: 10-Q}
+    - {ticker: TGT, accession: 0000027419-25-000126, form: 10-Q}
+    - {ticker: TGT, accession: 0000027419-26-000016, form: 10-K}
+    - {ticker: TGT, accession: 0000027419-26-000022, form: 10-Q}
+    - {ticker: TGT, accession: 0000027419-26-000042, form: 10-Q}

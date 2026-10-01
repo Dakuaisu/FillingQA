@@ -413,3 +413,90 @@ extracting titles broke on the ASCII apostrophes in TGT's "Registrant's" and
 "Management's", making two sections appear to vanish. Worth noting because it is
 the failure mode the rule guards against, inverted: the tooling was wrong and the
 code was right, and only checking against the source distinguished them.
+
+---
+
+## 2026-10-01 — Every corpus is an accession list, never a window relative to today
+
+General rule, not a dev-slice note.
+
+A window such as "filings from today minus N years" makes the corpus a function
+of the date the ingest happens to run. Run it a month later and a new 10-Q
+enters while an old one drops out, with no change to any file in the repo. That
+breaks PRD 11.4: two eval runs are comparable only if they ran over the same
+documents, and a date-relative definition cannot guarantee that even in
+principle. The move to a new machine made this concrete -- the dev slice had to
+be re-ingested from EDGAR, and with `years_back: 1` it would have come back as a
+different set of filings than the one the parser baseline was verified against.
+
+**The rule.** A corpus is defined by an explicit list of accession numbers
+committed to the repo. Ingest selects exactly those, checks each one's form
+against SEC's own value, and fails loudly if any accession is missing from the
+company's submissions. It never substitutes a nearby filing: a silent swap
+changes the corpus without changing its definition, which is the same failure
+the window had.
+
+A date window is still a fine way to *find* candidate accessions once. The output
+of that search is what gets committed, not the search.
+
+**Applied** to the dev slice: `corpus.dev_slice` in `api/config.yaml` is the 12
+accessions, read by `python -m api.ingest.cli --dev-slice`. **Not yet applied**
+to the Phase 2 eval corpus, which is still `years_back: 3` (F-42).
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: raw-hash drift, lint scope, untracking
+
+Three decisions taken by the supervisor on the owner's behalf. Recorded with the
+alternatives rejected, so each can be reversed knowingly.
+
+### F-43 — what identifies a filing, and what the corpus freeze checks
+
+**Decision.** Raw bytes stay exactly as fetched and `filings.content_hash` stays
+sha256 of those bytes. PRD 6.1 asks for that hash as the idempotency and
+provenance record. It never says the raw hash is the filing's identity. The
+identity is the accession: SEC does not edit filings in place, and an amendment
+gets a new accession.
+
+The Phase 2 freeze record is `(accession, text_sha256, parser_version)` per
+filing, and comparability is judged on `text_sha256`, because normalized text is
+what the pipeline consumes:
+
+- raw hash differs, `text_sha256` matches: informational log line, not a failure
+- `text_sha256` differs under the same `parser_version`: filing content changed, fail
+
+This is not circular. `text_sha256` is already in the parser snapshot, so parser
+drift fails the snapshot test and forces a deliberate update; the freeze check
+cannot silently absorb it. `tests/fixtures/manifest.json` stays as is: it
+describes the committed bytes, and they match.
+
+**Rejected:**
+- *Hash the raw bytes with the injected script stripped.* The script path is a
+  per-session bot-manager token on SEC's edge. A regex against markup we do not
+  control will break again, and "raw minus our edits" is no longer raw.
+- *`text_sha256` alone, without `parser_version`.* A changed hash would then be
+  ambiguous between "the filing changed" and "the parser changed". Carrying the
+  version separates the two.
+
+Gap noted, not fixed: `filings.parser_version` and `filings.norm_path` exist in
+migration 0001 and nothing under `api/` writes either. They are populated when
+the parser's DB write lands with the validation suite (PRD 6.2), not now.
+
+### F-44 — `ruff format --check` failing on `tools/bridge.py`
+
+**Decision.** `[tool.ruff.format] exclude = ["tools"]` in `pyproject.toml`.
+`tools/` is operator tooling, the owner's file, not project code; it also carries
+uncommitted changes that are not ours. Format-only, so `ruff check` still lints it.
+
+**Rejected:**
+- *`ruff format tools/bridge.py`.* Rewrites a file someone else is editing.
+- *Adding `tools` to `[tool.ruff] extend-exclude`.* Would drop `ruff check` too,
+  losing real lint coverage for no reason.
+
+### `.omo/` and `.serena/` tracked despite `.gitignore`
+
+**Decision.** `git rm -r --cached .omo .serena`. Four files leave the index and
+stay on disk.
+
+**Rejected:** *leave them tracked.* The ignore rule does not apply to tracked
+files, so `.omo/` session state would keep showing up in every diff.

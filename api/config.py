@@ -10,6 +10,8 @@ import os
 import re
 from pathlib import Path
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = REPO_ROOT / ".env"
 MIGRATIONS_DIR = REPO_ROOT / "infra" / "migrations"
@@ -50,6 +52,20 @@ def dsn() -> str:
 def data_dir() -> Path:
     load_env()
     return Path(os.environ.get("DATA_DIR", str(REPO_ROOT / "data")))
+
+
+CORPUS_FILE = REPO_ROOT / "api" / "config.yaml"
+
+
+def dev_slice(path: Path = CORPUS_FILE) -> list[dict[str, str]]:
+    """The dev slice as [{ticker, accession, form}], in file order."""
+    corpus = yaml.safe_load(path.read_text(encoding="utf-8"))["corpus"]
+    entries = corpus["dev_slice"]
+    for entry in entries:
+        missing = {"ticker", "accession", "form"} - entry.keys()
+        if missing:
+            raise ConfigError(f"dev_slice entry {entry!r} is missing {sorted(missing)}")
+    return [{k: str(entry[k]) for k in ("ticker", "accession", "form")} for entry in entries]
 
 
 # ---------------------------------------------------------------- user agent

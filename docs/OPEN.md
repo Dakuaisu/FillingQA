@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 22 |
-| RESOLVED | 19 |
-| **Total** | **41** |
+| OPEN | 23 |
+| RESOLVED | 21 |
+| **Total** | **44** |
 
 ---
 
@@ -24,6 +24,12 @@ carries the state.
 | F-32 | 30–56% of numeric iXBRL facts sit on dimensional (segmented) contexts — segment/product breakdowns, not company-level figures | Phase 3 | OPEN |
 | F-35 | TGT's 10-K has 250 table blocks vs AAPL's 54; most are layout scaffolding, not data | Phase 1 step 4 | OPEN |
 | F-39 | `api/config.yaml` sector labels exist but nothing reads them; `companies.sector` is still NULL | Phase 1 step 5 | OPEN |
+
+## Blocking Phase 2
+
+| ID | Finding | Status |
+|---|---|---|
+| F-42 | The eval corpus is still defined as `years_back: 3`, a window relative to the run date. Must become an explicit accession list before the end-of-Phase-2 freeze (TRADEOFFS 2026-10-01). The freeze record per filing is `(accession, text_sha256, parser_version)`: raw hash differs but `text_sha256` matches is logged, not failed; `text_sha256` differs under the same `parser_version` fails. Needs `filings.parser_version` and `norm_path` written first (nothing writes them yet) | OPEN |
 
 ## Blocking Phase 3
 
@@ -82,6 +88,8 @@ carries the state.
 | F-38 | PRD §6.2's `Document` dataclass has no `full_text`, yet its validation calls `alpha_char_ratio(doc.full_text)` | Normalized text persisted to `data/norm/{accession}.txt` with sha256 | 2026-08-30 |
 | F-40 | `docker-compose.yml` mounted the volume at `/var/lib/postgresql/data`; `pgvector/pgvector:pg18` refuses to start with that layout. Never caught because the old machine never ran Docker | Mount moved to `/var/lib/postgresql`. Verified: container healthy, PG 18.6, vector 0.8.6 | 2026-10-01 |
 | F-41 | `make test` and CI run bare `pytest`, which does not put the repo root on `sys.path`, so `from tests.conftest import ...` fails collection. Only `python -m pytest` worked | `pythonpath = ["."]` in `[tool.pytest.ini_options]`. Verified: `make test` 59 passed, 3 snapshots passed | 2026-10-01 |
+| F-43 | Re-downloaded raw bytes differ from `tests/fixtures/manifest.json` for all 3 fixtures: SEC's edge injects a 114-byte `<script>` before `</body>`. Parser output unaffected | Accession is the identity; `content_hash` stays raw sha256 as provenance; freeze compares `text_sha256` under a fixed `parser_version` (F-42). Manifest unchanged. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
+| F-44 | `make lint` failed: `ruff format --check` would reformat `tools/bridge.py` | `[tool.ruff.format] exclude = ["tools"]`; `ruff check` still covers it; file untouched. Verified: `23 files already formatted`. AUTONOMOUS DECISION, TRADEOFFS 2026-10-01 | 2026-10-01 |
 
 ---
 
@@ -102,6 +110,10 @@ filing rather than assuming a heuristic works.
 `tests/fixtures/filings/` with a manifest recording accession, CIK, form,
 `period_end`, source URL and sha256 (CLAUDE.md rule 2: fixtures must be real
 filings). Then snapshot `extract()` and `detect_sections()` output with syrupy.
+
+**F-42 — eval corpus as accession list.** Run the 3-year window once to list
+candidates, review them, and commit the resulting accessions under `corpus` in
+`api/config.yaml`. Ingest reads the list, never the window.
 
 **F-39 — sector labels.** Wire `api/config.yaml` into `upsert_company` so
 `companies.sector` is populated. Currently the file exists and nothing reads it,

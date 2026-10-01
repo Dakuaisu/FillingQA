@@ -7,11 +7,13 @@ from pathlib import Path
 
 import pytest
 
+from api.config import dev_slice
 from api.ingest.filings import (
     DiscoveredFiling,
     IngestError,
     assert_recent_covers_window,
     discover,
+    select_accessions,
     window_start,
 )
 
@@ -108,6 +110,39 @@ def test_no_older_files_means_recent_is_the_whole_history():
 def test_empty_recent_is_an_error():
     with pytest.raises(IngestError, match="no filings"):
         assert_recent_covers_window(submissions([]), date(2025, 1, 1))
+
+
+# ------------------------------------------------------- accession lists
+
+
+def test_select_accessions_returns_exactly_the_requested_filings():
+    wanted = {"0000320193-26-000003": "10-Q", "0000320193-24-000009": "10-K"}
+    found = select_accessions(submissions(ROWS), "0000320193", wanted)
+    assert [f.accession for f in found] == ["0000320193-24-000009", "0000320193-26-000003"]
+    assert found[1].period_end == date(2026, 3, 28)
+
+
+def test_missing_accession_raises_rather_than_substituting():
+    wanted = {"0000320193-26-000003": "10-Q", "0000320193-26-000099": "10-Q"}
+    with pytest.raises(IngestError, match="0000320193-26-000099"):
+        select_accessions(submissions(ROWS), "0000320193", wanted)
+
+
+def test_form_disagreeing_with_sec_raises():
+    with pytest.raises(IngestError, match="SEC says 10-K"):
+        select_accessions(submissions(ROWS), "0000320193", {"0000320193-25-000001": "10-Q"})
+
+
+def test_requested_accession_without_report_date_raises():
+    with pytest.raises(IngestError, match="reportDate"):
+        select_accessions(submissions(ROWS), "0000320193", {"0000320193-26-000005": "4"})
+
+
+def test_dev_slice_is_twelve_unique_accessions():
+    entries = dev_slice()
+    assert len(entries) == 12
+    assert len({e["accession"] for e in entries}) == 12
+    assert {e["ticker"] for e in entries} == {"AAPL", "COST", "TGT"}
 
 
 # ---------------------------------------------------------- urls and paths

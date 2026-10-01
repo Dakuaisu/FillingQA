@@ -159,6 +159,51 @@ def discover(
     return selected, skipped_no_period
 
 
+def select_accessions(
+    submissions: dict[str, Any],
+    cik: str,
+    wanted: dict[str, str],
+) -> list[DiscoveredFiling]:
+    """Select exactly the requested accessions; `wanted` maps accession -> form.
+
+    Raises on any accession absent from `filings.recent`, and on a form that
+    disagrees with SEC's. Never substitutes a nearby filing: a silent swap would
+    change the corpus without changing its definition.
+    """
+    recent = submissions["filings"]["recent"]
+    columns = ("accessionNumber", "form", "filingDate", "reportDate", "primaryDocument")
+    by_accession = {row[0]: row for row in zip(*(recent[c] for c in columns), strict=True)}
+
+    missing = sorted(a for a in wanted if a not in by_accession)
+    if missing:
+        older = [f.get("name") for f in submissions["filings"].get("files") or []]
+        raise IngestError(
+            f"CIK {cik}: accession(s) {missing} not found in filings.recent "
+            f"(paginated files not searched: {older})"
+        )
+
+    selected: list[DiscoveredFiling] = []
+    for accession, expected_form in wanted.items():
+        _, form, filed, report, document = by_accession[accession]
+        if form != expected_form:
+            raise IngestError(f"{accession}: config says {expected_form}, SEC says {form}")
+        if not report:
+            raise IngestError(f"{accession}: no reportDate, so period_end cannot be set")
+        selected.append(
+            DiscoveredFiling(
+                accession=accession,
+                cik=cik,
+                form_type=form,
+                filing_date=date.fromisoformat(filed),
+                period_end=date.fromisoformat(report),
+                primary_document=document,
+            )
+        )
+
+    selected.sort(key=lambda f: (f.filing_date, f.accession))
+    return selected
+
+
 def upsert_company(conn: psycopg.Connection, cik: str, ticker: str, submissions: dict) -> None:
     """Register the company. `sector` is left NULL -- see note below.
 
@@ -243,7 +288,38 @@ def ingest_company(
         discovered=len(filings),
         skipped_no_period=skipped,
     )
+    _store(conn, client, filings, root, report)
+    return report
 
+
+def ingest_accessions(
+    conn: psycopg.Connection,
+    client: EdgarClient,
+    ticker: str,
+    wanted: dict[str, str],
+    *,
+    root: Path | None = None,
+) -> IngestReport:
+    """Download and register exactly the given accessions for one company."""
+    root = root if root is not None else data_dir()
+
+    cik = client.resolve_cik(ticker)
+    submissions = client.fetch_submissions(cik)
+    filings = select_accessions(submissions, cik, wanted)
+
+    upsert_company(conn, cik, ticker, submissions)
+    report = IngestReport(ticker=ticker.upper(), cik=cik, discovered=len(filings))
+    _store(conn, client, filings, root, report)
+    return report
+
+
+def _store(
+    conn: psycopg.Connection,
+    client: EdgarClient,
+    filings: list[DiscoveredFiling],
+    root: Path,
+    report: IngestReport,
+) -> None:
     for filing in filings:
         path = filing.raw_path(root)
         existed = path.exists()
@@ -263,4 +339,3 @@ def ingest_company(
             report.already_present += 1
 
     conn.commit()
-    return report
