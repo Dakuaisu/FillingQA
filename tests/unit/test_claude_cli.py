@@ -36,6 +36,7 @@ def test_parses_the_recorded_response():
     r = parse_output(RAW)
     assert (r.text, r.model) == ("ready", "claude-haiku-4-5-20251001")
     assert (r.input_tokens, r.output_tokens) == (465, 41)
+    assert (r.cache_read_tokens, r.cache_creation_tokens) == (0, 0)
 
 
 def test_is_error_raises():

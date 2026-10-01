@@ -22,7 +22,11 @@ TIMEOUT_S = 300
 
 
 class CliError(RuntimeError):
-    """The CLI failed, or reported an error in its JSON result."""
+    """The CLI reported an error in its JSON result, or its output is unreadable."""
+
+
+class TransportError(CliError):
+    """The process timed out or exited without output: the call may be retried."""
 
 
 @dataclass(frozen=True)
@@ -31,6 +35,8 @@ class CliResult:
     model: str  # the model actually served (`modelUsage` keys)
     input_tokens: int
     output_tokens: int
+    cache_read_tokens: int = 0
+    cache_creation_tokens: int = 0
 
 
 def build_command(prompt: str, model: str, system_prompt: str) -> list[str]:
@@ -67,20 +73,31 @@ def parse_output(stdout: str) -> CliResult:
         model=",".join(served),
         input_tokens=usage["input_tokens"],
         output_tokens=usage["output_tokens"],
+        cache_read_tokens=usage.get("cache_read_input_tokens", 0),
+        cache_creation_tokens=usage.get("cache_creation_input_tokens", 0),
     )
 
 
 def run(prompt: str, model: str, system_prompt: str) -> CliResult:
     with tempfile.TemporaryDirectory(prefix="filingqa-cli-") as cwd:
-        proc = subprocess.run(
-            build_command(prompt, model, system_prompt),
-            cwd=cwd,
-            env=child_env(dict(os.environ)),
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT_S,
-            check=False,
-        )
+        try:
+            proc = subprocess.run(
+                build_command(prompt, model, system_prompt),
+                cwd=cwd,
+                env=child_env(dict(os.environ)),
+                capture_output=True,
+                text=True,
+                timeout=TIMEOUT_S,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as e:
+            raise TransportError(f"claude CLI timed out after {TIMEOUT_S}s") from e
     if proc.returncode != 0 and not proc.stdout.strip():
-        raise CliError(f"claude CLI exited {proc.returncode}: {proc.stderr.strip()[:500]}")
+        raise TransportError(f"claude CLI exited {proc.returncode}: {proc.stderr.strip()[:500]}")
     return parse_output(proc.stdout)
+
+
+def version() -> str:
+    """`claude --version`, recorded with every seeding response."""
+    proc = subprocess.run(["claude", "--version"], capture_output=True, text=True, check=True)
+    return proc.stdout.strip()

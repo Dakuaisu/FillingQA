@@ -50,3 +50,12 @@ def test_unknown_backend_is_refused():
 def test_default_backend_is_the_dev_cli():
     cfg = generation()
     assert cfg["backend"] == "claude_cli" and cfg["cli_system_prompt"]
+
+
+def test_dev_backend_never_writes_a_baseline():
+    from api.generate.generator import refuse_dev_baseline
+
+    with pytest.raises(ConfigError, match="development-only"):
+        refuse_dev_baseline("claude_cli", "eval/baselines/main.json")
+    refuse_dev_baseline("anthropic_api", "eval/baselines/main.json")
+    refuse_dev_baseline("claude_cli", "eval/seeding/raw_v1.jsonl")

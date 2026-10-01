@@ -4035,3 +4035,77 @@ Order check against `draw_v1` (ad hoc, both files in the tree before removal):
 commit 8e6854d) removed. `scripts.seed_supply` now prints 1x slots and each
 stratum's draw (`overdraw` x slots), the rule `seed_draw` applies; its 2x
 largest-remainder lines are gone.
+
+## 2026-10-01 — Seeding runner; one verification call outside the draw
+
+`api.generate.generator.complete` (backend-neutral; the `anthropic_api` request
+is the same code), `claude_cli.TransportError`, `claude_cli.version`,
+`refuse_dev_baseline` (F-59), `eval/generate/seed_runner.py` (order, resume,
+scrub, outcome), `scripts/seed_run.py`. Tests: `test_seed_runner.py` (5), one more
+in `test_generator.py`; `make test` 310 passed, `make lint` clean.
+
+`python -m scripts.seed_run --verify 0000909832-25-000015:68.1:68.1` (Costco Q2
+FY2025 cash-flow table; asserted in neither draw_v2 nor gold; 5.1 s wall):
+
+    backend claude_cli, model claude-sonnet-5-5 (tier_large); prompt 0dac2295c1cd2a20, draw 1c23e9f6511a554e
+    drawn chunks 180; recorded 0; pending 180
+    verify 0000909832-25-000015:68.1:68.1: in draw_v2 False, gold False; scrubbed fields []
+    {
+     "chunk_id": "0000909832-25-000015:68.1:68.1",
+     "kind": "table",
+     "ticker": "COST",
+     "verification": true,
+     "backend": "claude_cli",
+     "model_requested": "claude-sonnet-5-5",
+     "prompt_sha256": "0dac2295c1cd2a201df6efaac17917d8be07fda4e48156833b163759341d03f6",
+     "draw_sha256": "1c23e9f6511a554eebab64a25e07117d3e2c099cd504ad1948239d46c4028313",
+     "cli_version": "2.1.286 (Claude Code)",
+     "model_served": "claude-sonnet-5-5",
+     "usage": {
+      "input_tokens": 2,
+      "output_tokens": 364
+     },
+     "response": "{\"questions\": [{\"kind\": \"factual\", \"question\": \"What was Costco Wholesale Corp's net cash used in financing activities for the 24 weeks ended February 16, 2025 (Q2 FY2025)?\", \"answer\": \"(1,434)\", \"supporting_quote\": \"| Net cash used in financing activities | (1,434) | (8,250) |\"}, {\"kind\": \"interpretive\", \"question\": \"How did Costco Wholesale Corp's net change in cash and cash equivalents for the 24 weeks ended February 16, 2025 (Q2 FY2025) compare with the prior-year 24-week period, and what does that indicate about the direction of its cash position?\", \"answer\": \"Costco's cash position increased by 2,450 million in the 24 weeks ended February 16, 2025, versus a decrease of (4,605) million in the prior-year period, a reversal from cash decline to cash growth, with cash and cash equivalents ending at $12,356 compared with $9,095.\", \"supporting_quote\": \"| Net change in cash and cash equivalents | 2,450 | (4,605) |\"}]}",
+     "error": null,
+     "scrubbed_fields": []
+    }
+    outcome: {
+     "status": "kept",
+     "question": {
+      "kind": "factual",
+      "question": "What was Costco Wholesale Corp's net cash used in financing activities for the 24 weeks ended February 16, 2025 (Q2 FY2025)?",
+      "answer": "(1,434)",
+      "supporting_quote": "| Net cash used in financing activities | (1,434) | (8,250) |"
+     },
+     "flags": [
+      "parenthesized figure: sign wording set at review (F-87)"
+     ],
+     "value": "-1434000000"
+    }
+
+Two defects that output exposed, fixed after the call and before any drawn chunk
+was called: `value` came out signed (-1434000000), i.e. code decided the sign of
+"(1,434)"; and `input_tokens: 2` because the CLI counts cached input apart. The
+record on disk predates the cache-token fix (no re-call). Rebuilt offline:
+`python -m scripts.seed_run --show-verify`:
+
+    backend claude_cli, model claude-sonnet-5-5 (tier_large); prompt 0dac2295c1cd2a20, draw 1c23e9f6511a554e
+    drawn chunks 180; recorded 0; pending 180
+    0000909832-25-000015:68.1:68.1 (offline, from eval/seeding/verify_v1.jsonl):
+    {
+     "status": "kept",
+     "question": {
+      "kind": "factual",
+      "question": "What was Costco Wholesale Corp's net cash used in financing activities for the 24 weeks ended February 16, 2025 (Q2 FY2025)?",
+      "answer": "(1,434)",
+      "supporting_quote": "| Net cash used in financing activities | (1,434) | (8,250) |"
+     },
+     "flags": [
+      "parenthesized figure: sign wording set at review (F-87)"
+     ],
+     "value": null,
+     "magnitude": "1434000000"
+    }
+
+`eval/seeding/verify_v1.jsonl` checked before commit: no email address, no home
+path, no "/Users/".

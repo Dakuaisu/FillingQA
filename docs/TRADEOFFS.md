@@ -1791,3 +1791,30 @@ seeding".
   no spare per stratum.
 - *Backfill across strata after Stage 2:* the composition would then depend on
   model output.
+
+---
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the seeding runner
+
+Implements item 4 of "LLM seeding" (as amended for draw_v2).
+
+- `python -m scripts.seed_run` makes no call by default (status only). `--run`
+  must be given explicitly; `--verify CHUNK` asserts the chunk is in neither
+  `draw_v2` nor gold and writes to `eval/seeding/verify_v1.jsonl`, which nothing
+  that builds candidates reads.
+- One call per chunk on `tier_large`. Each record is appended and fsynced as it
+  arrives; a chunk with any recorded response, an error included, is never
+  called again. Only transport errors (timeout, exit without output) are retried,
+  3 attempts; an `is_error` result is recorded and becomes a drop.
+- Each raw record carries backend, requested and served model, prompt sha, draw
+  sha, usage (including the CLI's cache-read and cache-creation tokens, which its
+  `input_tokens` excludes) and CLI version. Before writing, any field holding an
+  email address or the home path is dropped and named in `scrubbed_fields`.
+- The runner refuses if the prompt file's sha differs from the draw manifest's.
+- `outcome` rebuilds Stage 2's key-free result offline from a record. A
+  parenthesized figure keeps its scaled magnitude and a null value: the sign is
+  set at review (F-87), not by `parse_number`'s accounting convention.
+
+*Alternatives:* write records at the end of the run (a crash loses them); retry
+`is_error` results (a re-generation); record only `input_tokens` (understates
+input on the CLI, which reported 2 for the verification call).
