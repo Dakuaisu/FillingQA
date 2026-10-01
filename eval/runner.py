@@ -33,6 +33,19 @@ def _generation(results: list[dict], nli_threshold) -> dict:
     return generation_metrics(results, nli_threshold if nli_threshold is not None else 0.0)
 
 
+def retrieval_slice(items: dict, results: list[dict], k: int, field: str = "retrieved") -> dict:
+    """Retrieval metrics at k on one stored list per item (`field`)."""
+    cols = {"sufficiency": sufficiency_at_k, "recall": recall_at_k, "precision": precision_at_k}
+    out = {"items": len(results)}
+    for name, f in cols.items():
+        out[f"{name}@{k}"] = _mean([f(r[field], items[r["item_id"]]["gold_evidence_sets"], k)
+                                    for r in results])  # fmt: skip
+    out["mrr"] = _mean([mrr(r[field], items[r["item_id"]]["gold_evidence_sets"]) for r in results])
+    out[f"ndcg@{k}"] = _mean([ndcg_at_k(r[field], items[r["item_id"]]["gold_evidence_sets"], k)
+                              for r in results])  # fmt: skip
+    return out
+
+
 def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict:
     ret = {"sufficiency": [], "recall": [], "precision": [], "mrr": [], "ndcg": [],
            "sufficiency_post_rerank": []}  # fmt: skip

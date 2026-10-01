@@ -82,6 +82,11 @@ def embedding(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["embedding"]
 
 
+def retrieval(path: Path = CORPUS_FILE) -> dict:
+    """The `retrieval:` block of api/config.yaml (PRD 7.2, Appendix A)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["retrieval"]
+
+
 def eval_sampler(path: Path = CORPUS_FILE) -> dict:
     """The `eval_sampler:` block of api/config.yaml: seed, total, per-ticker allocation."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["eval_sampler"]

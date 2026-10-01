@@ -212,6 +212,14 @@ embedding:
 
 # PRD 14 Phase 2: "assert >=80% resolve". A floor on span-to-chunk resolution;
 # well below it means offsets did not survive parsing and Phase 1 needs fixing.
+# Hybrid retrieval (PRD 7.2, Appendix A): dense and sparse top-50 fused by
+# weighted Reciprocal Rank Fusion; the fused list is the pre-rerank list (F-13).
+retrieval:
+  k_dense: 50
+  k_sparse: 50
+  rrf_k: 60
+  weights: { dense: 1.0, sparse: 1.0 }
+
 span_resolution:
   min_rate: 0.80
 

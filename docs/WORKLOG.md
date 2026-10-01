@@ -4911,3 +4911,36 @@ PRD 14's Phase 3 checklist, against the repo:
 
 Everything not done is OWNER-BLOCKED (F-103, F-104, F-105, F-106), except
 answer relevance (F-107), which is not on the Phase 3 checklist.
+
+## 2026-10-01 — Phase 4 starts: BM25-style sparse retrieval and RRF fusion, measured
+
+`api/query/retrieve.py`: `sparse_top_k`, `rrf_fuse`, `hybrid_top_k`; `dense_top_k`
+raises `hnsw.ef_search` to k above 40. Config `retrieval` (k_dense 50, k_sparse
+50, rrf_k 60, weights 1.0/1.0). `eval/runner.retrieval_slice`;
+`scripts/retrieval_run.py`. Tests: `tests/unit/test_rrf.py` (4). `make test`:
+415 passed. No candidate, metric definition or threshold touched.
+
+`python -m scripts.retrieval_run --compare f2e616e0a7d7` (1 min 32 s, no model
+call; run file `eval/runs/188304ccaf94.retrieval.json`):
+
+    retrieval run 188304ccaf94: 283 items; k 10; {'k_dense': 50, 'k_sparse': 50, 'rrf_k': 60, 'weights': {'dense': 1.0, 'sparse': 1.0}}
+    dense top-10 identical to the stored list of: {'f2e616e0a7d7': 273}
+    list / metric                    xbrl_auto    llm_seeded   handwritten     aggregate
+    dense sufficiency@10                 0.290         0.675             -         0.403
+    dense recall@10                      0.300         0.675             -         0.410
+    dense mrr                            0.155         0.487             -         0.252
+    dense ndcg@10                        0.174         0.524             -         0.277
+    dense precision@10                   0.052         0.067             -         0.057
+    sparse sufficiency@10                0.025         0.241             -         0.088
+    sparse recall@10                     0.025         0.241             -         0.088
+    sparse mrr                           0.012         0.127             -         0.046
+    sparse ndcg@10                       0.012         0.151             -         0.053
+    sparse precision@10                  0.005         0.024             -         0.010
+    hybrid sufficiency@10                0.215         0.687             -         0.353
+    hybrid recall@10                     0.217         0.687             -         0.355
+    hybrid mrr                           0.119         0.368             -         0.192
+    hybrid ndcg@10                       0.128         0.437             -         0.219
+    hybrid precision@10                  0.038         0.069             -         0.047
+
+Findings F-108 (the `ts_rank_cd` sparse branch is weak and fusion lowers dense)
+and F-109 (dense top-10 depends on `ef_search`). Nothing tuned in response.
