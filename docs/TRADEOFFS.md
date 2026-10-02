@@ -3058,3 +3058,12 @@ legacy ingestion API (rejected: deprecated per LangFuse's docs).
   `build/corpus_snapshot.dump`, hits `/health` and the Ask page in the
   containers, tears down. Checked: it passes; the API container refuses to serve
   on an empty database; the restore refuses an archive with another sha256.
+
+## 2026-10-02 — OWNER DECISION - JPM and XOM 10-Ks stay quarantined; known limitation (D2; F-66, F-70)
+
+Owner review D2 (`docs/OWNER_REVIEW.md`), overriding PRD 4.4's corpus scope of
+one 10-K per company and year: the six 10-Ks (JPM ×3, F-66; XOM ×3, F-70), whose
+MD&A and financial statements sit in an appended annual-report section the parser
+does not follow, stay quarantined. No parser change, no re-freeze. The README's
+"Known limitations" says so; their 10-Qs are in the corpus and there are no 10-K
+questions for JPM or XOM.

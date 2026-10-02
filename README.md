@@ -136,6 +136,14 @@ far is in [`docs/TRADEOFFS.md`](docs/TRADEOFFS.md); every finding, open or
 resolved, in [`docs/OPEN.md`](docs/OPEN.md); the build log in
 [`docs/WORKLOG.md`](docs/WORKLOG.md).
 
+## Known limitations
+
+- Six 10-Ks are not in the index: JPMorgan Chase's three and Exxon Mobil's
+  three. Their MD&A and financial statements sit in an appended annual-report
+  section that the parser does not follow, so they were quarantined at the corpus
+  freeze (F-66, F-70). Their 10-Qs are in the corpus; there are no 10-K
+  questions for JPM or XOM. The Corpus screen lists the six filings.
+
 ## Deploy
 
 What exists: Docker images for the API (`deploy/api.Dockerfile`, which refuses to
