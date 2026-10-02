@@ -2156,7 +2156,10 @@ whatever list the generator receives (moves with `top_k` and the score floor).
   with the raw router responses in `<run_id>.router.jsonl` and any failed calls
   in `<run_id>.router_errors.jsonl` (`scripts.filter_run`; e.g. 8b6bcc14f274). Smoke runs
   `<run_id>.smoke.json` (`scripts.eval_run --smoke SEED`): pipeline checks, not
-  measurements; they store which records broke and no metric.
+  measurements; they store which records broke and no metric. Derived files, never a
+  new run id: `<run_id>.rescore-<threshold>.json` (NLI re-score, F-125) and
+  `<run_id>.reverify-<tag>.json` (model-free checks re-run over stored claims;
+  e.g. a4e39a65c2c8.reverify-f128-f129-f130).
 
 *Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
 migration exists yet; JSON keeps the run reproducible without one); one column
