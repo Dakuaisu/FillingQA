@@ -3222,3 +3222,25 @@ measurement's `SCALE_EXCEPTION` / `PER_SHARE_EXCEPTION` on the raw text):
 sheets. 2 of 9 comparison, 3 of 83 llm_seeded, 6 of 44 xbrl_numeric entries. No
 item is changed, dropped or re-drawn; no review decision is filled; the review
 import ignores the new keys.
+
+## 2026-10-02 — OWNER DECISION - reranker bge-reranker-base, timeout 3000 ms (D1; overrides PRD 7.3)
+
+Owner review D1 overrides PRD 7.3's MiniLM cross-encoder and 800 ms rerank
+timeout: `rerank.model: BAAI/bge-reranker-base` at revision
+`2cfc18c9415c912f9d8155881c133215df768a70`, `timeout_ms: 3000`.
+
+Re-measured over retrieval run 5b3c3ac13e5e (lists identical in re-run
+7fa009acac95):
+
+| device | rerank run | p50 s | p95 s | max s | over 3000 ms |
+|---|---|---|---|---|---|
+| mps | 063aac623748 | 1.515 | 2.063 | 2.774 | 0 of 283 |
+| cpu | b6530895a7a4 | 4.288 | 8.518 | 13.808 | 283 of 283 |
+
+mps p95 is under 2,500 ms, so the timeout stays 3000 ms (D1 step 2). Post-rerank
+Sufficiency at top-n 0.562 aggregate against 0.505 for the fused top-8
+(xbrl_auto 0.455 vs 0.335, llm_seeded 0.819 vs 0.916). On a CPU-only runner every
+item exceeds the timeout and falls back to RRF order; runs record `device_used`
+and are flagged `hardware_dependent` (F-137). The score floor stays `pending`
+(F-112). Retrieval latency against PRD 11's 900 ms target is reported, not gated,
+as an owner-accepted trade-off; see the D1 eval entry in WORKLOG.
