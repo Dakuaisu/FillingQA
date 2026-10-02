@@ -1,6 +1,7 @@
 """Re-derive text_sha256 for every frozen accession and fail on any difference.
 
 python -m scripts.verify_freeze
+python -m scripts.verify_freeze --snapshot   # CI, after a restored snapshot (F-135)
 
 Reads api/corpus_freeze.yaml, re-parses each filing's raw document from disk, and
 compares the normalized text's sha256 with the frozen value. A different
@@ -11,6 +12,11 @@ The chunk set is frozen too. Gold evidence sets are chunk IDs, so a chunker or
 `chunking:` change must fail here as a parser change does: the current
 `chunker_version()` must equal the record's, and every stored chunk of every
 parsed filing must carry it.
+
+--snapshot skips the raw re-parse (raw documents are not in the CI snapshot; the
+archive's recorded sha256 pins its content) and checks instead that every
+frozen accession is present with its status and that every chunk of a parsed
+filing has an embedding.
 """
 
 from __future__ import annotations
@@ -34,8 +40,22 @@ def main() -> int:
     if current != record["parser_version"]:
         print(f"parser_version {current} != frozen {record['parser_version']}")
     failures = []
+    snapshot = "--snapshot" in sys.argv
     with connect() as conn:
-        for entry in record["filings"]:
+        if snapshot:
+            status = dict(conn.execute("SELECT accession, parse_status FROM filings").fetchall())
+            for entry in record["filings"]:
+                if status.get(entry["accession"]) != entry["status"]:
+                    failures.append(entry["accession"])
+                    print(f"MISMATCH {entry['accession']}: status {status.get(entry['accession'])} "
+                          f"!= frozen {entry['status']}")  # fmt: skip
+            missing = conn.execute(
+                "SELECT count(*) FROM chunks WHERE embedding IS NULL"
+            ).fetchone()[0]
+            if missing:
+                failures.append(f"{missing} chunks without an embedding")
+                print(f"chunks without an embedding: {missing}")
+        for entry in [] if snapshot else record["filings"]:
             raw_path = conn.execute(
                 "SELECT raw_path FROM filings WHERE accession = %s", (entry["accession"],)
             ).fetchone()[0]
@@ -44,7 +64,10 @@ def main() -> int:
             if digest != entry["text_sha256"]:
                 failures.append(entry["accession"])
                 print(f"MISMATCH {entry['accession']}: {digest} != {entry['text_sha256']}")
-    print(f"verified {len(record['filings'])} frozen accessions; mismatches {len(failures)}")
+    mode = "present with frozen status (snapshot)" if snapshot else "re-parsed"
+    print(
+        f"verified {len(record['filings'])} frozen accessions, {mode}; mismatches {len(failures)}"
+    )
 
     frozen_chunker = record["chunker_version"]
     current_chunker = chunker_version()

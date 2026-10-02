@@ -5460,3 +5460,25 @@ Checked: the workflow's key step with no key exits 1 and writes the reason as
 the PR comment; `--baseline-out eval/baselines/main_fast.json` on claude_cli is
 refused before any work; `make restore-corpus-snapshot` exits 1 (F-135). F-12
 resolved; F-07, F-59, F-104 noted; F-134, F-135 logged. No generation run.
+
+## 2026-10-02 — Corpus snapshot for CI (F-135); dense reproducibility (F-136); CI reranker device (F-137)
+
+`python -m scripts.corpus_snapshot dump` (13 s):
+
+    wrote build/corpus_snapshot.dump (104583437 bytes, sha256 9a8a82719f6daddfc31b91608d6ac01746aa14082ca1c06f20a89904af528775); recorded in api/corpus_freeze.yaml
+
+Restore into a scratch database `filingqa_snaptest` (migrated, then
+`PG_DB=filingqa_snaptest python -m scripts.corpus_snapshot restore ...`), exit 0:
+
+    verified 96 frozen accessions, present with frozen status (snapshot); mismatches 0
+    chunks of 90 parsed filings: 22354; not on chunker_version 964f77f6f9cb: 0; filings with no chunks: 0
+
+Counts restored: chunks 22,354 (all with embeddings), xbrl_facts 43,122,
+xbrl_spans 209,608. Retrieval on the restored database: seed_0005's hybrid list
+equals 01019ff395ec's, xbrl_0001's does not; exact search is identical across the
+two databases, HNSW at k 50 is not. `python -m scripts.exact_nn_check` (k 10) on
+both: 0 of 283 differ. At k 50 against exact: live 68, restored (after REINDEX)
+89; fused top-10 on the restored database vs 01019ff395ec differs for 49, 8
+sufficiency flips, aggregate 0.519 → 0.505 (F-136). Scratch database dropped.
+`rerank.device: mps` cannot run on a Linux runner (F-137). Upload of the archive
+OWNER-BLOCKED with the exact command under F-135.

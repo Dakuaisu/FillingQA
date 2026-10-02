@@ -658,3 +658,17 @@ filings:
   text_sha256: 5170453e9c73952638f4837e0fb6aab53fe2870ec3d7c2bb055bf837cea477fc
   parser_version: d58d26e08e5a
   status: parsed
+snapshot:
+  archive: corpus_snapshot.dump
+  sha256: 9a8a82719f6daddfc31b91608d6ac01746aa14082ca1c06f20a89904af528775
+  bytes: 104583437
+  tables:
+  - companies
+  - filings
+  - chunks
+  - xbrl_facts
+  - xbrl_spans
+  parser_version: d58d26e08e5a
+  chunker_version: 964f77f6f9cb
+  dumped_at: '2026-10-02T05:43:34+00:00'
+  hosted: null

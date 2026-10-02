@@ -2,8 +2,8 @@ name: eval
 
 # PRD 11.5 eval gate. Runs the fast subset on anthropic_api and enforces
 # eval/thresholds.yaml through eval/compare.py. Without ANTHROPIC_API_KEY the job
-# FAILS with that reason; it never skips or passes (F-59). It also needs the frozen
-# corpus in its database, which no snapshot fixture provides yet (F-135).
+# FAILS with that reason; it never skips or passes (F-59). The frozen corpus comes
+# from the snapshot archive released as corpus-snapshot-<sha12> (F-135).
 
 on:
   pull_request:
@@ -56,13 +56,22 @@ jobs:
         run: make migrate
 
       - name: Restore corpus snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PG_EXEC: docker exec -i ${{ job.services.postgres.id }}
         run: |
-          make restore-corpus-snapshot || {
-            printf '### Eval gate: FAILED\n\nNo corpus snapshot fixture exists for CI (F-135).\n' > build/eval_gate.md
+          sha=$(python -c "import yaml;print(yaml.safe_load(open('api/corpus_freeze.yaml'))['snapshot']['sha256'])")
+          tag="corpus-snapshot-${sha:0:12}"
+          gh release download "$tag" --pattern corpus_snapshot.dump --dir build || {
+            printf '### Eval gate: FAILED\n\nCorpus snapshot release %s is not hosted (F-135).\n' "$tag" > build/eval_gate.md
+            echo "::error::corpus snapshot $tag not hosted (F-135)"
             exit 1
           }
+          make restore-corpus-snapshot
 
       - name: Fast eval and gate
+        env:
+          VERIFY_FLAGS: --snapshot
         run: make eval-fast
 
       - name: Comment the gate on the PR

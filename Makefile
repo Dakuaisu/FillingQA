@@ -53,7 +53,7 @@ eval:
 # on the same pipeline, then the gate against a baseline from the same subset (F-12).
 # The gate exits non-zero on any failed or pending gated metric.
 eval-fast:
-	python -m scripts.verify_freeze
+	python -m scripts.verify_freeze $(VERIFY_FLAGS)
 	python -m scripts.eval_run --run --subset eval/fast_subset_v1.yaml --report-out build/eval_fast.json
 	$(MAKE) eval-gate
 
@@ -61,7 +61,8 @@ eval-gate:
 	python -m eval.compare --report build/eval_fast.json --baseline eval/baselines/main_fast.json \
 		--thresholds eval/thresholds.yaml --md build/eval_gate.md
 
-# CI needs the frozen corpus (chunks, embeddings, XBRL facts) in its database. No
-# snapshot fixture exists yet (F-135); this target fails rather than run on an empty DB.
+# CI restores the frozen corpus from the snapshot archive (scripts/corpus_snapshot.py),
+# checked against the sha256 in api/corpus_freeze.yaml, then verify_freeze --snapshot.
+# The archive must be in build/ first; hosting it is OWNER-BLOCKED (F-135).
 restore-corpus-snapshot:
-	@echo "restore-corpus-snapshot: no corpus snapshot fixture exists (F-135)" >&2; exit 1
+	python -m scripts.corpus_snapshot restore build/corpus_snapshot.dump

@@ -2804,3 +2804,29 @@ the synonym map, and a PASS would mean two things.
 handwritten slice); treat pending metrics as passing until measured (rejected:
 a gate that cannot evaluate a gated metric does not pass); skip the job without
 a key (rejected: indistinguishable from a pass in the PR checks).
+
+## 2026-10-02 — OWNER DECISION - CI restores a corpus snapshot; rebuilding from the freeze is the fallback only (F-135)
+
+Decided by the supervisor for the owner. `scripts/corpus_snapshot.py dump`
+writes `pg_dump -Fc --data-only` of companies, filings, chunks (with
+embeddings), xbrl_facts and xbrl_spans, and records the archive's sha256, size,
+tables and the parser/chunker versions it carries under `snapshot:` in
+`api/corpus_freeze.yaml` (first archive: 104,583,437 bytes, sha256
+9a8a82719f6d…). `restore` refuses an archive with another sha256, restores into
+the migrated schema, rebuilds the HNSW index in bulk, then runs
+`verify_freeze --snapshot` (raw documents are not in the archive; the recorded
+hash pins its content; every frozen accession must be present with its status
+and every chunk must have an embedding). The workflow downloads release
+`corpus-snapshot-<sha12>`, restores through the service container
+(`PG_EXEC=docker exec -i <id>`, so the client matches pg 18) and runs
+`make eval-fast VERIFY_FLAGS=--snapshot`. Checked locally into a scratch
+database: restored 22,354 chunks with embeddings, 43,122 facts, 209,608 spans;
+`verify_freeze --snapshot` mismatches 0.
+
+Hosting the archive needs repository credentials: OWNER-BLOCKED (F-135). The
+restore does not reproduce the HNSW graph, which moves dense top-50 lists and
+the metrics (F-136).
+
+*Fallback, documented only:* rebuild in CI from the freeze (about 90 SEC
+downloads per run at 8 req/s, parsing, chunking and embedding 22,354 chunks); not
+a CI step.
