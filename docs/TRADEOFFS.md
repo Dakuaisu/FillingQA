@@ -2420,6 +2420,19 @@ the same knowledge that failed, moved into the prompt); filter on period-end
 date ranges instead of fiscal labels (rejected: a stated FY label would then need
 the convention to turn into dates).
 
+*2026-10-02, OWNER DECISION, label defect.* The rule as set accepts quarter
+labels; the code rejected a leading article ("the third quarter of fiscal
+2023"), a defect in the rule's code, not a new rule. Fixed: an optional "the"
+before the label. In filter run d2e59dc4b792 this moves 2 items from ticker-only
+filtering to a resolved period (cmp_0018: "the third quarter of fiscal 2023" /
+"... 2025"; xbrl_0100: "the third quarter of fiscal 2026"); measured only in the
+next full run. Year-to-date phrases ("first three quarters of fiscal 2024", 10
+items, F-124) get no fourth rule: they come from our own comparison templates and
+a rule added after seeing them cost 2 items would be fitted to the eval set;
+ticker-only filtering loses no gold to a wrong period. Checked on d2e59dc4b792's
+recorded router responses, no new calls: cmp_0018 keeps 4 of 6 gold chunks in
+its filter, xbrl_0100 1 of 1.
+
 ## 2026-10-02 — OWNER DECISION - filters and intent budgets go into `make eval` (`config_4_routed`)
 
 Decided by the supervisor for the owner: PRD 7.1's pipeline is what Phase 4's

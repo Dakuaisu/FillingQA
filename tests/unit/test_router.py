@@ -66,6 +66,11 @@ def test_fy_labels_are_literal_and_other_text_is_unresolved():
     assert resolve_period("Q3 FY2024", [], ENDS) == [[2024, 3]]
     assert resolve_period("third quarter of fiscal 2024", [], ENDS) == [[2024, 3]]
     assert resolve_period("fiscal year 2023", [], ENDS) == [[2023, None]]
+    # cmp_0018 and xbrl_0100's stated periods: a quarter label with a leading article.
+    assert resolve_period("the third quarter of fiscal 2023", [], ENDS) == [[2023, 3]]
+    assert resolve_period("the third quarter of fiscal 2026", [], ENDS) == [[2026, 3]]
+    # Year-to-date phrases stay unresolved (F-124: no fourth rule).
+    assert resolve_period("the first three quarters of fiscal 2024", [], ENDS) is None
     for text in ("last year", "2024", "calendar 2024"):
         assert resolve_period(text, [], ENDS) is None
 

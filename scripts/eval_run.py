@@ -4,6 +4,7 @@ python -m scripts.eval_run                     # plan only: no retrieval, no mod
 python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
 python -m scripts.eval_run --report RUN_ID     # rebuild a finished run's report from its saved meta
+python -m scripts.eval_run --smoke SEED        # pipeline check, 12 seeded items: <id>.smoke.json
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
 
 The pipeline is `eval_run.pipeline` (PRD 11.6 configs: config_1_dense,
@@ -348,6 +349,72 @@ def run_items(todo: list[str], answer, results_path, errors_path) -> int:
     return 0
 
 
+SMOKE_PER_TYPE = 3
+
+
+def smoke_items(items: dict, seed: int) -> list[str]:
+    """SMOKE_PER_TYPE items per question type, drawn by seed from the sorted ids."""
+    import random
+
+    rng, out = random.Random(seed), []
+    for qt in sorted({it["question_type"] for it in items.values()}):
+        ids = sorted(i for i, it in items.items() if it["question_type"] == qt)
+        out += sorted(rng.sample(ids, SMOKE_PER_TYPE))
+    return out
+
+
+def smoke(items: dict, gen: dict, run_cfg: dict, seed: int) -> None:
+    """A pipeline check, not a measurement: runs the seeded subset end to end,
+    checks the records, builds and formats the report, and stores only what
+    broke. No metric is written."""
+    from api.db import connect
+
+    runs = REPO_ROOT / run_cfg["runs_dir"]
+    run_id, order = uuid.uuid4().hex[:12], smoke_items(items, seed)
+    meta = {**current_meta(gen, run_cfg), "run_id": run_id, "k": run_cfg["k"]}
+    print(f"smoke {run_id}: {len(order)} items (seed {seed}): {order}", flush=True)
+    results, failure = [], None
+    with connect() as conn:
+        ctx = Context(conn, run_cfg["pipeline"])
+        answer = answer_routed if run_cfg["pipeline"] == "config_4_routed" else answer_one
+        for n, iid in enumerate(order, start=1):
+            try:
+                results.append(answer(conn, ctx, items[iid], gen, run_cfg))
+            except Exception as e:  # a pipeline check records any failure, then stops
+                failure = {"item_id": iid, "error": f"{type(e).__name__}: {e}"}
+                print(f"FAIL at {iid}: {failure['error']}")
+                break
+            r = results[-1]
+            print(f"[{n}/{len(order)}] {iid} {r.get('intent')} {r['verdict']} "
+                  f"{r.get('latency_s')}s", flush=True)  # fmt: skip
+    checks = {"meta_disagreements": [], "report": None}
+    if not failure:
+        from eval.pipeline import depth_disagreements
+
+        checks["meta_disagreements"] = depth_disagreements(meta, results, items)
+        try:
+            format_report(build_report(items, results, meta, run_cfg["k"],
+                                       run_cfg["nli_threshold"]))  # fmt: skip
+            checks["report"] = "built and formatted"
+        except Exception as e:
+            checks["report"] = f"{type(e).__name__}: {e}"
+    ok = (
+        not failure
+        and not checks["meta_disagreements"]
+        and checks["report"] == ("built and formatted")
+    )
+    doc = {"kind": "PIPELINE CHECK, not a measurement: no number here goes into a finding "
+                   "except a failure", "seed": seed, "item_ids": order, "ok": ok,
+           "failure": failure, "checks": checks, "meta": meta,
+           "records": [{"item_id": r["item_id"], "keys": sorted(r), "intent": r.get("intent"),
+                        "verdict": r["verdict"], "abstain_reason": r.get("abstain_reason"),
+                        "contract_violations": r.get("contract_violations")}
+                       for r in results]}  # fmt: skip
+    (runs / f"{run_id}.smoke.json").write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print(f"smoke {run_id}: ok {ok}; failure {failure}; checks {checks}")
+    sys.exit(0 if ok else 1)
+
+
 def main() -> None:
     gen, run_cfg = generation(), eval_run()
     baseline_out = arg("--baseline-out")
@@ -360,6 +427,9 @@ def main() -> None:
     runs = REPO_ROOT / run_cfg["runs_dir"]
     meta = current_meta(gen, run_cfg)
 
+    if arg("--smoke"):
+        smoke(items, gen, run_cfg, int(arg("--smoke")))
+        return
     if arg("--report"):
         run_id = arg("--report")
         saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))

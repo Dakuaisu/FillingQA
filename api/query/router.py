@@ -23,7 +23,7 @@ KEYS = {"intent", "entities", "fiscal_periods", "form_types", "sub_queries", "co
 FORMS = {"10-K", "10-Q"}
 QUARTERS = {"first": 1, "second": 2, "third": 3, "fourth": 4}
 LABEL = re.compile(
-    r"^(?:(?:Q([1-4])|(first|second|third|fourth)\s+quarter(?:\s+of)?)\s*)?"
+    r"^(?:the\s+)?(?:(?:Q([1-4])|(first|second|third|fourth)\s+quarter(?:\s+of)?)\s*)?"
     r"(?:FY|fiscal(?:\s+year)?)\s*'?(\d{4})$", re.I)  # fmt: skip
 _NAMES = ("january", "february", "march", "april", "may", "june", "july", "august",
           "september", "october", "november", "december")  # fmt: skip

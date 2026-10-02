@@ -129,3 +129,12 @@ def test_routed_report_counts_filters_and_prints_the_intent_matrix():
     text = format_report(r)
     assert "F-118" in text and "F-110" in text and "router intent by question type" in text
     assert "F-118" not in format_report(build_report(ITEMS, RESULTS, meta("claude_cli"), 10))
+
+
+def test_smoke_draw_is_seeded_and_covers_every_question_type():
+    from scripts.eval_run import smoke_items
+
+    items = {f"{qt}_{i}": {"question_type": qt} for qt in ("a", "b", "c", "d") for i in range(9)}
+    draw = smoke_items(items, 7)
+    assert draw == smoke_items(items, 7) and len(draw) == 12
+    assert {items[i]["question_type"] for i in draw} == {"a", "b", "c", "d"}
