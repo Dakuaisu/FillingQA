@@ -2148,7 +2148,9 @@ whatever list the generator receives (moves with `top_k` and the score floor).
   2026-10-02): rerank runs `<run_id>.rerank.json` (`scripts.rerank_run`);
   filter runs `<run_id>.filter.json` (report, filters and both lists per item)
   with the raw router responses in `<run_id>.router.jsonl` and any failed calls
-  in `<run_id>.router_errors.jsonl` (`scripts.filter_run`; e.g. 8b6bcc14f274).
+  in `<run_id>.router_errors.jsonl` (`scripts.filter_run`; e.g. 8b6bcc14f274). Smoke runs
+  `<run_id>.smoke.json` (`scripts.eval_run --smoke SEED`): pipeline checks, not
+  measurements; they store which records broke and no metric.
 
 *Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
 migration exists yet; JSON keeps the run reproducible without one); one column

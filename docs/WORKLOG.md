@@ -5257,3 +5257,16 @@ cited claims with figure objects (21,448 and 29,789 million, difference 8,341,
 which no cited chunk prints: a rule-3 breach for the verifier), numerically
 correct by figure objects, no contract violations. `make test` 444 passed.
 No eval run yet on the routed, structured pipeline.
+
+## 2026-10-02 — Smoke run d2e9af80a8d8 (pipeline check, routed + structured)
+
+Label fix for "the third quarter of fiscal ..." (61e822e; cmp_0018 4 of 6 and
+xbrl_0100 1 of 1 gold inside their resolved filters, from d2e59dc4b792's recorded
+router responses). `python -m scripts.eval_run --smoke 20261002`, 02:05Z to 02:13Z,
+12 items (3 per question type: cmp_0010, 0011, 0035, seed_0070, 0071, 0073,
+seed_0006, 0032, 0042, xbrl_0070, 0082, 0123):
+
+    smoke d2e9af80a8d8: ok True; failure None; checks {'meta_disagreements': [], 'report': 'built and formatted'}
+
+No runner defect found. A pipeline check, not a measurement: nothing from it
+goes into a finding.
