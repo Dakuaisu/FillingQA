@@ -1,11 +1,87 @@
 # FilingQA
 
-Citation-grounded question answering over SEC 10-K and 10-Q filings, built around
-a CI-gated evaluation harness. The RAG pipeline exists to be measured; the harness
-is the point. Full specification in [`docs/PRD.md`](docs/PRD.md).
+Ask a question about the 10-K and 10-Q filings of eight US companies and get an
+answer broken into claims, each citing the filing chunk it came from, each
+checked against that chunk and, for figures, against the filing's own XBRL data;
+when the filings do not support an answer, it says so. The pipeline exists to be
+measured: the evaluation harness, and the CI gate built on it, is the point.
+Full specification in [`docs/PRD.md`](docs/PRD.md).
 
-**Status: Phase 5 (ship and document) started. The CI eval gate fails.** Phases
-1–3 are complete; Phase 4 is built up to the items that wait on the owner (below).
+## Architecture
+
+1. **Ingest** EDGAR filings and XBRL facts; inline-XBRL spans are captured before
+   the HTML is flattened (`api/ingest/`, `api/parse/ixbrl.py`).
+2. **Chunk** by document structure, tables whole, every chunk headed with its
+   company, form, period and section (`api/chunk/`).
+3. **Retrieve** with exact dense search plus BM25, fused by RRF
+   (`api/query/retrieve.py`, `api/query/bm25.py`).
+4. **Route**: a small model classifies intent and extracts companies and periods;
+   periods are resolved to fiscal years in code, not by the model
+   (`api/query/router.py`).
+5. **Rerank** with a cross-encoder, a score floor and a timeout that falls back
+   to the fused order (`api/query/rerank.py`).
+6. **Generate** schema-enforced claims, each with citations and a figure object
+   (`api/generate/claims.py`).
+7. **Verify** numeric grounding against the cited chunk
+   (`api/verify/grounding.py`), figures against the cited filing's XBRL fact
+   (`api/verify/xbrl_check.py`), prose by NLI, pending its threshold
+   (`api/verify/nli.py`).
+8. **Decide** PASS / PARTIAL / ABSTAIN from the checks (`api/verify/verdict.py`).
+9. **Serve** the same function the eval runs (`api/pipeline.py`, `api/server.py`,
+   `web/`).
+10. **Measure** per source and gate it (`eval/runner.py`, `eval/compare.py`).
+
+## What is hard here
+
+What the build found, not what the PRD predicted:
+
+- **The XBRL-templated questions are the hard slice.** Retrieval finds the right
+  filing but not the chunk; the misses are ranking and budget, not a defect
+  (F-98, F-138).
+- **The LLM-seeded questions are lexically easy:** they reuse their source
+  chunk's words, which flatters keyword retrieval (F-110).
+- **PASS is a faithfulness verdict, never a correctness claim.** An answer about
+  the wrong line item can be faithful to its chunk; correctness is measured
+  separately (F-133).
+- **Fiscal-year conventions:** NVIDIA's year ending January 2026 is fiscal 2026,
+  Target's is fiscal 2025; a model asked to pick the year picked wrong
+  confidently, so periods are resolved from the filings' own dates (F-119).
+- **Scale captions:** "in millions" does not cover per-share rows, and many
+  tables state no scale at all (F-90).
+- **Restatements versus rounding:** the facts feed drops XBRL precision, so a
+  rounded figure and a real restatement look alike (F-47).
+
+## Metrics
+
+Gated metrics by source (PRD 11.2, thresholds in `eval/thresholds.yaml`). No
+value appears here until a gated run exists; the figures in the status section
+below are model-free retrieval measurements, not this table.
+
+| Metric | xbrl_auto | llm_seeded | handwritten | aggregate |
+|---|---|---|---|---|
+| Sufficiency@10 | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| Faithfulness (pre) | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| Claim retention | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| Citation coverage | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| Answer correctness | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| False-answer rate | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| Over-abstention rate | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+| XBRL contradiction rate | waiting on a gated run (F-59) | waiting on a gated run (F-59) | waiting on F-103 | waiting on a gated run (F-59) |
+
+## Reproduce
+
+- `make eval`: every candidate item through the served pipeline, a per-source
+  report and the run files in `eval/runs/`.
+- `make eval-fast`: the committed 60-item subset, then the gate
+  (`eval/compare.py`), which exits non-zero on any failed or pending metric.
+- On the default `claude_cli` backend every run is a development run: never a
+  baseline, never a result, never able to pass the gate. Gated runs use
+  `anthropic_api`.
+
+## Status
+
+**Built up to the items that wait on the owner. The CI eval gate fails.** Phases
+1–3 are complete; Phases 4 and 5 are built up to the owner-blocked items below.
 
 ### Where the gate stands
 

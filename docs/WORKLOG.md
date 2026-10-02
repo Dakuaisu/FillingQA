@@ -5759,3 +5759,15 @@ EXPECTED_SHA256=0000 printed "refusing /snapshot/corpus_snapshot.dump: sha256
 F-143 logged (owner-blocked deploy with exact commands); README "Deploy" section;
 owner-blocked list (README table and `eval/dashboard.yaml`) gains F-143, `/metrics`
 fixture recaptured. `make lint` clean; `make test` 502 passed, e2e 12 passed.
+
+## 2026-10-02 — README narrative (Phase 5); servers stopped
+
+README gains, above the status section: what the system does and why the
+harness is the point; a ten-line architecture list with the file each step lives
+in; "What is hard here" from the findings (F-98, F-138, F-110, F-133, F-119,
+F-90, F-47); the PRD 11.2 metrics skeleton by source with every cell "waiting on
+a gated run (F-59)" and the handwritten column "waiting on F-103", no value; how
+to reproduce (`make eval`, `make eval-fast`, the gate, the dev-backend rule). The
+only figures in the README remain the status section's model-free retrieval
+numbers; `tests/unit/test_metrics.py` passes. No `claude_cli` number, no
+screenshot. The local API and web dev servers are stopped.
