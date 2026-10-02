@@ -5290,3 +5290,14 @@ ok, XBRL `verified`; the difference claim "$4,008 million" grounded as derived
 Every correct comparison answer would have been PARTIAL. Fixed (derived figure's
 scale follows its operands; TRADEOFFS amendment; unit test). Smoke rerun below.
 The report's refusal is the expected one while `nli_threshold` is null.
+
+Smoke rerun after the fix, 02:34Z to 02:41Z:
+
+    smoke b53bb3d79588: ok True; failure None; checks {'meta_disagreements': [], 'report': 'refused: claims present and nli_threshold null (expected, PRD 7.5 gate)'}
+
+cmp_0010 and cmp_0035 now PASS. seed_0006 came back `ABSTAIN` (`verifier`); a
+direct rerun gave a different answer that PASSed, so the abstention could not be
+reproduced and the smoke file kept no claims to inspect. Smoke records now carry
+each dropped claim's failed check names (`failed_checks`), still no metric.
+F-82, F-85, F-87 resolved; F-125 (NLI gate, owner-blocked) and F-126 (period
+accuracy with an uncheckable period) logged.

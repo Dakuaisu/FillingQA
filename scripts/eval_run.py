@@ -377,6 +377,22 @@ def run_items(todo: list[str], answer, results_path, errors_path) -> int:
 
 
 SMOKE_PER_TYPE = 3
+FIGURE_CHECKS = ("citation_valid", "entity_ok", "numbers_grounded", "unit_ok", "period_stated")
+
+
+def failed_checks(r: dict) -> list[list[str]]:
+    """Per claim not kept by the gate, the names of the checks it failed."""
+    kept = {c["claim_id"] for c in r.get("claims_post") or []}
+    out = []
+    for c in r.get("claims_pre") or []:
+        if c["claim_id"] in kept or r.get("claims_post") is None:
+            continue
+        k = c["checks"]
+        names = [n for n in FIGURE_CHECKS if not k.get(n)] if c.get("figure") else []
+        if k.get("xbrl_contradiction"):
+            names.append("xbrl_contradiction")
+        out.append([c["claim_id"], *(names or ["entail"])])
+    return out
 
 
 def smoke_items(items: dict, seed: int) -> list[str]:
@@ -439,7 +455,8 @@ def smoke(items: dict, gen: dict, run_cfg: dict, seed: int) -> None:
            "failure": failure, "checks": checks, "meta": meta,
            "records": [{"item_id": r["item_id"], "keys": sorted(r), "intent": r.get("intent"),
                         "verdict": r["verdict"], "abstain_reason": r.get("abstain_reason"),
-                        "contract_violations": r.get("contract_violations")}
+                        "contract_violations": r.get("contract_violations"),
+                        "failed_checks": failed_checks(r)}
                        for r in results]}  # fmt: skip
     (runs / f"{run_id}.smoke.json").write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
     print(f"smoke {run_id}: ok {ok}; failure {failure}; checks {checks}")
