@@ -354,6 +354,7 @@ OWNER-BLOCKED: nothing here is reviewed. Development-grade: seeded and no-contex
 - Other chunks in this filing printing '(7,005)' (candidate alternative evidence, not gold): 0
 
 ## seed_0028 (table, table NVDA 10-Q I.2)
+**Scale exception (F-90):** gold chunk(s) `0001045810-24-000316:327.0:327.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: What was NVIDIA Corp's revenue for the three months ended Oct 27, 2024 (Q3 FY2025)?
 - Answer: $35,082
@@ -419,6 +420,7 @@ OWNER-BLOCKED: nothing here is reviewed. Development-grade: seeded and no-contex
 - Other chunks in this filing printing '$267' (candidate alternative evidence, not gold): 0
 
 ## seed_0033 (table, table PFE 10-Q I.1)
+**Scale exception (F-90):** gold chunk(s) `0000078003-25-000138:70.1:70.1` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: What was Pfizer Inc.'s Total Equity as of the balance date June 29, 2025, reported in its Q2 FY2025 10-Q condensed consolidated statements of equity?
 - Answer: $89,012
@@ -445,6 +447,7 @@ OWNER-BLOCKED: nothing here is reviewed. Development-grade: seeded and no-contex
 - Other chunks in this filing printing '$233' (candidate alternative evidence, not gold): 1 -- 0000078003-23-000115:494.0:494.0
 
 ## seed_0035 (table, table TGT 10-K II.8)
+**Scale exception (F-90):** gold chunk(s) `0000027419-26-000016:688.0:688.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: What was Target Corporation's total investment in share repurchases in fiscal year 2025?
 - Answer: $403

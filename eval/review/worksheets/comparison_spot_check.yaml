@@ -36,7 +36,17 @@ decisions:
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000019617-24-000326:2054.0:2054.0
+  - 0000019617-25-000421:1959.0:1959.0
+  - 0001628280-26-029344:1941.0:1941.0
 - item_id: cmp_0018
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000019617-23-000524:2442.0:2442.0
+  - 0000019617-24-000611:2236.0:2236.0
+  - 0001628280-25-048859:2170.0:2170.0

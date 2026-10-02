@@ -3209,3 +3209,16 @@ Owner review D4, overriding PRD 7.4 / 11.4 and Appendix A's `temperature=0.0`:
 generation stays without a temperature (the pinned `anthropic==1.11.0`
 `Messages.create` takes no sampling parameters, F-60), and run-to-run noise
 keeps being measured. No SDK change.
+
+## 2026-10-02 — OWNER DECISION - unit-scale rules as built, with a review aid (D5; step 4c, F-45, F-90)
+
+Owner review D5: the table-scale rules stand, including PRD 6.2 step 3's
+"except per share" exceptions not being captured (F-90). To make that visible in
+review, `python -m scripts.flag_scale_exceptions` flags every item whose gold
+chunk is a table with a `unit_scale` and a scale-exception clause (the F-90
+measurement's `SCALE_EXCEPTION` / `PER_SHARE_EXCEPTION` on the raw text):
+`scale_exception: true` and `scale_exception_chunks` in
+`eval/review/worksheets/*.yaml`, one note line under the item in the spot-check
+sheets. 2 of 9 comparison, 3 of 83 llm_seeded, 6 of 44 xbrl_numeric entries. No
+item is changed, dropped or re-drawn; no review decision is filled; the review
+import ignores the new keys.

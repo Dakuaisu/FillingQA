@@ -966,6 +966,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - cmp_0010: 27734 in non-gold 0000070858-25-000268:122.0:122.0 [Bank of America Corporation (BAC) | 10-Q | Q2 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations] | | Net interest income | $14,670 | $14,443 | $14,359 | $13,967 | $13,702 | $29,113 | $27,734 |
 
 ## cmp_0016
+**Scale exception (F-90):** gold chunk(s) `0000019617-24-000326:2054.0:2054.0`, `0000019617-25-000421:1959.0:1959.0`, `0001628280-26-029344:1941.0:1941.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: By how much did JPMorgan Chase's income tax expense change from the first quarter of fiscal 2024 to the first quarter of fiscal 2026?
 - Reference answer: $3,985 million for the first quarter of fiscal 2026, compared with $3,874 million for the first quarter of fiscal 2024: an increase of $111 million.
@@ -1145,6 +1146,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - cmp_0016: 3874 in non-gold 0000019617-24-000326:171.0:171.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q1 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income tax expense | 3,874 | (a) | 3,345 | 16 |
 
 ## cmp_0018
+**Scale exception (F-90):** gold chunk(s) `0000019617-23-000524:2442.0:2442.0`, `0000019617-24-000611:2236.0:2236.0`, `0001628280-25-048859:2170.0:2170.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: By how much did JPMorgan Chase's income before income taxes change from the third quarter of fiscal 2023 to the third quarter of fiscal 2025?
 - Reference answer: $18,743 million for the third quarter of fiscal 2025, compared with $16,733 million for the third quarter of fiscal 2023: an increase of $2,010 million.

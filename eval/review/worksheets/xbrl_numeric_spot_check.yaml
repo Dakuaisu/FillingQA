@@ -116,26 +116,49 @@ decisions:
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0001628280-26-054343:2102.0:2102.0
 - item_id: xbrl_0066
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0001628280-26-054343:2102.0:2102.0
 - item_id: xbrl_0069
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000019617-24-000611:2236.0:2236.0
+  - 0001628280-25-048859:2170.0:2170.0
 - item_id: xbrl_0072
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0001628280-25-048859:2173.0:2173.0
 - item_id: xbrl_0075
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000019617-24-000611:2236.0:2236.0
+  - 0000019617-24-000611:2240.1:2240.1
+  - 0001628280-25-048859:2170.0:2170.0
+  - 0001628280-25-048859:2173.1:2173.1
 - item_id: xbrl_0079
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000019617-25-000615:2151.0:2151.0
+  - 0001628280-26-054343:2102.0:2102.0
 - item_id: xbrl_0084
   decision: null
   evidence_sets: null

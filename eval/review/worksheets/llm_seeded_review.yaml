@@ -116,6 +116,9 @@ decisions:
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0001045810-24-000316:327.0:327.0
 - item_id: seed_0029
   decision: null
   evidence_sets: null
@@ -136,6 +139,9 @@ decisions:
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000078003-25-000138:70.1:70.1
 - item_id: seed_0034
   decision: null
   evidence_sets: null
@@ -144,6 +150,9 @@ decisions:
   decision: null
   evidence_sets: null
   note: ''
+  scale_exception: true
+  scale_exception_chunks:
+  - 0000027419-26-000016:688.0:688.0
 - item_id: seed_0036
   decision: null
   evidence_sets: null

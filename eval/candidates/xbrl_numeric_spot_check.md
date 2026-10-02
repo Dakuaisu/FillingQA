@@ -1884,6 +1884,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0048: 11068 in non-gold 0000909832-24-000049:329.0:329.0 [COSTCO WHOLESALE CORP /NEW (COST) | 10-K | FY2024 | Item 7: Management's Discussion and Analysis of Financial Conditions and Results of Operations (amounts in millions, except per share, share, membership fee, and warehouse count data)] | | Net cash provided by operating activities | $11,339 | $11,068 | $7,392 |
 
 ## xbrl_0063
+**Scale exception (F-90):** gold chunk(s) `0001628280-26-054343:2102.0:2102.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: According to its 10-Q for the second quarter of fiscal 2026, what figure did JPMorgan Chase report for noninterest expense in the three months ended June 30, 2026?
 - Reference answer: $27,316 million for the three months ended June 30, 2026.
@@ -1936,6 +1937,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0063: 27316 in non-gold 0001628280-26-054343:189.0:189.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Total noninterest expense | $27,316 | $23,779 | 15% | $54,166 | $47,376 | 14% |
 
 ## xbrl_0066
+**Scale exception (F-90):** gold chunk(s) `0001628280-26-054343:2102.0:2102.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: How much net interest income did JPMorgan Chase report for the three months ended June 30, 2026?
 - Reference answer: $25,511 million for the three months ended June 30, 2026.
@@ -2005,6 +2007,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0066: 25511 in non-gold 0001628280-26-054343:114.1:114.1 [JPMorgan Chase & Co (JPM) | 10-Q | Q2 FY2026 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Net interest income | 25,511 |  | 23,209 | 10 | 50,877 |  | 46,482 | 9 |
 
 ## xbrl_0069
+**Scale exception (F-90):** gold chunk(s) `0000019617-24-000611:2236.0:2236.0`, `0001628280-25-048859:2170.0:2170.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: How much income tax expense did JPMorgan Chase report for the three months ended September 30, 2024?
 - Reference answer: $4,080 million for the three months ended September 30, 2024.
@@ -2102,6 +2105,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0069: 4080 in non-gold 0001628280-25-048859:222.0:222.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income tax expense | 4,350 | 4,080 | 7 | 11,412 | 13,240 | (14) |
 
 ## xbrl_0072
+**Scale exception (F-90):** gold chunk(s) `0001628280-25-048859:2173.0:2173.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: How much income before income taxes did JPMorgan Chase report for the nine months ended September 30, 2025?
 - Reference answer: $55,435 million for the nine months ended September 30, 2025.
@@ -2153,6 +2157,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0072: 55435 in non-gold 0001628280-25-048859:222.0:222.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2025 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Income before income tax expense | $18,743 | $16,978 | 10% | $55,435 | $57,706 | (4)% |
 
 ## xbrl_0075
+**Scale exception (F-90):** gold chunk(s) `0000019617-24-000611:2236.0:2236.0`, `0000019617-24-000611:2240.1:2240.1`, `0001628280-25-048859:2170.0:2170.0`, `0001628280-25-048859:2173.1:2173.1` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: What did JPMorgan Chase report as its total assets as of September 30, 2024?
 - Reference answer: $4,210,048 million as of September 30, 2024.
@@ -2250,6 +2255,7 @@ From dev run(s) 19693d4aa874 (`python -m scripts.f100_check`): the item was nume
 - xbrl_0075: 4210048 in non-gold 0000019617-24-000611:250.0:250.0 [JPMorgan Chase & Co (JPM) | 10-Q | Q3 FY2024 | Part I, Item 2: Management’s Discussion and Analysis of Financial Condition and Results of Operations.] | | Total assets | $4,210,048 | $3,875,393 | 9% |
 
 ## xbrl_0079
+**Scale exception (F-90):** gold chunk(s) `0000019617-25-000615:2151.0:2151.0`, `0001628280-26-054343:2102.0:2102.0` carry a scale-exception clause; the caption's scale may not apply to every figure. Check the scale.
 
 - Question: JPMorgan Chase net interest income, the second quarter of fiscal 2025: what was the figure?
 - Reference answer: $23,209 million for the three months ended June 30, 2025.
