@@ -34,7 +34,7 @@ import yaml
 
 from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval, router
 from api.generate import claude_cli
-from api.generate.generator import generate, refuse_dev_baseline
+from api.generate.generator import generate, generate_structured, refuse_dev_baseline
 from eval.pipeline import depths
 from eval.runner import build_report, format_report
 from scripts.write_freeze import FREEZE_FILE
@@ -97,6 +97,17 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
     if pipeline in ("config_4_rerank", "config_4_routed"):
         meta["rerank"] = rerank()
         meta["machine"] = machine()
+    if gen.get("structured"):
+        from api.generate import claims
+
+        meta["generation_contract"] = {
+            "kind": "PRD 7.4 structured claims, schema enforced by the backend",
+            "schema_sha256": hashlib.sha256(
+                json.dumps(claims.SCHEMA, sort_keys=True).encode()).hexdigest(),
+            "system_prompt_sha256": hashlib.sha256(claims.SYSTEM_PROMPT.encode()).hexdigest(),
+        }  # fmt: skip
+    else:
+        meta["generation_contract"] = {"kind": "plain prompt, free text (Phase 2 baseline)"}
     if pipeline == "config_4_routed":
         meta["router"] = router()
         meta["model_requested"] = {t: gen[t] for t in ("tier_small", "tier_large")}
@@ -179,19 +190,9 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
                 "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
     texts = texts_for(conn, c["generator_input"])
     chunks = [Retrieved(cid, 0.0, texts[cid]) for cid in c["generator_input"]]
-    last = None
-    for _ in range(TRANSPORT_RETRIES):
-        try:
-            a = generate(it["question"], chunks, gen, TIER)
-            break
-        except claude_cli.TransportError as e:
-            last = e
-    else:
-        raise last
-    if gen[TIER] not in a.model.split(","):
-        raise claude_cli.CliError(f"served {a.model}, requested {gen[TIER]}")
+    a = call_model(chunks, it["question"], gen, TIER)
     return {
-        **record, "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
+        **record, **answer_fields(a, c["generator_input"]),
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,
@@ -210,6 +211,8 @@ def call_model(prompt_or_chunks, question, gen: dict, tier: str):
         try:
             if question is None:
                 a = complete(prompt_or_chunks, gen, tier)
+            elif gen.get("structured"):
+                a = generate_structured(question, prompt_or_chunks, gen, tier)
             else:
                 a = generate(question, prompt_or_chunks, gen, tier)
             break
@@ -220,6 +223,23 @@ def call_model(prompt_or_chunks, question, gen: dict, tier: str):
     if gen[tier] not in a.model.split(","):
         raise claude_cli.CliError(f"served {a.model}, requested {gen[tier]}")
     return a
+
+
+def answer_fields(a, given: list[str]) -> dict:
+    """The answer part of a result. Structured (PRD 7.4): claims, the model's own
+    abstention (`sufficient_evidence` false) and contract violations; plain: text only."""
+    from api.generate.claims import contract_violations
+
+    if a.structured is None:
+        return {"answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS"}
+    doc = a.structured
+    abstained = not doc["sufficient_evidence"]
+    out = {"answer": {"text": a.text, "claims": doc["answer_claims"], "abstained": abstained},
+           "verdict": "ABSTAIN" if abstained else "PASS", "structured": doc,
+           "contract_violations": contract_violations(doc, given)}  # fmt: skip
+    if abstained:
+        out["abstain_reason"] = "insufficient_evidence"
+    return out
 
 
 def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
@@ -302,7 +322,7 @@ def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dic
     a = call_model([Retrieved(c, 0.0, texts[c]) for c in post], it["question"], gen,
                    budget["tier"])  # fmt: skip
     return {
-        **record, "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
+        **record, **answer_fields(a, post),
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,

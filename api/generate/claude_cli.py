@@ -37,9 +37,13 @@ class CliResult:
     output_tokens: int
     cache_read_tokens: int = 0
     cache_creation_tokens: int = 0
+    structured: dict | None = None  # `structured_output` when a JSON schema was given
 
 
-def build_command(prompt: str, model: str, system_prompt: str) -> list[str]:
+def build_command(
+    prompt: str, model: str, system_prompt: str, json_schema: dict | None = None
+) -> list[str]:
+    schema = ["--json-schema", json.dumps(json_schema)] if json_schema else []
     return [
         "claude", "-p", prompt,
         "--model", model,
@@ -50,6 +54,7 @@ def build_command(prompt: str, model: str, system_prompt: str) -> list[str]:
         "--setting-sources", "",
         "--no-session-persistence",
         "--output-format", "json",
+        *schema,
     ]  # fmt: skip
 
 
@@ -57,8 +62,9 @@ def child_env(env: dict[str, str]) -> dict[str, str]:
     return {k: v for k, v in env.items() if k != "ANTHROPIC_API_KEY"}
 
 
-def parse_output(stdout: str) -> CliResult:
-    """The CLI's JSON result; any malformed document raises CliError, never KeyError."""
+def parse_output(stdout: str, structured: bool = False) -> CliResult:
+    """The CLI's JSON result; any malformed document raises CliError, never KeyError.
+    With `structured`, the schema-enforced `structured_output` object is required."""
     try:
         doc = json.loads(stdout)
     except json.JSONDecodeError as e:
@@ -78,6 +84,9 @@ def parse_output(stdout: str) -> CliResult:
     text = doc.get("result")
     if not isinstance(text, str) or not text.strip():
         raise CliError(f"claude CLI result is missing or empty: {text!r}")
+    so = doc.get("structured_output")
+    if structured and not isinstance(so, dict):
+        raise CliError("claude CLI result has no structured_output (schema not enforced)")
     return CliResult(
         text=text,
         model=",".join(sorted(model_usage)),
@@ -85,14 +94,15 @@ def parse_output(stdout: str) -> CliResult:
         output_tokens=usage["output_tokens"],
         cache_read_tokens=usage.get("cache_read_input_tokens", 0),
         cache_creation_tokens=usage.get("cache_creation_input_tokens", 0),
+        structured=so if structured else None,
     )
 
 
-def run(prompt: str, model: str, system_prompt: str) -> CliResult:
+def run(prompt: str, model: str, system_prompt: str, json_schema: dict | None = None) -> CliResult:
     with tempfile.TemporaryDirectory(prefix="filingqa-cli-") as cwd:
         try:
             proc = subprocess.run(
-                build_command(prompt, model, system_prompt),
+                build_command(prompt, model, system_prompt, json_schema),
                 cwd=cwd,
                 env=child_env(dict(os.environ)),
                 capture_output=True,
@@ -104,7 +114,7 @@ def run(prompt: str, model: str, system_prompt: str) -> CliResult:
             raise TransportError(f"claude CLI timed out after {TIMEOUT_S}s") from e
     if proc.returncode != 0 and not proc.stdout.strip():
         raise TransportError(f"claude CLI exited {proc.returncode}: {proc.stderr.strip()[:500]}")
-    return parse_output(proc.stdout)
+    return parse_output(proc.stdout, structured=json_schema is not None)
 
 
 def version() -> str:

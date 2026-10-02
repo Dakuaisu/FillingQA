@@ -265,6 +265,9 @@ generation:
   max_tokens: 1024        # the Messages API requires a cap; not in Appendix A
   # claude_cli answers are dev-only: never README, CI baseline, or compared with anthropic_api.
   backend: claude_cli       # claude_cli | anthropic_api
+  # PRD 7.4 claims with citations, schema-enforced (api/generate/claims.py);
+  # false gives the Phase 2 baseline's plain prompt.
+  structured: true
   cli_system_prompt: "You are a helpful assistant."
 
 # xbrl_auto sampler (PRD 11.1: 160 `xbrl_numeric` items). Equal allocation per
