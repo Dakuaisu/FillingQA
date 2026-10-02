@@ -41,6 +41,7 @@ class ChunkNumbers:
     pct: set[Decimal] = field(default_factory=set)
     except_per_share: bool = False
     zero_span: bool = False  # holds an inline-XBRL span of value 0 (F-82)
+    unscaled: set[Decimal] = field(default_factory=set)  # printed bare, chunk states no scale
 
 
 def _figures(text: str):
@@ -65,6 +66,8 @@ def chunk_numbers(text: str, zero_span: bool = False) -> ChunkNumbers:
             out.scaled.add(v * Decimal(10) ** SCALE_WORDS[m.group("scale").lower()])
         elif scale is not None:
             out.scaled.add(v * Decimal(10) ** scale)
+        else:
+            out.unscaled.add(v)
     return out
 
 
@@ -112,6 +115,22 @@ def grounded_in(n: Num, chunks: dict[str, ChunkNumbers]) -> list[str]:
         if ok:
             hits.append(cid)
     return hits
+
+
+UNSTATED_SCALES = (3, 6, 9, 12)
+
+
+def unscaled_in(n: Num, chunks: dict[str, ChunkNumbers]) -> list[str]:
+    """Cited chunks stating no scale that print n's digits: n is a bare printed
+    number times 10^3, 10^6, 10^9 or 10^12 (F-130; the scale cannot be checked)."""
+    if n.pct:
+        return []
+    scales = [Decimal(10) ** k for k in UNSTATED_SCALES]
+    return [
+        cid
+        for cid, c in chunks.items()
+        if any(n.value == v * f for v in c.unscaled for f in scales)
+    ]
 
 
 def unit_ok(figure: dict | None, chunks: dict[str, ChunkNumbers]) -> bool | None:
@@ -163,40 +182,45 @@ def derived(n: Num, others: list[Num]) -> bool:
 
 def ground_answer(claims: list[dict], chunk_text: dict[str, str],
                   zero_span_chunks: set[str]) -> list[dict]:  # fmt: skip
-    """Per claim: numbers with where each is grounded, `numbers_grounded`,
-    `numbers_derived`, `unit_ok`, `period_stated`. Only the claim's own cited
-    chunks that were given to the generator count (`chunk_text`)."""
+    """Per claim: numbers with where and how each is grounded (`printed`,
+    `printed_unscaled` when the chunk states no scale, `derived`),
+    `numbers_grounded`, `numbers_derived`, `unit_ok` (true / false / "unknown" /
+    None), `period_stated`. Only the claim's own cited chunks that were given to
+    the generator count (`chunk_text`)."""
     parsed = {cid: chunk_numbers(t, cid in zero_span_chunks) for cid, t in chunk_text.items()}
     rows = []
     for c in claims:
         cited = {x: parsed[x] for x in c["citations"] if x in parsed}
-        nums = claim_numbers(c["text"], c.get("figure"))
-        found = [{"num": n, "in": grounded_in(n, cited)} for n in nums]
+        found = []
+        for n in claim_numbers(c["text"], c.get("figure")):
+            hits = grounded_in(n, cited)
+            if hits:
+                found.append({"num": n, "in": hits, "how": "printed"})
+                continue
+            bare = unscaled_in(n, cited)
+            found.append({"num": n, "in": bare, "how": "printed_unscaled" if bare else None})
         rows.append({"claim": c, "cited": cited, "numbers": found})
-    pool = [x["num"] for r in rows for x in r["numbers"] if x["in"]]
+    pool = [x["num"] for r in rows for x in r["numbers"] if x["how"]]
     out = []
     for r in rows:
         nums, any_derived = [], False
         for x in r["numbers"]:
-            how = "printed" if x["in"] else None
-            if not x["in"]:
-                others = [p for p in pool if p is not x["num"]]
-                if derived(x["num"], others):
-                    how, any_derived = "derived", True
+            how = x["how"]
+            if how is None and derived(x["num"], [p for p in pool if p is not x["num"]]):
+                how, any_derived = "derived", True
             nums.append({"printed": x["num"].printed, "value": str(x["num"].value),
                          "pct": x["num"].pct, "grounded_in": x["in"], "how": how})  # fmt: skip
         c = r["claim"]
         fv = figure_value(c.get("figure"))
         unit = unit_ok(c.get("figure"), r["cited"])
-        if (
-            unit is False
-            and fv is not None
-            and any(
-                n["how"] == "derived" and Decimal(n["value"]) == fv.value and n["pct"] == fv.pct
-                for n in nums
-            )
-        ):
-            unit = True  # derived from the answer's own figures at their printed scale (F-85)
+        if unit is False and fv is not None:
+            hows = {
+                n["how"] for n in nums if Decimal(n["value"]) == fv.value and n["pct"] == fv.pct
+            }
+            if "derived" in hows:
+                unit = True  # derived from the answer's own figures at their printed scale (F-85)
+            elif "printed_unscaled" in hows:
+                unit = "unknown"  # the chunk states no scale (F-130)
         out.append({
             "numbers": nums,
             "numbers_grounded": all(n["how"] for n in nums),

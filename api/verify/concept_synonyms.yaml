@@ -1,8 +1,9 @@
 # Hand-written synonym map for the curated line items (PRD 6.5.4), read by
 # api/verify/xbrl_check.py together with eval/concepts.yaml (labels, tags,
-# variants). Keys are line-item ids from eval/concepts.yaml; matching is on the
-# normalized phrase (lowercase, punctuation and "total"/"net" kept as written).
-revenue: [revenue, revenues, total revenue, total revenues, net sales, total net sales, net revenue, net revenues]
+# variants). 2026-10-02: "allowance for credit losses", bare "net sales" and
+# "share repurchases" removed after eval run a4e39a65c2c8 (F-128). Keys are
+# line-item ids from eval/concepts.yaml; matching is on the normalized phrase (lowercase, punctuation and "total"/"net" kept as written).
+revenue: [revenue, revenues, total revenue, total revenues, total net sales, net revenue, net revenues]
 cost_of_revenue: [cost of revenue, cost of revenues, cost of sales, total cost of sales, cost of goods sold]
 gross_profit: [gross profit, gross margin]
 operating_income: [operating income, income from operations, operating income (loss)]
@@ -20,11 +21,11 @@ accounts_receivable: [accounts receivable net, accounts receivable]
 long_term_debt_noncurrent: [long-term debt, long term debt, long-term debt noncurrent, long-term debt excluding current portion]
 operating_cash_flow: [net cash provided by operating activities, operating cash flow, cash from operations]
 capex: [payments for property plant and equipment, capital expenditures, capex, purchases of property and equipment]
-share_repurchases: [payments for repurchases of common stock, share repurchases, repurchases of common stock, stock repurchases]
+share_repurchases: [payments for repurchases of common stock, repurchases of common stock, stock repurchases]
 net_interest_income: [net interest income]
 noninterest_income: [noninterest income, non-interest income, total noninterest income]
 noninterest_expense: [noninterest expense, non-interest expense, total noninterest expense]
-credit_loss_allowance: [allowance for credit losses, allowance for credit losses on loans, allowance for loan losses]
+credit_loss_allowance: [allowance for credit losses on loans, allowance for loan losses]
 deposits: [total deposits, deposits]
 pretax_income: [income before income taxes, pretax income, income before taxes, earnings before income taxes]
 income_tax: [income tax expense, provision for income taxes, income taxes]

@@ -262,6 +262,8 @@ def format_report(report: dict) -> str:
             ("Citation coverage", lambda c: _gen(c["generation"], "citation_coverage")),
             ("Citation precision", lambda c: _gen(c["generation"], "citation_precision")),
             ("Unit-scale accuracy", lambda c: _gen(c["generation"], "unit_scale_accuracy")),
+            ("  scale unknown (in denominator)",
+             lambda c: _gen(c["generation"], "unit_scale_unknown")),
             ("Period accuracy", lambda c: _gen(c["generation"], "period_accuracy")),
             ("  checkable only (F-126)",
              lambda c: _gen(c["generation"], "period_accuracy_checkable")),

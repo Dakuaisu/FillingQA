@@ -2,6 +2,8 @@
 
 Run a4e39a65c2c8, seed 20261006, 40 pairs drawn from 95 prose (claim, cited chunk) pairs, stratified {'llm_seeded/other checks pass': 40, 'xbrl_auto/other checks pass': 0}. For each pair: does the chunk, on its own, support the claim? Label in labels_v1.yaml: true or false. No score is shown here.
 
+**Note (2026-10-02):** the xbrl_auto stratum had one pair (of 95), which rounds to zero, so all 40 pairs are prose claims from the llm_seeded slice: the gate is validated on seeded prose only.
+
 ## p01 (seed_0070 1, chunk 0000078003-24-000039:239.0:246.0)
 
 **Claim:** Pfizer characterizes the trend in formulary placement of its branded products by managed care organizations as increasingly being placed on higher tiers or in non-preferred status.

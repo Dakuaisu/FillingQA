@@ -28,7 +28,7 @@ def supported(claim: dict, nli_threshold: float) -> bool:
     if is_figure(claim):
         return bool(
             check(claim, "numbers_grounded")
-            and check(claim, "unit_ok")
+            and check(claim, "unit_ok") in (True, "unknown")  # unknown scale kept (F-130)
             and check(claim, "period_stated")
             and not check(claim, "xbrl_contradiction")
         )

@@ -5,6 +5,7 @@ python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
 python -m scripts.eval_run --report RUN_ID     # rebuild a finished run's report from its saved meta
 python -m scripts.eval_run --rescore RUN_ID T   # derived report at nli_threshold T (F-125)
+python -m scripts.eval_run --reverify RUN_ID TAG  # model-free checks again: <id>.reverify-TAG.json
 python -m scripts.eval_run --smoke SEED        # pipeline check, 12 seeded items: <id>.smoke.json
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
 
@@ -414,6 +415,88 @@ def rescore_run(items: dict, run_cfg: dict, run_id: str, nli_threshold: float) -
     print(f"wrote {path}")
 
 
+def verdict_summary(items: dict, results: list[dict]) -> dict:
+    """Counts the re-verification compares: verdicts and abstain reasons per
+    source, XBRL statuses, ungrounded and scale-unknown figure claims."""
+    from collections import Counter
+
+    def src(r):
+        return items[r["item_id"]]["source"]
+
+    figs = [c for r in results for c in r.get("claims_pre") or [] if c.get("figure")]
+    verdicts = Counter(f"{src(r)}/{r['verdict']}" for r in results)
+    reasons = Counter(f"{src(r)}/{r.get('abstain_reason')}" for r in results
+                      if r["verdict"] == "ABSTAIN")  # fmt: skip
+    status = Counter(str((c["checks"].get("xbrl") or {}).get("status")) for c in figs)
+    return {
+        "verdict": dict(sorted(verdicts.items())),
+        "abstain_reason": dict(sorted(reasons.items())),
+        "xbrl_status": dict(sorted(status.items())),
+        "figure_claims": len(figs),
+        "figure_ungrounded": sum(not c["checks"]["numbers_grounded"] for c in figs),
+        "figure_unit_false": sum(c["checks"]["unit_ok"] is False for c in figs),
+        "figure_unit_unknown": sum(c["checks"]["unit_ok"] == "unknown" for c in figs),
+    }
+
+
+def reverify_run(items: dict, run_cfg: dict, run_id: str, tag: str) -> None:
+    """Re-run the model-free checks (grounding, XBRL) over a run's stored claims,
+    then the verdicts; a derived file, never a new run (TRADEOFFS, F-128)."""
+    from api.db import connect
+    from api.verify.gate import Gate
+    from api.verify.verdict import item_verdict, verdict
+
+    runs = REPO_ROOT / run_cfg["runs_dir"]
+    saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
+    before = read_jsonl(runs / f"{run_id}.results.jsonl")
+    threshold = saved.get("verification", {}).get("nli_threshold")
+    names = yaml.safe_load(TEMPLATES.read_text(encoding="utf-8"))["company_names"]
+    after = []
+    with connect() as conn:
+        gate = Gate(conn, names)
+        for r in before:
+            if r.get("claims_pre") is None:
+                after.append(r)
+                continue
+            texts = texts_for(conn, r["generator_input"])
+            pre = gate.recheck(r["claims_pre"], r["generator_input"], texts)
+            gv, post = verdict(pre, threshold)
+            v, why = item_verdict(bool(r["answer"].get("abstained")), gv, pre)
+            new = {**r, "claims_pre": pre, "claims_post": post, "gate_verdict": gv, "verdict": v}
+            new.pop("abstain_reason", None)
+            if why:
+                new["abstain_reason"] = why
+            after.append(new)
+    meta = {k: v for k, v in saved.items() if k != "item_order"}
+    meta = {**meta, "derived": f"re-verification of run {run_id} ({tag}): grounding and XBRL "
+                               "checks recomputed over stored claims, no model call",
+            "source_run": run_id}  # fmt: skip
+    report = build_report(items, after, meta, saved["k"], threshold)
+    changed = [
+        {"item_id": a["item_id"], "verdict_before": b["verdict"], "verdict_after": a["verdict"]}
+        for b, a in zip(before, after, strict=True)
+        if a["verdict"] != b["verdict"]
+    ]
+    doc = {"kind": f"derived: re-verification of {run_id}", "tag": tag, "report": report,
+           "summary": {"as_run": verdict_summary(items, before),
+                       "reverified": verdict_summary(items, after)},
+           "verdict_changes": changed,
+           "items": [{"item_id": r["item_id"], "verdict": r["verdict"],
+                      "abstain_reason": r.get("abstain_reason"),
+                      "claims_pre": r.get("claims_pre"), "claims_post": r.get("claims_post")}
+                     for r in after]}  # fmt: skip
+    path = runs / f"{run_id}.reverify-{tag}.json"
+    path.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print(format_report(report))
+    for k in doc["summary"]["as_run"]:
+        print(f"{k}:\n  as run      {doc['summary']['as_run'][k]}\n  re-verified "
+              f"{doc['summary']['reverified'][k]}")  # fmt: skip
+    print(f"verdict changes: {len(changed)}")
+    for c in changed:
+        print(f"  {c['item_id']}: {c['verdict_before']} -> {c['verdict_after']}")
+    print(f"wrote {path}")
+
+
 SMOKE_PER_TYPE = 3
 FIGURE_CHECKS = ("citation_valid", "entity_ok", "numbers_grounded", "unit_ok", "period_stated")
 
@@ -513,6 +596,9 @@ def main() -> None:
     runs = REPO_ROOT / run_cfg["runs_dir"]
     meta = current_meta(gen, run_cfg)
 
+    if arg("--reverify"):
+        reverify_run(items, run_cfg, arg("--reverify"), sys.argv[sys.argv.index("--reverify") + 2])
+        return
     if arg("--rescore"):
         rescore_run(
             items, run_cfg, arg("--rescore"), float(sys.argv[sys.argv.index("--rescore") + 2])

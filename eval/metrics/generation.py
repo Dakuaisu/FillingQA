@@ -53,9 +53,11 @@ def generation_metrics(results: list[dict], nli_threshold: float) -> dict:
         "claim_retention": _rate(len(post), len(pre)),
         "citation_coverage": _rate(sum(bool(c.get("citations")) for c in pre), len(pre)),
         "citation_precision": _rate(good_cites, cites),
+        # F-130: an unknown scale is in the denominator, not correct; counted beside.
         "unit_scale_accuracy": _rate(
-            sum(bool(_check(c, "unit_ok")) for c in figures), len(figures)
+            sum(_check(c, "unit_ok") is True for c in figures), len(figures)
         ),
+        "unit_scale_unknown": sum(_check(c, "unit_ok") == "unknown" for c in figures),
         "period_accuracy": _rate(sum(bool(_check(c, "period_ok")) for c in figures), len(figures)),
         # F-126: beside the gated rate, the rate over checkable claims and the uncheckable count.
         "period_accuracy_checkable": _rate(

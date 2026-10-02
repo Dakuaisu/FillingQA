@@ -128,3 +128,22 @@ def test_period_stated_and_number_reading():
     n = claim_numbers("Up 15% to $7.286 billion.", None)
     assert [(x.value, x.pct) for x in n] == [(Decimal(15), True), (Decimal("7286000000"), False)]
     assert chunk_numbers(TABLE).scaled == {Decimal(v) * 10**6 for v in (7286, 6331, 94949, 77550)}
+
+
+NOSCALE = """[Exxon Mobil Corporation (XOM) | 10-Q | Q1 FY2025 | Part I, Item 1]
+[Table | Exxon Mobil Corporation | Q1 FY2025 10-Q | Part I, Item 1]
+| Total current assets | 91,233 | 91,990 |"""
+
+
+def test_f130_a_chunk_stating_no_scale_grounds_digits_and_leaves_the_scale_unknown():
+    fig = {"value": 91233, "unit": "millions", "currency": "USD", "period": "Q1 FY2025",
+           "concept": "Total current assets"}  # fmt: skip
+    r = one("Total current assets were $91,233 million as of March 31, 2025.", fig, {"x": NOSCALE})
+    assert r["numbers_grounded"] and r["unit_ok"] == "unknown"
+    assert r["numbers"][0]["how"] == "printed_unscaled"
+    # Digits not printed: still ungrounded. A stated-scale chunk is unaffected (unit_ok False).
+    assert not one("Total current assets were $91,234 million in Q1 FY2025.",
+                   {**fig, "value": 91234}, {"x": NOSCALE})["numbers_grounded"]  # fmt: skip
+    assert (
+        one("Inventories were 7,286 in fiscal 2024.", {**FIG, "unit": "ones"})["unit_ok"] is False
+    )

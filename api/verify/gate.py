@@ -26,6 +26,7 @@ from api.verify.xbrl_check import (
     norm,
     of_kind,
     period_ends_for,
+    printed_interval,
 )
 
 
@@ -84,33 +85,47 @@ class Gate:
             return {**base, "status": "no_fact", "period_ok": None, "why": "period unresolved"}
         cited = {accession_of(c) for c in claim["citations"]}
         facts = of_kind(self.xbrl.facts(ticker, tags), kind)
-        out = classify(Decimal(f.value), cited, ends, facts, self.tol)
+        out = classify(Decimal(f.value), cited, ends, facts, self.tol,
+                       printed_interval(claim["figure"]))  # fmt: skip
         return {**base, **out, "period_ends": [e.isoformat() for e in ends]}
+
+    def figure_checks(self, claims: list[dict], given: list[str],
+                      given_texts: dict[str, str]) -> list[dict]:  # fmt: skip
+        """Grounding for every claim, XBRL for figure claims: the checks that need
+        no model. One dict per claim."""
+        grounding = ground_answer(claims, given_texts, self.zero_span_chunks(given))
+        out = []
+        for c, g in zip(claims, grounding, strict=True):
+            k = {"numbers": g["numbers"], "numbers_grounded": g["numbers_grounded"],
+                 "numbers_derived": g["numbers_derived"], "unit_ok": g["unit_ok"],
+                 "period_stated": g["period_stated"], "xbrl": None,
+                 "xbrl_contradiction": False, "period_ok": None}  # fmt: skip
+            if c.get("figure"):
+                k["citations_supporting"] = g["citations_supporting"]
+                x = self.xbrl_check(c)
+                k.update({"xbrl": x, "xbrl_contradiction": x["status"] == "contradiction",
+                          "period_ok": x["period_ok"]})  # fmt: skip
+                if k["unit_ok"] == "unknown" and x["status"] in ("verified", "restatement"):
+                    k["unit_ok"] = True  # the fact within tolerance confirms the scale
+            out.append(k)
+        return out
 
     def verify(self, question: str, claims: list[dict], given: list[str], texts: dict[str, str],
                nli_threshold: float | None) -> dict:  # fmt: skip
         """claims_pre (with checks), claims_post, verdict, per-claim xbrl results."""
         pre = copy.deepcopy(claims)
         given_texts = {c: texts[c] for c in given if c in texts}
-        grounding = ground_answer(pre, given_texts, self.zero_span_chunks(given))
+        figure = self.figure_checks(pre, given, given_texts)
         targets = targets_in(question, self.names)
-        for c, g in zip(pre, grounding, strict=True):
+        for c, f in zip(pre, figure, strict=True):
             cited_tickers = {self.ticker_of.get(accession_of(x)) for x in c["citations"]}
             checks = {
                 "citation_valid": bool(c["citations"]) and set(c["citations"]) <= set(given),
                 "entity_ok": not targets or (cited_tickers <= targets),
-                "numbers": g["numbers"], "numbers_grounded": g["numbers_grounded"],
-                "numbers_derived": g["numbers_derived"], "unit_ok": g["unit_ok"],
-                "period_stated": g["period_stated"],
-                "xbrl": None, "xbrl_contradiction": False, "period_ok": None,
-                "entail": None, "entail_by_chunk": None,
-                "citations_supporting": g["citations_supporting"],
+                "entail": None, "entail_by_chunk": None, "citations_supporting": [],
+                **f,
             }  # fmt: skip
-            if c.get("figure"):
-                x = self.xbrl_check(c)
-                checks.update({"xbrl": x, "xbrl_contradiction": x["status"] == "contradiction",
-                               "period_ok": x["period_ok"]})  # fmt: skip
-            elif self.nli is not None:
+            if not c.get("figure") and self.nli is not None:
                 cited = [x for x in c["citations"] if x in given_texts]
                 scores = self.nli.score([(given_texts[x], c["text"]) for x in cited])
                 checks["entail_by_chunk"] = [
@@ -126,3 +141,14 @@ class Gate:
             c["checks"] = checks
         v, post = verdict(pre, nli_threshold)
         return {"claims_pre": pre, "claims_post": post, "verify_verdict": v}
+
+    def recheck(self, claims_pre: list[dict], given: list[str], texts: dict[str, str]) -> list:
+        """Stored claims with the model-free checks recomputed; citation validity,
+        entity match and every NLI field kept as stored (TRADEOFFS, F-128)."""
+        pre = copy.deepcopy(claims_pre)
+        given_texts = {c: texts[c] for c in given if c in texts}
+        for c, f in zip(pre, self.figure_checks(pre, given, given_texts), strict=True):
+            if not c.get("figure"):
+                f.pop("citations_supporting", None)
+            c["checks"].update(f)
+        return pre

@@ -2674,3 +2674,70 @@ report lists every contradiction with the synonym, the claim figure, the cited
 facts and their periods, and counts claims matched per synonym. A contradiction
 caused by a wrong synonym is a finding with the item id, never a map edit after
 the fact.
+
+## 2026-10-02 — OWNER DECISION - grounding checks digits; the unit check reports what it can (F-130)
+
+Decided by the supervisor for the owner, after eval run a4e39a65c2c8. When a
+cited chunk states no scale (no "in thousands / millions / billions" in its
+context line) and prints the claim's digits (the claim's magnitude is a printed
+number times 10^3, 10^6, 10^9 or 10^12), the number is grounded
+(`how: printed_unscaled`) and the figure's `unit_ok` is `unknown`, not false. The
+verdict does not drop a claim for an unknown scale. Unit-scale accuracy keeps
+unknown claims in the denominator as not correct (F-126's rule), with the
+unknown count printed beside it; `unknown` becomes `true` only when the XBRL
+check matches a fact within tolerance (`verified`, or `restatement`, a match to
+another filing's fact), which confirms the scale. Before: 36 figure claims in 31
+items ungrounded for this reason (F-130). The re-verification of a4e39a65c2c8
+(entry below) gives the after.
+
+Scale of the gap in the frozen corpus (`chunks`, table chunks whose context line
+states no scale and that print figures): AAPL 146 of 443, BAC 470 of 3,052,
+COST 230 of 437, JPM 1,208 of 3,315, NVDA 188 of 596, PFE 101 of 1,040, TGT 150
+of 506, XOM 188 of 476; all 2,681 of 9,865. No parser change (F-90).
+
+The 4 per-share unit failures of the same run (cmp_0019 claims 1 and 2,
+seed_0014, xbrl_0147) are F-90's caption gap: an "in millions" context line
+whose "except per share" exception the parser dropped. Logged under F-90; the
+unit rule is not widened for them.
+
+*Alternatives:* keep failing the claim (rejected: strips figures the chunk
+prints); treat an unknown scale as correct (rejected: lets a claim choose its own
+scale unchecked).
+
+## 2026-10-02 — OWNER DECISION - a claim is read at its own printed precision; `rounded` is not a contradiction (F-129)
+
+Decided by the supervisor for the owner. The 0.5% tolerance stays the definition
+of `verified`. A claim whose figure has at least two significant digits asserts
+the half-unit interval of its printed precision ("$58 billion" asserts [57.5,
+58.5) billion; significant digits from the figure value with trailing integer
+zeros dropped, so "60" has one). If a cited filing's fact at the claim's period
+lies inside that interval but outside 0.5%, the result is `rounded`: the claim
+is kept, not verified, counted on the report, `period_ok` true. A
+contradiction, which forces ABSTAIN, needs the fact outside both the 0.5% band
+and the printed-precision interval. One significant digit gets no interval:
+"$60 billion" against 57,639 million is still a contradiction. This reads the
+claim at its own precision; it does not widen the tolerance. In a4e39a65c2c8
+this concerns xbrl_0104 ("$58 billion" vs 57,639 million), xbrl_0125 ("$4.8
+billion" vs 4,767 million) and xbrl_0143 ("$4.9 billion" vs 4,868 million).
+
+*Rejected:* the strict rule as built (any fact outside 0.5% is a contradiction),
+which forced those three correct rounded answers to ABSTAIN; a wider tolerance
+(would accept a wrong exact figure).
+
+## 2026-10-02 — OWNER DECISION - three synonyms removed; the run's stored claims re-verified (F-128)
+
+Decided by the supervisor for the owner: data wins over the map. Removed from
+`api/verify/concept_synonyms.yaml`: "allowance for credit losses" (to the
+loans-only tag; BAC's allowance for credit losses includes unfunded
+commitments), bare "net sales" (to revenue; Costco's net sales exclude
+membership fees), "share repurchases" (to the cash-payments tag). The rest of
+the map stays an owner-review item (F-127). The loader also stopped deriving a phrase
+from each line-item id: the id `share_repurchases` had put "share repurchases"
+back; phrases are now each line item's label and its written synonyms only.
+
+The three changes above are measured by re-running grounding and the XBRL check
+over the stored claims of a4e39a65c2c8, no model call:
+`python -m scripts.eval_run --reverify a4e39a65c2c8 TAG` writes
+`eval/runs/<run_id>.reverify-<TAG>.json` (derived report, per-item verdicts,
+re-verified figure checks; prose claims keep their stored checks and `entail`).
+Never a new run id; the run's files are not modified.

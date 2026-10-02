@@ -13,6 +13,7 @@ from api.verify.xbrl_check import (
     load_concepts,
     of_kind,
     period_ends_for,
+    printed_interval,
 )
 
 FILINGS = [("AAPL", date(2023, 9, 30), 2023, None), ("AAPL", date(2024, 9, 28), 2024, None),
@@ -79,3 +80,42 @@ def test_unit_kind_must_match_before_a_contradiction_is_possible():
     # A per-share claim never meets the dollar fact: no fact, not a contradiction.
     assert classify(Decimal("7.0"), {K24}, [date(2024, 9, 28)], of_kind(facts[:1], "per_share"),
                     0.5)["status"] == "no_fact"  # fmt: skip
+
+
+def test_f129_a_claim_is_read_at_its_printed_precision():
+    pfe = "0000078003-25-000114"
+    facts = [(pfe, date(2025, 3, 30), Decimal("57639000000"))]
+    end = [date(2025, 3, 30)]
+
+    def run(value, unit="billions"):
+        fig = {"value": value, "unit": unit}
+        mag = Decimal(str(value)) * Decimal(10) ** {"billions": 9, "millions": 6}[unit]
+        return classify(mag, {pfe}, end, facts, 0.5, printed_interval(fig))
+
+    lo, hi = printed_interval({"value": 58, "unit": "billions"})
+    assert (lo, hi) == (Decimal("57.5") * 10**9, Decimal("58.5") * 10**9)
+    assert printed_interval({"value": 60, "unit": "billions"}) is None
+    r = run(58)  # xbrl_0104
+    assert r["status"] == "rounded" and r["period_ok"] is True
+    assert run(57.6)["status"] == "verified"  # within 0.5%
+    assert run(60)["status"] == "contradiction"  # one significant digit: strict rule
+    assert run(57.0)["status"] == "contradiction"  # outside both the band and [56.95, 57.05)
+    # xbrl_0125: Target's "$4.8 billion" vs 4,767 million; xbrl_0143: Exxon's "$4.9 billion"
+    # vs 4,868 million.
+    for v, fact in ((4.8, "4767000000"), (4.9, "4868000000")):
+        f = [(pfe, date(2025, 3, 30), Decimal(fact))]
+        mag = Decimal(str(v)) * 10**9
+        out = classify(mag, {pfe}, end, f, 0.5, printed_interval({"value": v, "unit": "billions"}))
+        assert out["status"] == "rounded"
+
+
+def test_f128_the_three_synonyms_the_run_proved_wrong_are_gone():
+    cfg = verification()
+    phrases = load_concepts(
+        REPO_ROOT / "eval" / "concepts.yaml", REPO_ROOT / cfg["concept_synonyms"]
+    )
+    for phrase in ("Allowance for credit losses", "Net sales", "Share repurchases"):
+        assert concept_tags(phrase, phrases) == [], phrase
+    assert concept_tags("Allowance for credit losses on loans", phrases)
+    assert concept_tags("Total net sales", phrases) and concept_tags("Repurchases of common stock",
+                                                                     phrases)  # fmt: skip

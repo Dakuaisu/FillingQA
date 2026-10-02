@@ -23,7 +23,8 @@ def norm(text: str) -> str:
 
 
 def load_concepts(concepts_path, synonyms_path) -> dict[str, list[str]]:
-    """normalized phrase -> candidate tags (line item's tag and variant)."""
+    """normalized phrase -> candidate tags (line item's tag and variant). Phrases:
+    each line item's label and its hand-written synonyms, nothing derived."""
     with open(concepts_path, encoding="utf-8") as fh:
         items = yaml.safe_load(fh)["line_items"]
     with open(synonyms_path, encoding="utf-8") as fh:
@@ -31,7 +32,7 @@ def load_concepts(concepts_path, synonyms_path) -> dict[str, list[str]]:
     out: dict[str, list[str]] = {}
     for it in items:
         tags = [t for t in (it["tag"], it.get("variant")) if t]
-        for phrase in [it["label"], it["id"].replace("_", " "), *syn.get(it["id"], [])]:
+        for phrase in [it["label"], *syn.get(it["id"], [])]:
             out[norm(phrase)] = tags
     return out
 
@@ -77,6 +78,22 @@ def of_kind(facts: list[tuple], kind: str) -> list[tuple[str, date, Decimal]]:
     return [(a, pe, v) for a, pe, v, u in facts if FACT_KINDS.get(u) == kind]
 
 
+def printed_interval(figure: dict) -> tuple[Decimal, Decimal] | None:
+    """The half-unit interval the figure asserts at its printed precision, in base
+    units, or None below two significant digits (F-129). "58" billions ->
+    [57.5, 58.5) billion; "60" has one significant digit -> None."""
+    from eval.metrics.numeric import FIGURE_UNITS
+
+    n = abs(Decimal(str(figure["value"]))).normalize()
+    t = n.as_tuple()
+    if len(t.digits) < 2:
+        return None
+    scale = Decimal(10) ** FIGURE_UNITS.get((figure.get("unit") or "").lower(), 0)
+    half = Decimal(10) ** t.exponent * scale / 2
+    v = n * scale
+    return v - half, v + half
+
+
 def within(a: Decimal, b: Decimal, tol_pct: float) -> bool:
     a, b = abs(a), abs(b)
     if b == 0:
@@ -85,7 +102,8 @@ def within(a: Decimal, b: Decimal, tol_pct: float) -> bool:
 
 
 def classify(magnitude: Decimal, cited: set[str], period_ends: list[date],
-             facts: list[tuple[str, date, Decimal]], tol_pct: float) -> dict:  # fmt: skip
+             facts: list[tuple[str, date, Decimal]], tol_pct: float,
+             interval: tuple[Decimal, Decimal] | None = None) -> dict:  # fmt: skip
     """`facts`: (accession, period_end, value) for the company and the concept's
     tags, every filing. Status verified | restatement | contradiction | no_fact,
     with `period_ok` true / false / None."""
@@ -104,6 +122,13 @@ def classify(magnitude: Decimal, cited: set[str], period_ends: list[date],
         return {"status": "restatement", "accession": other[0], "fact_value": str(other[2]),
                 "fact_period_end": other[1].isoformat(), "cited_values": cited_values,
                 "period_ok": True}  # fmt: skip
+    if interval is not None:
+        lo, hi = interval
+        near = next((f for f in in_cited if lo <= abs(f[2]) < hi), None)
+        if near:
+            return {"status": "rounded", "accession": near[0], "fact_value": str(near[2]),
+                    "fact_period_end": near[1].isoformat(), "interval": [str(lo), str(hi)],
+                    "period_ok": True}  # fmt: skip
     wrong_period = any(
         f[0] in cited and f[1] not in period_ends and within(magnitude, f[2], tol_pct)
         for f in facts
