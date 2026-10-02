@@ -1,0 +1,643 @@
+{
+ "backend": "claude_cli",
+ "model_requested": {
+  "tier_small": "claude-haiku-4-5-20251001",
+  "tier_large": "claude-sonnet-5-5"
+ },
+ "tier": "tier_small",
+ "pipeline": "config_4_routed",
+ "retrieval_stage": "PRD 7.1 router, metadata filters and intent budgets in front of Config 4; pre-rerank list per query (RRF over a comparison's sub-queries), reranked lists beside",
+ "retrieve_depth": {
+  "lookup": 20,
+  "comparison": 100,
+  "synthesis": 50,
+  "unrouted": 50
+ },
+ "generator_top_k": {
+  "lookup": 5,
+  "comparison": 8,
+  "synthesis": 10,
+  "unrouted": 8
+ },
+ "hnsw_ef_search": 100,
+ "k_dense": 50,
+ "dense_search": "exact",
+ "parser_version": "d58d26e08e5a",
+ "chunker_version": "964f77f6f9cb",
+ "datasets": {
+  "comparison_candidates.jsonl": "e8f78af34061ba4fe05c10facc6f9dcab2d4e30219dcad40806616614dbb0eef",
+  "llm_seeded_candidates.jsonl": "f1b7849ab81e52991b8d5ea9b46e420da81198d6010675949a74c8d25937cf33",
+  "xbrl_numeric_candidates.jsonl": "19fb355d8134c9504a654282354c13e92a453c450e67b87c9e9a25a9aaf638e7"
+ },
+ "retrieval": {
+  "k_dense": 50,
+  "k_sparse": 50,
+  "rrf_k": 60,
+  "weights": {
+   "dense": 1.0,
+   "sparse": 1.0
+  },
+  "hnsw_ef_search": 100,
+  "dense_search": "exact",
+  "metadata_filter": true,
+  "filter_confidence_min": 0.6,
+  "sparse": {
+   "backend": "bm25",
+   "k1": 1.2,
+   "b": 0.75
+  }
+ },
+ "bm25_index_key": "5a33c360a77f5bdf6f47912f850dda20c5cf15d0cbc3ecc40c124a5486723a67",
+ "rerank": {
+  "model": "BAAI/bge-reranker-base",
+  "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+  "top_n": 8,
+  "top_n_synthesis": 10,
+  "score_floor": 0.3,
+  "floor_calibration": "pending",
+  "timeout_ms": 3000,
+  "device": "auto",
+  "device_used": "mps"
+ },
+ "machine": {
+  "torch": "2.14.1",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "cpu": "Apple M1 Pro",
+  "gpu": "Apple M1 Pro (16 GPU cores)",
+  "ram_gb": 16.0,
+  "mps_available": true
+ },
+ "generation_contract": {
+  "kind": "PRD 7.4 structured claims, schema enforced by the backend",
+  "schema_sha256": "9f057fe4f2da28c4e08f4771ae4b782054666b2387e11f57311050d054492cff",
+  "system_prompt_sha256": "eecd3f3eba9be659b5881bc8d40520390f686aede14d1ceac963dd1e7408faf2"
+ },
+ "verification": {
+  "xbrl_match_tolerance_pct": 0.5,
+  "concept_synonyms": "api/verify/concept_synonyms.yaml",
+  "nli_model": "cross-encoder/nli-deberta-v3-base",
+  "nli_revision": "6c749ce3425cd33b46d187e45b92bbf96ee12ec7",
+  "nli_threshold": null
+ },
+ "router": {
+  "tier": "tier_small",
+  "budgets": {
+   "lookup": {
+    "tier": "tier_small",
+    "k": 20,
+    "top_n": 5,
+    "sub_queries": 1
+   },
+   "comparison": {
+    "tier": "tier_large",
+    "k": 50,
+    "top_n": 8,
+    "sub_queries": 2
+   },
+   "synthesis": {
+    "tier": "tier_large",
+    "k": 50,
+    "top_n": 10,
+    "sub_queries": 1
+   },
+   "unrouted": {
+    "tier": "tier_small",
+    "k": 50,
+    "top_n": 8,
+    "sub_queries": 1
+   }
+  }
+ },
+ "templates_sha256": "2031f559084e9fc70914df4ce52ad1e3eba021ee702aaf3417db2af8752780d8",
+ "run_id": "7a079fe7abfe",
+ "development_run": true,
+ "k": 10,
+ "served_models": {
+  "claude-sonnet-5-5": 45,
+  "claude-haiku-4-5-20251001": 238
+ },
+ "anomalies": {
+  "empty_retrieval": [],
+  "empty_answer": [
+   "cmp_0003",
+   "cmp_0004",
+   "cmp_0013",
+   "cmp_0014",
+   "cmp_0038",
+   "cmp_0040",
+   "seed_0012",
+   "seed_0021",
+   "seed_0025",
+   "seed_0042",
+   "seed_0043",
+   "xbrl_0002",
+   "xbrl_0004",
+   "xbrl_0009",
+   "xbrl_0011",
+   "xbrl_0024",
+   "xbrl_0026",
+   "xbrl_0028",
+   "xbrl_0033",
+   "xbrl_0034",
+   "xbrl_0035",
+   "xbrl_0056",
+   "xbrl_0058",
+   "xbrl_0062",
+   "xbrl_0065",
+   "xbrl_0085",
+   "xbrl_0088",
+   "xbrl_0097",
+   "xbrl_0098",
+   "xbrl_0112",
+   "xbrl_0114",
+   "xbrl_0119",
+   "xbrl_0122",
+   "xbrl_0125",
+   "xbrl_0128",
+   "xbrl_0135",
+   "xbrl_0136",
+   "xbrl_0150"
+  ],
+  "latency_s": {
+   "p50": 26.45,
+   "p95": 61.06,
+   "max": 177.83
+  },
+  "slow_items_over_3x_p50": [
+   [
+    "seed_0018",
+    177.83
+   ],
+   [
+    "seed_0020",
+    91.07
+   ],
+   [
+    "xbrl_0026",
+    79.38
+   ],
+   [
+    "xbrl_0071",
+    107.75
+   ],
+   [
+    "xbrl_0144",
+    91.4
+   ]
+  ]
+ },
+ "retrieval_latency_s": {
+  "p50": 2.887,
+  "p95": 6.342,
+  "max": 22.811,
+  "n": 283
+ },
+ "intent_matrix": {
+  "xbrl_auto": {
+   "comparison": {
+    "comparison": 40
+   },
+   "xbrl_numeric": {
+    "lookup": 160
+   }
+  },
+  "llm_seeded": {
+   "table": {
+    "lookup": 47
+   },
+   "synthesis": {
+    "lookup": 31,
+    "comparison": 4,
+    "synthesis": 1
+   }
+  }
+ },
+ "verdict_by_correctness": {
+  "xbrl_auto": {
+   "PASS": {
+    "correct": 121,
+    "wrong": 19
+   },
+   "ABSTAIN": {
+    "generator abstained": 45,
+    "correct": 6,
+    "wrong": 6
+   },
+   "PENDING_NLI": {
+    "wrong": 1,
+    "correct": 1
+   },
+   "PARTIAL": {
+    "correct": 1
+   }
+  },
+  "llm_seeded": {
+   "PASS": {
+    "correct": 24,
+    "not scored (unit_scale_unknown)": 8,
+    "wrong": 5
+   },
+   "PENDING_NLI": {
+    "correct": 1,
+    "not scored (not numeric)": 35
+   },
+   "ABSTAIN": {
+    "generator abstained": 6,
+    "not scored (unit_scale_unknown)": 2,
+    "wrong": 1,
+    "not scored (not numeric)": 1
+   }
+  }
+ },
+ "xbrl": {
+  "status_counts": {
+   "verified": 125,
+   "no_fact": 160,
+   "not_checked": 8,
+   "contradiction": 6,
+   "rounded": 2
+  },
+  "matched_per_synonym": {
+   "accounts receivable net": 2,
+   "allowance for loan losses": 1,
+   "capital expenditures": 2,
+   "cash and cash equivalents": 3,
+   "cost of revenue": 1,
+   "cost of sales": 2,
+   "diluted earnings per share": 12,
+   "earnings before income taxes": 3,
+   "income before income taxes": 4,
+   "income tax expense": 5,
+   "inventories": 3,
+   "inventory": 2,
+   "long-term debt": 2,
+   "long-term debt excluding current portion": 6,
+   "long-term debt excluding the current portion": 1,
+   "net cash provided by operating activities": 12,
+   "net earnings": 3,
+   "net income": 3,
+   "net interest income": 5,
+   "noninterest expense": 3,
+   "operating income": 6,
+   "payments for repurchases of common stock": 1,
+   "provision for income taxes": 1,
+   "repurchases of common stock": 4,
+   "research and development": 1,
+   "research and development expense": 1,
+   "revenue": 2,
+   "selling general and administrative expense": 2,
+   "shareholders equity": 3,
+   "total assets": 14,
+   "total current assets": 7,
+   "total deposits": 2,
+   "total liabilities": 9,
+   "total noninterest expense": 4,
+   "total revenue": 3,
+   "total shareholders equity": 3,
+   "total stockholders equity": 4
+  },
+  "contradictions": [
+   {
+    "item_id": "xbrl_0014",
+    "claim_id": "3",
+    "synonym": "long-term debt excluding current portion",
+    "tags": [
+     "us-gaap:LongTermDebtNoncurrent"
+    ],
+    "figure": {
+     "value": 96.7,
+     "unit": "billions",
+     "currency": "USD",
+     "period": "FY2023 (as of September 30, 2023)",
+     "concept": "Long-term debt, excluding current portion"
+    },
+    "period_ends": [
+     "2023-09-30"
+    ],
+    "cited_facts": [
+     [
+      "0000320193-23-000106",
+      "2023-09-30",
+      "95281000000"
+     ]
+    ],
+    "period_ok": null
+   },
+   {
+    "item_id": "xbrl_0016",
+    "claim_id": "1",
+    "synonym": "operating income",
+    "tags": [
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "figure": {
+     "value": 28202,
+     "unit": "millions",
+     "currency": "USD",
+     "period": "Q3 FY2026",
+     "concept": "Operating income"
+    },
+    "period_ends": [
+     "2026-06-27"
+    ],
+    "cited_facts": [
+     [
+      "0000320193-26-000020",
+      "2026-06-27",
+      "122432000000"
+     ],
+     [
+      "0000320193-26-000020",
+      "2026-06-27",
+      "35695000000"
+     ]
+    ],
+    "period_ok": false
+   },
+   {
+    "item_id": "xbrl_0036",
+    "claim_id": "1",
+    "synonym": "net interest income",
+    "tags": [
+     "us-gaap:InterestIncomeExpenseNet"
+    ],
+    "figure": {
+     "value": 60705,
+     "unit": "millions",
+     "currency": "USD",
+     "period": "Year ended December 31, 2025",
+     "concept": "Net interest income"
+    },
+    "period_ends": [
+     "2025-12-31"
+    ],
+    "cited_facts": [
+     [
+      "0000070858-26-000157",
+      "2025-12-31",
+      "60096000000"
+     ]
+    ],
+    "period_ok": null
+   },
+   {
+    "item_id": "xbrl_0063",
+    "claim_id": "1",
+    "synonym": "total noninterest expense",
+    "tags": [
+     "us-gaap:NoninterestExpense"
+    ],
+    "figure": {
+     "value": 11390,
+     "unit": "millions",
+     "currency": "USD",
+     "period": "three months ended June 30, 2026",
+     "concept": "Total noninterest expense"
+    },
+    "period_ends": [
+     "2026-06-30"
+    ],
+    "cited_facts": [
+     [
+      "0001628280-26-054343",
+      "2026-06-30",
+      "27316000000"
+     ],
+     [
+      "0001628280-26-054343",
+      "2026-06-30",
+      "54166000000"
+     ]
+    ],
+    "period_ok": null
+   },
+   {
+    "item_id": "xbrl_0075",
+    "claim_id": "1",
+    "synonym": "total assets",
+    "tags": [
+     "us-gaap:Assets"
+    ],
+    "figure": {
+     "value": 253750,
+     "unit": "millions",
+     "currency": "USD",
+     "period": "September 30, 2024",
+     "concept": "Total assets"
+    },
+    "period_ends": [
+     "2024-09-30"
+    ],
+    "cited_facts": [
+     [
+      "0000019617-24-000611",
+      "2024-09-30",
+      "4210048000000"
+     ]
+    ],
+    "period_ok": null
+   },
+   {
+    "item_id": "xbrl_0100",
+    "claim_id": "2",
+    "synonym": "operating income",
+    "tags": [
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "figure": {
+     "value": 38267,
+     "unit": "millions",
+     "currency": "USD",
+     "period": "Q3 FY2026 (three months ended October 26, 2025)",
+     "concept": "Operating income"
+    },
+    "period_ends": [
+     "2025-10-26"
+    ],
+    "cited_facts": [
+     [
+      "0001045810-25-000230",
+      "2025-10-26",
+      "36010000000"
+     ],
+     [
+      "0001045810-25-000230",
+      "2025-10-26",
+      "86088000000"
+     ]
+    ],
+    "period_ok": null
+   }
+  ]
+ },
+ "meta_disagreements": [],
+ "rerank_fell_back": 50,
+ "hardware_dependent": true,
+ "columns": {
+  "xbrl_auto": {
+   "items": 200,
+   "retrieval_n": 200,
+   "sufficiency@10": 0.71,
+   "recall@10": 0.7275,
+   "precision@10": 0.10950000000000001,
+   "mrr": 0.33753068066383163,
+   "ndcg@10": 0.42496182323158527,
+   "sufficiency@10_post_rerank": 0.545,
+   "floor_empties": 0,
+   "filtered": 200,
+   "filter_zero_recall": 0,
+   "declined_unsupported": 0,
+   "pending_nli": 2,
+   "tokens": {
+    "input_tokens": 510927,
+    "output_tokens": 528840,
+    "cache_read_tokens": 127616,
+    "cache_creation_tokens": 610309
+   },
+   "cost_per_query": "cost n/a (dev backend)",
+   "rerank_fell_back": 31,
+   "numeric": {
+    "n": 200,
+    "excluded": {},
+    "numeric_accuracy": 0.645,
+    "strict_first_figure": 0.635,
+    "tolerant_0_5pct": 0.695,
+    "comparison_values_only": 0.9583333333333334,
+    "sign_agreement": 0.9844961240310077,
+    "sign_agreement_n": 129,
+    "abstained": 45,
+    "fallback_used": 0,
+    "mean_figure_count": 1.075,
+    "figure_count_distribution": {
+     "0": 45,
+     "1": 122,
+     "2": 6,
+     "3": 27
+    }
+   },
+   "abstention": {
+    "partial_rate": "pending NLI threshold (F-125)",
+    "false_answer_rate": "pending NLI threshold (F-125)",
+    "over_abstention_rate": "pending NLI threshold (F-125)",
+    "abstention_precision": "pending NLI threshold (F-125)",
+    "abstention_recall": "pending NLI threshold (F-125)",
+    "abstention_f1": "pending NLI threshold (F-125)"
+   },
+   "generation": {
+    "status": "pending NLI threshold (F-125)"
+   }
+  },
+  "llm_seeded": {
+   "items": 83,
+   "retrieval_n": 83,
+   "sufficiency@10": 1.0,
+   "recall@10": 1.0,
+   "precision@10": 0.1,
+   "mrr": 0.767202141900937,
+   "ndcg@10": 0.8250785500059795,
+   "sufficiency@10_post_rerank": 0.8313253012048193,
+   "floor_empties": 0,
+   "filtered": 83,
+   "filter_zero_recall": 0,
+   "declined_unsupported": 0,
+   "pending_nli": 36,
+   "tokens": {
+    "input_tokens": 245311,
+    "output_tokens": 261219,
+    "cache_read_tokens": 31982,
+    "cache_creation_tokens": 207279
+   },
+   "cost_per_query": "cost n/a (dev backend)",
+   "rerank_fell_back": 19,
+   "numeric": {
+    "n": 37,
+    "excluded": {
+     "unit_scale_unknown": 10,
+     "not numeric": 36
+    },
+    "numeric_accuracy": 0.6756756756756757,
+    "strict_first_figure": 0.6486486486486487,
+    "tolerant_0_5pct": 0.6756756756756757,
+    "comparison_values_only": null,
+    "sign_agreement": 0.96,
+    "sign_agreement_n": 25,
+    "abstained": 6,
+    "fallback_used": 0,
+    "mean_figure_count": 0.8918918918918919,
+    "figure_count_distribution": {
+     "0": 6,
+     "1": 30,
+     "3": 1
+    }
+   },
+   "abstention": {
+    "partial_rate": "pending NLI threshold (F-125)",
+    "false_answer_rate": "pending NLI threshold (F-125)",
+    "over_abstention_rate": "pending NLI threshold (F-125)",
+    "abstention_precision": "pending NLI threshold (F-125)",
+    "abstention_recall": "pending NLI threshold (F-125)",
+    "abstention_f1": "pending NLI threshold (F-125)"
+   },
+   "generation": {
+    "status": "pending NLI threshold (F-125)"
+   }
+  },
+  "handwritten": null,
+  "aggregate": {
+   "items": 283,
+   "retrieval_n": 283,
+   "sufficiency@10": 0.7950530035335689,
+   "recall@10": 0.8074204946996466,
+   "precision@10": 0.10671378091872792,
+   "mrr": 0.46354739897718766,
+   "ndcg@10": 0.5423105452184218,
+   "sufficiency@10_post_rerank": 0.6289752650176679,
+   "floor_empties": 0,
+   "filtered": 283,
+   "filter_zero_recall": 0,
+   "declined_unsupported": 0,
+   "pending_nli": 38,
+   "tokens": {
+    "input_tokens": 756238,
+    "output_tokens": 790059,
+    "cache_read_tokens": 159598,
+    "cache_creation_tokens": 817588
+   },
+   "cost_per_query": "cost n/a (dev backend)",
+   "rerank_fell_back": 50,
+   "numeric": {
+    "n": 237,
+    "excluded": {
+     "unit_scale_unknown": 10,
+     "not numeric": 36
+    },
+    "numeric_accuracy": 0.6497890295358649,
+    "strict_first_figure": 0.6371308016877637,
+    "tolerant_0_5pct": 0.6919831223628692,
+    "comparison_values_only": 0.9583333333333334,
+    "sign_agreement": 0.9805194805194806,
+    "sign_agreement_n": 154,
+    "abstained": 51,
+    "fallback_used": 0,
+    "mean_figure_count": 1.0464135021097047,
+    "figure_count_distribution": {
+     "0": 51,
+     "1": 152,
+     "2": 6,
+     "3": 28
+    }
+   },
+   "abstention": {
+    "partial_rate": "pending NLI threshold (F-125)",
+    "false_answer_rate": "pending NLI threshold (F-125)",
+    "over_abstention_rate": "pending NLI threshold (F-125)",
+    "abstention_precision": "pending NLI threshold (F-125)",
+    "abstention_recall": "pending NLI threshold (F-125)",
+    "abstention_f1": "pending NLI threshold (F-125)"
+   },
+   "generation": {
+    "status": "pending NLI threshold (F-125)"
+   }
+  }
+ }
+}
