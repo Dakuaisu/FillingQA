@@ -34,3 +34,32 @@ jobs:
         # Network-marked tests hit SEC EDGAR and are excluded from CI so a
         # rate-limit or outage can never fail a build. See PRD 6.1.
         run: pytest -m "not network"
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: web/.nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: e2e (mocked API, captured development responses)
+        run: npm run test:e2e

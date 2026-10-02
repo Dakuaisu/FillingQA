@@ -5572,3 +5572,97 @@ Process note: for 6596aa6 the privacy grep ran in the same command as the
 commit, so it could not stop it. Its hits, read afterwards, were all Python
 decorators (`@app.post`, `@pytest.fixture`) matching the email pattern; nothing
 private. The check runs as its own step before every commit from here on.
+
+## 2026-10-02 — Frontend: Ask and Answer (PRD 10), e2e and live browser pass
+
+`web/` scaffolded (create-next-app 16.3.8, shadcn 4.21.1), npm, `.nvmrc` 24.
+Screens: Ask (`/`), Answer (`/answer?q=`) with the source panel. `npm run
+typecheck`, `npm run lint` clean; `make web-build` builds (`/` static, `/answer`
+and `/web-api/chunks/[id]` dynamic).
+
+**e2e** (`npx playwright test`, mocked API serving captured development
+responses): 8 passed: Ask examples and submit; the unanswerable example lands on
+the abstention panel; PASS answer (banner, verdict, confidence band, claim, XBRL
+badge, citation list, dev-labelled latency and cost); hover preview and source
+panel (metadata, "not computed" page, sec.gov link); chunk 404 in the source
+panel; unsupported abstention; NLI-pending verdict (notice, "Pending" band, 3
+claims, 2 badges, reading-order numbering); 422 message.
+
+**Live pass** (`node scripts/live-pass.mjs` against `make serve` on claude_cli
+and `next dev`; screenshots in `build/web-live/`, not committed). First pass found:
+- page text in a serif fallback: shadcn's `--font-sans: var(--font-sans)` expects
+  the layout's font variable to be `--font-sans`; the scaffold named it
+  `--font-geist-sans`. Fixed.
+- citation markers numbered by chunk id, not reading order (comparison: first
+  claim [2], second [1]). Fixed: numbered by first appearance.
+- under test, pages opened on `127.0.0.1` did not hydrate (HMR socket refused);
+  and a second `next dev` in the same directory refuses to start. Fixed in the
+  test setup (`localhost`, separate `.next-e2e` build directory).
+Second pass, no page errors:
+- Ask: three examples, the third labelled "See how it handles a question it
+  can't answer."
+- Apple R&D fiscal 2023: banner (claude_cli, claude-haiku-4-5-20251001), PASS,
+  Confidence High, one claim with "✓ matches SEC XBRL", citations [1] [2] (10-K
+  FY2023 items II.7 and II.8), 31.7 s; hover preview and source panel shown.
+- Bank of America net interest income comparison: banner (claude-sonnet-5-5),
+  PASS this time (the captured fixture of the same question was PENDING_NLI), two
+  badges, citations [1] FY2026 Q2, [2] FY2024 Q2 in reading order, 22.6 s.
+- "Should I buy NVIDIA stock right now?": banner, abstention panel ("outside
+  what the indexed SEC filings can answer"), intent unsupported, 14.8 s.
+- 602-token question: the 422 message.
+Still rough, not fixed: company names show SEC's conformed form ("BANK OF
+AMERICA CORP /DE/"); hover previews and the source panel show the chunk's raw
+markdown table; the banner on a router-only decline says "generated on
+claude_cli" with no model. Not exercised: F-141. Development answers: checks
+that the screens work, not results.
+
+Before committing `web/` (supervisor review): `src/lib/utils.ts` had been wired
+by the scaffold to the unrelated npm package `cn`; it is now shadcn's helper over
+`clsx` 2.1.1 and `tailwind-merge` 3.7.0, the UI components import it, `cn` is
+uninstalled. `shadcn` 4.21.1 moved to devDependencies (only `globals.css`'s build-
+time import of `shadcn/tailwind.css` uses it). Every direct dependency is exact
+in `package.json`; `package-lock.json` committed. `web/README.md` replaced (five
+lines). `web/AGENTS.md` / `web/CLAUDE.md` are `next dev`'s own files (TRADEOFFS).
+The 422 fixture is `query_422.development.json`. ESLint ignores the e2e server's
+`.next-e2e/`. No nested `.git`; `.next/`, `.next-e2e/`, `node_modules/`,
+`test-results/`, `playwright-report/`, `*.tsbuildinfo` ignored in `web/.gitignore`,
+screenshots under the root-ignored `build/`; Playwright's Chromium lives in
+`~/Library/Caches/ms-playwright`, outside the repo.
+
+`make lint`:
+
+    ruff check .
+    All checks passed!
+    ruff format --check .
+    165 files already formatted
+    cd web && npm run lint && npm run typecheck
+    > web@0.1.0 lint
+    > eslint
+    > web@0.1.0 typecheck
+    > tsc --noEmit
+
+`make test` (pytest, then the Playwright suite on its own mock API :8765 and Next
+server :3100 / `.next-e2e`, with `make web-dev` running on :3000 / `.next`):
+
+    pytest -m "not network"
+    3 snapshots passed.
+    493 passed in 14.51s
+    > playwright test
+      ✓  1 [chromium] › e2e/answer.spec.ts:10:5 › a PASS answer: dev banner, claim, XBRL badge, citations, latency and cost labelled dev (2.2s)
+      ✓  2 [chromium] › e2e/ask.spec.ts:3:5 › Ask shows three examples, one labelled as unanswerable, and submits to Answer (2.7s)
+      ✓  3 [chromium] › e2e/answer.spec.ts:22:5 › hovering a citation marker previews the excerpt; clicking opens the source panel (1.6s)
+      ✓  4 [chromium] › e2e/ask.spec.ts:15:5 › the unanswerable example lands on the abstention state (1.2s)
+      ✓  5 [chromium] › e2e/answer.spec.ts:36:5 › a chunk the index does not have shows the 404 state in the source panel (572ms)
+      ✓  6 [chromium] › e2e/answer.spec.ts:45:5 › an unsupported question renders the designed abstention state (462ms)
+      ✓  7 [chromium] › e2e/answer.spec.ts:54:5 › a verdict waiting on the NLI threshold says so and shows the band as pending (484ms)
+      ✓  8 [chromium] › e2e/answer.spec.ts:67:5 › a question over the length limit shows the 422 message (288ms)
+      8 passed (7.3s)
+
+Third live pass on the final code (dev server restarted: it had cached a failed
+CSS import from the moment `shadcn` was uninstalled and not yet reinstalled):
+no page errors; Apple R&D PASS, one claim XBRL-verified, citation [1], source
+panel shown, 41.9 s; Bank of America comparison PASS, two badges, citations [1]
+FY2026 Q2 and [2] FY2024 Q2 in reading order, 21.3 s; NVIDIA buy question
+abstained (unsupported), 7.8 s; 602-token question 422 message. Also seen: a
+citation marker can wrap alone onto the next line after a claim ending at the
+line edge (cosmetic, not fixed).

@@ -1,5 +1,5 @@
 .PHONY: help install db-up db-down db-psql migrate lint fmt test eval eval-fast eval-gate \
-	restore-corpus-snapshot serve
+	restore-corpus-snapshot serve web-dev web-build
 
 # Targets are added as the modules behind them land.
 
@@ -16,6 +16,8 @@ help:
 	@echo "eval-fast the 60-item fast subset on the same pipeline, then eval-gate"
 	@echo "eval-gate eval/compare.py: build/eval_fast.json vs thresholds and main_fast baseline"
 	@echo "serve     the HTTP API (PRD 9) on localhost:8000; docs at /docs"
+	@echo "web-dev   the frontend (PRD 10) on localhost:3000 against API_BASE (default :8000)"
+	@echo "web-build production build of the frontend"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -35,6 +37,7 @@ migrate:
 lint:
 	ruff check .
 	ruff format --check .
+	cd web && npm run lint && npm run typecheck
 
 fmt:
 	ruff format .
@@ -42,6 +45,7 @@ fmt:
 
 test:
 	pytest -m "not network"
+	cd web && npm run test:e2e
 
 # One full eval run (PRD 11.4): freeze check first, then every candidate item.
 # The report carries the backend; a claude_cli run is marked a development run.
@@ -71,3 +75,12 @@ restore-corpus-snapshot:
 # PRD 9 API. On claude_cli every answer is labelled development (OWNER DECISION).
 serve:
 	uvicorn api.server:app --port 8000
+
+
+# PRD 10 frontend (web/, npm). Run `make serve` first; generated text carries the
+# dev banner whenever the API says the answer is a development answer.
+web-dev:
+	cd web && npm run dev
+
+web-build:
+	cd web && npm run build

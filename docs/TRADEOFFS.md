@@ -2936,3 +2936,55 @@ corpus: the PRD does not ask for one.
 *Alternatives:* a separate serving pipeline (rejected: the shipped path would
 not be the measured path); a fixed character limit for 422 (rejected: invents a
 number the PRD does not give).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the frontend as first built (PRD 10)
+
+Stack as PRD 10 (supervisor decision): Next.js 16.3.8 App Router, TypeScript,
+Tailwind 4, shadcn/ui (radix base), in `web/`. **npm**, since pnpm is not
+installed; `web/package-lock.json` is committed and Node is pinned to the
+installed major in `web/.nvmrc` (24). `make web-dev`, `make web-build`; `make
+lint` adds ESLint and `tsc --noEmit` for `web/`, `make test` adds the Playwright
+suite, and CI has a `web` job doing the same.
+
+- **No `/query` through the browser.** A live answer takes 20-55 s; the Next dev
+  proxy cuts rewrites at 30 s (checked in `next/dist/server/lib/router-utils`).
+  The Answer page is a server component that calls the API directly
+  (`web/src/lib/api.ts`, `API_BASE`), with a loading state; the source panel's
+  chunk lookup goes through a route handler (`/web-api/chunks/[id]`). Nothing in
+  `web/` imports from `eval/` or reads run files.
+- **Rendered from the response only.** The dev banner comes from the response's
+  `development` field; the abstention panel, the "✓ matches SEC XBRL" badge,
+  the restatement and printed-precision notes, the pending notice and the
+  latency / cost line come from the response's verdict and per-claim records.
+  Confidence shows as a band: High ≥ 0.9, Medium ≥ 0.6, Low below, the cut
+  points of PRD 7.5's verdict ratios; Pending while the verdict waits on the NLI
+  threshold. Citations are numbered in reading order.
+- **Ask**: the three PRD 10 examples are a lookup, a comparison and "Should I buy
+  NVIDIA stock right now?", which the pipeline declines live (intent
+  `unsupported`), labelled "See how it handles a question it can't answer."
+  Company / year filter chips are not built: the API's filter override is
+  deferred (F-140).
+- **Tests.** `@playwright/test` 1.63.0 with its Chromium (toolchain). The e2e
+  suite (`web/e2e/`) runs against `e2e/mock-api.mjs`, which serves responses
+  captured from the real API on `claude_cli` (`web/e2e/fixtures/`, labelled
+  development, README there). The e2e Next server uses its own build directory
+  (`NEXT_DIST_DIR=.next-e2e`): Next allows one dev server per directory, and
+  `make test` must work while `make web-dev` runs. Its base URL is `localhost`:
+  the dev server's HMR socket refused `127.0.0.1`, which left pages unhydrated.
+  A manual live pass is `web/scripts/live-pass.mjs` (screenshots and a summary to
+  `build/web-live/`, git-ignored, never committed or used in the README, F-59).
+
+- **Dependencies** are pinned to exact versions in `web/package.json` and the
+  committed lockfile. shadcn's `cn()` is the local `src/lib/utils.ts` over `clsx`
+  and `tailwind-merge` (the scaffold had wired it to an unrelated npm package
+  `cn`, removed). The `shadcn` CLI is a devDependency only because
+  `globals.css` imports its `tailwind.css` (variants and keyframes), read at build
+  time; nothing imports it at runtime.
+- `web/AGENTS.md` and `web/CLAUDE.md` are written by `next dev` itself and left as
+  the tool writes them; they are not this project's working agreement, which is
+  the repository root's.
+
+*Alternatives:* raise the dev proxy timeout (rejected: the production path
+should not depend on a dev setting); call `/query` from the browser with CORS on
+the API (rejected: same timeout question in production proxies, and the API key
+story later is simpler server-side).
