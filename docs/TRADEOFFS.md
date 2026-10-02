@@ -2501,3 +2501,54 @@ across sub-queries (rejected: same reason); keep Appendix A's single `top_n: 8`
 *Alternatives:* ask for JSON in the prompt and parse it (rejected: PRD 7.4 says
 enforced, not asked); drop or repair claims with bad citations at generation
 (rejected: hides the pre-verification faithfulness the PRD charts).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: numeric grounding (PRD 7.5), and F-82, F-85, F-87
+
+Decided before any verifier code, without touching gold or reference answers.
+
+**What a claim's numbers are.** The figures `eval.metrics.numeric.text_figures`
+reads from the claim text (dates, period labels, form names, item numbers,
+period lengths and bare years masked first), each as a magnitude in base units
+using the claim's own scale words; plus the figure object's value times its
+unit scale. Percentages are kept apart from amounts.
+
+**What a cited chunk offers.** Every figure printed in the chunk (same reader),
+each as up to three candidate magnitudes: printed × the chunk's stated scale
+(the context line's "in thousands / millions / billions"), printed × a scale
+word printed beside it, and printed as is. A claim number is grounded when its
+magnitude equals one candidate of one cited chunk exactly (Decimal equality at
+the claim's printed precision; no tolerance: PRD 7.4 rule 3 forbids
+approximating).
+
+- **F-87, sign.** Grounding compares magnitudes. 296 positive facts print in
+  parentheses and 3 negative facts print plain, so a sign-sensitive match would
+  strip correct claims. Sign is not part of grounding; it is reported by the
+  existing sign-agreement row and the XBRL check below.
+- **F-82, zero.** A claim number 0 is grounded when a cited chunk prints 0, or
+  holds an inline-XBRL span of value 0 (the filer's "—" for a nil fact,
+  `xbrl_spans.raw_text`). A dash with no span behind it does not ground a zero:
+  a dash also means "not applicable".
+- **F-85, differences.** A number printed in no cited chunk is grounded *as
+  derived* when it equals the difference of, or the percent change between, two
+  other figures of the same answer that are themselves grounded (percent change
+  rounded to the claim's printed decimals). The claim records
+  `numbers_derived: true`; derived claims are counted in the report, separately.
+  Only differences and percent changes, only between the answer's own grounded
+  figures: anything wider would let chance arithmetic over a chunk's numbers
+  ground a made-up figure.
+
+**Unit scale (`unit_ok`).** The figure object's value × unit equals a candidate
+built with the chunk's stated scale or a printed scale word, not the "as is"
+candidate; a chunk whose context line says "except per share" also admits "as
+is" for that chunk. A figure grounded only "as is" in a scaled table is a unit
+error.
+
+**Period stated.** The claim text names a period: a date, an FY or quarter
+label, "fiscal YYYY", "year/months/quarter ended", or a year.
+
+*Alternatives:* sign-sensitive grounding (rejected, F-87); a 0.5% tolerance in
+grounding (rejected: rule 3; the tolerance belongs to the XBRL check, PRD 6.5.4);
+treating every dash as zero (rejected: dashes also mean n/a); stripping all
+derived numbers (rejected: strips every correct comparison answer, F-85);
+grounding derived numbers against any pair of chunk numbers (rejected: chance
+matches).
