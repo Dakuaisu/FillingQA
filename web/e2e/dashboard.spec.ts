@@ -32,5 +32,5 @@ test("development runs appear as ids with the banner and no value", async ({ pag
   await expect(dev).toContainText("a4e39a65c2c8");
   await expect(dev).toContainText("not a result");
   expect(await dev.innerText()).not.toMatch(/\b\d\.\d{2,}/);
-  await expect(page.getByTestId("owner-blocked").locator("tr")).toHaveCount(8);
+  await expect(page.getByTestId("owner-blocked").locator("tr")).toHaveCount(9);
 });

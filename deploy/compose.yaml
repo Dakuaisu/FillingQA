@@ -1,0 +1,64 @@
+# The API and frontend with Postgres restored from the corpus snapshot.
+# Used by `make deploy-check` (local) and as the reference for a deploy (F-143).
+# Secrets come from the environment; none are in this file.
+name: filingqa-deploy
+services:
+  db:
+    image: pgvector/pgvector:pg18
+    environment:
+      POSTGRES_USER: filingqa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-filingqa}
+      POSTGRES_DB: filingqa
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U filingqa"]
+      interval: 3s
+      retries: 30
+
+  migrate:
+    build: { context: .., dockerfile: deploy/api.Dockerfile }
+    image: filingqa-api:local
+    entrypoint: ["python", "-m", "api.db"]
+    environment:
+      DATABASE_URL: postgresql://filingqa:${POSTGRES_PASSWORD:-filingqa}@db:5432/filingqa
+    depends_on: { db: { condition: service_healthy } }
+
+  restore:
+    image: pgvector/pgvector:pg18
+    entrypoint: ["sh", "/deploy/restore.sh"]
+    environment:
+      POSTGRES_USER: filingqa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-filingqa}
+      POSTGRES_DB: filingqa
+      EXPECTED_SHA256: ${EXPECTED_SHA256:?set from api/corpus_freeze.yaml snapshot.sha256}
+    volumes:
+      - ./restore.sh:/deploy/restore.sh:ro
+      - ${SNAPSHOT_DIR:-../build}:/snapshot:ro
+    depends_on: { migrate: { condition: service_completed_successfully } }
+
+  api:
+    image: filingqa-api:local
+    environment:
+      DATABASE_URL: postgresql://filingqa:${POSTGRES_PASSWORD:-filingqa}@db:5432/filingqa
+      FILINGQA_GENERATION_BACKEND: anthropic_api
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
+    ports: ["${API_PORT:-18000}:8000"]
+    depends_on: { restore: { condition: service_completed_successfully } }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 5s
+      retries: 60
+
+  web:
+    build: { context: ../web }
+    image: filingqa-web:local
+    environment:
+      API_BASE: http://api:8000
+    ports: ["${WEB_PORT:-13000}:3000"]
+    depends_on: { api: { condition: service_healthy } }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      retries: 60

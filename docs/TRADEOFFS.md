@@ -3037,3 +3037,24 @@ LangFuse endpoint (OWNER-BLOCKED with the deploy, F-143).
 *Alternatives:* the LangFuse Python SDK (rejected for now: a dependency for one
 POST, and its OTEL setup would trace libraries we do not want traced); the
 legacy ingestion API (rejected: deprecated per LangFuse's docs).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: deployment as committed config, not deployed (F-143)
+
+- `deploy/api.Dockerfile` (python 3.12-slim, CPU torch 2.14.1, editable install
+  so `REPO_ROOT` resolves to the image's `/app`); `deploy/entrypoint.sh` migrates,
+  runs `verify_freeze --snapshot` and exits with "refusing to serve" on any
+  mismatch. Models download from Hugging Face on first `/query`.
+- `web/Dockerfile` (node 24-slim, `npm ci`, `next build`, `next start`), `API_BASE`
+  at run time. The Answer page declares `maxDuration = 120` for hosts that cap
+  server functions (a live answer takes up to about a minute).
+- `deploy/compose.yaml`: Postgres (pgvector pg18), migrate, restore (the Postgres
+  image runs `deploy/restore.sh`: sha256 against `snapshot.sha256` in
+  `api/corpus_freeze.yaml`, `pg_restore --data-only`, HNSW reindex), API, web.
+  Every secret is an environment variable; none is in the repo.
+- Hosting manifests for PRD 13's hosts: `deploy/fly.toml` (API) and
+  `web/vercel.json` (frontend). There is no worker process: answers are
+  synchronous and ingestion is frozen (PRD 11.4; `/admin/ingest` deferred, F-140).
+- `make deploy-check` is the test: builds both images, runs the stack on
+  `build/corpus_snapshot.dump`, hits `/health` and the Ask page in the
+  containers, tears down. Checked: it passes; the API container refuses to serve
+  on an empty database; the restore refuses an archive with another sha256.

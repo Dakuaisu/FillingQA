@@ -50,6 +50,7 @@ once validated). Reports print the two side by side (F-133).
 | Rerank score-floor calibration | F-112 |
 | Hosting the corpus snapshot for CI (exact command in the finding) | F-135 |
 | Review of the XBRL concept synonym map | F-127 |
+| Deploy: Fly.io and Vercel accounts, LangFuse keys, the deploy itself and the public URL (exact commands in the finding) | F-143 |
 
 Dense search is exact, so any run is reproducible from the corpus snapshot
 (F-136). The reranker runs on whatever device is present; a run where it hit
@@ -58,6 +59,21 @@ cost decision (F-137). Everything decided so
 far is in [`docs/TRADEOFFS.md`](docs/TRADEOFFS.md); every finding, open or
 resolved, in [`docs/OPEN.md`](docs/OPEN.md); the build log in
 [`docs/WORKLOG.md`](docs/WORKLOG.md).
+
+## Deploy
+
+What exists: Docker images for the API (`deploy/api.Dockerfile`, which refuses to
+serve unless the database matches the corpus freeze) and the frontend
+(`web/Dockerfile`), `deploy/compose.yaml` running both on Postgres restored from
+the corpus snapshot, hosting manifests (`deploy/fly.toml` for the API,
+`web/vercel.json` for the frontend), and LangFuse tracing that sends nothing
+without keys. `make deploy-check` builds and runs both images locally against
+the snapshot and checks `/health` and the Ask page. Every secret is an
+environment variable.
+
+What waits on the owner: hosting the snapshot, a Postgres, Fly.io and Vercel
+accounts, `ANTHROPIC_API_KEY` and LangFuse keys, the deploy itself and the public
+URL. The exact commands are in `docs/OPEN.md` F-143. There is no public URL yet.
 
 ## Local setup
 

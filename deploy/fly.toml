@@ -1,0 +1,32 @@
+# Fly.io manifest for the API (PRD 14 Phase 5 / 13: "API + worker on Fly.io or
+# Railway"). There is no worker process: the pipeline answers synchronously and
+# ingestion is frozen (PRD 11.4; /admin/ingest deferred, F-140).
+# Secrets (never in the repo): fly secrets set ANTHROPIC_API_KEY=... DATABASE_URL=...
+#   LANGFUSE_PUBLIC_KEY=... LANGFUSE_SECRET_KEY=... (F-143).
+app = "filingqa-api"
+primary_region = "iad"
+
+[build]
+  dockerfile = "api.Dockerfile"
+
+[env]
+  FILINGQA_GENERATION_BACKEND = "anthropic_api"
+  PORT = "8000"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/api/v1/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "120s"
+
+[[vm]]
+  memory = "4gb"
+  cpus = 2

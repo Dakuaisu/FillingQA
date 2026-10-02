@@ -5732,3 +5732,30 @@ seed_0044 PARTIAL and cmp_0021 PARTIAL, both with "I could only partially verify
 this from the filings." and only the supported claims (cmp_0021's difference
 claim dropped, its two figures XBRL-verified, Confidence Medium); cmp_0039 and
 xbrl_0153 PASS this time. Restatement still unseen.
+
+## 2026-10-02 — Deployment as committed config (F-143), `make deploy-check`
+
+`deploy/api.Dockerfile`, `deploy/entrypoint.sh`, `deploy/restore.sh`,
+`deploy/compose.yaml`, `deploy/check.sh`, `deploy/fly.toml`, `web/Dockerfile`,
+`web/vercel.json`, `.dockerignore`s; `make deploy-check`. `make deploy-check`
+(first build about 5 minutes):
+
+     Container filingqa-deploy-api-1 Healthy 
+     Container filingqa-deploy-db-1 Healthy 
+     Container filingqa-deploy-restore-1 Exited 
+     Container filingqa-deploy-web-1 Healthy 
+    --- GET /api/v1/health (api container)
+    {"status":"ok","database":"reachable","chunks":22354,"chunks_with_embeddings":22354,"pipeline":"config_4_routed","backend":"anthropic_api","development":false,"tracing":"disabled"}
+    --- GET / (web container)
+    Ask the filings
+    deploy-check: ok
+
+Negative checks on the same images: the API container against a migrated but
+empty database printed "corpus does not match api/corpus_freeze.yaml: refusing
+to serve" (verify_freeze --snapshot: mismatches 96) and exited; the restore with
+EXPECTED_SHA256=0000 printed "refusing /snapshot/corpus_snapshot.dump: sha256
+9a8a8271... != recorded 0000". Stack torn down, no containers left.
+
+F-143 logged (owner-blocked deploy with exact commands); README "Deploy" section;
+owner-blocked list (README table and `eval/dashboard.yaml`) gains F-143, `/metrics`
+fixture recaptured. `make lint` clean; `make test` 502 passed, e2e 12 passed.

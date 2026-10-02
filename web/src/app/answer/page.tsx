@@ -4,6 +4,10 @@ import { AnswerView } from "@/components/answer-view";
 import { AskForm } from "@/components/ask-form";
 import { query } from "@/lib/api";
 
+// A live answer takes up to about a minute (router, retrieval, generation, gate); hosts that
+// cap server function time (Vercel) need the allowance.
+export const maxDuration = 120;
+
 const ERROR_TEXT: Record<number, string> = {
   400: "The request was not understood.",
   422: "The question is too long for the retriever. Shorten it and ask again.",

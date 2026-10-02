@@ -22,6 +22,8 @@ owner_blocked:
     findings: [F-135]
   - item: Review of the XBRL concept synonym map
     findings: [F-127]
+  - item: "Deploy: Fly.io and Vercel accounts, LangFuse keys, the deploy itself and the public URL (exact commands in the finding)"
+    findings: [F-143]
 
 # Gated metrics that would stay pending even once a gated run exists, and why
 # (README "Where the gate stands", third bullet).

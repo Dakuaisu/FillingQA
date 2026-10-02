@@ -1,5 +1,5 @@
 .PHONY: help install db-up db-down db-psql migrate lint fmt test eval eval-fast eval-gate \
-	restore-corpus-snapshot serve web-dev web-build
+	restore-corpus-snapshot serve web-dev web-build deploy-check
 
 # Targets are added as the modules behind them land.
 
@@ -18,6 +18,7 @@ help:
 	@echo "serve     the HTTP API (PRD 9) on localhost:8000; docs at /docs"
 	@echo "web-dev   the frontend (PRD 10) on localhost:3000 against API_BASE (default :8000)"
 	@echo "web-build production build of the frontend"
+	@echo "deploy-check build both images, run them on the snapshot, hit /health and Ask"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -84,3 +85,9 @@ web-dev:
 
 web-build:
 	cd web && npm run build
+
+
+# Deployment config test (F-143): both images built and run locally against the
+# corpus snapshot (build/corpus_snapshot.dump); nothing is deployed.
+deploy-check:
+	sh deploy/check.sh
