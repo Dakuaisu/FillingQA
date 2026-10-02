@@ -2401,3 +2401,88 @@ filters); filtering inside HNSW with iterative scans (pgvector 0.8.6 has them;
 rejected for the first build because exact search over a filtered slice is
 simple and has no recall question); re-asking the router on a parse failure
 (rejected: eval_run's rule, record and move on).
+
+## 2026-10-02 — OWNER DECISION - periods are resolved in code, not by the router (F-119)
+
+Decided by the supervisor for the owner. The router extracts only what the
+question states: tickers, and each period as the question words it. Code maps a
+stated date (also inside "fiscal year ended <date>") through `filings.period_end`
+to that filing's own `fiscal_year` / `fiscal_quarter`, the dei labels already
+stored; the year written in the date is not used. An FY label ("FY2025", "Q3
+FY2024", "fiscal 2024") is taken literally, since the filer's filings and the
+templated questions carry the filer's own convention. Anything else, including a
+date that is no filing's period end, is unresolved and dropped from the filter,
+never guessed. No fiscal-year-end table is given to the model: the model's
+knowledge of filer conventions is what failed at confidence 0.95.
+
+*Alternatives:* tell the router each filer's fiscal-year convention (rejected:
+the same knowledge that failed, moved into the prompt); filter on period-end
+date ranges instead of fiscal labels (rejected: a stated FY label would then need
+the convention to turn into dates).
+
+## 2026-10-02 — OWNER DECISION - filters and intent budgets go into `make eval` (`config_4_routed`)
+
+Decided by the supervisor for the owner: PRD 7.1's pipeline is what Phase 4's
+exit is measured on. `eval_run.pipeline: config_4_routed` (PRD 11.6 Config 8's
+component on top of Config 4; Configs 5-7 not built, so this is not Config 8).
+The handwritten slice, when it lands, is the gate on filtered numbers (PRD 11.2).
+Synthesis routing is not changed to match the candidates' labels (F-121, F-89).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: how `config_4_routed` applies PRD 7.1's budgets
+
+- One router call per item on `tier_small`, recorded raw. A response that does
+  not parse runs as `unrouted` with Config 4's settings (k 50, top-n 8, small
+  tier), unfiltered; PRD 7.1 does not say. `unsupported` is declined: no
+  retrieval, no generator call, `abstain_reason: unsupported`.
+- Budgets from PRD 7.1's table in `router.budgets`: lookup small tier, k 20,
+  top-n 5; comparison large tier, k 50 per sub-query, top-n 8; synthesis large
+  tier, k 50, top-n 10. k applies to both dense and BM25 per query. Rerank top-n
+  now comes from intent, not from the eval item's `question_type` (F-123).
+- Lookup and synthesis retrieve for the question itself; comparison for the
+  router's two sub-queries (the question stands in for a missing one). Each
+  sub-query's fused list is reranked against that sub-query, with the timeout
+  and floor applied per rerank pass; the two post-rerank lists are interleaved
+  to top-n so both periods reach the generator. The stored pre-rerank list for a
+  comparison is the RRF of the two sub-query lists (up to 100), every query's
+  lists are stored beside it.
+- Filters as in the filter runs: exact dense within the allowed chunks, BM25
+  restricted, RRF; an empty filtered result falls back to unfiltered for that
+  query (`filter_zero_recall`).
+- On `claude_cli`, comparison and synthesis answers come from `tier_large`
+  (`claude-sonnet-5-5`), the judge's model; F-14 applies to those items.
+
+*Alternatives:* rerank a comparison's merged candidates once against the
+original question (rejected: one period's chunks can take every slot; and 100
+pairs per pass would miss the timeout on this machine, F-114); top-n by score
+across sub-queries (rejected: same reason); keep Appendix A's single `top_n: 8`
+(F-122: PRD 7.1's table is the more specific rule).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: PRD 7.4 structured output as first built
+
+- Enforcement: `claude_cli` with `--json-schema` (checked: the CLI answers through
+  a forced tool call, `stop_reason: tool_use`, and returns `structured_output`; a
+  result without it is a CliError, never parsed from prose); `anthropic_api` with
+  a forced tool (`tool_choice`) whose `input_schema` is the contract. The API
+  path is not exercised (F-59).
+- Schema: PRD 7.4's keys; `citations` at least one; `figure` required on every
+  claim, null for claims without a number (PRD: "treat it as required on any
+  claim containing a number"); `figure.unit` an enum of scales (`ones`,
+  `thousands`, `millions`, `billions`, `trillions`, `percent`) so unit scale is
+  machine-checkable and numeric scoring reads it directly; `currency`, `concept`
+  nullable; `period` free text, as the PRD example.
+- System prompt: PRD 7.4's draft verbatim, plus one paragraph on the figure
+  object. The plain prompt stays for `generation.structured: false` (Phase 2
+  baseline).
+- Contract breaches the schema cannot express are recorded per result
+  (`contract_violations`: citations to chunks not given, a number with no
+  figure, duplicate claim ids, sufficient evidence with no claims, abstention
+  with no reason) and never repaired: the verifier's job (PRD 7.5).
+- The model's `sufficient_evidence: false` is an abstention (`abstain_reason:
+  insufficient_evidence`), counted in the 2x2. Claims are stored in
+  `answer.claims`, which numeric scoring reads; `claims_pre` stays empty until
+  the verifier adds its per-claim checks, so the claim metrics still print
+  "n/a: no claims".
+
+*Alternatives:* ask for JSON in the prompt and parse it (rejected: PRD 7.4 says
+enforced, not asked); drop or repair claims with bad citations at generation
+(rejected: hides the pre-verification faithfulness the PRD charts).

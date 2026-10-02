@@ -5198,3 +5198,62 @@ FY2026 against chunks stored as 2025: 0 allowed, `filter_zero_recall`, fell back
 Findings F-118 (movement), F-119 (fiscal-year labels), F-120 (gate never
 exercised), F-121 (synthesis intent). Nothing tuned: the threshold, prompt and
 period rule are as first written.
+
+## 2026-10-02 — F-119 fixed and re-measured; routed `make eval`; PRD 7.4 structured output
+
+Run-file convention in TRADEOFFS now names the filter-run files: run
+8b6bcc14f274 is `eval/runs/8b6bcc14f274.filter.json` plus
+`8b6bcc14f274.router.jsonl` (no `.retrieval.json`; it reuses 01019ff395ec's).
+
+**F-119 (3adf99e).** The router copies periods verbatim; code resolves them.
+Unit tests on the stored period ends: "January 25, 2026" + NVDA → FY2026;
+"fiscal year ended January 31, 2026" + TGT → fiscal 2025; "December 31, 2024" +
+PFE → 2024; "three months ended June 30, 2024" + XOM → 2024 Q2. Live router before
+the run: xbrl_0083 → [[2026, None]], 2 of 6 gold allowed; xbrl_0125 → [[2025,
+None]], 1 of 1; seed_0029 (Pfizer) → [[2025, None]], 1 of 1.
+
+`python -m scripts.filter_run --run --against 01019ff395ec`, 00:44Z to 02:00Z,
+run d2e59dc4b792, 283 router calls, 0 errors:
+
+    list / metric                    xbrl_auto    llm_seeded   handwritten     aggregate
+    unfiltered sufficiency@10            0.365         0.892             -         0.519
+    unfiltered recall@10                 0.375         0.892             -         0.527
+    unfiltered mrr                       0.178         0.639             -         0.313
+    unfiltered ndcg@10                   0.213         0.697             -         0.355
+    filtered sufficiency@10              0.690         1.000             -         0.781
+    filtered recall@10                   0.703         1.000             -         0.790
+    filtered mrr                         0.319         0.773             -         0.452
+    filtered ndcg@10                     0.400         0.830             -         0.526
+    counts per source:
+      filtered                                       200            83             0           283
+      unfiltered_low_confidence_or_empty               0             0             0             0
+      router_parse_failure                             0             0             0             0
+      period_unresolved                               12             1             0            13
+      filter_zero_recall                               0             0             0             0
+      all_gold_outside_filter                          0             0             0             0
+
+Against 8b6bcc14f274 item by item: sufficient@10 only now xbrl_0083, xbrl_0125;
+only before cmp_0003, xbrl_0137 (both with an unresolved year-to-date period,
+F-124); 256 of 283 filtered lists identical. F-119 resolved; F-120 unchanged
+(confidence min 0.85); F-124 logged. Notes that go with these numbers: F-118
+(questions name company and period), F-110 (seeded slice).
+
+**Routed `make eval` (dfcafc4).** `eval_run.pipeline: config_4_routed`: router,
+filters, PRD 7.1 budgets per intent; stores router response, intent, confidence,
+filters, per-query lists, `filter_zero_recall`; report prints filter and fallback
+counts per source, the intent-by-question-type matrix and the F-118 / F-110
+notes. Smoke with stubbed model calls on xbrl_0083 (lookup, k 20, 5 to the
+generator, 2 gold in the 20), cmp_0001 (two sub-queries, 81 fused, 8 to the
+generator), seed_0005 forced `unsupported` (declined, no lists), xbrl_0125 with an
+unparseable router reply (`unrouted`, k 50, 8): stored lists agree with the meta.
+F-122 (Appendix A top_n vs PRD 7.1) and F-123 (Config 4's top-n from the eval
+label) logged.
+
+**PRD 7.4 (3b58c35).** `--json-schema` on the CLI checked by one probe call
+(`stop_reason: tool_use`, `structured_output` returned). Live, routed and
+structured, not written to a run: xbrl_0083 on haiku abstained
+(`sufficient_evidence: false`) over its 5 chunks; cmp_0001 on sonnet-5-5 gave three
+cited claims with figure objects (21,448 and 29,789 million, difference 8,341,
+which no cited chunk prints: a rule-3 breach for the verifier), numerically
+correct by figure objects, no contract violations. `make test` 444 passed.
+No eval run yet on the routed, structured pipeline.
