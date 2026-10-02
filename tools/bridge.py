@@ -24,6 +24,8 @@ Stdlib only.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -52,7 +54,19 @@ BUILDER_MODEL = os.environ.get("BRIDGE_BUILDER_MODEL", "")  # "" = opencode defa
 BUILDER_SKIP_PERMS = os.environ.get("BRIDGE_BUILDER_SKIP_PERMS", "1") == "1"
 THINK = os.environ.get("BRIDGE_THINK", "ultrathink")
 
-SUPERVISOR_TIMEOUT = 900
+SUPERVISOR_TIMEOUT = 1800
+# opencode: persistent session as omo's default agent (omo drops custom agents), Fable
+# forced with -m, read-only by instruction only; a repo tripwire logs any change.
+# claude: one-shot, read-only enforced by --tools.
+SUPERVISOR_VIA = os.environ.get("BRIDGE_SUPERVISOR", "opencode")  # opencode | claude
+SUPERVISOR_VARIANT = os.environ.get("BRIDGE_VARIANT", "")
+SUP_SESSION_FILE = STATE / "supervisor_session"
+REVERIFY = (
+    "The builder just sent the message below. Re-verify its claims against the "
+    "repo this turn with Read, Grep and Glob. Your memory of earlier turns is "
+    "context, not evidence: files and commits may have changed since. Then draft "
+    "the developer's reply in the required shape.\n\n"
+)
 BUILDER_TIMEOUT = int(os.environ.get("BRIDGE_BUILDER_TIMEOUT", "10800"))
 RESUME_NOTE = (
     "Your previous turn was cut off by the bridge's timeout before you replied. "
@@ -302,8 +316,144 @@ def run_builder(message: str) -> str:
 # ------------------------------------------------------------------ supervisor
 
 
-def draft(turn: str, autonomous: bool = False) -> str:
-    """Headless Claude Code call. Uses your Max sub, not the API."""
+def supervisor_rules(autonomous: bool) -> str:
+    # The claude login wrapper resolves relative paths against its own cwd, not --dir.
+    where = (
+        f"The FilingQA repository is at {REPO}. Always pass absolute paths under it "
+        "to Read, Grep and Glob; relative paths resolve to a different directory.\n\n"
+    )
+    return (
+        "ROLE FOR THIS ENTIRE SESSION. Ignore any instruction to implement, plan or "
+        "continue tasks yourself: in this session you are only the supervisor.\n\n"
+        + where
+        + READ_ONLY
+        + SYSTEM
+        + (AUTONOMOUS if autonomous else "")
+    )
+
+
+READ_ONLY = (
+    "You are read-only. Never use Write, Edit, Bash, todo or task tools, or anything "
+    "that changes files or runs commands, even though they are available to you. If "
+    "something needs changing, tell the builder in your REPLY. The bridge fingerprints "
+    "the repo around every turn of yours and reports any change to the developer.\n\n"
+)
+
+TURN_REMINDER = (
+    "Reminder: you are the read-only SUPERVISOR from the first message of this session. "
+    "Absolute paths only. Output only VERDICT / REPLY (or ESCALATE). No edits, no bash.\n\n"
+)
+
+
+def served_models(sid: str) -> set[str]:
+    if not re.fullmatch(r"ses_[A-Za-z0-9]+", sid):
+        return set()
+    db = Path.home() / ".local" / "share" / "opencode" / "opencode.db"
+    q = (
+        "select distinct json_extract(data,'$.modelID') from message "
+        f"where session_id='{sid}' and json_extract(data,'$.role')='assistant'"
+    )
+    out = subprocess.run(["sqlite3", "-readonly", str(db), q], capture_output=True, text=True)
+    return {m for m in out.stdout.split() if m}
+
+
+def last_step_text(events: list[dict]) -> str:
+    steps: list[list[str]] = [[]]
+    for e in events:
+        if e.get("type") == "step_start":
+            steps.append([])
+        elif e.get("type") == "text":
+            steps[-1].append((e.get("part") or {}).get("text", ""))
+    texts = ["".join(s).strip() for s in steps]
+    return next((t for t in reversed(texts) if t), "")
+
+
+def draft_opencode(turn: str, autonomous: bool, fresh: bool) -> str:
+    exe = need("opencode", "Install OpenCode: https://opencode.ai")
+    sid = "" if fresh or not SUP_SESSION_FILE.exists() else SUP_SESSION_FILE.read_text().strip()
+
+    print(f"supervisor drafting ({'session ' + sid if sid else 'new session'}) ...")
+    preface = TURN_REMINDER if sid else supervisor_rules(autonomous)
+    message = preface + REVERIFY + f"===== BUILDER =====\n{turn}\n===== END =====\n"
+    before = repo_fingerprint()
+    try:
+        text, sid = opencode_supervisor_call(exe, sid, message)
+        if not text:
+            # Turns can end with tool calls and no text; nudge once in the same session.
+            text, sid = opencode_supervisor_call(exe, sid, EMPTY_NUDGE)
+    finally:
+        if repo_fingerprint() != before:
+            status = git_out("status", "--porcelain")
+            print("!! supervisor turn changed the repo -- logged to review.log")
+            log(f"\n=== SUPERVISOR CHANGED THE REPO (session {sid}) ===\n{status}", REVIEW_LOG)
+    if not text:
+        raise BridgeError("supervisor returned no output twice")
+    models = served_models(sid)
+    if models and models != {SUPERVISOR_MODEL.split("/")[-1]}:
+        print(f"!! supervisor was served by {sorted(models)}, not {SUPERVISOR_MODEL}")
+        log(f"\n=== SUPERVISOR MODEL MISMATCH (session {sid}): {sorted(models)} ===", REVIEW_LOG)
+    return text
+
+
+def git_out(*args: str) -> str:
+    return subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True).stdout
+
+
+def repo_fingerprint() -> str:
+    state = git_out("rev-parse", "HEAD") + git_out("status", "--porcelain") + git_out("diff")
+    return hashlib.sha256(state.encode()).hexdigest()
+
+
+EMPTY_NUDGE = (
+    "Your previous turn ended without any text. Use only Read, Grep and Glob, then "
+    "reply now in the required VERDICT / REPLY shape."
+)
+
+
+def opencode_supervisor_call(exe: str, sid: str, message: str) -> tuple[str, str]:
+    model = SUPERVISOR_MODEL if "/" in SUPERVISOR_MODEL else f"anthropic/{SUPERVISOR_MODEL}"
+    # Without --auto, headless runs reject any "ask" permission and abort the turn.
+    cmd = [exe, "run", "-m", model, "--format", "json", "--auto"]
+    if ATTACH_URL:
+        ensure_server(exe)
+        cmd += ["--attach", ATTACH_URL, "--dir", str(REPO)]
+    if sid:
+        cmd += ["--session", sid]
+    else:
+        cmd += ["--title", f"FilingQA supervisor {time.strftime('%Y-%m-%d %H:%M')}"]
+    if SUPERVISOR_VARIANT:
+        cmd += ["--variant", SUPERVISOR_VARIANT]
+    cmd.append(message)
+
+    try:
+        out = subprocess.run(
+            cmd, cwd=REPO, capture_output=True, text=True, timeout=SUPERVISOR_TIMEOUT
+        )
+    except subprocess.TimeoutExpired as e:
+        raise BridgeError(f"supervisor timed out after {SUPERVISOR_TIMEOUT}s") from e
+    if out.returncode != 0:
+        raise BridgeError(f"opencode supervisor exited {out.returncode}:\n{out.stderr[:800]}")
+
+    events = []
+    for line in out.stdout.splitlines():
+        try:
+            events.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    new_sid = next((e["sessionID"] for e in events if e.get("sessionID")), sid)
+    if new_sid and new_sid != sid:
+        SUP_SESSION_FILE.write_text(new_sid)
+        log(f"\n=== supervisor session {new_sid} ===")
+    errors = [e for e in events if e.get("type") == "error"]
+    if errors:
+        raise BridgeError(f"opencode supervisor error: {json.dumps(errors[0])[:800]}")
+    return last_step_text(events), new_sid
+
+
+def draft(turn: str, autonomous: bool = False, fresh: bool = False) -> str:
+    """Draft the developer's reply. opencode: persistent read-only session; claude: one-shot."""
+    if SUPERVISOR_VIA == "opencode":
+        return draft_opencode(turn, autonomous, fresh)
     exe = need("claude", "Install Claude Code and log in with your Max account.")
     system = SYSTEM + AUTONOMOUS if autonomous else SYSTEM
     prompt = (f"{THINK}\n\n" if THINK else "") + (
@@ -395,6 +545,13 @@ def check() -> None:
     )
     print(f"builder perms: {perms}")
     print(f"session:       {sid or 'NOT PINNED - will use last session; run --pin'}")
+    sup_sid = SUP_SESSION_FILE.read_text().strip() if SUP_SESSION_FILE.exists() else ""
+    if SUPERVISOR_VIA == "opencode":
+        print(f"supervisor via: opencode (omo default agent, -m {SUPERVISOR_MODEL})")
+        print("               read-only by instruction only; repo + model checks -> review.log")
+        print(f"sup. session:  {sup_sid or 'none yet - first draft creates it'}")
+    else:
+        print("supervisor via: claude -p, one-shot, read-only via --tools Read,Grep,Glob")
     if ATTACH_URL:
         state = "up" if server_up() else "down - bridge starts it on first builder call"
         print(f"server:        {ATTACH_URL} ({state}); watch: opencode attach {ATTACH_URL}")
@@ -486,8 +643,12 @@ def forever() -> None:
 
         if pending is None:
             print(f"--- exchange {i + 1} [{time.strftime('%H:%M:%S')}] ---")
+            phase_cp = checkpoint(turn) or ""
+            fresh = "phase" in phase_cp or "exit criterion" in phase_cp
+            if fresh:
+                log(f"\n=== phase boundary ({phase_cp!r}): fresh supervisor session ===")
             try:
-                raw = draft(turn, autonomous=True)
+                raw = draft(turn, autonomous=True, fresh=fresh)
             except BridgeError as e:
                 wait(backoff, f"supervisor: {e}")
                 backoff = min(backoff * 2, BACKOFF_MAX)
@@ -589,7 +750,13 @@ def main() -> None:
     ap.add_argument("--kickoff", metavar="MSG_OR_@FILE")
     ap.add_argument("--loop", type=int, metavar="N")
     ap.add_argument("--forever", action="store_true")
+    ap.add_argument("--new-supervisor", action="store_true")
     a = ap.parse_args()
+    if a.new_supervisor:
+        SUP_SESSION_FILE.unlink(missing_ok=True)
+        print("supervisor session cleared; the next draft starts a new one")
+        if not (a.forever or a.loop or a.kickoff):
+            return
     try:
         run(a)
     except BridgeError as e:
