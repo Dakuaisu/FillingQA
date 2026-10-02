@@ -12,8 +12,8 @@ carries the state.
 | Status | Count |
 |---|---|
 | OPEN | 82 |
-| RESOLVED | 61 |
-| **Total** | **143** |
+| RESOLVED | 62 |
+| **Total** | **144** |
 
 ---
 
@@ -138,6 +138,7 @@ carries the state.
 
 | ID | Finding | Resolution | Date |
 |---|---|---|---|
+| F-144 | `python -m scripts.eval_run --report RUN_ID` rewrote the run's committed `eval/runs/<run_id>.json` in place with whatever the current report code computes: run on a4e39a65c2c8 on 2026-10-02 it added `retrieval_latency_s: null` and `verdict_by_correctness` (60 lines; no recorded result changed). A report command must not mutate a run file; under the run-file convention (TRADEOFFS, run kinds in `eval/runs/`) derived output goes to stdout or a suffix file | The accidental change was restored from git (`git checkout -- eval/runs/a4e39a65c2c8.json`; the change was made by this session's own command). `--report` is now read-only: `scripts/eval_run.py::rebuild_report` reads the meta and results and returns the report, which is printed to stdout only; `tests/unit/test_eval_report_readonly.py` checks that every file in the run directory is byte-identical after a report. A completed or resumed run still writes its own `<run_id>.json` once, as before | 2026-10-02 |
 | F-01 | `xbrl_facts` key collides on QTD vs YTD facts in Q2/Q3 10-Qs | `period_start` added to the key; `UNIQUE NULLS NOT DISTINCT` so instant facts still dedupe | 2026-08-30 |
 | F-02 | iXBRL offsets and chunk offsets are different coordinate systems; normalized text had nowhere to live | Extraction and flattening made one traversal; `filings.norm_path` added; verified 0 mismatches across 12 filings on an independent lxml check | 2026-08-30 |
 | F-03 | `companyfacts` returns accessions outside `filings`, violating the FK | `xbrl_facts_unlinked` staging table, kept for restatement history. Exercised 2026-10-01: 70,999 unlinked facts across 3 companies, restatement query reads both tables | 2026-08-30 |

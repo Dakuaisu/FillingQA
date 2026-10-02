@@ -3,7 +3,7 @@
 python -m scripts.eval_run                     # plan only: no retrieval, no model call
 python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
-python -m scripts.eval_run --report RUN_ID     # rebuild a finished run's report from its saved meta
+python -m scripts.eval_run --report RUN_ID     # a finished run's report, stdout only (F-144)
 python -m scripts.eval_run --rescore RUN_ID T   # derived report at nli_threshold T (F-125)
 python -m scripts.eval_run --reverify RUN_ID TAG  # model-free checks again: <id>.reverify-TAG.json
 python -m scripts.eval_run --smoke SEED        # pipeline check, 12 seeded items: <id>.smoke.json
@@ -33,6 +33,7 @@ import time
 import uuid
 from collections import Counter
 from datetime import UTC, datetime
+from pathlib import Path
 
 import yaml
 
@@ -419,6 +420,16 @@ def smoke(items: dict, gen: dict, run_cfg: dict, seed: int) -> None:
     sys.exit(0 if ok else 1)
 
 
+def rebuild_report(runs: Path, run_id: str, items: dict, run_cfg: dict) -> dict:
+    # Read-only: run files are records; derived output goes to stdout or a suffix file (F-144).
+    saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
+    results = read_jsonl(runs / f"{run_id}.results.jsonl")
+    if len(results) != len(saved["item_order"]):
+        raise SystemExit(f"run {run_id} has {len(results)} of {len(saved['item_order'])} items")
+    report_meta = {k: v for k, v in saved.items() if k != "item_order"}
+    return build_report(items, results, report_meta, saved["k"], run_cfg["nli_threshold"])
+
+
 def main() -> None:
     gen, run_cfg = generation(), eval_run()
     baseline_out = arg("--baseline-out")
@@ -453,15 +464,7 @@ def main() -> None:
         smoke(items, gen, run_cfg, int(arg("--smoke")))
         return
     if arg("--report"):
-        run_id = arg("--report")
-        saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
-        results = read_jsonl(runs / f"{run_id}.results.jsonl")
-        if len(results) != len(saved["item_order"]):
-            raise SystemExit(f"run {run_id} has {len(results)} of {len(saved['item_order'])} items")
-        report_meta = {k: v for k, v in saved.items() if k != "item_order"}
-        report = build_report(items, results, report_meta, saved["k"], run_cfg["nli_threshold"])
-        (runs / f"{run_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
-        print(format_report(report))
+        print(format_report(rebuild_report(runs, arg("--report"), items, run_cfg)))
         return
     if arg("--resume"):
         run_id = arg("--resume")
