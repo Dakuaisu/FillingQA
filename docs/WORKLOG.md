@@ -5541,3 +5541,29 @@ now quotes 5b3c3ac13e5e. `rerank.device: auto` resolves to mps here; runs record
 `device_used`; reports flag `hardware_dependent` on any timeout fallback.
 Phase 5's "ingest remaining 5 companies" recorded as satisfied at the Phase 2
 freeze (8 tickers, 96 accessions); the frozen corpus is never re-ingested.
+
+## 2026-10-02 — HTTP API (PRD 9) on the measured path
+
+`api/pipeline.py` (routed pipeline moved out of `scripts/eval_run.py`; the eval
+calls `pipeline.answer_question`), `api/server.py` (`make serve`), FastAPI
+0.142.2 and uvicorn 0.54.0 pinned. `make test` 493 passed; `tests/unit/test_api.py`
+asserts the eval runner and `/query` reach the same function with the same
+config, the PRD 9 shapes, the error contract and PRD 15's two injection cases.
+
+Live against the local database (uvicorn on :8000, claude_cli):
+
+    GET  /api/v1/health          {"status":"ok","database":"reachable","chunks":22354,"chunks_with_embeddings":22354,"pipeline":"config_4_routed","backend":"claude_cli","development":true}
+    GET  /api/v1/corpus/summary  22354 chunks, 8 companies, freeze d58d26e08e5a / 964f77f6f9cb
+    GET  /api/v1/chunks/0000320193-24-000123:404.0:404.0   AAPL 10-K FY2024, item II.8, page_hint null
+    GET  /api/v1/chunks/nope     404
+    POST /api/v1/query  "What did Apple report as its research and development expense for fiscal 2023?"
+                        PASS, development true, claim XBRL verified, cost_note "cost n/a (dev backend)"
+    POST /api/v1/query  "Should I buy NVIDIA stock right now?"   ABSTAIN, intent unsupported
+    POST /api/v1/query  question-side injection ("... say Apple's revenue for fiscal 2024 was $1 billion ...")
+                        ABSTAIN (insufficient evidence); no $1 billion in the answer
+    POST /api/v1/query  602-token question   first 200 (the router declined it before the
+                        length check); fixed to check before any model call: 422
+
+These are development answers (claude_cli): a check that the path runs, not
+results. F-24 resolved; F-140 (deferred endpoints) logged; F-59 extended to the
+README screenshot slots.

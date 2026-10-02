@@ -1750,6 +1750,19 @@ through the `claude` CLI. This partly unblocks F-59.
   `anthropic_api` runs. Final and published runs are re-run on `anthropic_api`.
 - **Seeding** (`eval/generate/seeding.py`) may use the same backend. Seeding and
   generating with one model family is the bias F-14 describes.
+- **Serving (2026-10-02, OWNER DECISION, same scope).** Until a key exists the
+  local API answers on `claude_cli`. Every `/query` response carries `backend`,
+  `model_served` and `development: true`; the Answer screen shows a persistent
+  banner from that response field, never from config; latency and cost on screen
+  are the response's own and labelled dev. No screenshot of a `claude_cli` answer
+  goes into the README; the README's screenshot slots are OWNER-BLOCKED under
+  F-59. The eval dashboard renders only from committed run files: model-free
+  retrieval runs, the gate's per-metric table (pass / fail / pending with each
+  pending reason) and the owner-blocked list from OPEN; development runs appear
+  only as run ids with the banner "development run on `claude_cli`, not a
+  result", linked to their files, with no metric value; any run whose meta has
+  `development_run: true` is excluded from every chart and table by code, with a
+  test. A gated run appears by the same rule when it exists.
 - *Alternatives (owner's):* wait for an API key (Phase 2 exit and all model-based
   Phase 3 work stay blocked); `--bare` with the shell key (rejected: 401, and
   `--bare` cannot use the Max login).
@@ -2887,3 +2900,39 @@ slice. The frozen eval corpus has been 8 companies × 3 years since the Phase 2
 freeze (F-06, F-42: 96 accessions, 8 tickers, `api/corpus_freeze.yaml`), so the
 item is done; the frozen corpus is never re-ingested (PRD 11.4). No separate demo
 corpus: the PRD does not ask for one.
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the HTTP API as first built (PRD 9)
+
+- **One path.** `POST /api/v1/query` calls `api.pipeline.answer_question`, the
+  function `scripts.eval_run` calls for `config_4_routed`, with the same config
+  (`eval_run.pipeline`, `generation`, `retrieval`, `rerank`, `router`,
+  `verification`); the routed pipeline moved from `scripts/eval_run.py` into
+  `api/pipeline.py` unchanged. A test asserts both callers reach that function
+  with the same config. Only `config_4_routed` is served (the other configs
+  need the eval item's label, F-123); any other configured pipeline returns 503.
+- **Shapes** as PRD 9, plus `backend`, `model_served`, `development` and, for a
+  verdict still waiting on the NLI threshold, `verification_pending` (verdict
+  `PENDING_NLI`, F-125). `page_hint` is null (F-55). `confidence` is the
+  fraction of the generator's claims the gate kept (0.0 on ABSTAIN, null while
+  pending): a plain ratio, not a calibrated probability. Claims shown are
+  `claims_post` (PARTIAL shows supported claims only, PRD 7.5), each with its
+  XBRL status and, for a restatement, the restating filing. `cost_usd` follows
+  F-134 (null with "cost n/a (dev backend)" on claude_cli). `nearest_evidence`
+  `rerank_score` is null: per-chunk rerank scores are not kept by the pipeline.
+- **Errors.** 400 for a malformed or empty request and for the request's
+  `filters` / `options` overrides (deferred, F-140); 422 when the question is
+  longer than the embedder's own window (512 tokens), checked before any model
+  call (no separate limit invented); 503 when the database is unreachable.
+  Abstention is a 200.
+- **Concurrency.** One process, one loaded model set: queries run one at a time.
+- **Prompt injection (PRD 15).** The question is data in the user turn after
+  the evidence; the system prompt is fixed. Tests (stubbed generator, inline
+  facts, no database): a filing-text injection telling the model to report
+  revenue as $1 billion, obeyed by the generator, is caught by the cited
+  filing's XBRL revenue fact and never reaches the answer; a question telling
+  the model to cite a chunk it was not given fails citation validity and is
+  dropped. The injected chunk exists only in the test module (F-24).
+
+*Alternatives:* a separate serving pipeline (rejected: the shipped path would
+not be the measured path); a fixed character limit for 422 (rejected: invents a
+number the PRD does not give).

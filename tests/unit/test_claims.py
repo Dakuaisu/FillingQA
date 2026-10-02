@@ -9,7 +9,7 @@ import pytest
 from api.generate import claude_cli
 from api.generate.claims import SCHEMA, SYSTEM_PROMPT, answer_text, contract_violations, render
 from api.generate.generator import Answer
-from scripts.eval_run import answer_fields
+from api.pipeline import answer_fields
 
 FIG = {"value": 7286, "unit": "millions", "currency": "USD", "period": "FY2024",
        "concept": "Inventories"}  # fmt: skip

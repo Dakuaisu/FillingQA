@@ -1,5 +1,5 @@
 .PHONY: help install db-up db-down db-psql migrate lint fmt test eval eval-fast eval-gate \
-	restore-corpus-snapshot
+	restore-corpus-snapshot serve
 
 # Targets are added as the modules behind them land.
 
@@ -15,6 +15,7 @@ help:
 	@echo "eval      verify the freeze, run the eval over the candidates, print the report"
 	@echo "eval-fast the 60-item fast subset on the same pipeline, then eval-gate"
 	@echo "eval-gate eval/compare.py: build/eval_fast.json vs thresholds and main_fast baseline"
+	@echo "serve     the HTTP API (PRD 9) on localhost:8000; docs at /docs"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -66,3 +67,7 @@ eval-gate:
 # The archive must be in build/ first; hosting it is OWNER-BLOCKED (F-135).
 restore-corpus-snapshot:
 	python -m scripts.corpus_snapshot restore build/corpus_snapshot.dump
+
+# PRD 9 API. On claude_cli every answer is labelled development (OWNER DECISION).
+serve:
+	uvicorn api.server:app --port 8000
