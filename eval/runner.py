@@ -11,6 +11,7 @@ from collections import Counter
 
 from api.generate.generator import DEV_BACKENDS
 from eval.metrics.abstention import rates, two_by_two
+from eval.metrics.cost import cost_per_query, tokens
 from eval.metrics.generation import NA, generation_metrics
 from eval.metrics.numeric import aggregate, score_item
 from eval.metrics.retrieval import mrr, ndcg_at_k, precision_at_k, recall_at_k, sufficiency_at_k
@@ -99,7 +100,21 @@ def floor_empty(r: dict) -> bool:
     return r.get("retrieved_post_rerank") == [] and not r.get("rerank_fell_back")
 
 
-def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict:
+PRICING = None
+
+
+def _prices() -> dict:
+    global PRICING
+    if PRICING is None:
+        import yaml
+
+        from api.config import REPO_ROOT
+
+        PRICING = yaml.safe_load((REPO_ROOT / "eval" / "pricing.yaml").read_text(encoding="utf-8"))
+    return PRICING["models"]
+
+
+def _slice(items: dict, results: list[dict], k: int, nli_threshold=None, dev=False) -> dict:
     ret = {"sufficiency": [], "recall": [], "precision": [], "mrr": [], "ndcg": [],
            "sufficiency_post_rerank": []}  # fmt: skip
     scores, abst = [], []
@@ -132,6 +147,8 @@ def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict
         "filter_zero_recall": sum(bool(r.get("filter_zero_recall")) for r in results),
         "declined_unsupported": sum(r.get("abstain_reason") == "unsupported" for r in results),
         "pending_nli": sum(r.get("verdict") == "PENDING_NLI" for r in results),
+        "tokens": tokens(results),
+        "cost_per_query": cost_per_query(results, _prices(), dev),
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "numeric": aggregate(scores),
         "abstention": _abstention(abst),
@@ -144,6 +161,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
     retrieved_post_rerank (or None), answer {text, claims, abstained}, verdict and
     served model; `meta`: backend, run_id, dataset files, retrieval stage."""
     by_source = {s: [r for r in results if items[r["item_id"]]["source"] == s] for s in SOURCES}
+    dev = meta["backend"] in DEV_BACKENDS
     return {
         **meta,
         "development_run": meta["backend"] in DEV_BACKENDS,
@@ -159,10 +177,10 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "columns": {
             **{
-                s: _slice(items, rs, k, nli_threshold) if rs else None
+                s: _slice(items, rs, k, nli_threshold, dev) if rs else None
                 for s, rs in by_source.items()
             },
-            "aggregate": _slice(items, results, k, nli_threshold),
+            "aggregate": _slice(items, results, k, nli_threshold, dev),
         },
     }
 
@@ -232,6 +250,10 @@ def _faith(g: dict):
     return f"{_fmt(g['faithfulness_pre'])} [{_fmt(g['answer_rate'])}]"
 
 
+def _usd(v):
+    return f"{v:.5f}" if isinstance(v, float) else v
+
+
 def _fmt(v) -> str:
     return "-" if v is None else f"{v:.3f}" if isinstance(v, float) else str(v)
 
@@ -267,6 +289,12 @@ def format_report(report: dict) -> str:
             ("  filter_zero_recall (fell back)", lambda c: c.get("filter_zero_recall", 0)),
             ("  declined: intent unsupported", lambda c: c.get("declined_unsupported", 0)),
             ("verdict pending NLI (F-125)", lambda c: c.get("pending_nli", 0)),
+            ("Cost per query, USD (F-134)", lambda c: _usd(c.get("cost_per_query"))),
+            ("  input tokens", lambda c: (c.get("tokens") or {}).get("input_tokens")),
+            ("  output tokens", lambda c: (c.get("tokens") or {}).get("output_tokens")),
+            ("  cache-read tokens", lambda c: (c.get("tokens") or {}).get("cache_read_tokens")),
+            ("  cache-creation tokens",
+             lambda c: (c.get("tokens") or {}).get("cache_creation_tokens")),
             ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
             ("  numeric items scored", lambda c: c["numeric"]["n"]),
             ("  excluded unit_scale_unknown",

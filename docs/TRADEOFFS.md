@@ -2830,3 +2830,20 @@ the metrics (F-136).
 *Fallback, documented only:* rebuild in CI from the freeze (about 90 SEC
 downloads per run at 8 req/s, parsing, chunking and embedding 22,354 chunks); not
 a CI step.
+
+## 2026-10-02 — OWNER DECISION - cost_per_query defined (F-134)
+
+Decided by the supervisor for the owner. `cost_per_query` is the mean over items
+of the cost of every model call made to answer the item: the router and the
+generator. The judge is eval cost and excluded; the local NLI model and the
+reranker cost zero. Each call's input, output, cache-read and cache-creation
+tokens are priced from `eval/pricing.yaml` (model id, USD per million tokens,
+the date and source the prices were read from: 2026-10-02,
+platform.claude.com pricing page; Claude Haiku 4.5 $1 / $5, Claude Sonnet 5.5
+$2 / $10, cache writes at the 5-minute rate, cache reads at the table's rate).
+A model with no price, or a call whose tokens were not recorded, makes the cost
+pending, never estimated. On `claude_cli` the report prints the token counts
+and "cost n/a (dev backend)", and the gate treats that as pending. The router
+call's token usage was not stored before this change (a4e39a65c2c8's token
+totals cover the generator only); it is stored from now on. F-134 resolves with
+the first priced run, which is F-59.

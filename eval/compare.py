@@ -26,7 +26,6 @@ from api.config import REPO_ROOT
 NOT_IN_REPORT = {
     "answer_correctness": "pending: judge answer correctness (F-105)",
     "natural_phrasing_gap": "pending: hand-written natural-phrasing items (F-103)",
-    "cost_per_query": "pending: cost per query not measured (F-134)",
 }
 
 
@@ -46,6 +45,7 @@ METRICS = {
     "xbrl_contradiction": _gen("xbrl_contradiction_rate"),
     "false_answer_rate": _abst("false_answer_rate"),
     "over_abstention_rate": _abst("over_abstention_rate"),
+    "cost_per_query": lambda c: c.get("cost_per_query", "pending: cost not in this report (F-134)"),
 }
 
 

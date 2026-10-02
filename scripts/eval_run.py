@@ -298,7 +298,10 @@ def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dic
         f = filters(route, set(ctx.companies), rc["filter_confidence_min"], ctx.period_ends)
     record = {
         "item_id": it["item_id"], "pipeline": "config_4_routed",
-        "router": {"response": ra.text, "model_served": ra.model, "parse_error": parse_error},
+        "router": {"response": ra.text, "model_served": ra.model, "parse_error": parse_error,
+                   "usage": {"input_tokens": ra.input_tokens, "output_tokens": ra.output_tokens,
+                             "cache_read_tokens": ra.cache_read_tokens,
+                             "cache_creation_tokens": ra.cache_creation_tokens}},
         "intent": intent, "router_confidence": route["confidence"] if route else None,
         "filters": f, "budget": budget, "queries": [], "claims_pre": [], "claims_post": [],
     }  # fmt: skip
