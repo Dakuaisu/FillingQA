@@ -87,6 +87,11 @@ def retrieval(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["retrieval"]
 
 
+def verification(path: Path = CORPUS_FILE) -> dict:
+    """The `verification:` block of api/config.yaml (PRD 7.5)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["verification"]
+
+
 def router(path: Path = CORPUS_FILE) -> dict:
     """The `router:` block of api/config.yaml (PRD 7.1)."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["router"]

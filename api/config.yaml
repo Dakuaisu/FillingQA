@@ -352,6 +352,11 @@ eval_run:
   pipeline: config_4_routed   # config_1_dense | config_3_hybrid | config_4_rerank | config_4_routed (PRD 11.6, F-61)
   nli_threshold: null        # PRD 7.5: calibrated in Phase 4; scoring claims refuses while null
 
+# PRD 7.5 verification gate. Appendix A values; decisions in TRADEOFFS.
+verification:
+  xbrl_match_tolerance_pct: 0.5     # PRD 6.5.4 / Appendix A xbrl.match_tolerance_pct
+  concept_synonyms: api/verify/concept_synonyms.yaml
+
 # PRD 7.1 router: intent -> generator tier, retrieval k per query, rerank top-n,
 # number of queries (comparison retrieves for the router's two sub-queries).
 # `unsupported` is declined with no retrieval and no generator call. `unrouted`

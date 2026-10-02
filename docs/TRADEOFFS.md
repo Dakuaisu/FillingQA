@@ -2552,3 +2552,38 @@ treating every dash as zero (rejected: dashes also mean n/a); stripping all
 derived numbers (rejected: strips every correct comparison answer, F-85);
 grounding derived numbers against any pair of chunk numbers (rejected: chance
 matches).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: runtime XBRL validation (PRD 6.5.4, 7.5)
+
+- **Which fact.** Per figure claim, per cited chunk's filing (the accession,
+  never "the latest value", Trap 1): facts of that filing for the claim's
+  concept whose `period_end` is the claim's period end. `xbrl_facts.fiscal_year`
+  / `fiscal_period` are the reporting filing's, not the fact's (checked: AAPL's
+  FY2024 10-Qs carry the 2023-09-30 inventory as fiscal_year 2024), so periods
+  are matched on `period_end` only.
+- **Claim period to period end.** The figure's `period` text through the
+  router's resolver (F-119): a stated date is the period end; an FY / quarter
+  label resolves to the period end of the filer's own filing for that fiscal
+  year and quarter (Q4 and FY: the 10-K). Both durations ending that day (three
+  months and year to date) are candidates. Unresolvable period: no lookup.
+- **Concept.** `figure.concept` against a hand-written synonym map over the
+  curated line items (PRD 6.5.4: "keep a hand-written synonym map for your 25
+  curated concepts"), `api/verify/concept_synonyms.yaml`; tag and variant both
+  candidates. Not in the map: no lookup, no penalty.
+- **Compare.** Magnitudes (F-87), base units, within 0.5%
+  (`xbrl.match_tolerance_pct`). Percent figures are not checked.
+- **Outcomes** (PRD 6.5.4): a cited filing's candidate fact matches →
+  `verified`; none does but the same company, concept and period end has a
+  matching fact in another filing → `restatement` (accepted; the other filing
+  and value recorded); a cited filing has candidate facts and nothing matches
+  anywhere → `contradiction` (strip, and the answer abstains); no candidate fact
+  → `no_fact` (falls through to grounding, no penalty).
+- **`period_ok`** (PRD 11.2 period accuracy): true when verified or restated;
+  false when the value matches a fact of the same concept in a cited filing at a
+  different period end (the right number for the wrong period); otherwise
+  unknown (null).
+
+*Alternatives:* general taxonomy matching (rejected by PRD 6.5.4); matching on
+`fiscal_year` (rejected: it is the filing's year); a contradiction when any cited
+filing mismatches though another cited filing matches (rejected: comparisons cite
+two filings).
