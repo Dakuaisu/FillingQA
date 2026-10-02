@@ -5316,3 +5316,7 @@ same smoke seed_0006 was dropped by the gate again (`failed_checks`
 [['1', 'numbers_grounded', 'unit_ok']]); its gold chunk states "in millions"
 and prints 3,438, so grounding is not missing a correct printed number there;
 the claim itself is not stored by a smoke. The full run stores it.
+
+    smoke 34a69c7dac93: ok True; failure None; checks {'meta_disagreements': [], 'report': 'built and formatted'}
+
+Smoke rerun after 9e33863 (02:58Z to 03:05Z) passes; `make eval` launched next.
