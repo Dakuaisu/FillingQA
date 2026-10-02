@@ -346,8 +346,20 @@ eval_run:
   k: 10
   retrieve_depth: 10
   runs_dir: eval/runs
-  pipeline: config_4_rerank   # config_1_dense | config_3_hybrid | config_4_rerank (PRD 11.6, F-61)
+  pipeline: config_4_routed   # config_1_dense | config_3_hybrid | config_4_rerank | config_4_routed (PRD 11.6, F-61)
   nli_threshold: null        # PRD 7.5: calibrated in Phase 4; scoring claims refuses while null
+
+# PRD 7.1 router: intent -> generator tier, retrieval k per query, rerank top-n,
+# number of queries (comparison retrieves for the router's two sub-queries).
+# `unsupported` is declined with no retrieval and no generator call. `unrouted`
+# (router output not parseable) runs with Config 4's settings.
+router:
+  tier: tier_small
+  budgets:
+    lookup: {tier: tier_small, k: 20, top_n: 5, sub_queries: 1}
+    comparison: {tier: tier_large, k: 50, top_n: 8, sub_queries: 2}
+    synthesis: {tier: tier_large, k: 50, top_n: 10, sub_queries: 1}
+    unrouted: {tier: tier_small, k: 50, top_n: 8, sub_queries: 1}
 
 # Hand-written items (PRD 11.1, Stage 4; authored by the owner). Counts per PRD 11.1.
 eval_handwritten:

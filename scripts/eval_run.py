@@ -32,7 +32,7 @@ from datetime import UTC, datetime
 
 import yaml
 
-from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval
+from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval, router
 from api.generate import claude_cli
 from api.generate.generator import generate, refuse_dev_baseline
 from eval.pipeline import depths
@@ -40,6 +40,7 @@ from eval.runner import build_report, format_report
 from scripts.write_freeze import FREEZE_FILE
 
 DATASETS = sorted((REPO_ROOT / "eval" / "candidates").glob("*_candidates.jsonl"))
+TEMPLATES = REPO_ROOT / "eval" / "templates.yaml"
 TIER = "tier_small"
 TRANSPORT_RETRIES = 3
 
@@ -65,6 +66,8 @@ STAGES = {
     "config_1_dense": "dense top-k (no fusion, no rerank)",
     "config_3_hybrid": "BM25 + dense, RRF-fused pre-rerank list (no rerank)",
     "config_4_rerank": "BM25 + dense, RRF-fused pre-rerank list; reranked list stored beside it",
+    "config_4_routed": "PRD 7.1 router, metadata filters and intent budgets in front of Config 4; "
+    "pre-rerank list per query (RRF over a comparison's sub-queries), reranked lists beside",
 }
 
 
@@ -80,7 +83,8 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
         "backend": gen["backend"], "model_requested": gen[TIER], "tier": TIER,
         "pipeline": pipeline, "retrieval_stage": STAGES[pipeline],
         **depths(pipeline, retrieve_depth=run_cfg["retrieve_depth"], retrieval_cfg=rc,
-                 rerank_cfg=rerank(), baseline_top_k=baseline()["top_k"]),
+                 rerank_cfg=rerank(), baseline_top_k=baseline()["top_k"],
+                 budgets=router()["budgets"] if pipeline == "config_4_routed" else None),
         "hnsw_ef_search": rc["hnsw_ef_search"], "k_dense": rc["k_dense"],
         "parser_version": freeze["parser_version"], "chunker_version": freeze["chunker_version"],
         "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
@@ -90,9 +94,13 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
         if rc["sparse"]["backend"] == "bm25":
             with connect() as conn:
                 meta["bm25_index_key"] = load_bm25(conn, rc["sparse"])[0].key
-    if pipeline == "config_4_rerank":
+    if pipeline in ("config_4_rerank", "config_4_routed"):
         meta["rerank"] = rerank()
         meta["machine"] = machine()
+    if pipeline == "config_4_routed":
+        meta["router"] = router()
+        meta["model_requested"] = {t: gen[t] for t in ("tier_small", "tier_large")}
+        meta["templates_sha256"] = hashlib.sha256(TEMPLATES.read_bytes()).hexdigest()
     return meta
 
 
@@ -110,8 +118,17 @@ class Context:
         if pipeline != "config_1_dense" and self.rcfg["sparse"]["backend"] == "bm25":
             self.index, _ = load_bm25(conn, self.rcfg["sparse"])
             self.key = self.index.key
-        if pipeline == "config_4_rerank":
+        if pipeline in ("config_4_rerank", "config_4_routed"):
             self.reranker = load_reranker(self.rrcfg)
+        if pipeline == "config_4_routed":
+            from api.query.router import PERIOD_ENDS_SQL
+
+            self.router = router()
+            self.companies = yaml.safe_load(TEMPLATES.read_text(encoding="utf-8"))["company_names"]
+            self.chunk_meta = conn.execute(
+                "SELECT chunk_id, ticker, fiscal_year, fiscal_quarter, form_type FROM chunks"
+            ).fetchall()
+            self.period_ends = conn.execute(PERIOD_ENDS_SQL).fetchall()
 
 
 def texts_for(conn, ids: list[str]) -> dict[str, str]:
@@ -173,6 +190,117 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
         raise last
     if gen[TIER] not in a.model.split(","):
         raise claude_cli.CliError(f"served {a.model}, requested {gen[TIER]}")
+    return {
+        **record, "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
+        "model_served": a.model, "backend": a.backend,
+        "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
+                  "cache_read_tokens": a.cache_read_tokens,
+                  "cache_creation_tokens": a.cache_creation_tokens},
+        "latency_s": round(time.monotonic() - t0, 2),
+        "answered_at": datetime.now(UTC).isoformat(timespec="seconds"),
+    }  # fmt: skip
+
+
+def call_model(prompt_or_chunks, question, gen: dict, tier: str):
+    """One generator or router call with eval_run's transport retries and served-model check."""
+    from api.generate.generator import complete
+
+    last = None
+    for _ in range(TRANSPORT_RETRIES):
+        try:
+            if question is None:
+                a = complete(prompt_or_chunks, gen, tier)
+            else:
+                a = generate(question, prompt_or_chunks, gen, tier)
+            break
+        except claude_cli.TransportError as e:
+            last = e
+    else:
+        raise last
+    if gen[tier] not in a.model.split(","):
+        raise claude_cli.CliError(f"served {a.model}, requested {gen[tier]}")
+    return a
+
+
+def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
+    """PRD 7.1 router in front of Config 4: filters, and per intent the tier, k,
+    top-n and sub-queries. Every query's lists are stored."""
+    from api.query.rerank import rerank as rerank_one
+    from api.query.retrieve import (
+        Retrieved,
+        dense_filtered_top_k,
+        dense_top_k,
+        embed_question,
+        rrf_fuse,
+    )
+    from api.query.router import RouterParseError, allowed_chunks, filters, parse, render
+    from eval.pipeline import budget_for, interleave, post_for_query, queries_for
+
+    t0 = time.monotonic()
+    rc, rr = ctx.rcfg, ctx.rrcfg
+    ra = call_model(render(it["question"], ctx.companies), None, gen, ctx.router["tier"])
+    try:
+        route, parse_error = parse(ra.text), None
+    except RouterParseError as e:
+        route, parse_error = None, str(e)
+    intent, budget = budget_for(route, ctx.router["budgets"])
+    f = None
+    if route and rc.get("metadata_filter"):
+        f = filters(route, set(ctx.companies), rc["filter_confidence_min"], ctx.period_ends)
+    record = {
+        "item_id": it["item_id"], "pipeline": "config_4_routed",
+        "router": {"response": ra.text, "model_served": ra.model, "parse_error": parse_error},
+        "intent": intent, "router_confidence": route["confidence"] if route else None,
+        "filters": f, "budget": budget, "queries": [], "claims_pre": [], "claims_post": [],
+    }  # fmt: skip
+    if budget is None:  # unsupported: declined, no retrieval, no generator call (PRD 7.1)
+        return {**record, "retrieved": [], "retrieved_post_rerank": [], "generator_input": [],
+                "filter_zero_recall": False, "rerank_fell_back": False, "rerank_seconds": None,
+                "answer": {"text": "", "claims": [], "abstained": True}, "verdict": "ABSTAIN",
+                "abstain_reason": "unsupported", "tier": None, "model_served": None,
+                "backend": gen["backend"], "usage": None,
+                "latency_s": round(time.monotonic() - t0, 2),
+                "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
+    allowed = allowed_chunks(ctx.chunk_meta, f) if f else None
+    k, w = budget["k"], rc["weights"]
+    per_query = []
+    for q in queries_for(it["question"], route, budget):
+        vec = embed_question(ctx.model, ctx.emb, q)
+        fused, zero = [], False
+        if allowed is not None:
+            dense = dense_filtered_top_k(conn, vec, k, allowed) if allowed else []
+            sp = [c for c, _ in ctx.index.search(q, k, allowed)]
+            fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
+            zero = not fused
+        if not fused:  # unfiltered, or the filter returned nothing (filter_zero_recall)
+            dense = [r.chunk_id for r in dense_top_k(conn, vec, k, rc["hnsw_ef_search"])[0]]
+            sp = [c for c, _ in ctx.index.search(q, k)]
+            fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
+        texts = texts_for(conn, fused)
+        ranked, secs = rerank_one(ctx.reranker, q, [(c, texts[c]) for c in fused])
+        post, fell = post_for_query(fused, ranked, secs, rr, budget["top_n"])
+        per_query.append({"query": q, "filter_zero_recall": zero, "retrieved": fused,
+                          "retrieved_post_rerank": post, "rerank_seconds": secs,
+                          "rerank_fell_back": fell})  # fmt: skip
+    lists = [x["retrieved"] for x in per_query]
+    retrieved = lists[0] if len(lists) == 1 else rrf_fuse(lists, [1.0] * len(lists), rc["rrf_k"])
+    post = interleave([x["retrieved_post_rerank"] for x in per_query], budget["top_n"])
+    record.update({
+        "queries": per_query, "retrieved": retrieved, "retrieved_post_rerank": post,
+        "generator_input": post, "tier": budget["tier"],
+        "filter_zero_recall": any(x["filter_zero_recall"] for x in per_query),
+        "rerank_fell_back": any(x["rerank_fell_back"] for x in per_query),
+        "rerank_seconds": max(x["rerank_seconds"] for x in per_query),
+    })  # fmt: skip
+    if not post:  # every chunk below the score floor: no generator call (PRD 7.3)
+        return {**record, "answer": {"text": "", "claims": [], "abstained": True},
+                "verdict": "ABSTAIN", "abstain_reason": "score_floor", "model_served": None,
+                "backend": gen["backend"], "usage": None,
+                "latency_s": round(time.monotonic() - t0, 2),
+                "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
+    texts = texts_for(conn, post)
+    a = call_model([Retrieved(c, 0.0, texts[c]) for c in post], it["question"], gen,
+                   budget["tier"])  # fmt: skip
     return {
         **record, "answer": {"text": a.text, "claims": [], "abstained": False}, "verdict": "PASS",
         "model_served": a.model, "backend": a.backend,
@@ -254,9 +382,10 @@ def main() -> None:
 
         with connect() as conn:
             ctx = Context(conn, run_cfg["pipeline"])
+            answer = answer_routed if run_cfg["pipeline"] == "config_4_routed" else answer_one
             code = run_items(
                 todo,
-                lambda iid: answer_one(conn, ctx, items[iid], gen, run_cfg),
+                lambda iid: answer(conn, ctx, items[iid], gen, run_cfg),
                 results_path,
                 runs / f"{run_id}.errors.jsonl",
             )

@@ -4,7 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from eval.pipeline import PIPELINES, context_for, depth_disagreements, depths
+from eval.pipeline import (
+    budget_for,
+    context_for,
+    depth_disagreements,
+    depths,
+    interleave,
+    post_for_query,
+    queries_for,
+)
 
 CFG = {"top_n": 2, "top_n_synthesis": 3, "score_floor": 0.3, "timeout_ms": 800}
 DENSE = ["d1", "d2", "d3", "d4", "d5", "d6"]
@@ -86,7 +94,7 @@ def test_answer_one_lists_match_depths_for_every_pipeline():
     kw = {"retrieve_depth": 10, "retrieval_cfg": RC, "rerank_cfg": RR, "baseline_top_k": 5}
     dense, fused = [f"d{i}" for i in range(10)], [f"c{i}" for i in range(50)]
     cfg = {**RR, "timeout_ms": 800, "score_floor": 0.3}
-    for pl in PIPELINES:
+    for pl in ("config_1_dense", "config_3_hybrid", "config_4_rerank"):
         meta = {"pipeline": pl, **depths(pl, **kw)}
         for iid in ("x", "s"):
             c = context_for(pl, dense=dense, fused=fused,
@@ -95,3 +103,48 @@ def test_answer_one_lists_match_depths_for_every_pipeline():
                             baseline_top_k=5)  # fmt: skip
             r = {"item_id": iid, **c}
             assert depth_disagreements(meta, [r], QT) == [], (pl, iid)
+
+
+BUDGETS = {"lookup": {"tier": "tier_small", "k": 20, "top_n": 5, "sub_queries": 1},
+           "comparison": {"tier": "tier_large", "k": 50, "top_n": 8, "sub_queries": 2},
+           "synthesis": {"tier": "tier_large", "k": 50, "top_n": 10, "sub_queries": 1},
+           "unrouted": {"tier": "tier_small", "k": 50, "top_n": 8, "sub_queries": 1}}  # fmt: skip
+
+
+def test_budgets_follow_prd_7_1_intents():
+    assert budget_for({"intent": "lookup"}, BUDGETS) == ("lookup", BUDGETS["lookup"])
+    assert budget_for({"intent": "unsupported"}, BUDGETS) == ("unsupported", None)
+    assert budget_for(None, BUDGETS) == ("unrouted", BUDGETS["unrouted"])
+    cmp = BUDGETS["comparison"]
+    assert queries_for("Q?", {"sub_queries": ["a FY24", "a FY23"]}, cmp) == ["a FY24", "a FY23"]
+    assert queries_for("Q?", {"sub_queries": ["a FY24"]}, cmp) == ["a FY24", "Q?"]
+    assert queries_for("Q?", {"sub_queries": ["x", "y"]}, BUDGETS["lookup"]) == ["Q?"]
+
+
+def test_post_rerank_per_query_and_interleave():
+    cfg = {"timeout_ms": 800, "score_floor": 0.3}
+    ranked = [("b", 0.9), ("a", 0.5), ("c", 0.1)]
+    assert post_for_query(["a", "b", "c"], ranked, 0.2, cfg, 5) == (["b", "a"], False)
+    assert post_for_query(["a", "b", "c"], ranked, 0.9, cfg, 2) == (["a", "b"], True)
+    assert interleave([["a", "b", "c"], ["x", "a", "y"]], 4) == ["a", "x", "b", "c"]
+    assert interleave([[], []], 8) == []
+
+
+def test_routed_meta_and_lists_agree_per_intent():
+    meta = {"pipeline": "config_4_routed", **depths(
+        "config_4_routed", retrieve_depth=10, retrieval_cfg=RC, rerank_cfg=RR, baseline_top_k=5,
+        budgets=BUDGETS)}  # fmt: skip
+    assert meta["retrieve_depth"]["comparison"] == 100 and meta["generator_top_k"]["lookup"] == 5
+    ids = [f"c{i}" for i in range(100)]
+    ok = [{"item_id": "x", "intent": "lookup", "retrieved": ids[:20], "generator_input": ids[:5]},
+          {"item_id": "s", "intent": "comparison", "retrieved": ids, "generator_input": ids[:8]},
+          {"item_id": "x", "intent": None, "retrieved": ids[:12], "generator_input": ids[:3]},
+          {"item_id": "s", "intent": "unsupported", "retrieved": [],
+           "generator_input": []}]  # fmt: skip
+    assert depth_disagreements(meta, ok, QT) == []
+    bad = [{"item_id": "x", "intent": "lookup", "retrieved": ids[:50], "generator_input": ids[:5]},
+           {"item_id": "s", "intent": "synthesis", "retrieved": ids[:50],
+            "generator_input": ids[:11]},
+           {"item_id": "x", "intent": "unsupported", "retrieved": ids[:1],
+            "generator_input": []}]  # fmt: skip
+    assert depth_disagreements(meta, bad, QT) == ["x", "s", "x"]

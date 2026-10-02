@@ -18,6 +18,11 @@ from eval.pipeline import depth_disagreements
 
 SOURCES = ("xbrl_auto", "llm_seeded", "handwritten")
 COLUMNS = (*SOURCES, "aggregate")
+NOTE_F110 = ("F-110: llm_seeded retrieval numbers reflect lexical overlap between seeded questions "
+             "and their source chunk")  # fmt: skip
+NOTE_F118 = ("F-118: retrieval numbers on this filtered run come from candidate questions that "
+             "name their company and period; the router's job here is easier than on real "
+             "questions")  # fmt: skip
 DEV_BANNER = ("DEVELOPMENT RUN (claude_cli): not a CI baseline, not publishable, not comparable "
               "with anthropic_api runs (F-59)")  # fmt: skip
 
@@ -85,6 +90,9 @@ def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict
         f"ndcg@{k}": _mean(ret["ndcg"]),
         f"sufficiency@{k}_post_rerank": _mean(ret["sufficiency_post_rerank"]),
         "floor_empties": sum(floor_empty(r) for r in results),
+        "filtered": sum(bool(r.get("filters")) for r in results),
+        "filter_zero_recall": sum(bool(r.get("filter_zero_recall")) for r in results),
+        "declined_unsupported": sum(r.get("abstain_reason") == "unsupported" for r in results),
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "numeric": aggregate(scores),
         "abstention": rates(two_by_two(abst)),
@@ -103,6 +111,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "k": k,
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
+        "intent_matrix": intent_matrix(items, results),
         "meta_disagreements": depth_disagreements(meta, results, items)
         if "retrieve_depth" in meta and "generator_top_k" in meta
         else None,
@@ -115,6 +124,18 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
             "aggregate": _slice(items, results, k, nli_threshold),
         },
     }
+
+
+def intent_matrix(items: dict, results: list[dict]) -> dict | None:
+    """{source: {question_type: {intent: n}}} for routed runs, else None."""
+    if not any("intent" in r for r in results):
+        return None
+    out: dict = {}
+    for r in results:
+        it = items[r["item_id"]]
+        row = out.setdefault(it["source"], {}).setdefault(it["question_type"], {})
+        row[r.get("intent")] = row.get(r.get("intent"), 0) + 1
+    return out
 
 
 def anomalies(results: list[dict]) -> dict:
@@ -158,6 +179,9 @@ def format_report(report: dict) -> str:
              f"generation model requested: {report['model_requested']}"]  # fmt: skip
     if report["development_run"]:
         lines.append(DEV_BANNER)
+    lines.append(NOTE_F110)
+    if report.get("pipeline") == "config_4_routed":
+        lines.append(NOTE_F118)
     lines.append(f"pipeline: {report.get('pipeline', 'config_1_dense')}  served models: "
                  f"{report['served_models']}  retrieval measured on: "
                  f"{report['retrieval_stage']} (F-13)")  # fmt: skip
@@ -176,6 +200,9 @@ def format_report(report: dict) -> str:
             ("Sufficiency post-rerank (top-n)", lambda c: c[f"sufficiency@{k}_post_rerank"]),
             ("  floor_empties (abstain, score_floor; F-112)", lambda c: c.get("floor_empties", 0)),
             ("  rerank fell back to RRF order", lambda c: c.get("rerank_fell_back", 0)),
+            ("  router filters applied", lambda c: c.get("filtered", 0)),
+            ("  filter_zero_recall (fell back)", lambda c: c.get("filter_zero_recall", 0)),
+            ("  declined: intent unsupported", lambda c: c.get("declined_unsupported", 0)),
             ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
             ("  numeric items scored", lambda c: c["numeric"]["n"]),
             ("  excluded unit_scale_unknown",
@@ -208,6 +235,11 @@ def format_report(report: dict) -> str:
     agg = cols["aggregate"]["numeric"]
     lines.append(f"figures per numeric answer (aggregate): {agg['figure_count_distribution']}")
     lines.append(f"excluded from numeric accuracy (aggregate): {agg['excluded']}")
+    if report.get("intent_matrix"):
+        lines.append("router intent by question type (per source):")
+        for src, rows in report["intent_matrix"].items():
+            for qt, cnt in sorted(rows.items()):
+                lines.append(f"  {src:12} {qt:14} {dict(sorted(cnt.items(), key=str))}")
     lines.append(f"anomalies: {report['anomalies']}")
     md = report.get("meta_disagreements")
     if md is not None:

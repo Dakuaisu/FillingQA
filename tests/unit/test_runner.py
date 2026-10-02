@@ -111,3 +111,21 @@ def test_floor_empties_are_counted_per_source_tagged_or_not():
     assert cols["xbrl_auto"]["floor_empties"] == 1 and cols["llm_seeded"]["floor_empties"] == 1
     assert cols["llm_seeded"]["rerank_fell_back"] == 1 and cols["aggregate"]["floor_empties"] == 2
     assert "floor_empties" in format_report(build_report(ITEMS, [floor], meta("claude_cli"), 10))
+
+
+def test_routed_report_counts_filters_and_prints_the_intent_matrix():
+    routed = [{**result("x1", ["a"], "$7,286 million"), "intent": "lookup", "filters": {"t": 1},
+               "filter_zero_recall": True},
+              {**result("s2", ["d"], ""), "intent": "unsupported", "abstain_reason": "unsupported",
+               "verdict": "ABSTAIN", "answer": {"text": "", "claims": [], "abstained": True}},
+              {**result("s1", ["c"], "44.1%"), "intent": "lookup", "filters": None}]  # fmt: skip
+    m = {**meta("claude_cli"), "pipeline": "config_4_routed"}
+    r = build_report(ITEMS, routed, m, 10)
+    assert r["columns"]["xbrl_auto"]["filter_zero_recall"] == 1
+    assert r["columns"]["llm_seeded"]["declined_unsupported"] == 1
+    assert r["columns"]["aggregate"]["filtered"] == 1
+    assert r["intent_matrix"]["llm_seeded"] == {"synthesis": {"unsupported": 1},
+                                                "table": {"lookup": 1}}  # fmt: skip
+    text = format_report(r)
+    assert "F-118" in text and "F-110" in text and "router intent by question type" in text
+    assert "F-118" not in format_report(build_report(ITEMS, RESULTS, meta("claude_cli"), 10))

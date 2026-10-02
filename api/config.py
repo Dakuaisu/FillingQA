@@ -87,6 +87,11 @@ def retrieval(path: Path = CORPUS_FILE) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))["retrieval"]
 
 
+def router(path: Path = CORPUS_FILE) -> dict:
+    """The `router:` block of api/config.yaml (PRD 7.1)."""
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["router"]
+
+
 def rerank(path: Path = CORPUS_FILE) -> dict:
     """The `rerank:` block of api/config.yaml (PRD 7.3, Appendix A)."""
     return yaml.safe_load(path.read_text(encoding="utf-8"))["rerank"]
