@@ -6,7 +6,14 @@ from datetime import date
 from decimal import Decimal
 
 from api.config import REPO_ROOT, verification
-from api.verify.xbrl_check import classify, concept_tags, load_concepts, period_ends_for
+from api.verify.xbrl_check import (
+    claim_kind,
+    classify,
+    concept_tags,
+    load_concepts,
+    of_kind,
+    period_ends_for,
+)
 
 FILINGS = [("AAPL", date(2023, 9, 30), 2023, None), ("AAPL", date(2024, 9, 28), 2024, None),
            ("AAPL", date(2024, 6, 29), 2024, 3),
@@ -55,3 +62,20 @@ def test_verified_restatement_contradiction_and_no_fact():
     assert classify(7286 * M, {"other"}, fy24, FACTS, 0.5)["status"] == "no_fact"
     # Sign is not compared (F-87).
     assert classify(-7286 * M, {K24}, fy24, FACTS, 0.5)["status"] == "verified"
+
+
+def test_unit_kind_must_match_before_a_contradiction_is_possible():
+    usd = {"value": 46.2, "unit": "percent", "currency": None, "concept": "Gross margin"}
+    assert claim_kind(usd, "Gross margin was 46.2% in fiscal 2024.") is None
+    eps = {"value": 6.11, "unit": "ones", "currency": "USD", "concept": "Diluted EPS"}
+    assert claim_kind(eps, "Diluted EPS was $6.11.") == "per_share"
+    rev = {"value": 391035, "unit": "millions", "currency": "USD", "concept": "Revenue"}
+    assert claim_kind(rev, "Revenue was $391,035 million.") == "monetary"
+    shares = {"value": 15, "unit": "billions", "currency": None, "concept": "Shares outstanding"}
+    assert claim_kind(shares, "15 billion shares.") == "shares"
+    facts = [(K24, date(2024, 9, 28), Decimal("7286000000"), "USD"),
+             (K24, date(2024, 9, 28), Decimal("6.11"), "USD/shares")]  # fmt: skip
+    assert of_kind(facts, "per_share") == [(K24, date(2024, 9, 28), Decimal("6.11"))]
+    # A per-share claim never meets the dollar fact: no fact, not a contradiction.
+    assert classify(Decimal("7.0"), {K24}, [date(2024, 9, 28)], of_kind(facts[:1], "per_share"),
+                    0.5)["status"] == "no_fact"  # fmt: skip

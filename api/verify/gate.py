@@ -19,9 +19,12 @@ from api.verify.grounding import figure_value, ground_answer
 from api.verify.verdict import verdict
 from api.verify.xbrl_check import (
     XbrlIndex,
+    claim_kind,
     classify,
     concept_tags,
     load_concepts,
+    norm,
+    of_kind,
     period_ends_for,
 )
 
@@ -64,19 +67,25 @@ class Gate:
 
     def xbrl_check(self, claim: dict) -> dict:
         f = figure_value(claim.get("figure"))
-        if f is None or f.pct:
+        kind = claim_kind(claim["figure"], claim["text"]) if f is not None else None
+        if f is None or kind is None:
             return {"status": "not_checked", "period_ok": None}
-        tickers = {self.ticker_of.get(accession_of(c)) for c in claim["citations"]} - {None}
+        phrase = norm(claim["figure"].get("concept") or "")
         tags = concept_tags(claim["figure"].get("concept"), self.phrases)
+        base = {"synonym": phrase if tags else None, "tags": tags, "kind": kind,
+                "claim_value": str(f.value)}  # fmt: skip
+        tickers = {self.ticker_of.get(accession_of(c)) for c in claim["citations"]} - {None}
         if len(tickers) != 1 or not tags:
-            return {"status": "no_fact", "period_ok": None,
-                    "why": "no concept" if not tags else "citations span companies"}  # fmt: skip
+            why = "no concept" if not tags else "citations span companies"
+            return {**base, "status": "no_fact", "period_ok": None, "why": why}
         ticker = tickers.pop()
         ends = period_ends_for(claim["figure"].get("period"), ticker, self.filings)
         if not ends:
-            return {"status": "no_fact", "period_ok": None, "why": "period unresolved"}
+            return {**base, "status": "no_fact", "period_ok": None, "why": "period unresolved"}
         cited = {accession_of(c) for c in claim["citations"]}
-        return classify(Decimal(f.value), cited, ends, self.xbrl.facts(ticker, tags), self.tol)
+        facts = of_kind(self.xbrl.facts(ticker, tags), kind)
+        out = classify(Decimal(f.value), cited, ends, facts, self.tol)
+        return {**base, **out, "period_ends": [e.isoformat() for e in ends]}
 
     def verify(self, question: str, claims: list[dict], given: list[str], texts: dict[str, str],
                nli_threshold: float | None) -> dict:  # fmt: skip

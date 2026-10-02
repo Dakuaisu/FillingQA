@@ -2094,6 +2094,12 @@ question's period or context first); comparison by difference only (credits a
 right difference from wrong values); reusing the no-context extractor (carries
 F-97 into scoring).
 
+*2026-10-02, OWNER DECISION, period accuracy (F-126).* The gated period accuracy
+keeps figure claims whose period cannot be checked against XBRL (`period_ok`
+null) in the denominator as not correct, as built. Beside it the report prints
+the rate over checkable claims only and the count of uncheckable ones. Dropping
+them would let a system raise the number by citing periods we cannot check.
+
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: retrieval metrics are measured post-fusion, pre-rerank (F-13)
@@ -2619,3 +2625,47 @@ two filings).
 7.5); a threshold of 0.5 by convention (rejected: "set only from that check");
 labels by the developer's agent (rejected: PRD 7.5 asks for the owner's own
 labels, as for the judge, F-105).
+
+## 2026-10-02 — OWNER DECISION - the first full run is scored before the NLI threshold exists; re-score is derived (F-125)
+
+Decided by the supervisor for the owner. `make eval` runs with
+`nli_threshold: null`. Each claim in `claims_pre` stores every check, including
+the raw `entail` per cited chunk and its token count, so nothing is regenerated
+later. Items with a prose claim carry verdict `PENDING_NLI`; the report prints
+the pending count per source and every claim metric as "pending NLI threshold
+(F-125)" instead of refusing, so retrieval and numeric columns still print.
+
+The 40-pair NLI sheet is drawn from this run by seed, stratified by source and
+by whether the claim passes the gate's other checks (citation validity, entity
+match), allocated in proportion to each stratum's pairs.
+
+**Re-score derivation.** Once the owner's labels set `nli_threshold`
+(TRADEOFFS, NLI gate), `python -m scripts.eval_run --rescore RUN_ID THRESHOLD`
+applies a pure, tested function to the stored results: for each prose claim,
+`citations_supporting` = cited chunks with stored `entail` ≥ threshold; then PRD
+7.5's verdict and `claims_post` over the stored checks, and the item verdict
+exactly as the live gate sets it (the model's own abstention stands; an XBRL
+contradiction abstains). Figure claims' checks are not touched. Output:
+`eval/runs/<run_id>.rescore-<threshold>.json` with the rebuilt report, the
+re-scored verdicts and claims_post per item, the source run id and the
+threshold, never a new run id. The source run's files are not modified.
+
+*Alternatives:* re-run generation once the threshold exists (rejected: a second
+sample of a nondeterministic generator, F-60, would change what the threshold
+was fitted on); write re-scored verdicts back into the run's results (rejected:
+a run's files record what the run did).
+
+## 2026-10-02 — OWNER DECISION - XBRL contradictions require matching unit kinds; synonym matches are reported
+
+Decided by the supervisor for the owner. A claim is compared only with facts of
+its own unit kind: monetary (fact unit `USD`) when the figure has a currency and
+is not per share; per share (`USD/shares`) when the claim or its concept says
+"per share" or EPS; shares (`shares`) when it has no currency; percent figures
+are not checked (no `pure` comparison). Facts of another kind are ignored, so a
+mismatch of kind is `no_fact`, never a contradiction ("gross margin" as a
+percent cannot force an ABSTAIN against a dollar fact). Each XBRL result records
+the matched synonym phrase, the tags, the claim's kind and the period ends; the
+report lists every contradiction with the synonym, the claim figure, the cited
+facts and their periods, and counts claims matched per synonym. A contradiction
+caused by a wrong synonym is a finding with the item id, never a map edit after
+the fact.

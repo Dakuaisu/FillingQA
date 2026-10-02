@@ -58,6 +58,25 @@ def period_ends_for(period: str | None, ticker: str,
     return sorted({pe for t, pe, y, fq in filings if t == ticker and y == fy and fq == q})
 
 
+FACT_KINDS = {"USD": "monetary", "USD/shares": "per_share", "shares": "shares"}
+
+
+def claim_kind(figure: dict, text: str) -> str | None:
+    """monetary | per_share | shares, or None (percent: not checked)."""
+    if (figure.get("unit") or "") == "percent":
+        return None
+    words = f"{text} {figure.get('concept') or ''}".lower()
+    if "per share" in words or re.search(r"\beps\b", words):
+        return "per_share"
+    return "monetary" if figure.get("currency") else "shares"
+
+
+def of_kind(facts: list[tuple], kind: str) -> list[tuple[str, date, Decimal]]:
+    """(accession, period_end, value) of facts whose unit is of `kind`; facts are
+    (accession, period_end, value, unit)."""
+    return [(a, pe, v) for a, pe, v, u in facts if FACT_KINDS.get(u) == kind]
+
+
 def within(a: Decimal, b: Decimal, tol_pct: float) -> bool:
     a, b = abs(a), abs(b)
     if b == 0:
@@ -75,7 +94,7 @@ def classify(magnitude: Decimal, cited: set[str], period_ends: list[date],
     hit = next((f for f in in_cited if within(magnitude, f[2], tol_pct)), None)
     if hit:
         return {"status": "verified", "accession": hit[0], "fact_value": str(hit[2]),
-                "period_ok": True}  # fmt: skip
+                "fact_period_end": hit[1].isoformat(), "period_ok": True}  # fmt: skip
     if not in_cited:
         return {"status": "no_fact", "period_ok": None}
     other = next((f for f in at_period if f[0] not in cited and within(magnitude, f[2], tol_pct)),
@@ -83,12 +102,15 @@ def classify(magnitude: Decimal, cited: set[str], period_ends: list[date],
     if other:
         cited_values = sorted({str(f[2]) for f in in_cited})
         return {"status": "restatement", "accession": other[0], "fact_value": str(other[2]),
-                "cited_values": cited_values, "period_ok": True}  # fmt: skip
+                "fact_period_end": other[1].isoformat(), "cited_values": cited_values,
+                "period_ok": True}  # fmt: skip
     wrong_period = any(
         f[0] in cited and f[1] not in period_ends and within(magnitude, f[2], tol_pct)
         for f in facts
     )
-    return {"status": "contradiction", "cited_values": sorted({str(f[2]) for f in in_cited}),
+    return {"status": "contradiction",
+            "cited_facts": sorted({(f[0], f[1].isoformat(), str(f[2])) for f in in_cited}),
+            "cited_values": sorted({str(f[2]) for f in in_cited}),
             "period_ok": False if wrong_period else None}  # fmt: skip
 
 
@@ -97,16 +119,16 @@ class XbrlIndex:
 
     def __init__(self, conn):
         self.conn = conn
-        self.cache: dict[tuple[str, str], list[tuple[str, date, Decimal]]] = {}
+        self.cache: dict[tuple[str, str], list[tuple[str, date, Decimal, str]]] = {}
         self.cik = dict(conn.execute("SELECT ticker, cik FROM companies").fetchall())
 
-    def facts(self, ticker: str, tags: list[str]) -> list[tuple[str, date, Decimal]]:
+    def facts(self, ticker: str, tags: list[str]) -> list[tuple[str, date, Decimal, str]]:
         out = []
         for tag in tags:
             key = (self.cik[ticker], tag)
             if key not in self.cache:
                 self.cache[key] = [tuple(r) for r in self.conn.execute(
-                    "SELECT accession, period_end, value FROM xbrl_facts "
+                    "SELECT accession, period_end, value, unit FROM xbrl_facts "
                     "WHERE cik = %s AND concept = %s", key).fetchall()]  # fmt: skip
             out += self.cache[key]
         return out

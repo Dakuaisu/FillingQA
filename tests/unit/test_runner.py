@@ -91,8 +91,8 @@ def test_generation_metrics_print_na_without_claims_and_faithfulness_carries_ans
                         "xbrl_contradiction": False, "entail": 0.0,
                         "citations_supporting": ["b"]}}  # fmt: skip
     with_claims = [{**RESULTS[0], "claims_pre": [claim], "claims_post": [claim]}]
-    with pytest.raises(ValueError, match="nli_threshold"):
-        build_report(ITEMS, with_claims, meta("claude_cli"), 10)
+    pending = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10))
+    assert "pending NLI threshold (F-125)" in pending and "Sufficiency@10" in pending
     out = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10, 0.5))
     assert "1.000 [1.000]" in out
 
@@ -138,3 +138,39 @@ def test_smoke_draw_is_seeded_and_covers_every_question_type():
     draw = smoke_items(items, 7)
     assert draw == smoke_items(items, 7) and len(draw) == 12
     assert {items[i]["question_type"] for i in draw} == {"a", "b", "c", "d"}
+
+
+def test_rescore_reproduces_the_gate_from_stored_checks():
+    from scripts.eval_run import rescore_results
+
+    ok = {"citation_valid": True, "entity_ok": True, "numbers_grounded": True, "unit_ok": True,
+          "period_stated": True, "xbrl_contradiction": False}  # fmt: skip
+    fig = {"claim_id": "c1", "figure": {"value": 1}, "citations": ["a"],
+           "checks": {**ok, "entail": None, "citations_supporting": ["a"]}}  # fmt: skip
+    prose = {"claim_id": "c2", "figure": None, "citations": ["a", "b"],
+             "checks": {**ok, "entail": 0.7, "citations_supporting": [],
+                        "entail_by_chunk": [{"chunk_id": "a", "entail": 0.7},
+                                            {"chunk_id": "b", "entail": 0.2}]}}  # fmt: skip
+    r = {**result("s1", ["c"], "x"), "claims_pre": [fig, prose], "claims_post": None,
+         "verdict": "PENDING_NLI"}  # fmt: skip
+    hi, lo = rescore_results([r], 0.5)[0], rescore_results([r], 0.8)[0]
+    assert hi["verdict"] == "PASS" and [c["claim_id"] for c in hi["claims_post"]] == ["c1", "c2"]
+    assert hi["claims_pre"][1]["checks"]["citations_supporting"] == ["a"]
+    assert lo["verdict"] == "ABSTAIN" and lo["abstain_reason"] == "verifier"  # 1 of 2 supported
+    assert (
+        r["verdict"] == "PENDING_NLI" and r["claims_pre"][1]["checks"]["citations_supporting"] == []
+    )
+    plain = result("x1", ["a"], "t")
+    assert rescore_results([plain], 0.5)[0] is plain
+
+
+def test_nli_sheet_strata_are_proportional():
+    import random
+
+    from scripts.nli_auc import stratified
+
+    pool = [{"stratum": "a", "i": i} for i in range(30)] + [{"stratum": "b", "i": i}
+                                                             for i in range(10)]  # fmt: skip
+    drawn = stratified(pool, 8, random.Random(1))
+    assert sum(p["stratum"] == "a" for p in drawn) == 6 and len(drawn) == 8
+    assert drawn == stratified(pool, 8, random.Random(1))

@@ -57,6 +57,12 @@ def generation_metrics(results: list[dict], nli_threshold: float) -> dict:
             sum(bool(_check(c, "unit_ok")) for c in figures), len(figures)
         ),
         "period_accuracy": _rate(sum(bool(_check(c, "period_ok")) for c in figures), len(figures)),
+        # F-126: beside the gated rate, the rate over checkable claims and the uncheckable count.
+        "period_accuracy_checkable": _rate(
+            sum(bool(_check(c, "period_ok")) for c in figures),
+            sum(_check(c, "period_ok") is not None for c in figures),
+        ),
+        "period_uncheckable": sum(_check(c, "period_ok") is None for c in figures),
         "xbrl_contradiction_rate": _rate(
             sum(bool(_check(c, "xbrl_contradiction")) for c in figures), len(figures)
         ),

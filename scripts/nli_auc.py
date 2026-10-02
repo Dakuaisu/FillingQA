@@ -4,10 +4,13 @@ python -m scripts.nli_auc --sheet RUN_ID [--seed 20261006]   # draw pairs, write
 python -m scripts.nli_auc --score                            # AUC and threshold from labels
 
 --sheet draws 40 pairs by seed from a run's `claims_pre` (prose claims only,
-one cited chunk per pair) and writes eval/nli/label_sheet_v1.md (claim and chunk
-text, no score) and eval/nli/labels_v1.yaml (all null). It refuses to overwrite
-a sheet. --score refuses while any label is null, then scores every pair with the
-pinned NLI model, prints AUC and, at AUC >= 0.75, the Youden threshold, and writes
+one cited chunk per pair), stratified by source and by whether the claim passes
+the gate's other checks (citation validity, entity match), each stratum's share
+in proportion to its pairs (largest remainder), and writes
+eval/nli/label_sheet_v1.md (claim and chunk text, no score) and
+eval/nli/labels_v1.yaml (all null). It refuses to overwrite a sheet. --score
+refuses while any label is null, then scores every pair with the pinned NLI
+model, prints AUC and, at AUC >= 0.75, the Youden threshold, and writes
 eval/nli/auc_v1.json. It never writes `nli_threshold` to config: that edit is
 made by hand from this file and recorded (TRADEOFFS).
 """
@@ -33,16 +36,37 @@ def arg(name: str) -> str | None:
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else None
 
 
-def candidate_pairs(results: list[dict]) -> list[dict]:
+def candidate_pairs(results: list[dict], sources: dict[str, str] | None = None) -> list[dict]:
     out = []
     for r in results:
         for c in r.get("claims_pre") or []:
             if c.get("figure"):
                 continue
+            k = c.get("checks") or {}
+            passed = k.get("citation_valid") and k.get("entity_ok")
+            others = "other checks pass" if passed else "other checks fail"
+            stratum = f"{(sources or {}).get(r['item_id'], '?')}/{others}"
             for cid in c["citations"]:
                 if cid in (r.get("generator_input") or []):
-                    out.append({"item_id": r["item_id"], "claim_id": c["claim_id"],
-                                "claim": c["text"], "chunk_id": cid})  # fmt: skip
+                    pair = {"item_id": r["item_id"], "claim_id": c["claim_id"],
+                            "claim": c["text"], "chunk_id": cid, "stratum": stratum}  # fmt: skip
+                    out.append(pair)
+    return out
+
+
+def stratified(pool: list[dict], n: int, rng: random.Random) -> list[dict]:
+    """n pairs, each stratum's share proportional to its size (largest remainder)."""
+    strata: dict[str, list[dict]] = {}
+    for p in pool:
+        strata.setdefault(p["stratum"], []).append(p)
+    keys = sorted(strata)
+    exact = {k: n * len(strata[k]) / len(pool) for k in keys}
+    take = {k: int(exact[k]) for k in keys}
+    for k in sorted(keys, key=lambda k: (-(exact[k] - take[k]), k))[: n - sum(take.values())]:
+        take[k] += 1
+    out = []
+    for k in keys:
+        out += rng.sample(strata[k], take[k])
     return out
 
 
@@ -51,17 +75,24 @@ def sheet(run_id: str, seed: int) -> None:
 
     if SHEET.exists() or LABELS.exists():
         raise SystemExit(f"{SHEET} or {LABELS} exists; a drawn sheet is never redrawn")
+    from scripts.eval_run import DATASETS
+
     results = read_jsonl(REPO_ROOT / "eval" / "runs" / f"{run_id}.results.jsonl")
-    pool = candidate_pairs(results)
+    sources = {it["item_id"]: it["source"] for p in DATASETS for it in read_jsonl(p)}
+    pool = candidate_pairs(results, sources)
     if len(pool) < PAIRS:
         raise SystemExit(f"run {run_id} has {len(pool)} prose (claim, chunk) pairs, need {PAIRS}")
-    drawn = random.Random(seed).sample(pool, PAIRS)
+    drawn = stratified(pool, PAIRS, random.Random(seed))
+    counts = {
+        k: sum(p["stratum"] == k for p in drawn) for k in sorted({p["stratum"] for p in pool})
+    }
     with connect() as conn:
         texts = dict(conn.execute("SELECT chunk_id, text FROM chunks WHERE chunk_id = ANY(%s)",
                                   ([p["chunk_id"] for p in drawn],)).fetchall())  # fmt: skip
     OUT.mkdir(parents=True, exist_ok=True)
     lines = [f"# NLI gate label sheet v1 (PRD 7.5)\n\nRun {run_id}, seed {seed}, {PAIRS} pairs "
-             f"drawn from {len(pool)} prose (claim, cited chunk) pairs. For each pair: does the "
+             f"drawn from {len(pool)} prose (claim, cited chunk) pairs, stratified {counts}. "
+             "For each pair: does the "
              "chunk, on its own, support the claim? Label in labels_v1.yaml: true or false. "
              "No score is shown here.\n"]  # fmt: skip
     for i, p in enumerate(drawn, 1):
@@ -72,9 +103,10 @@ def sheet(run_id: str, seed: int) -> None:
     SHEET.write_text("\n".join(lines), encoding="utf-8")
     LABELS.write_text(yaml.safe_dump({"run_id": run_id, "seed": seed, "pairs": [
         {"pair": p["pair"], "item_id": p["item_id"], "claim_id": p["claim_id"],
+         "stratum": p["stratum"],
          "chunk_id": p["chunk_id"], "claim": p["claim"], "supports": None} for p in drawn]},
         sort_keys=False, allow_unicode=True), encoding="utf-8")  # fmt: skip
-    print(f"wrote {SHEET} and {LABELS}: {PAIRS} pairs from {len(pool)}")
+    print(f"wrote {SHEET} and {LABELS}: {PAIRS} pairs from {len(pool)}; strata {counts}")
 
 
 def score() -> None:

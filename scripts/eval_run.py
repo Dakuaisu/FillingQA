@@ -4,6 +4,7 @@ python -m scripts.eval_run                     # plan only: no retrieval, no mod
 python -m scripts.eval_run --run [--limit N]   # new run
 python -m scripts.eval_run --resume RUN_ID     # continue a run from its results file
 python -m scripts.eval_run --report RUN_ID     # rebuild a finished run's report from its saved meta
+python -m scripts.eval_run --rescore RUN_ID T   # derived report at nli_threshold T (F-125)
 python -m scripts.eval_run --smoke SEED        # pipeline check, 12 seeded items: <id>.smoke.json
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
 
@@ -257,16 +258,14 @@ def answer_fields(a, given: list[str], ctx=None, question: str = "", texts=None,
     if abstained:
         out["abstain_reason"] = "insufficient_evidence"
     if ctx is not None and ctx.gate is not None:
+        from api.verify.verdict import item_verdict
+
         g = ctx.gate.verify(question, doc["answer_claims"], given, texts or {}, nli_threshold)
-        out.update({"claims_pre": g["claims_pre"], "claims_post": g["claims_post"]})
-        if not abstained:
-            out["verdict"] = g["verify_verdict"] or "PENDING_NLI"
-            if g["verify_verdict"] == "ABSTAIN":
-                out["abstain_reason"] = (
-                    "xbrl_contradiction"
-                    if any(c["checks"]["xbrl_contradiction"] for c in g["claims_pre"])
-                    else "verifier"
-                )  # fmt: skip
+        v, why = item_verdict(abstained, g["verify_verdict"], g["claims_pre"])
+        out.update({"claims_pre": g["claims_pre"], "claims_post": g["claims_post"],
+                    "gate_verdict": g["verify_verdict"], "verdict": v})  # fmt: skip
+        if why:
+            out["abstain_reason"] = why
     return out
 
 
@@ -376,6 +375,45 @@ def run_items(todo: list[str], answer, results_path, errors_path) -> int:
     return 0
 
 
+def rescore_results(results: list[dict], nli_threshold: float) -> list[dict]:
+    """Pure: each structured result's verdict and claims_post from its stored checks
+    at the threshold (TRADEOFFS, re-score derivation). Other fields unchanged."""
+    from api.verify.verdict import item_verdict, rescore_claims, verdict
+
+    out = []
+    for r in results:
+        if r.get("claims_pre") is None:
+            out.append(r)
+            continue
+        pre = rescore_claims(r["claims_pre"], nli_threshold)
+        gv, post = verdict(pre, nli_threshold)
+        v, why = item_verdict(bool(r["answer"].get("abstained")), gv, pre)
+        new = {**r, "claims_pre": pre, "claims_post": post, "gate_verdict": gv, "verdict": v}
+        new.pop("abstain_reason", None)
+        if why:
+            new["abstain_reason"] = why
+        out.append(new)
+    return out
+
+
+def rescore_run(items: dict, run_cfg: dict, run_id: str, nli_threshold: float) -> None:
+    runs = REPO_ROOT / run_cfg["runs_dir"]
+    saved = json.loads((runs / f"{run_id}.meta.json").read_text(encoding="utf-8"))
+    results = rescore_results(read_jsonl(runs / f"{run_id}.results.jsonl"), nli_threshold)
+    meta = {k: v for k, v in saved.items() if k != "item_order"}
+    meta = {**meta, "derived": f"re-score of run {run_id} at nli_threshold {nli_threshold}",
+            "source_run": run_id, "nli_threshold": nli_threshold}  # fmt: skip
+    report = build_report(items, results, meta, saved["k"], nli_threshold)
+    doc = {"report": report, "items": [
+        {"item_id": r["item_id"], "verdict": r["verdict"], "gate_verdict": r.get("gate_verdict"),
+         "abstain_reason": r.get("abstain_reason"), "claims_post": r.get("claims_post")}
+        for r in results]}  # fmt: skip
+    path = runs / f"{run_id}.rescore-{nli_threshold}.json"
+    path.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print(format_report(report))
+    print(f"wrote {path}")
+
+
 SMOKE_PER_TYPE = 3
 FIGURE_CHECKS = ("citation_valid", "entity_ok", "numbers_grounded", "unit_ok", "period_stated")
 
@@ -475,6 +513,11 @@ def main() -> None:
     runs = REPO_ROOT / run_cfg["runs_dir"]
     meta = current_meta(gen, run_cfg)
 
+    if arg("--rescore"):
+        rescore_run(
+            items, run_cfg, arg("--rescore"), float(sys.argv[sys.argv.index("--rescore") + 2])
+        )
+        return
     if arg("--smoke"):
         smoke(items, gen, run_cfg, int(arg("--smoke")))
         return

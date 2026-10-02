@@ -32,11 +32,39 @@ def _mean(xs: list) -> float | None:
     return sum(xs) / len(xs) if xs else None
 
 
+PENDING_NLI = "pending NLI threshold (F-125)"
+
+
 def _generation(results: list[dict], nli_threshold) -> dict:
+    """Claim metrics; every one pending while claims exist and the NLI threshold
+    is not set (TRADEOFFS: first full run scored before the threshold)."""
     has_claims = any(r.get("claims_pre") or r.get("claims_post") for r in results)
     if has_claims and nli_threshold is None:
-        raise ValueError("claims present but eval_run.nli_threshold is not set (PRD 7.5)")
+        return {"status": PENDING_NLI}
     return generation_metrics(results, nli_threshold if nli_threshold is not None else 0.0)
+
+
+def xbrl_summary(results: list[dict]) -> dict | None:
+    """Every contradiction with its synonym, figure and facts; claims matched per
+    synonym; status counts. None when no result has claims."""
+    claims = [(r["item_id"], c) for r in results for c in r.get("claims_pre") or []]
+    if not claims:
+        return None
+    status, per_syn, contra = {}, {}, []
+    for iid, c in claims:
+        x = (c.get("checks") or {}).get("xbrl")
+        if not x:
+            continue
+        status[x["status"]] = status.get(x["status"], 0) + 1
+        if x.get("synonym"):
+            per_syn[x["synonym"]] = per_syn.get(x["synonym"], 0) + 1
+        if x["status"] == "contradiction":
+            contra.append({"item_id": iid, "claim_id": c["claim_id"], "synonym": x["synonym"],
+                           "tags": x["tags"], "figure": c["figure"],
+                           "period_ends": x["period_ends"], "cited_facts": x["cited_facts"],
+                           "period_ok": x["period_ok"]})  # fmt: skip
+    return {"status_counts": status, "matched_per_synonym": dict(sorted(per_syn.items())),
+            "contradictions": contra}  # fmt: skip
 
 
 def retrieval_slice(items: dict, results: list[dict], k: int, field: str = "retrieved") -> dict:
@@ -93,6 +121,7 @@ def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict
         "filtered": sum(bool(r.get("filters")) for r in results),
         "filter_zero_recall": sum(bool(r.get("filter_zero_recall")) for r in results),
         "declined_unsupported": sum(r.get("abstain_reason") == "unsupported" for r in results),
+        "pending_nli": sum(r.get("verdict") == "PENDING_NLI" for r in results),
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "numeric": aggregate(scores),
         "abstention": rates(two_by_two(abst)),
@@ -112,6 +141,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
         "intent_matrix": intent_matrix(items, results),
+        "xbrl": xbrl_summary(results),
         "meta_disagreements": depth_disagreements(meta, results, items)
         if "retrieve_depth" in meta and "generator_top_k" in meta
         else None,
@@ -159,13 +189,13 @@ def anomalies(results: list[dict]) -> dict:
 
 
 def _gen(g: dict, key: str):
-    return NA if g["status"] == NA else g[key]
+    return g["status"] if g["status"] in (NA, PENDING_NLI) else g[key]
 
 
 def _faith(g: dict):
     """faithfulness_pre is never printed without the answer rate (F-09)."""
-    if g["status"] == NA:
-        return NA
+    if g["status"] in (NA, PENDING_NLI):
+        return g["status"]
     return f"{_fmt(g['faithfulness_pre'])} [{_fmt(g['answer_rate'])}]"
 
 
@@ -203,6 +233,7 @@ def format_report(report: dict) -> str:
             ("  router filters applied", lambda c: c.get("filtered", 0)),
             ("  filter_zero_recall (fell back)", lambda c: c.get("filter_zero_recall", 0)),
             ("  declined: intent unsupported", lambda c: c.get("declined_unsupported", 0)),
+            ("verdict pending NLI (F-125)", lambda c: c.get("pending_nli", 0)),
             ("Numeric accuracy (gated)", lambda c: c["numeric"]["numeric_accuracy"]),
             ("  numeric items scored", lambda c: c["numeric"]["n"]),
             ("  excluded unit_scale_unknown",
@@ -222,6 +253,10 @@ def format_report(report: dict) -> str:
             ("Citation precision", lambda c: _gen(c["generation"], "citation_precision")),
             ("Unit-scale accuracy", lambda c: _gen(c["generation"], "unit_scale_accuracy")),
             ("Period accuracy", lambda c: _gen(c["generation"], "period_accuracy")),
+            ("  checkable only (F-126)",
+             lambda c: _gen(c["generation"], "period_accuracy_checkable")),
+            ("  uncheckable (in denominator)",
+             lambda c: _gen(c["generation"], "period_uncheckable")),
             ("XBRL contradiction rate", lambda c: _gen(c["generation"], "xbrl_contradiction_rate")),
             ("PARTIAL rate", lambda c: c["abstention"]["partial_rate"]),
             ("False-answer rate", lambda c: c["abstention"]["false_answer_rate"]),
@@ -240,6 +275,15 @@ def format_report(report: dict) -> str:
         for src, rows in report["intent_matrix"].items():
             for qt, cnt in sorted(rows.items()):
                 lines.append(f"  {src:12} {qt:14} {dict(sorted(cnt.items(), key=str))}")
+    xs = report.get("xbrl")
+    if xs:
+        lines.append(f"XBRL check status (claims): {xs['status_counts']}")
+        lines.append(f"claims matched per synonym: {xs['matched_per_synonym']}")
+        lines.append(f"XBRL contradictions: {len(xs['contradictions'])}")
+        for x in xs["contradictions"]:
+            lines.append(f"  {x['item_id']} {x['claim_id']}: synonym {x['synonym']!r} -> "
+                         f"{x['tags']}; figure {x['figure']}; period ends {x['period_ends']}; "
+                         f"cited facts {x['cited_facts']}; period_ok {x['period_ok']}")  # fmt: skip
     lines.append(f"anomalies: {report['anomalies']}")
     md = report.get("meta_disagreements")
     if md is not None:

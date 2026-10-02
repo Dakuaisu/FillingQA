@@ -52,3 +52,36 @@ def verdict(claims: list[dict], nli_threshold: float | None) -> tuple[str | None
     if ratio >= 0.6:
         return PARTIAL, post
     return ABSTAIN, post
+
+
+PENDING = "PENDING_NLI"
+
+
+def item_verdict(model_abstained: bool, gate_verdict: str | None,
+                 claims_pre: list[dict]) -> tuple[str, str | None]:  # fmt: skip
+    """(item verdict, abstain_reason): the model's own abstention stands; else the
+    gate's verdict, PENDING_NLI while it waits on the NLI threshold."""
+    if model_abstained:
+        return ABSTAIN, "insufficient_evidence"
+    if gate_verdict is None:
+        return PENDING, None
+    if gate_verdict == ABSTAIN:
+        hard = any(c["checks"]["xbrl_contradiction"] for c in claims_pre)
+        return ABSTAIN, "xbrl_contradiction" if hard else "verifier"
+    return gate_verdict, None
+
+
+def rescore_claims(claims_pre: list[dict], nli_threshold: float) -> list[dict]:
+    """Stored claims with each prose claim's `citations_supporting` set from its
+    stored per-chunk entail at the threshold; figure claims untouched."""
+    import copy
+
+    out = copy.deepcopy(claims_pre)
+    for c in out:
+        if is_figure(c):
+            continue
+        by_chunk = c["checks"].get("entail_by_chunk") or []
+        c["checks"]["citations_supporting"] = [
+            x["chunk_id"] for x in by_chunk if x["entail"] >= nli_threshold
+        ]
+    return out
