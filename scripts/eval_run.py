@@ -8,6 +8,7 @@ python -m scripts.eval_run --rescore RUN_ID T   # derived report at nli_threshol
 python -m scripts.eval_run --reverify RUN_ID TAG  # model-free checks again: <id>.reverify-TAG.json
 python -m scripts.eval_run --smoke SEED        # pipeline check, 12 seeded items: <id>.smoke.json
 python -m scripts.eval_run --run --baseline-out eval/baselines/main.json
+python -m scripts.eval_run --run --subset eval/fast_subset_v1.yaml --report-out build/eval_fast.json
 
 The pipeline is `eval_run.pipeline` (PRD 11.6 configs: config_1_dense,
 config_3_hybrid, config_4_rerank; eval/pipeline.py). Each result stores the
@@ -595,6 +596,16 @@ def main() -> None:
             items[it["item_id"]] = it
     runs = REPO_ROOT / run_cfg["runs_dir"]
     meta = current_meta(gen, run_cfg)
+    subset = None
+    if arg("--subset"):
+        path = REPO_ROOT / arg("--subset")
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        subset = [i for ids in doc["items"].values() for i in ids]
+        missing = [i for i in subset if i not in items]
+        if missing:
+            raise SystemExit(f"subset {path.name} names items not in the candidates: {missing[:5]}")
+        meta["subset"] = {"file": arg("--subset"), "items": len(subset),
+                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}  # fmt: skip
 
     if arg("--reverify"):
         reverify_run(items, run_cfg, arg("--reverify"), sys.argv[sys.argv.index("--reverify") + 2])
@@ -627,7 +638,8 @@ def main() -> None:
         order = saved["item_order"]
     elif "--run" in sys.argv:
         run_id = uuid.uuid4().hex[:12]
-        order = list(items)[: int(arg("--limit"))] if arg("--limit") else list(items)
+        order = subset or list(items)
+        order = order[: int(arg("--limit"))] if arg("--limit") else order
         runs.mkdir(parents=True, exist_ok=True)
         (runs / f"{run_id}.meta.json").write_text(
             json.dumps({**meta, "run_id": run_id, "k": run_cfg["k"], "item_order": order},
@@ -666,6 +678,14 @@ def main() -> None:
     print(format_report(report))
     if baseline_out:
         (REPO_ROOT / baseline_out).write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+    if arg("--report-out"):
+        out = REPO_ROOT / arg("--report-out")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+        out.with_suffix(".md").write_text(
+            f"### Eval report, run {run_id}\n\n```\n{format_report(report)}\n```\n",
+            encoding="utf-8",
+        )
 
 
 if __name__ == "__main__":

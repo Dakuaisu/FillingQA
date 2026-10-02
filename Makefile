@@ -1,4 +1,5 @@
-.PHONY: help install db-up db-down db-psql migrate lint fmt test eval
+.PHONY: help install db-up db-down db-psql migrate lint fmt test eval eval-fast eval-gate \
+	restore-corpus-snapshot
 
 # Targets are added as the modules behind them land.
 
@@ -12,6 +13,8 @@ help:
 	@echo "fmt       ruff format + ruff check --fix"
 	@echo "test      pytest, excluding network-marked tests"
 	@echo "eval      verify the freeze, run the eval over the candidates, print the report"
+	@echo "eval-fast the 60-item fast subset on the same pipeline, then eval-gate"
+	@echo "eval-gate eval/compare.py: build/eval_fast.json vs thresholds and main_fast baseline"
 
 install:
 	python -m pip install -e ".[dev]"
@@ -45,3 +48,20 @@ test:
 eval:
 	python -m scripts.verify_freeze
 	python -m scripts.eval_run --run
+
+# PRD 11.5 fast eval for PRs: the committed 60-item subset (eval/fast_subset_v1.yaml)
+# on the same pipeline, then the gate against a baseline from the same subset (F-12).
+# The gate exits non-zero on any failed or pending gated metric.
+eval-fast:
+	python -m scripts.verify_freeze
+	python -m scripts.eval_run --run --subset eval/fast_subset_v1.yaml --report-out build/eval_fast.json
+	$(MAKE) eval-gate
+
+eval-gate:
+	python -m eval.compare --report build/eval_fast.json --baseline eval/baselines/main_fast.json \
+		--thresholds eval/thresholds.yaml --md build/eval_gate.md
+
+# CI needs the frozen corpus (chunks, embeddings, XBRL facts) in its database. No
+# snapshot fixture exists yet (F-135); this target fails rather than run on an empty DB.
+restore-corpus-snapshot:
+	@echo "restore-corpus-snapshot: no corpus snapshot fixture exists (F-135)" >&2; exit 1

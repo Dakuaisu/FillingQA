@@ -1,0 +1,30 @@
+# ⚠️ THIS FILE IS THE SINGLE SOURCE OF TRUTH FOR EVERY THRESHOLD.
+# The PRD names metrics; it must never restate their values. v2.0 of the PRD
+# carried three different faithfulness targets in three sections.
+
+absolute_minimums:
+  faithfulness_pre:      0.72   # ⚠️ PRE-verification. Post is circular by construction.
+  sufficiency_at_10:     0.82
+  claim_retention:       0.78   # guards against a verifier that strips everything
+  citation_coverage:     0.93
+
+# Gate the hard slice on its own. The aggregate is carried by the easy
+# 39% of items that come from XBRL templates. See §11.2.
+by_source:
+  handwritten:                  # smallest, hardest, noisiest — lower bar, still gated
+    faithfulness_pre:    0.65
+    sufficiency_at_10:   0.72
+  llm_seeded:
+    sufficiency_at_10:   0.80
+  xbrl_auto:                    # if this drops, something is badly broken
+    sufficiency_at_10:   0.90
+maximums:
+  false_answer_rate:     0.07
+  over_abstention_rate:  0.15
+  xbrl_contradiction:    0.03
+regression_tolerance:            # vs. main baseline
+  faithfulness_pre:     -0.02
+  sufficiency_at_10:    -0.03
+  answer_correctness:   -0.03
+  natural_phrasing_gap: +0.05   # control-set gap widening = lexical overfitting
+  cost_per_query:       +0.20

@@ -5415,3 +5415,48 @@ items now PASS while answering a different line item (F-133; numeric accuracy
 scores all five wrong). Corpus count of no-scale table chunks and the 4
 per-share failures under F-90. NLI sheet carries a note: the gate is validated
 on llm_seeded prose only. F-128, F-129, F-130 resolved; F-133 logged.
+
+## 2026-10-02 — F-133 decided; CI gate, eval-fast and the eval workflow (PRD 11.5)
+
+F-133: the gate stays faithfulness only; the report prints verdict against
+numeric correctness per source (b5d116c). The loader test now asserts the phrase
+set is exactly labels plus written synonyms; it fails on the old id-to-phrase
+loader (checked by restoring that line, then `git checkout`).
+
+`eval/thresholds.yaml` did not exist; created byte-for-byte from PRD 11.5.
+`python -m scripts.draw_fast`:
+
+    wrote eval/fast_subset_v1.yaml: quotas {'handwritten': 18, 'llm_seeded': 12, 'xbrl_auto': 30}; drawn {'handwritten': 0, 'llm_seeded': 12, 'xbrl_auto': 30}
+
+The gate on the full dev run (`python -m eval.compare --report
+eval/runs/a4e39a65c2c8.json --baseline eval/baselines/main_fast.json`), exit 1:
+
+    GATE FAILED
+    metric                scope        rule                       threshold  value       baseline  status   why
+    faithfulness_pre      aggregate    min                        0.720      -           -         PENDING  pending NLI threshold (F-125)
+    faithfulness_pre      handwritten  min                        0.650      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    sufficiency_at_10     aggregate    min                        0.820      0.792       -         FAIL     
+    sufficiency_at_10     handwritten  min                        0.720      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    claim_retention       aggregate    min                        0.780      -           -         PENDING  pending NLI threshold (F-125)
+    claim_retention       handwritten  min                        0.780      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    citation_coverage     aggregate    min                        0.930      -           -         PENDING  pending NLI threshold (F-125)
+    citation_coverage     handwritten  min                        0.930      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    false_answer_rate     aggregate    max                        0.070      -           -         PENDING  pending NLI threshold (F-125)
+    false_answer_rate     handwritten  max                        0.070      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    over_abstention_rate  aggregate    max                        0.150      -           -         PENDING  pending NLI threshold (F-125)
+    over_abstention_rate  handwritten  max                        0.150      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    xbrl_contradiction    aggregate    max                        0.030      -           -         PENDING  pending NLI threshold (F-125)
+    xbrl_contradiction    handwritten  max                        0.030      -           -         PENDING  pending: handwritten slice empty, hand-written items not yet authored (F-103)
+    sufficiency_at_10     llm_seeded   min                        0.800      1.000       -         PASS     
+    sufficiency_at_10     xbrl_auto    min                        0.900      0.705       -         FAIL     
+    faithfulness_pre      aggregate    delta -0.02                -0.020     -           -         PENDING  pending NLI threshold (F-125)
+    sufficiency_at_10     aggregate    delta -0.03                -0.030     0.792       -         PENDING  pending: no baseline report (F-59)
+    answer_correctness    aggregate    delta -0.03                -0.030     -           -         PENDING  pending: judge answer correctness (F-105)
+    natural_phrasing_gap  aggregate    delta +0.05                0.050      -           -         PENDING  pending: hand-written natural-phrasing items (F-103)
+    cost_per_query        aggregate    delta +0.2                 0.200      -           -         PENDING  pending: cost per query not measured (F-134)
+    backend               run          not a development backend  -          claude_cli  -         FAIL     development run (claude_cli) cannot pass (F-59)
+
+Checked: the workflow's key step with no key exits 1 and writes the reason as
+the PR comment; `--baseline-out eval/baselines/main_fast.json` on claude_cli is
+refused before any work; `make restore-corpus-snapshot` exits 1 (F-135). F-12
+resolved; F-07, F-59, F-104 noted; F-134, F-135 logged. No generation run.

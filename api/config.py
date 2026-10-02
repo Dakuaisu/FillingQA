@@ -68,8 +68,16 @@ def baseline(path: Path = CORPUS_FILE) -> dict:
 
 
 def generation(path: Path = CORPUS_FILE) -> dict:
-    """The `generation:` block of api/config.yaml (PRD Appendix A)."""
-    return yaml.safe_load(path.read_text(encoding="utf-8"))["generation"]
+    """The `generation:` block of api/config.yaml (PRD Appendix A).
+    FILINGQA_GENERATION_BACKEND overrides `backend` (CI sets anthropic_api); the
+    run meta records the backend used."""
+    cfg = yaml.safe_load(path.read_text(encoding="utf-8"))["generation"]
+    override = os.environ.get("FILINGQA_GENERATION_BACKEND", "").strip()
+    if override:
+        if override not in ("claude_cli", "anthropic_api"):
+            raise ConfigError(f"FILINGQA_GENERATION_BACKEND={override!r} is not a backend")
+        cfg["backend"] = override
+    return cfg
 
 
 def span_resolution(path: Path = CORPUS_FILE) -> dict:

@@ -194,3 +194,23 @@ def test_verdict_by_correctness_separates_faithfulness_from_correctness():
     assert "never a correctness claim" in format_report(
         build_report(ITEMS, rs, meta("claude_cli"), 10)
     )
+
+
+def test_fast_subset_reserves_the_handwritten_quota():
+    from scripts.draw_fast import draw, largest_remainder
+
+    assert largest_remainder({"a": 200, "b": 83, "c": 120}, 60) == {"a": 30, "b": 12, "c": 18}
+
+    def qt(i):
+        return "xbrl_numeric" if i < 8 else "comparison"
+
+    items = {f"x{i}": {"source": "xbrl_auto", "question_type": qt(i)} for i in range(10)}
+    items |= {f"s{i}": {"source": "llm_seeded", "question_type": "table"} for i in range(5)}
+    d = draw(items, 5, 6, 1)
+    assert d["quotas"] == {
+        "handwritten": 2,
+        "llm_seeded": 1,
+        "xbrl_auto": 3,
+    }  # tie to "handwritten"
+    assert d["items"]["handwritten"] == [] and len(d["items"]["xbrl_auto"]) == 3
+    assert d == draw(items, 5, 6, 1)

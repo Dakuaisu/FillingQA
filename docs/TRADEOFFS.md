@@ -2760,3 +2760,47 @@ llm_seeded PASS 26 correct, 3 wrong (9 not scored for unit scale, 1 not numeric)
 *Rejected:* a question-concept check in the gate (the claim's concept against the
 concept the question asks for): faithfulness would then depend on the router and
 the synonym map, and a PASS would mean two things.
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the CI gate, `eval-fast` and the workflow (PRD 11.4, 11.5)
+
+- **`eval/thresholds.yaml` did not exist.** PRD 11.5 names it the single source
+  of truth and prints its contents; the repo had no such file. Created as a
+  byte-for-byte copy of that block (extracted from `docs/PRD.md`), no number
+  changed. §11.2 prose drift stays F-07.
+- **`eval/compare.py`** (PRD 11.5's `eval.compare` and `eval.gate` in one, by
+  the supervisor's instruction) reads the file as it is. Rows:
+  `absolute_minimums` and `maximums` on the aggregate and on the handwritten
+  slice (`by_source.handwritten` overrides its two keys there); each other
+  `by_source` slice on its own keys; `regression_tolerance` on the aggregate
+  against the baseline (a negative tolerance bounds a drop, a positive one a
+  rise). A metric that is pending (NLI threshold, judge), not measured (cost per
+  query, F-134), on an empty slice (handwritten, F-103) or without a baseline
+  prints as pending and fails the gate. A baseline from another subset fails the
+  regression rows (F-12). A development-backend report fails. Exit 1 on any
+  failure; per-metric table to stdout and Markdown for the PR comment.
+  On the full dev run a4e39a65c2c8: GATE FAILED (sufficiency aggregate 0.792 <
+  0.82, xbrl_auto 0.705 < 0.90; llm_seeded 1.000 passes; claim metrics pending
+  F-125; handwritten empty; claude_cli).
+- **Fast subset** `eval/fast_subset_v1.yaml` (`python -m scripts.draw_fast`,
+  seed 20261007): 60 items, source quotas by planned set size (xbrl_auto 200,
+  llm_seeded 83, handwritten 120 targets) by largest remainder: xbrl_auto 30,
+  llm_seeded 12, handwritten 18 reserved and empty until F-103 (filled by a v2
+  draw, never by moving the others); within a source, by question type. `make
+  eval-fast` runs it on the same pipeline (`eval_run --subset`, which records
+  the subset file and hash in the run meta) and then the gate against
+  `eval/baselines/main_fast.json`, which must come from the same subset;
+  `refuse_dev_baseline` blocks writing it from claude_cli (checked).
+- **Backend in CI.** `FILINGQA_GENERATION_BACKEND` overrides
+  `generation.backend` (validated); the workflow sets `anthropic_api`. The run
+  meta records the backend used.
+- **Workflow** `.github/workflows/eval.yml` on pull requests: the first step
+  fails the job when `ANTHROPIC_API_KEY` is empty, with that reason, and writes
+  it as the PR comment (checked locally: exit 1); then migrate, restore the corpus
+  snapshot (fails: no fixture exists, F-135), `make eval-fast`; the gate table is
+  posted as a PR comment whenever it exists. Never a skip, never a pass without
+  a run.
+
+*Alternatives:* gate only the aggregate (rejected: PRD 14's exit names the
+handwritten slice); treat pending metrics as passing until measured (rejected:
+a gate that cannot evaluate a gated metric does not pass); skip the job without
+a key (rejected: indistinguishable from a pass in the PR checks).

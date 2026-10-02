@@ -1,7 +1,7 @@
 name: ci
 
-# Lint and unit tests only. The eval gate (PRD 11.5) is a separate workflow and
-# does not exist until Phase 4 -- do not add eval steps here.
+# Lint and unit tests only. The eval gate (PRD 11.5) is the separate workflow
+# eval.yml -- do not add eval steps here.
 
 on:
   pull_request:

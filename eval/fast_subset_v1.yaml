@@ -1,0 +1,58 @@
+# Fast-eval subset v1 (PRD 11.5), drawn by `python -m scripts.draw_fast`.
+# The handwritten quota is reserved and empty until F-103 lands.
+seed: 20261007
+size: 60
+quotas:
+  handwritten: 18
+  llm_seeded: 12
+  xbrl_auto: 30
+planned_sizes:
+  xbrl_auto: 200
+  llm_seeded: 83
+  handwritten: 120
+items:
+  handwritten: []
+  llm_seeded:
+  - seed_0052
+  - seed_0054
+  - seed_0062
+  - seed_0066
+  - seed_0070
+  - seed_0007
+  - seed_0009
+  - seed_0018
+  - seed_0031
+  - seed_0033
+  - seed_0036
+  - seed_0043
+  xbrl_auto:
+  - cmp_0001
+  - cmp_0008
+  - cmp_0011
+  - cmp_0012
+  - cmp_0013
+  - cmp_0035
+  - xbrl_0001
+  - xbrl_0005
+  - xbrl_0007
+  - xbrl_0010
+  - xbrl_0011
+  - xbrl_0013
+  - xbrl_0015
+  - xbrl_0023
+  - xbrl_0029
+  - xbrl_0051
+  - xbrl_0055
+  - xbrl_0061
+  - xbrl_0068
+  - xbrl_0081
+  - xbrl_0087
+  - xbrl_0093
+  - xbrl_0117
+  - xbrl_0124
+  - xbrl_0131
+  - xbrl_0140
+  - xbrl_0145
+  - xbrl_0148
+  - xbrl_0149
+  - xbrl_0154
