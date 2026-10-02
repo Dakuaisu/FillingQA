@@ -24,12 +24,14 @@ pass, and no number in this README describes it as passing:
   0.80 (that slice is inflated by lexical overlap with its source chunk, F-110). The specified pipeline adds the
   router and metadata filters; its numbers come from development runs and are
   not reported here. Why the XBRL slice misses: `docs/OPEN.md` F-138.
-- **Gated metrics that cannot be evaluated yet,** which fail the gate as
-  pending: faithfulness, claim retention, citation coverage and the abstention
-  rates (the NLI threshold needs 40 owner labels, F-125), answer correctness
-  (judge labels, F-105), the natural-phrasing gap and every handwritten-slice
-  threshold (hand-written items, F-103), cost per query (needs a priced run,
-  F-134).
+- **Every gated metric is pending,** and pending fails the gate: there is no
+  gated run (F-59). Even once one exists, these stay pending:
+  - faithfulness, claim retention, citation coverage and the abstention rates
+    (the NLI threshold needs 40 owner labels, F-125);
+  - answer correctness (judge labels, F-105);
+  - the natural-phrasing gap and every handwritten-slice threshold (hand-written
+    items, F-103);
+  - cost per query (needs a priced run, F-134).
 
 **PASS is a faithfulness verdict, never a correctness claim.** The verifier
 checks each claim against the evidence it cites (PRD 7.5); whether the answer

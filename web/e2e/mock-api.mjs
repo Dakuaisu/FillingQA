@@ -29,6 +29,8 @@ createServer((req, res) => {
     req.on("end", () => send(...answerFor(JSON.parse(raw || "{}").question ?? "")));
     return;
   }
+  if (req.method === "GET" && req.url === "/api/v1/metrics") return send(200, load("metrics.json"));
+  if (req.method === "GET" && req.url === "/api/v1/corpus/summary") return send(200, load("corpus_summary.json"));
   const m = req.url?.match(/^\/api\/v1\/chunks\/(.+)$/);
   if (req.method === "GET" && m) {
     const id = decodeURIComponent(m[1]);

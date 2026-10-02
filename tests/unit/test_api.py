@@ -183,3 +183,26 @@ def test_length_is_checked_before_any_model_call(monkeypatch):
         c.post("/api/v1/query", json={"question": "one two three four five six"}).status_code == 422
     )
     assert calls == []
+
+
+def test_corpus_summary_lists_the_quarantined_filings_from_the_freeze(monkeypatch):
+    class Conn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def execute(self, sql, *a):
+            rows = {"companies": [("AAPL", "Apple Inc.")], "GROUP BY": [("AAPL", "10-K", 2024, 7)],
+                    "max(": [(None,)]}  # fmt: skip
+            key = next(k for k in rows if k in sql)
+            return type("R", (), {"fetchall": lambda s: rows[key],
+                                  "fetchone": lambda s: rows[key][0]})()  # fmt: skip
+
+    monkeypatch.setattr(server, "connect", lambda: Conn())
+    body = server.corpus_summary()
+    assert body["filings"] == {"listed": 96, "parsed": 90, "quarantined": 6}
+    q = body["quarantined"]
+    assert len(q) == 6 and {x["finding"] for x in q} == {"F-66", "F-70"}
+    assert {x["ticker"] for x in q} == {"JPM", "XOM"} and all(x["reason"] for x in q)

@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { ApiResult, ChunkDetail, QueryResponse } from "@/lib/types";
+import type { ApiResult, ChunkDetail, CorpusSummary, Metrics, QueryResponse } from "@/lib/types";
 
 // The FilingQA API (PRD 9). Server-side only: a live answer takes longer than the
 // dev proxy's 30 s timeout, so the browser never calls /query directly.
@@ -31,4 +31,12 @@ export function query(question: string) {
 
 export function chunk(id: string) {
   return call<ChunkDetail>(`/api/v1/chunks/${encodeURIComponent(id)}`);
+}
+
+export function corpusSummary() {
+  return call<CorpusSummary>("/api/v1/corpus/summary");
+}
+
+export function metrics() {
+  return call<Metrics>("/api/v1/metrics");
 }

@@ -5666,3 +5666,51 @@ FY2026 Q2 and [2] FY2024 Q2 in reading order, 21.3 s; NVIDIA buy question
 abstained (unsupported), 7.8 s; 602-token question 422 message. Also seen: a
 citation marker can wrap alone onto the next line after a claim ending at the
 line edge (cosmetic, not fixed).
+
+## 2026-10-02 — `/metrics`, Corpus screen, eval dashboard
+
+`api/metrics.py` and `GET /api/v1/metrics`; `eval/dashboard.yaml`; `/corpus/summary`
+adds the freeze totals and quarantined filings; `web/src/app/corpus`,
+`web/src/app/dashboard`. F-142 logged (rough edges, none blocking).
+
+Live `GET /api/v1/metrics` (captured as `web/e2e/fixtures/metrics.json`): gate not
+passed, reason "no gated run exists (F-59)", 21 rows; retrieval runs 01019ff395ec,
+188304ccaf94, 5b3c3ac13e5e (current); 12 development run ids; 8 owner-blocked
+items. Live `/corpus/summary`: 22,354 chunks, filings listed 96 / parsed 90 /
+quarantined 6 (JPM 10-K ×3 F-66, XOM 10-K ×3 F-70).
+
+The first browser pass of the dashboard disagreed with the README: every gate
+row says "no gated run exists (F-59)", while the README's third bullet named
+F-125 / F-105 / F-103 / F-134 as the reasons. Both reworded to one source
+(`pending_even_with_a_gated_run` in `eval/dashboard.yaml`): every gated metric is
+pending for want of a gated run, and these four stay pending even with one; the
+README agreement test covers it. Also fixed: the gate box repeated its reason;
+table headers ran together.
+
+Browse-only live pass (`node scripts/live-pass.mjs http://localhost:3000
+--browse-only`), no page errors:
+- Corpus: "96 filings listed in the frozen corpus: 90 parsed and indexed, 6
+  quarantined (not indexed). 22,354 chunks."; freeze 2026-10-01, parser
+  d58d26e08e5a, chunker 964f77f6f9cb; 8 companies (JPM and XOM show 10-Qs only);
+  six quarantined filings with accession, F-66 / F-70 and reason.
+- Dashboard: "The CI eval gate fails. No gated run exists (F-59)."; the four
+  pending-with-a-run lines; 21 gate rows, all PENDING; retrieval run 5b3c3ac13e5e,
+  Config 3, unreviewed candidates, dense exact, sparse bm25: XBRL slice 0.375 vs
+  0.90 misses, LLM-seeded 0.928 vs 0.80 meets (F-110 note), hand-written "no
+  items yet" vs 0.72, aggregate 0.537 vs 0.82 misses; earlier runs listed as
+  superseded; 12 development run ids with the banner and no value; 8
+  owner-blocked items. Seen, not fixed (F-142): backticks shown literally.
+
+`make lint` and `make test`:
+
+    lint: ruff check .
+    lint: All checks passed!
+    lint: ruff format --check .
+    lint: 167 files already formatted
+    lint: cd web && npm run lint && npm run typecheck
+    test: pytest -m "not network"
+    test: 3 snapshots passed.
+    test: 498 passed in 14.66s
+    test: cd web && npm run test:e2e
+    test: > playwright test
+    test:   12 passed (9.8s)

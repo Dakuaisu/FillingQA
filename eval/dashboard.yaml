@@ -1,0 +1,40 @@
+# The committed source behind GET /api/v1/metrics and the README status section:
+# if the two ever disagree, both are wrong (tests/unit/test_metrics.py checks).
+
+# The model-free retrieval run the README and the dashboard quote (F-136, F-139).
+current_retrieval_run: 5b3c3ac13e5e
+
+# What waits on the owner, with its finding ids (README "What waits on the owner").
+owner_blocked:
+  - item: API key for CI runs, the fast-eval baseline, a priced run, the deliberate-regression PR and its screenshot
+    findings: [F-59, F-134]
+  - item: Hand-written eval items (unanswerable, adversarial, natural phrasing, comparison)
+    findings: [F-103]
+  - item: Human review of the candidates; the golden-set freeze; ablations run only on reviewed items
+    findings: [F-104, F-106]
+  - item: Judge validation labels
+    findings: [F-105]
+  - item: NLI gate labels (40 pairs, `eval/nli/label_sheet_v1.md`)
+    findings: [F-125]
+  - item: Rerank score-floor calibration
+    findings: [F-112]
+  - item: Hosting the corpus snapshot for CI (exact command in the finding)
+    findings: [F-135]
+  - item: Review of the XBRL concept synonym map
+    findings: [F-127]
+
+# Gated metrics that would stay pending even once a gated run exists, and why
+# (README "Where the gate stands", third bullet).
+pending_even_with_a_gated_run:
+  - metrics: faithfulness, claim retention, citation coverage and the abstention rates
+    reason: the NLI threshold needs 40 owner labels
+    findings: [F-125]
+  - metrics: answer correctness
+    reason: judge labels
+    findings: [F-105]
+  - metrics: the natural-phrasing gap and every handwritten-slice threshold
+    reason: hand-written items
+    findings: [F-103]
+  - metrics: cost per query
+    reason: needs a priced run
+    findings: [F-134]

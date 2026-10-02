@@ -72,3 +72,41 @@ export interface QueryResponse {
 export type ApiResult<T> =
   | { ok: true; status: number; body: T }
   | { ok: false; status: number; detail: string };
+
+export interface CorpusSummary {
+  companies: { ticker: string; name: string; chunks: { form_type: string; fiscal_year: number; chunks: number }[] }[];
+  total_chunks: number;
+  last_ingested_at: string | null;
+  freeze: { frozen_on: string; parser_version: string; chunker_version: string };
+  filings: { listed: number; parsed: number; quarantined: number };
+  quarantined: { accession: string; ticker: string; form: string; reason: string; finding: string }[];
+}
+
+export interface GateRow {
+  metric: string;
+  scope: string;
+  rule: string;
+  threshold: number | null;
+  value: number | string | null;
+  baseline: number | null;
+  status: "pass" | "fail" | "pending";
+  why: string | null;
+}
+
+export interface Metrics {
+  gate: { passed: boolean; run_id: string | null; reason: string | null; rows: GateRow[] };
+  retrieval_runs: {
+    run_id: string;
+    current: boolean;
+    config: string;
+    label: string;
+    dense_search: string;
+    sparse: string;
+    sufficiency_at_10: Record<string, { value: number | null; threshold: number | null }>;
+    notes: Record<string, string>;
+  }[];
+  gated_runs: string[];
+  development_runs: { run_id: string; files: string[]; banner: string }[];
+  pending_even_with_a_gated_run: { metrics: string; reason: string; findings: string[] }[];
+  owner_blocked: { item: string; findings: string[] }[];
+}

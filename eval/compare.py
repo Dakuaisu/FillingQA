@@ -49,12 +49,16 @@ METRICS = {
 }
 
 
-def value(report: dict | None, scope: str, metric: str):
+NO_RUN = "pending: no gated run exists (F-59)"
+NO_BASELINE = "pending: no baseline report (F-59)"
+
+
+def value(report: dict | None, scope: str, metric: str, missing: str = NO_BASELINE):
     """(number, None) or (None, why it cannot be evaluated)."""
     if metric in NOT_IN_REPORT:
         return None, NOT_IN_REPORT[metric]
     if report is None:
-        return None, "pending: no baseline report (F-59)"
+        return None, missing
     col = report["columns"].get(scope)
     if col is None:
         why = (
@@ -78,13 +82,14 @@ def _row(metric, scope, rule, threshold, v, why, ok, base=None) -> dict:
 
 
 def _check(report, metric, scope, rule, t) -> dict:
-    v, why = value(report, scope, metric)
+    v, why = value(report, scope, metric, NO_RUN)
     ok = why is None and (v >= t if rule == "min" else v <= t)
     return _row(metric, scope, rule, t, v, why, ok)
 
 
-def rows(report: dict, thresholds: dict, baseline: dict | None) -> list[dict]:
-    """One row per gated (metric, scope); see the module docstring."""
+def rows(report: dict | None, thresholds: dict, baseline: dict | None) -> list[dict]:
+    """One row per gated (metric, scope); see the module docstring. `report` None:
+    no gated run exists, and every row is pending for that reason."""
     minimums = thresholds.get("absolute_minimums") or {}
     maximums = thresholds.get("maximums") or {}
     by_source = thresholds.get("by_source") or {}
@@ -101,16 +106,16 @@ def rows(report: dict, thresholds: dict, baseline: dict | None) -> list[dict]:
         if scope != "handwritten":
             out += [_check(report, m, scope, "min", t) for m, t in (table or {}).items()]
     same_subset = baseline is not None and (baseline.get("subset") or {}).get("sha256") == (
-        report.get("subset") or {}).get("sha256")  # fmt: skip
+        (report or {}).get("subset") or {}).get("sha256")  # fmt: skip
     for metric, tol in (thresholds.get("regression_tolerance") or {}).items():
-        v, why = value(report, "aggregate", metric)
+        v, why = value(report, "aggregate", metric, NO_RUN)
         b, bwhy = value(baseline, "aggregate", metric)
         why = why or bwhy
         if why is None and not same_subset:
             why = "baseline is not from the same subset (F-12)"
         ok = why is None and ((v - b) >= tol if tol < 0 else (v - b) <= tol)
         out.append(_row(metric, "aggregate", f"delta {tol:+}", tol, v, why, ok, b))
-    if report.get("development_run"):
+    if report is not None and report.get("development_run"):
         out.append(_row("backend", "run", "not a development backend", None,
                         report.get("backend"), "development run (claude_cli) cannot pass (F-59)",
                         False))  # fmt: skip

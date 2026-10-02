@@ -1,12 +1,13 @@
 // Manual live pass: drives the real frontend against the real API (development
 // backend). Screenshots and a text summary go to ../build/web-live/ (git-ignored);
 // nothing here is committed output or README material (F-59).
-// Usage: make serve; make web-dev; node scripts/live-pass.mjs [http://localhost:3000]
+// Usage: make serve; make web-dev; node scripts/live-pass.mjs [http://localhost:3000] [--browse-only]
+// --browse-only: Ask, Corpus and Dashboard only (no generation calls).
 import { mkdirSync, writeFileSync } from "node:fs";
 
 import { chromium } from "@playwright/test";
 
-const BASE = process.argv[2] ?? "http://localhost:3000";
+const BASE = process.argv.slice(2).find((a) => a.startsWith("http")) ?? "http://localhost:3000";
 const OUT = new URL("../../build/web-live/", import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
 const QUESTIONS = [
@@ -28,6 +29,28 @@ const text = async (id) => ((await page.getByTestId(id).count()) ? (await page.g
 await page.goto(BASE);
 await page.screenshot({ path: `${OUT}ask.png`, fullPage: true });
 summary.screens.push({ screen: "ask", examples: await text("example") });
+
+await page.goto(`${BASE}/corpus`);
+await page.getByTestId("quarantined").waitFor({ timeout: 30_000 });
+await page.screenshot({ path: `${OUT}corpus.png`, fullPage: true });
+summary.screens.push({ screen: "corpus", totals: await text("corpus-totals"), freeze: await text("freeze"),
+  companies: await page.getByTestId("companies").locator("tbody tr").allInnerTexts(),
+  quarantined: await page.getByTestId("quarantined").locator("li").allInnerTexts() });
+
+await page.goto(`${BASE}/dashboard`);
+await page.getByTestId("gate-status").waitFor({ timeout: 30_000 });
+await page.screenshot({ path: `${OUT}dashboard.png`, fullPage: true });
+summary.screens.push({ screen: "dashboard", gate: await text("gate-status"),
+  gate_rows: await page.getByTestId("gate-row").count(),
+  retrieval: await text("retrieval-current"), development: await text("development-runs"),
+  owner_blocked: await page.getByTestId("owner-blocked").locator("tr").allInnerTexts() });
+if (process.argv.includes("--browse-only")) {
+  summary.page_errors = errors;
+  writeFileSync(`${OUT}summary.json`, JSON.stringify(summary, null, 1));
+  await browser.close();
+  console.log(JSON.stringify(summary, null, 1));
+  process.exit(0);
+}
 
 for (const [name, q] of QUESTIONS) {
   const t0 = Date.now();

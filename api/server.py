@@ -158,7 +158,11 @@ def corpus_summary() -> dict:
             "total_chunks": sum(r[3] for r in rows),
             "last_ingested_at": last.isoformat() if last else None,
             "freeze": {k: freeze.get(k) for k in ("frozen_on", "parser_version",
-                                                   "chunker_version")}}  # fmt: skip
+                                                   "chunker_version")},
+            "filings": freeze["totals"],
+            "quarantined": [{k: f.get(k) for k in ("accession", "ticker", "form", "reason",
+                                                   "finding")}
+                            for f in freeze["filings"] if f["status"] != "parsed"]}  # fmt: skip
 
 
 def health() -> dict:
@@ -243,6 +247,12 @@ def create_app() -> FastAPI:
     @app.get("/api/v1/corpus/summary")
     def summary():
         return corpus_summary()
+
+    @app.get("/api/v1/metrics")
+    def metrics():
+        from api import metrics as m
+
+        return m.build()
 
     @app.get("/api/v1/health")
     def healthcheck():

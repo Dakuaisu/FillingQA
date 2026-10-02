@@ -11,9 +11,9 @@ carries the state.
 
 | Status | Count |
 |---|---|
-| OPEN | 83 |
+| OPEN | 84 |
 | RESOLVED | 58 |
-| **Total** | **141** |
+| **Total** | **142** |
 
 ---
 
@@ -82,6 +82,7 @@ carries the state.
 | F-139 | Exact dense search against HNSW, retrieval-only, 5b3c3ac13e5e (exact) against 01019ff395ec (HNSW, ef_search 100), same corpus, candidates and config otherwise; a measurement of the search method, not a gain. Sufficiency@10, xbrl_auto / llm_seeded / aggregate: dense 0.290 / 0.699 / 0.410 → 0.310 / 0.723 / 0.431; sparse unchanged 0.175 / 0.892 / 0.385 (283 of 283 lists identical); hybrid 0.365 / 0.892 / 0.519 → 0.375 / 0.928 / 0.537 (F-110 for the seeded slice). Dense top-50 identical for 215 of 283, top-10 for 262; hybrid top-50 for 237, top-10 for 249. Sufficient at 10 only on exact: dense 6 (cmp_0012, seed_0013, seed_0079, xbrl_0046, xbrl_0058, xbrl_0059), hybrid 5 (cmp_0012, seed_0012, seed_0013, seed_0016, xbrl_0046); only on HNSW: none. Earlier routed runs (a4e39a65c2c8, filter runs) used HNSW and stay as recorded | OPEN |
 | F-140 | PRD 9 items deferred, not dropped, from the first API: `POST /feedback` (→ eval candidate queue), `POST /admin/ingest` (API-key protected; the frozen corpus is never re-ingested, PRD 11.4), `GET /metrics` (Prometheus; next after the frontend's first screen, the dashboard reads it), `GET /documents/{accession}` and `GET /documents/{accession}/content` (PRD 10 scoped the document viewer down to the source panel), the request's `filters` / `options` overrides (400 until built), `nearest_evidence.rerank_score` (not kept per chunk), `trace_id` (LangFuse, Phase 5 deploy), `429` rate limiting | OPEN |
 | F-141 | Frontend states with no captured response, so neither the e2e suite nor the live pass exercised them: the restatement annotation (no restatement occurred in any live answer or in eval run a4e39a65c2c8), the PARTIAL verdict line, the abstention panel's nearest-evidence list (the live abstention was `unsupported`, which retrieves nothing), and the 503 state against a stopped API. Rendered from the response's own fields; untested | OPEN |
+| F-142 | Frontend rough edges seen in the live passes (2026-10-02), none blocking: company names show SEC's conformed form (e.g. "BANK OF AMERICA CORP /DE/", from `companies.name`); use a display name from config if the API exposes one later, not a hand-written map in the frontend. Citation hover previews and the source panel show the chunk's raw markdown table text. A citation marker can wrap alone onto the next line when a claim ends at the line edge. The dashboard shows markdown backticks literally in owner-blocked items (the shared source is written for the README) | OPEN |
 | F-122 | PRD 7.1's intent table (lookup rerank→5, comparison →8, synthesis →10) conflicts with Appendix A's single `rerank.top_n: 8`. `config_4_routed` follows 7.1 (`router.budgets`); Config 4 runs keep 8 / 10 | OPEN |
 | F-123 | Config 4 chose rerank top-n (10 vs 8) from the eval item's own `question_type` label, which a deployed system does not have: rerank runs 4aef651ade44, dd372192a070, 45e3ed5c8f13, 46523deda1c0 and eval run 63cf35c328e2 gave the 36 `synthesis` candidates top-n 10 by label. Their numbers stand as recorded; `config_4_routed` takes top-n from the router's intent | OPEN |
 | F-89 | PRD 7.1's `synthesis` intent (summaries, top-10 lists, answers drawn from several chunks) has no eval item behind it: PRD 11.1 Stage 1 seeds `synthesis` items from one chunk each (TRADEOFFS, LLM seeding). No report may call the `synthesis` slice multi-chunk. 2026-10-02: so the current set cannot evaluate synthesis routing (F-121); the owner's hand-written items are where it would be evaluated | OPEN |

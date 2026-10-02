@@ -2988,3 +2988,29 @@ suite, and CI has a `web` job doing the same.
 should not depend on a dev setting); call `/query` from the browser with CORS on
 the API (rejected: same timeout question in production proxies, and the API key
 story later is simpler server-side).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: `/metrics`, the Corpus screen and the eval dashboard
+
+- `GET /api/v1/metrics` (`api/metrics.py`) reads committed files only: the gate
+  table exactly as `eval/compare.py` computes it for the latest gated eval run
+  (none yet: every row pending "no gated run exists (F-59)"; `compare.rows`
+  now takes `None` for that case); each model-free retrieval run's per-source
+  hybrid Sufficiency@10 beside its threshold, labelled Config 3 and "unreviewed
+  candidates"; development runs as ids, files and the banner. A run is
+  development when its report or meta says `development_run` or a development
+  backend; filter and smoke runs are development. This is decided in the
+  endpoint, and a test writes development reports with a sentinel value and
+  asserts it appears nowhere in the payload. Runs whose files predate a field
+  say so ("not recorded") rather than guess.
+- `eval/dashboard.yaml` is the committed source for the current retrieval
+  comparison run, the owner-blocked list and the metrics that stay pending even
+  with a gated run; the README's status section and the dashboard both come from
+  it, and `tests/unit/test_metrics.py` fails if the README's quoted run, figures,
+  thresholds, pending list or owner-blocked table differ from `/metrics`.
+- `/corpus/summary` adds the freeze totals and the six quarantined filings with
+  their reasons and findings (F-66, F-70) from `api/corpus_freeze.yaml`. The
+  Corpus screen says what is and is not in the index; it shows no generated text,
+  so no banner.
+- The dashboard renders `/metrics` only: the gate box and per-metric table, the
+  current retrieval run (other runs as superseded comparison points), development
+  run ids with the banner and no value, and the owner-blocked list.

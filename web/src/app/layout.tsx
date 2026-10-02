@@ -24,6 +24,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/" className="text-muted-foreground hover:text-foreground">
               Ask
             </Link>
+            <Link href="/corpus" className="text-muted-foreground hover:text-foreground">
+              Corpus
+            </Link>
+            <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+              Eval dashboard
+            </Link>
           </nav>
         </header>
         <main className="mx-auto max-w-3xl px-4 py-8">{children}</main>

@@ -18,6 +18,11 @@ test the screens, never results and never README material (F-59).
 - `chunk.json`, `chunk_*.json`: `GET /api/v1/chunks/{id}` for the cited chunks
   (database records of the frozen corpus, no generated text)
 - `chunk_404.json`: `GET /api/v1/chunks/nope`
+- `metrics.json`: `GET /api/v1/metrics` (committed run files: the gate table with
+  no gated run, model-free retrieval runs, development run ids only, owner-blocked
+  items). No generated text.
+- `corpus_summary.json`: `GET /api/v1/corpus/summary` (database counts and the
+  freeze record, including the six quarantined filings). No generated text.
 
 No restatement response was seen live, so no fixture exercises the
 restatement annotation.

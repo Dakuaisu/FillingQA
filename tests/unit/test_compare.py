@@ -84,3 +84,12 @@ def test_ci_backend_override(monkeypatch):
     monkeypatch.setenv("FILINGQA_GENERATION_BACKEND", "openai")
     with pytest.raises(ConfigError):
         generation()
+
+
+def test_without_a_gated_run_every_row_is_pending_for_that_reason():
+    t = rows(None, TH, None)
+    assert not passed(t) and {r["status"] for r in t} == {"pending"}
+    assert all(r["why"].startswith("pending:") for r in t)
+    assert next(r for r in t if r["metric"] == "faithfulness_pre")["why"] == (
+        "pending: no gated run exists (F-59)"
+    )
