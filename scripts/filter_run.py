@@ -29,7 +29,14 @@ from api.config import REPO_ROOT, eval_run, generation, retrieval
 from api.db import connect
 from api.generate import claude_cli
 from api.generate.generator import complete
-from api.query.router import RouterParseError, allowed_chunks, filters, parse, render
+from api.query.router import (
+    PERIOD_ENDS_SQL,
+    RouterParseError,
+    allowed_chunks,
+    filters,
+    parse,
+    render,
+)
 from eval.runner import COLUMNS, SOURCES, retrieval_slice
 from scripts.eval_run import read_jsonl, run_items
 
@@ -80,12 +87,13 @@ def main() -> None:
     base = {r["item_id"]: r for r in base_doc["results"]}
     routes = {r["item_id"]: r for r in read_jsonl(router_path)}
     model, emb = load_model()
-    out, counts = [], Counter()
+    out, counts, ids = [], Counter(), {}
     with connect() as conn:
         index, _ = load_bm25(conn, rc["sparse"])
         meta = conn.execute(
             "SELECT chunk_id, ticker, fiscal_year, fiscal_quarter, form_type FROM chunks"
         ).fetchall()
+        period_ends = conn.execute(PERIOD_ENDS_SQL).fetchall()
         for iid, it in items.items():
             src = it["source"]
             try:
@@ -93,7 +101,11 @@ def main() -> None:
             except RouterParseError:
                 route = None
                 counts[(src, "router_parse_failure")] += 1
-            f = filters(route, set(companies), rc["filter_confidence_min"]) if route else None
+            f = (filters(route, set(companies), rc["filter_confidence_min"], period_ends)
+                 if route else None)  # fmt: skip
+            if f and f["unresolved_periods"]:
+                counts[(src, "period_unresolved")] += 1
+                ids.setdefault("period_unresolved", []).append(iid)
             unfiltered = base[iid]["hybrid"]
             fused, event = unfiltered, None
             if route and f is None:
@@ -103,6 +115,7 @@ def main() -> None:
                 gold = {c for es in it["gold_evidence_sets"] for c in es}
                 if gold and not gold & allowed:
                     counts[(src, "all_gold_outside_filter")] += 1
+                    ids.setdefault("all_gold_outside_filter", []).append(iid)
                 vec = embed_question(model, emb, it["question"])
                 dense = dense_filtered_top_k(conn, vec, rc["k_dense"], allowed) if allowed else []
                 sp = [c for c, _ in index.search(it["question"], rc["k_sparse"], allowed)]
@@ -111,6 +124,7 @@ def main() -> None:
                 if not fused:
                     event = "filter_zero_recall"
                     counts[(src, "filter_zero_recall")] += 1
+                    ids.setdefault("filter_zero_recall", []).append(iid)
                     fused = unfiltered
                 else:
                     counts[(src, "filtered")] += 1
@@ -121,7 +135,7 @@ def main() -> None:
               "router_model": gen[TIER], "backend": gen["backend"],
               "filter_confidence_min": rc["filter_confidence_min"], "retrieval": rc,
               "counts": {f"{s}/{n}": v for (s, n), v in sorted(counts.items())},
-              "columns": {}}  # fmt: skip
+              "item_ids": ids, "columns": {}}  # fmt: skip
     for lst in ("unfiltered", "filtered"):
         by = {s: [r for r in out if items[r["item_id"]]["source"] == s] for s in SOURCES}
         report["columns"][lst] = {
@@ -142,9 +156,11 @@ def main() -> None:
             print(f"{lst + ' ' + m:28}" + "".join(f"{x:>14}" for x in shown))
     print("counts per source:")
     for name in ("filtered", "unfiltered_low_confidence_or_empty", "router_parse_failure",
-                 "filter_zero_recall", "all_gold_outside_filter"):  # fmt: skip
+                 "period_unresolved", "filter_zero_recall", "all_gold_outside_filter"):  # fmt: skip
         row = [counts.get((s, name), 0) for s in SOURCES]
         print(f"  {name:36}" + "".join(f"{x:>14}" for x in [*row, sum(row)]))
+    for name, v in ids.items():
+        print(f"  {name}: {v}")
 
 
 if __name__ == "__main__":

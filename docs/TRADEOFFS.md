@@ -2144,7 +2144,11 @@ whatever list the generator receives (moves with `top_k` and the score floor).
   written to `eval/runs/<run_id>.retrieval.json`, report and per-item lists in
   one file, beside the eval runs' `<run_id>.json` / `.meta.json` /
   `.results.jsonl`. Both kinds are committed; every number in a finding comes
-  from a committed run file.
+  from a committed run file. The other run kinds in `eval/runs/` (added
+  2026-10-02): rerank runs `<run_id>.rerank.json` (`scripts.rerank_run`);
+  filter runs `<run_id>.filter.json` (report, filters and both lists per item)
+  with the raw router responses in `<run_id>.router.jsonl` and any failed calls
+  in `<run_id>.router_errors.jsonl` (`scripts.filter_run`; e.g. 8b6bcc14f274).
 
 *Alternatives:* store results in PRD 8's `eval_runs`/`eval_results` tables (no
 migration exists yet; JSON keeps the run reproducible without one); one column
