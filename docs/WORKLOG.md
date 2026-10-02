@@ -5567,3 +5567,8 @@ Live against the local database (uvicorn on :8000, claude_cli):
 These are development answers (claude_cli): a check that the path runs, not
 results. F-24 resolved; F-140 (deferred endpoints) logged; F-59 extended to the
 README screenshot slots.
+
+Process note: for 6596aa6 the privacy grep ran in the same command as the
+commit, so it could not stop it. Its hits, read afterwards, were all Python
+decorators (`@app.post`, `@pytest.fixture`) matching the email pattern; nothing
+private. The check runs as its own step before every commit from here on.
