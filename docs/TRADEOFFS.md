@@ -2744,3 +2744,19 @@ over the stored claims of a4e39a65c2c8, no model call:
 `eval/runs/<run_id>.reverify-<TAG>.json` (derived report, per-item verdicts,
 re-verified figure checks; prose claims keep their stored checks and `entail`).
 Never a new run id; the run's files are not modified.
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the gate verifies faithfulness, not correctness (F-133)
+
+Decided by the supervisor. The PRD 7.5 gate checks claims against their cited
+evidence. Whether the answer addresses the question is correctness, measured by
+numeric accuracy and, once F-105 lands, the judge's answer correctness. **PASS is
+a faithfulness verdict, never a correctness claim**; that sentence goes into the
+README when Phase 5 writes it. The report prints, per source, the verdict
+against numeric correctness (correct / wrong / generator abstained / not scored;
+unanswerable items marked), so a PASS on a wrong answer is visible. On
+a4e39a65c2c8 re-verified (f128-f129-f130): xbrl_auto PASS 102 correct, 24 wrong;
+llm_seeded PASS 26 correct, 3 wrong (9 not scored for unit scale, 1 not numeric).
+
+*Rejected:* a question-concept check in the gate (the claim's concept against the
+concept the question asks for): faithfulness would then depend on the router and
+the synonym map, and a PASS would mean two things.

@@ -119,3 +119,23 @@ def test_f128_the_three_synonyms_the_run_proved_wrong_are_gone():
     assert concept_tags("Allowance for credit losses on loans", phrases)
     assert concept_tags("Total net sales", phrases) and concept_tags("Repurchases of common stock",
                                                                      phrases)  # fmt: skip
+
+
+def test_loader_phrases_are_exactly_labels_and_written_synonyms():
+    """No phrase is derived from a line-item id (the id `share_repurchases` once
+    restored a removed synonym)."""
+    import yaml
+
+    from api.verify.xbrl_check import norm
+
+    cfg = verification()
+    concepts, syn = REPO_ROOT / "eval" / "concepts.yaml", REPO_ROOT / cfg["concept_synonyms"]
+    phrases = load_concepts(concepts, syn)
+    items = yaml.safe_load(concepts.read_text(encoding="utf-8"))["line_items"]
+    written = yaml.safe_load(syn.read_text(encoding="utf-8"))
+    expected = {norm(it["label"]) for it in items} | {
+        norm(p) for ps in written.values() for p in ps
+    }
+    assert set(phrases) == expected
+    derived_only = {norm(it["id"].replace("_", " ")) for it in items} - expected
+    assert derived_only and not derived_only & set(phrases)

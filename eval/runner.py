@@ -151,6 +151,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
         "intent_matrix": intent_matrix(items, results),
+        "verdict_by_correctness": verdict_by_correctness(items, results),
         "xbrl": xbrl_summary(results),
         "meta_disagreements": depth_disagreements(meta, results, items)
         if "retrieve_depth" in meta and "generator_top_k" in meta
@@ -164,6 +165,28 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
             "aggregate": _slice(items, results, k, nli_threshold),
         },
     }
+
+
+def verdict_by_correctness(items: dict, results: list[dict]) -> dict:
+    """{source: {verdict: {numeric outcome: n}}}: PASS is a faithfulness verdict,
+    never a correctness claim (F-133); this table shows where the two part.
+    Outcome: correct / wrong / generator abstained / not scored (<reason>),
+    prefixed `unanswerable:` for items whose reference is an abstention."""
+    out: dict = {}
+    for r in results:
+        it = items[r["item_id"]]
+        sc = score_item(it, r["answer"])
+        if sc.excluded:
+            outcome = f"not scored ({sc.excluded})"
+        elif sc.abstained:
+            outcome = "generator abstained"
+        else:
+            outcome = "correct" if sc.correct else "wrong"
+        if it.get("expected_abstain"):
+            outcome = f"unanswerable: {outcome}"
+        row = out.setdefault(it["source"], {}).setdefault(r["verdict"], {})
+        row[outcome] = row.get(outcome, 0) + 1
+    return out
 
 
 def intent_matrix(items: dict, results: list[dict]) -> dict | None:
@@ -282,6 +305,12 @@ def format_report(report: dict) -> str:
     agg = cols["aggregate"]["numeric"]
     lines.append(f"figures per numeric answer (aggregate): {agg['figure_count_distribution']}")
     lines.append(f"excluded from numeric accuracy (aggregate): {agg['excluded']}")
+    if report.get("verdict_by_correctness"):
+        lines.append("verdict x numeric correctness (per source; PASS is a faithfulness verdict, "
+                     "never a correctness claim, F-133):")  # fmt: skip
+        for src, rows in report["verdict_by_correctness"].items():
+            for v, cnt in sorted(rows.items()):
+                lines.append(f"  {src:12} {v:12} {dict(sorted(cnt.items()))}")
     if report.get("intent_matrix"):
         lines.append("router intent by question type (per source):")
         for src, rows in report["intent_matrix"].items():

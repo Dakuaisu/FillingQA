@@ -181,3 +181,16 @@ def test_nli_sheet_strata_are_proportional():
     drawn = stratified(pool, 8, random.Random(1))
     assert sum(p["stratum"] == "a" for p in drawn) == 6 and len(drawn) == 8
     assert drawn == stratified(pool, 8, random.Random(1))
+
+
+def test_verdict_by_correctness_separates_faithfulness_from_correctness():
+    rs = [{**result("x1", ["a"], "$7,286 million"), "verdict": "PASS"},
+          {**result("s1", ["c"], "12.0%"), "verdict": "PASS"},
+          {**result("s2", ["d"], "x"), "verdict": "ABSTAIN"}]  # fmt: skip
+    t = build_report(ITEMS, rs, meta("claude_cli"), 10)["verdict_by_correctness"]
+    assert t["xbrl_auto"] == {"PASS": {"correct": 1}}
+    assert t["llm_seeded"]["PASS"] == {"not scored (unit_scale_unknown)": 1}
+    assert t["llm_seeded"]["ABSTAIN"] == {"not scored (not numeric)": 1}
+    assert "never a correctness claim" in format_report(
+        build_report(ITEMS, rs, meta("claude_cli"), 10)
+    )
