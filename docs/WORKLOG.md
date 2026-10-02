@@ -5510,3 +5510,13 @@ cache read 107,229, cache creation 599,891 (router tokens not stored by that run
 
 No defect found (filters, headers, tokenizer checked); every cause is a ranking
 or budget effect, recorded for PRD 11.7 (F-138). Nothing tuned.
+
+## 2026-10-02 — Phase 5 started: README states the gate as it is
+
+Phase 4 is at its owner-blocked boundary (checklist in the previous report). The
+README status section now says the gate fails and why: no gated (API-backend)
+run exists; the model-free hybrid retrieval measurement (01019ff395ec, Config 3)
+misses Sufficiency@10 on the aggregate (0.519 vs 0.82) and the XBRL slice (0.365
+vs 0.90); the claim, judge, handwritten and cost metrics are pending. No
+`claude_cli` number is quoted. It lists what waits on the owner by finding and
+states that PASS is a faithfulness verdict, never a correctness claim (F-133).
