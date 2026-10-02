@@ -222,6 +222,10 @@ retrieval:
   # Set before every dense query (F-109). At least k_dense; 100 chosen for recall,
   # not tuned on any metric.
   hnsw_ef_search: 100
+  # F-136: exact (sequential scan, deterministic, reproducible from the corpus
+  # snapshot alone) | hnsw (approximate at hnsw_ef_search; PRD 6.4). Exact is the
+  # default at this corpus size; a deviation from PRD 6.4 (TRADEOFFS).
+  dense_search: exact
   # PRD 7.1: router entities become hard filters only at or above this confidence.
   metadata_filter: true
   filter_confidence_min: 0.6
@@ -243,7 +247,9 @@ rerank:
   score_floor: 0.30         # sigmoid-normalized; calibration PENDING: on reviewed items only (F-104)
   floor_calibration: pending
   timeout_ms: 800           # over it, fall through to RRF order (PRD 7.3)
-  device: mps               # torch device; latency is a property of the hardware (F-111)
+  # auto: mps, else cuda, else cpu (F-137); the device used is in every run's meta.
+  # Latency is a property of the hardware (F-111); the timeout is not relaxed for CPU.
+  device: auto
 
 span_resolution:
   min_rate: 0.80

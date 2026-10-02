@@ -17,11 +17,11 @@ pass, and no number in this README describes it as passing:
   not quoted here, and cannot pass the gate by construction. A gated run needs
   `ANTHROPIC_API_KEY` in CI (F-59).
 - **Retrieval sufficiency misses its thresholds.** The model-free hybrid
-  retrieval measurement (BM25 + dense, RRF; retrieval run `01019ff395ec`, Config
-  3 of PRD 11.6, no router, on unreviewed candidates) reaches Sufficiency@10
-  0.519 aggregate against 0.82, 0.365 on the XBRL-templated slice against 0.90,
-  and 0.892 on the LLM-seeded slice against 0.80 (that slice is inflated by
-  lexical overlap with its source chunk, F-110). The specified pipeline adds the
+  retrieval measurement (BM25 + exact dense search, RRF; retrieval run
+  `5b3c3ac13e5e`, Config 3 of PRD 11.6, no router, on unreviewed candidates)
+  reaches Sufficiency@10 0.537 aggregate against 0.82, 0.375 on the
+  XBRL-templated slice against 0.90, and 0.928 on the LLM-seeded slice against
+  0.80 (that slice is inflated by lexical overlap with its source chunk, F-110). The specified pipeline adds the
   router and metadata filters; its numbers come from development runs and are
   not reported here. Why the XBRL slice misses: `docs/OPEN.md` F-138.
 - **Gated metrics that cannot be evaluated yet,** which fail the gate as
@@ -49,8 +49,10 @@ once validated). Reports print the two side by side (F-133).
 | Hosting the corpus snapshot for CI (exact command in the finding) | F-135 |
 | Review of the XBRL concept synonym map | F-127 |
 
-Open decisions on reproducibility in CI: F-136 (dense top-50 after a corpus
-restore), F-137 (no `mps` reranker device on CI runners). Everything decided so
+Dense search is exact, so any run is reproducible from the corpus snapshot
+(F-136). The reranker runs on whatever device is present; a run where it hit
+its timeout is marked hardware-dependent, and a GPU CI runner is the owner's
+cost decision (F-137). Everything decided so
 far is in [`docs/TRADEOFFS.md`](docs/TRADEOFFS.md); every finding, open or
 resolved, in [`docs/OPEN.md`](docs/OPEN.md); the build log in
 [`docs/WORKLOG.md`](docs/WORKLOG.md).

@@ -175,6 +175,8 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         if "retrieve_depth" in meta and "generator_top_k" in meta
         else None,
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
+        # F-137: results depend on the hardware whenever a rerank hit the timeout.
+        "hardware_dependent": any(r.get("rerank_fell_back") for r in results),
         "columns": {
             **{
                 s: _slice(items, rs, k, nli_threshold, dev) if rs else None
@@ -264,6 +266,9 @@ def format_report(report: dict) -> str:
              f"generation model requested: {report['model_requested']}"]  # fmt: skip
     if report["development_run"]:
         lines.append(DEV_BANNER)
+    if report.get("hardware_dependent"):
+        lines.append("HARDWARE-DEPENDENT: some reranks exceeded the timeout and fell back to RRF "
+                     "order (F-137); see the per-source fallback counts")  # fmt: skip
     lines.append(NOTE_F110)
     if report.get("pipeline") == "config_4_routed":
         lines.append(NOTE_F118)
@@ -272,7 +277,8 @@ def format_report(report: dict) -> str:
                  f"{report['retrieval_stage']} (F-13)")  # fmt: skip
     if report.get("rerank"):
         rr = report["rerank"]
-        lines.append(f"rerank: {rr['model']}@{rr['revision'][:12]} on {rr['device']}; top-n "
+        lines.append(f"rerank: {rr['model']}@{rr['revision'][:12]} on "
+                     f"{rr.get('device_used', rr['device'])}; top-n "
                      f"{rr['top_n']} ({rr['top_n_synthesis']} synthesis); floor "
                      f"{rr['score_floor']} ({rr['floor_calibration']}); timeout "
                      f"{rr['timeout_ms']} ms; fell back to RRF order: "

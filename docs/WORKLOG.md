@@ -5520,3 +5520,24 @@ misses Sufficiency@10 on the aggregate (0.519 vs 0.82) and the XBRL slice (0.365
 vs 0.90); the claim, judge, handwritten and cost metrics are pending. No
 `claude_cli` number is quoted. It lists what waits on the owner by finding and
 states that PASS is a faithfulness verdict, never a correctness claim (F-133).
+
+## 2026-10-02 — Exact dense search (F-136), rerank device auto (F-137), Phase 5 ingest item
+
+`retrieval.dense_search: exact` (default; `hnsw` an option). `python -m
+scripts.retrieval_run` → 5b3c3ac13e5e:
+
+    dense search exact: latency per question {'p50': 0.0748, 'p95': 0.1124, 'max': 0.2437, 'n': 283}
+    hybrid sufficiency@10                0.375         0.928             -         0.537
+
+Against 01019ff395ec (HNSW), item by item:
+
+    dense: identical top-50 lists 215/283, identical top-10 262/283; sufficient@10 only on exact 6 ['cmp_0012', 'seed_0013', 'seed_0079', 'xbrl_0046', 'xbrl_0058', 'xbrl_0059']; only on hnsw 0 []
+    sparse: identical top-50 lists 283/283, identical top-10 283/283; sufficient@10 only on exact 0 []; only on hnsw 0 []
+    hybrid: identical top-50 lists 237/283, identical top-10 249/283; sufficient@10 only on exact 5 ['cmp_0012', 'seed_0012', 'seed_0013', 'seed_0016', 'xbrl_0046']; only on hnsw 0 []
+
+The 68 differing dense top-50 lists and 21 differing top-10 lists match F-136's
+measurement. Logged as F-139 (a measurement of the method, not a gain); README
+now quotes 5b3c3ac13e5e. `rerank.device: auto` resolves to mps here; runs record
+`device_used`; reports flag `hardware_dependent` on any timeout fallback.
+Phase 5's "ingest remaining 5 companies" recorded as satisfied at the Phase 2
+freeze (8 tickers, 96 accessions); the frozen corpus is never re-ingested.

@@ -22,7 +22,7 @@ import uuid
 
 from api.config import REPO_ROOT, rerank
 from api.db import connect
-from api.query.rerank import apply_floor, load_reranker, machine, top_n_for
+from api.query.rerank import apply_floor, load_reranker, machine, resolve_device, top_n_for
 from api.query.rerank import rerank as rerank_one
 from eval.metrics.retrieval import mrr, ndcg_at_k, recall_at_k, sufficiency_at_k
 from eval.runner import COLUMNS, SOURCES
@@ -42,6 +42,7 @@ def main() -> None:
     for flag in ("model", "revision", "device"):
         if f"--{flag}" in sys.argv:
             cfg[flag] = sys.argv[sys.argv.index(f"--{flag}") + 1]
+    cfg["device"] = resolve_device(cfg["device"])  # the device used, never "auto" (F-137)
     doc = json.loads((RUNS / f"{src}.retrieval.json").read_text(encoding="utf-8"))
     items = {}
     for p in DATASETS:

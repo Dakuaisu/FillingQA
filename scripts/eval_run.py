@@ -90,6 +90,7 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
                  rerank_cfg=rerank(), baseline_top_k=baseline()["top_k"],
                  budgets=router()["budgets"] if pipeline == "config_4_routed" else None),
         "hnsw_ef_search": rc["hnsw_ef_search"], "k_dense": rc["k_dense"],
+        "dense_search": rc.get("dense_search", "exact"),
         "parser_version": freeze["parser_version"], "chunker_version": freeze["chunker_version"],
         "datasets": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATASETS},
     }  # fmt: skip
@@ -99,7 +100,9 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
             with connect() as conn:
                 meta["bm25_index_key"] = load_bm25(conn, rc["sparse"])[0].key
     if pipeline in ("config_4_rerank", "config_4_routed"):
-        meta["rerank"] = rerank()
+        from api.query.rerank import resolve_device
+
+        meta["rerank"] = {**rerank(), "device_used": resolve_device(rerank()["device"])}
         meta["machine"] = machine()
     if gen.get("structured"):
         from api.generate import claims
@@ -166,7 +169,7 @@ def texts_for(conn, ids: list[str]) -> dict[str, str]:
 
 def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
     from api.query.rerank import rerank as rerank_one
-    from api.query.retrieve import Retrieved, dense_top_k, embed_question, rrf_fuse, sparse
+    from api.query.retrieve import Retrieved, dense_search, embed_question, rrf_fuse, sparse
     from eval.pipeline import context_for
 
     t0 = time.monotonic()
@@ -180,7 +183,7 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
         baseline_top_k=baseline()["top_k"],
     )
     k_dense = run_cfg["retrieve_depth"] if pipeline == "config_1_dense" else rc["k_dense"]
-    dense = [r.chunk_id for r in dense_top_k(conn, vec, k_dense, rc["hnsw_ef_search"])[0]]
+    dense = dense_search(conn, vec, k_dense, rc)
     fused, reranked, secs = [], None, None
     if pipeline != "config_1_dense":
         sp = sparse(conn, it["question"], rc["k_sparse"], rc["sparse"], ctx.index)
@@ -278,7 +281,7 @@ def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dic
     from api.query.retrieve import (
         Retrieved,
         dense_filtered_top_k,
-        dense_top_k,
+        dense_search,
         embed_question,
         rrf_fuse,
     )
@@ -325,7 +328,7 @@ def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dic
             fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
             zero = not fused
         if not fused:  # unfiltered, or the filter returned nothing (filter_zero_recall)
-            dense = [r.chunk_id for r in dense_top_k(conn, vec, k, rc["hnsw_ef_search"])[0]]
+            dense = dense_search(conn, vec, k, rc)
             sp = [c for c, _ in ctx.index.search(q, k)]
             fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
         texts = texts_for(conn, fused)

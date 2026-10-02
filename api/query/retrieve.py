@@ -65,6 +65,30 @@ def dense_top_k(
     return [Retrieved(cid, float(d), text) for cid, d, text in rows], node
 
 
+_EXACT = """
+    SELECT chunk_id FROM chunks
+     ORDER BY embedding <=> %(q)s::vector, chunk_id
+     LIMIT %(k)s
+"""
+
+
+def dense_exact_top_k(conn: psycopg.Connection, query_vector: str, k: int) -> list[str]:
+    """Exact nearest neighbours by cosine distance, ties to the smaller chunk id: a
+    sequential scan, deterministic and independent of any index build (F-136)."""
+    with conn.transaction():
+        conn.execute("SET LOCAL enable_indexscan = off")
+        conn.execute("SET LOCAL enable_bitmapscan = off")
+        return [r[0] for r in conn.execute(_EXACT, {"q": query_vector, "k": k}).fetchall()]
+
+
+def dense_search(conn: psycopg.Connection, query_vector: str, k: int, cfg: dict) -> list[str]:
+    """Dense top-k chunk ids per `retrieval.dense_search`: `exact` (default, F-136)
+    or `hnsw` at the pinned `hnsw_ef_search`."""
+    if cfg.get("dense_search", "exact") == "exact":
+        return dense_exact_top_k(conn, query_vector, k)
+    return [r.chunk_id for r in dense_top_k(conn, query_vector, k, cfg["hnsw_ef_search"])[0]]
+
+
 # The question's lexemes OR-ed: an AND of every term of a natural-language question
 # rarely matches a chunk; ts_rank_cd then orders by coverage and proximity.
 _SPARSE = """
@@ -136,10 +160,10 @@ def hybrid_top_k(
     conn: psycopg.Connection, query_vector: str, question: str, cfg: dict, index=None
 ) -> list[str]:
     """The fused pre-rerank list (chunk ids), length up to max(k_dense, k_sparse)."""
-    dense, _ = dense_top_k(conn, query_vector, cfg["k_dense"], cfg["hnsw_ef_search"])
+    dense_ids = dense_search(conn, query_vector, cfg["k_dense"], cfg)
     sp = sparse(conn, question, cfg["k_sparse"], cfg["sparse"], index)
     w = cfg["weights"]
-    fused = rrf_fuse([[r.chunk_id for r in dense], sp], [w["dense"], w["sparse"]], cfg["rrf_k"])
+    fused = rrf_fuse([dense_ids, sp], [w["dense"], w["sparse"]], cfg["rrf_k"])
     return fused[: max(cfg["k_dense"], cfg["k_sparse"])]
 
 

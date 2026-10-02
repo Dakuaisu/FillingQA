@@ -11,10 +11,23 @@ import math
 import time
 
 
+def resolve_device(device: str) -> str:
+    """`auto`: mps, else cuda, else cpu (F-137). Any other value is used as given."""
+    if device != "auto":
+        return device
+    import torch
+
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cuda" if torch.cuda.is_available() else "cpu"
+
+
 def load_reranker(cfg: dict):
     from sentence_transformers import CrossEncoder  # torch is heavy; load on use
 
-    return CrossEncoder(cfg["model"], revision=cfg["revision"], device=cfg["device"])
+    return CrossEncoder(
+        cfg["model"], revision=cfg["revision"], device=resolve_device(cfg["device"])
+    )
 
 
 def machine() -> dict:

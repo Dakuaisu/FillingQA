@@ -106,3 +106,17 @@ def test_prompt_lists_the_corpus_companies_and_asks_for_periods_verbatim():
     p = render("What was Apple's revenue?", {"AAPL": "Apple", "BAC": "Bank of America"})
     assert "- AAPL: Apple" in p and p.rstrip().endswith("Question: What was Apple's revenue?")
     assert "never convert a date into a fiscal year" in p
+
+
+def test_dense_search_dispatches_on_config(monkeypatch):
+    import api.query.retrieve as r
+
+    monkeypatch.setattr(r, "dense_exact_top_k", lambda conn, q, k: ["exact"])
+    monkeypatch.setattr(
+        r, "dense_top_k", lambda conn, q, k, ef: ([r.Retrieved("hnsw", 0.0, "")], "")
+    )
+    assert r.dense_search(None, "v", 5, {"dense_search": "exact", "hnsw_ef_search": 100}) == [
+        "exact"
+    ]
+    assert r.dense_search(None, "v", 5, {"dense_search": "hnsw", "hnsw_ef_search": 100}) == ["hnsw"]
+    assert r.dense_search(None, "v", 5, {"hnsw_ef_search": 100}) == ["exact"]

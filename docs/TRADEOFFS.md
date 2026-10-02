@@ -2847,3 +2847,43 @@ and "cost n/a (dev backend)", and the gate treats that as pending. The router
 call's token usage was not stored before this change (a4e39a65c2c8's token
 totals cover the generator only); it is stored from now on. F-134 resolves with
 the first priced run, which is F-59.
+
+## 2026-10-02 — OWNER DECISION - exact dense search for eval and serving; a deviation from PRD 6.4's HNSW (F-136)
+
+Decided by the supervisor for the owner. `retrieval.dense_search: exact` (a
+sequential scan ordered by cosine distance, ties to the smaller chunk id) is the
+default for eval and serving; `hnsw` stays a config option, off by default. Every
+run's meta records `dense_search`, so a run is reproducible from the corpus
+snapshot alone. Why: HNSW at the pipeline's depth is not reproducible: at depth
+50, 68 of 283 dense lists differ from exact search on the live database and 89 on
+a restored one, and recomputing 01019ff395ec's hybrid lists on a restore changes
+49 fused top-10 lists (F-136). Cost, measured on the 283 questions (retrieval run
+5b3c3ac13e5e, M1 Pro, 22,354 vectors): p50 0.075 s, p95 0.112 s, max 0.244 s per
+dense query. Stored runs are immutable records and are not recomputed;
+5b3c3ac13e5e is the new comparison point, and its difference from 01019ff395ec
+is a finding (F-139), not a gain. F-109's HNSW check held at depth 10 only.
+The Phase 2 baseline's own query (`api/query/baseline.py`, specified through
+HNSW) and `scripts/exact_nn_check.py` keep HNSW.
+
+*Rejected:* a physical snapshot carrying the HNSW index (HNSW builds are not
+deterministic across machines either); keeping HNSW and rebuilding the CI
+baseline on every restore (comparisons would depend on the build).
+
+## 2026-10-02 — OWNER DECISION - rerank device `auto`; the timeout holds on any hardware (F-137)
+
+Decided by the supervisor for the owner. `rerank.device: auto` resolves to `mps`,
+else `cuda`, else `cpu`; the device used is recorded in every run's meta
+(`rerank.device_used`) and in rerank runs. The 800 ms timeout and the RRF
+fallback stay: on CPU the eval measures the system as it would run on that
+hardware; `rerank_fell_back` is printed per source and a run with any fallback
+is flagged `hardware_dependent: true` in its report. No CI-only exemption. A
+GPU runner is the owner's cost decision (F-137): MiniLM on CPU had p95 0.834 s,
+34 of 283 over the timeout (rerank run 45e3ed5c8f13).
+
+## 2026-10-02 — OWNER DECISION - Phase 5 "ingest remaining 5 companies" was satisfied at the freeze
+
+Decided by the supervisor. The item dates from the PRD's 3-company development
+slice. The frozen eval corpus has been 8 companies × 3 years since the Phase 2
+freeze (F-06, F-42: 96 accessions, 8 tickers, `api/corpus_freeze.yaml`), so the
+item is done; the frozen corpus is never re-ingested (PRD 11.4). No separate demo
+corpus: the PRD does not ask for one.

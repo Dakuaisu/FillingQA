@@ -214,3 +214,20 @@ def test_fast_subset_reserves_the_handwritten_quota():
     }  # tie to "handwritten"
     assert d["items"]["handwritten"] == [] and len(d["items"]["xbrl_auto"]) == 3
     assert d == draw(items, 5, 6, 1)
+
+
+def test_rerank_device_auto_and_the_hardware_dependent_flag(monkeypatch):
+    import torch
+
+    from api.query.rerank import resolve_device
+
+    assert resolve_device("cpu") == "cpu" and resolve_device("mps") == "mps"
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: False)
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: False)
+    assert resolve_device("auto") == "cpu"
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    assert resolve_device("auto") == "cuda"
+    fell = [{**RESULTS[0], "rerank_fell_back": True}, *RESULTS[1:]]
+    r = build_report(ITEMS, fell, meta("claude_cli"), 10)
+    assert r["hardware_dependent"] and "HARDWARE-DEPENDENT" in format_report(r)
+    assert not build_report(ITEMS, RESULTS, meta("claude_cli"), 10)["hardware_dependent"]
