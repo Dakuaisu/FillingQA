@@ -231,3 +231,11 @@ def test_rerank_device_auto_and_the_hardware_dependent_flag(monkeypatch):
     r = build_report(ITEMS, fell, meta("claude_cli"), 10)
     assert r["hardware_dependent"] and "HARDWARE-DEPENDENT" in format_report(r)
     assert not build_report(ITEMS, RESULTS, meta("claude_cli"), 10)["hardware_dependent"]
+
+
+def test_stage_latency_is_reported_from_the_records_when_present():
+    rs = [{**r, "stage_seconds": v} for r, v in zip(RESULTS, (0.5, 1.5, 2.5), strict=True)]
+    rep = build_report(ITEMS, rs, meta("claude_cli"), 10)
+    assert rep["retrieval_latency_s"] == {"p50": 1.5, "p95": 1.5, "max": 2.5, "n": 3}
+    assert "retrieve + rerank stage latency" in format_report(rep)
+    assert build_report(ITEMS, RESULTS, meta("claude_cli"), 10)["retrieval_latency_s"] is None

@@ -11,7 +11,7 @@ reranked by the cross-encoder in one pass; the post-rerank list is the top-n
 (8, or 10 for synthesis). Reports per source column: pre-rerank Sufficiency at 8
 and 10, post-rerank sufficiency at the item's top-n without and with the score
 floor (calibration pending), the items the floor would empty (abstain), and
-latency against the 800 ms timeout. Writes eval/runs/<run_id>.rerank.json.
+latency against the configured `rerank.timeout_ms`. Writes eval/runs/<run_id>.rerank.json.
 """
 
 from __future__ import annotations

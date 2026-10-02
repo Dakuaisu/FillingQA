@@ -238,15 +238,18 @@ retrieval:
 
 # Cross-encoder reranking (PRD 7.3, Appendix A) over the fused top-50.
 rerank:
-  # PRD 7.3's second model, adopted because it alone meets the 800 ms timeout on
-  # this machine (F-111); bge-reranker-base@2cfc18c9 measured p95 1.80 s on mps.
-  model: cross-encoder/ms-marco-MiniLM-L-6-v2
-  revision: 233902d25c440f23af6f7d6e94d2946bac0bee0a
+  # OWNER DECISION D1 (docs/OWNER_REVIEW.md): bge-reranker-base, PRD 7.3's first
+  # model, for retrieval quality; MiniLM ranked below the fused order it reranks
+  # (F-113). Same revision as measured in F-111 (rerank run dd372192a070).
+  model: BAAI/bge-reranker-base
+  revision: 2cfc18c9415c912f9d8155881c133215df768a70
   top_n: 8                  # PRD 7.3; synthesis items take top_n_synthesis
   top_n_synthesis: 10
   score_floor: 0.30         # sigmoid-normalized; calibration PENDING: on reviewed items only (F-104)
   floor_calibration: pending
-  timeout_ms: 800           # over it, fall through to RRF order (PRD 7.3)
+  # Over it, fall through to RRF order (PRD 7.3). 3000 ms by OWNER DECISION D1,
+  # overriding PRD 7.3's 800 ms; re-measured in WORKLOG (F-111).
+  timeout_ms: 3000
   # auto: mps, else cuda, else cpu (F-137); the device used is in every run's meta.
   # Latency is a property of the hardware (F-111); the timeout is not relaxed for CPU.
   device: auto

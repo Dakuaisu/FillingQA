@@ -177,6 +177,7 @@ def answer_question(
     k, w = budget["k"], rc["weights"]
     per_query = []
     for q in queries_for(question, route, budget):
+        t_retrieve = time.monotonic()
         with tracing.span("retrieval") as rs:
             rs.content("query", q)
             vec = embed_question(ctx.model, ctx.emb, q)
@@ -192,6 +193,7 @@ def answer_question(
                 fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
             rs.set(k=k, filtered=allowed is not None, filter_zero_recall=zero, chunks=len(fused),
                    dense_search=rc.get("dense_search", "exact"))  # fmt: skip
+        retrieve_seconds = time.monotonic() - t_retrieve
         with tracing.span("rerank") as rk:
             texts = texts_for(conn, fused)
             ranked, secs = rerank_one(ctx.reranker, q, [(c, texts[c]) for c in fused])
@@ -199,6 +201,7 @@ def answer_question(
             rk.set(seconds=secs, fell_back=fell, kept=len(post))
         per_query.append({"query": q, "filter_zero_recall": zero, "retrieved": fused,
                           "retrieved_post_rerank": post, "rerank_seconds": secs,
+                          "retrieve_seconds": retrieve_seconds,
                           "rerank_fell_back": fell})  # fmt: skip
     lists = [x["retrieved"] for x in per_query]
     retrieved = lists[0] if len(lists) == 1 else rrf_fuse(lists, [1.0] * len(lists), rc["rrf_k"])
@@ -209,6 +212,8 @@ def answer_question(
         "filter_zero_recall": any(x["filter_zero_recall"] for x in per_query),
         "rerank_fell_back": any(x["rerank_fell_back"] for x in per_query),
         "rerank_seconds": max(x["rerank_seconds"] for x in per_query),
+        # PRD 11.2 "retrieval latency": the retrieve + rerank stage, summed over queries.
+        "stage_seconds": sum(x["retrieve_seconds"] + x["rerank_seconds"] for x in per_query),
     })  # fmt: skip
     if not post:  # every chunk below the score floor: no generator call (PRD 7.3)
         return {**record, "answer": {"text": "", "claims": [], "abstained": True},

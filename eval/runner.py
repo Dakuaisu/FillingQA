@@ -168,6 +168,7 @@ def build_report(items: dict, results: list[dict], meta: dict, k: int, nli_thres
         "k": k,
         "served_models": dict(Counter(r["model_served"] for r in results)),
         "anomalies": anomalies(results),
+        "retrieval_latency_s": stage_latency(results),
         "intent_matrix": intent_matrix(items, results),
         "verdict_by_correctness": verdict_by_correctness(items, results),
         "xbrl": xbrl_summary(results),
@@ -219,6 +220,16 @@ def intent_matrix(items: dict, results: list[dict]) -> dict | None:
         row = out.setdefault(it["source"], {}).setdefault(it["question_type"], {})
         row[r.get("intent")] = row.get(r.get("intent"), 0) + 1
     return out
+
+
+def stage_latency(results: list[dict]) -> dict | None:
+    """p50 / p95 of the retrieve + rerank stage per item (PRD 11.2 retrieval latency);
+    None when no result records it (runs before the field existed)."""
+    xs = sorted(r["stage_seconds"] for r in results if r.get("stage_seconds") is not None)
+    if not xs:
+        return None
+    return {"p50": round(xs[len(xs) // 2], 3), "p95": round(xs[int(0.95 * (len(xs) - 1))], 3),
+            "max": round(xs[-1], 3), "n": len(xs)}  # fmt: skip
 
 
 def anomalies(results: list[dict]) -> dict:
@@ -359,6 +370,9 @@ def format_report(report: dict) -> str:
             lines.append(f"  {x['item_id']} {x['claim_id']}: synonym {x['synonym']!r} -> "
                          f"{x['tags']}; figure {x['figure']}; period ends {x['period_ends']}; "
                          f"cited facts {x['cited_facts']}; period_ok {x['period_ok']}")  # fmt: skip
+    if report.get("retrieval_latency_s"):
+        lines.append(f"retrieve + rerank stage latency, seconds per item (PRD 11.2, not gated): "
+                     f"{report['retrieval_latency_s']}")  # fmt: skip
     lines.append(f"anomalies: {report['anomalies']}")
     md = report.get("meta_disagreements")
     if md is not None:
