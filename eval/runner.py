@@ -44,6 +44,16 @@ def _generation(results: list[dict], nli_threshold) -> dict:
     return generation_metrics(results, nli_threshold if nli_threshold is not None else 0.0)
 
 
+def _abstention(rows: list[tuple[bool, str]]) -> dict:
+    """The 2x2 rates; all pending while any verdict in the column waits on the NLI
+    threshold, since the pending items are exactly those with prose claims."""
+    if any(v == "PENDING_NLI" for _, v in rows):
+        keys = ("partial_rate", "false_answer_rate", "over_abstention_rate",
+                "abstention_precision", "abstention_recall", "abstention_f1")  # fmt: skip
+        return dict.fromkeys(keys, PENDING_NLI)
+    return rates(two_by_two(rows))
+
+
 def xbrl_summary(results: list[dict]) -> dict | None:
     """Every contradiction with its synonym, figure and facts; claims matched per
     synonym; status counts. None when no result has claims."""
@@ -124,7 +134,7 @@ def _slice(items: dict, results: list[dict], k: int, nli_threshold=None) -> dict
         "pending_nli": sum(r.get("verdict") == "PENDING_NLI" for r in results),
         "rerank_fell_back": sum(bool(r.get("rerank_fell_back")) for r in results),
         "numeric": aggregate(scores),
-        "abstention": rates(two_by_two(abst)),
+        "abstention": _abstention(abst),
         "generation": _generation(results, nli_threshold),
     }
 

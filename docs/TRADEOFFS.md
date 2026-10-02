@@ -2650,6 +2650,11 @@ contradiction abstains). Figure claims' checks are not touched. Output:
 re-scored verdicts and claims_post per item, the source run id and the
 threshold, never a new run id. The source run's files are not modified.
 
+*Amended after smoke 55cb57be9164 (the report raised on verdict
+`PENDING_NLI`):* the abstention 2x2 rates of a column also print as pending
+while any verdict in it is pending; computing them over the decided items alone
+would drop exactly the items with prose claims.
+
 *Alternatives:* re-run generation once the threshold exists (rejected: a second
 sample of a nondeterministic generator, F-60, would change what the threshold
 was fitted on); write re-scored verdicts back into the run's results (rejected:

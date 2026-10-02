@@ -93,6 +93,13 @@ def test_generation_metrics_print_na_without_claims_and_faithfulness_carries_ans
     with_claims = [{**RESULTS[0], "claims_pre": [claim], "claims_post": [claim]}]
     pending = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10))
     assert "pending NLI threshold (F-125)" in pending and "Sufficiency@10" in pending
+    waiting = [{**r, "verdict": "PENDING_NLI"} for r in with_claims]
+    rep = build_report(ITEMS, waiting, meta("claude_cli"), 10)
+    assert (
+        rep["columns"]["aggregate"]["abstention"]["partial_rate"] == "pending NLI threshold (F-125)"
+    )
+    assert rep["columns"]["aggregate"]["pending_nli"] == len(waiting)
+    format_report(rep)
     out = format_report(build_report(ITEMS, with_claims, meta("claude_cli"), 10, 0.5))
     assert "1.000 [1.000]" in out
 

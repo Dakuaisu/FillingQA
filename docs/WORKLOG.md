@@ -5301,3 +5301,18 @@ reproduced and the smoke file kept no claims to inspect. Smoke records now carry
 each dropped claim's failed check names (`failed_checks`), still no metric.
 F-82, F-85, F-87 resolved; F-125 (NLI gate, owner-blocked) and F-126 (period
 accuracy with an uncheckable period) logged.
+
+## 2026-10-02 — Supervisor decisions on the first full run; smoke 55cb57be9164 caught a report defect
+
+89077ba: pending-NLI report, derived re-score (`--rescore`), period accuracy
+checkable-only rate and uncheckable count (F-126), unit-kind rule and synonym
+reporting for XBRL (F-127), stratified NLI sheet. Smoke (02:50Z to 02:57Z):
+
+    smoke 55cb57be9164: ok False; failure None; checks {'meta_disagreements': [], 'report': "ValueError: unknown verdict 'PENDING_NLI'"}
+
+The abstention 2x2 rejected the new verdict. Fixed: a column's 2x2 rates print
+as pending while any of its verdicts is pending (TRADEOFFS amendment). In the
+same smoke seed_0006 was dropped by the gate again (`failed_checks`
+[['1', 'numbers_grounded', 'unit_ok']]); its gold chunk states "in millions"
+and prints 3,438, so grounding is not missing a correct printed number there;
+the claim itself is not stored by a smoke. The full run stores it.
