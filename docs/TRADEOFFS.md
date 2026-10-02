@@ -2368,3 +2368,32 @@ beyond showing direction: that run is Config 1 at ef_search 40.
 pre-rerank list); make Config 4 a separate target and keep `make eval` dense
 (rejected: decision 2); skip the floor until calibrated (rejected: that changes
 the pipeline the PRD specifies; the floor is reported as pending instead).
+
+## 2026-10-01 — AUTONOMOUS DECISION - owner to review: router and metadata filters as first built (PRD 7.1)
+
+One small-tier call per question (`claude-haiku-4-5-20251001` on the dev
+backend) returns PRD 7.1's JSON. The parse is strict (exact keys, intent in the
+taxonomy, confidence a number in [0, 1]); one fenced code block is unwrapped; any
+other output is a parse failure, counted, and the item retrieves unfiltered. The
+prompt lists the corpus companies by ticker.
+
+Filters apply only at `retrieval.filter_confidence_min` (0.6, PRD 7.1 and
+Appendix A) or above. Tickers outside the corpus, periods not of the form
+`FY2024` / `Q2 FY2025`, and forms other than 10-K / 10-Q are dropped, never
+guessed; if nothing usable is left, retrieval is unfiltered. A filter list that
+is empty does not restrict. Filtered retrieval: exact nearest neighbours among
+the allowed chunks (index scans off; a filtered HNSW scan can return fewer than
+k), BM25 restricted to the same ids, then RRF as unfiltered. A filtered result
+that is empty falls back to unfiltered and is counted as `filter_zero_recall`.
+The harness also counts, per source, items whose every gold chunk lies outside
+the filter: the silent wrong-filter failure PRD 7.1 warns about, which
+`filter_zero_recall` does not catch.
+
+Measured retrieval-only against hybrid run 01019ff395ec; not yet in `make eval`.
+Router intent, tier selection and sub-queries are recorded but not used.
+
+*Alternatives:* soft filters as a score boost (rejected: PRD 7.1 says hard
+filters); filtering inside HNSW with iterative scans (pgvector 0.8.6 has them;
+rejected for the first build because exact search over a filtered slice is
+simple and has no recall question); re-asking the router on a parse failure
+(rejected: eval_run's rule, record and move on).

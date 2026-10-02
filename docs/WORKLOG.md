@@ -5157,3 +5157,44 @@ Process notes: polls were briefly sent several to a message, so they ran in
 parallel and returned at once; one poll per message after that. The privacy grep
 for 90c689d ran after its commit (false alarms only: WORKLOG sentences quoting
 "/Users/"); since then it runs before each commit.
+
+## 2026-10-02 — Router and metadata filters, retrieval-only (PRD 7.1)
+
+`api/query/router.py`, filtered BM25 and exact filtered dense, harness
+`scripts/filter_run.py` (9f4f4ad); `retrieval.metadata_filter: true`,
+`filter_confidence_min: 0.6` added to config with this run. `python -m
+scripts.filter_run --run --against 01019ff395ec`, 23:53Z to 00:37Z: 283 router
+calls on `claude-haiku-4-5-20251001` (claude_cli), 0 errors; files
+`eval/runs/8b6bcc14f274.router.jsonl`, `8b6bcc14f274.filter.json`.
+
+    against retrieval run 01019ff395ec; router claude-haiku-4-5-20251001 on claude_cli; confidence min 0.6
+    list / metric                    xbrl_auto    llm_seeded   handwritten     aggregate
+    unfiltered sufficiency@10            0.365         0.892             -         0.519
+    unfiltered recall@10                 0.375         0.892             -         0.527
+    unfiltered mrr                       0.178         0.639             -         0.313
+    unfiltered ndcg@10                   0.213         0.697             -         0.355
+    filtered sufficiency@10              0.690         1.000             -         0.781
+    filtered recall@10                   0.705         1.000             -         0.792
+    filtered mrr                         0.312         0.778             -         0.448
+    filtered ndcg@10                     0.396         0.834             -         0.524
+    counts per source:
+      filtered                                       199            83             0           282
+      unfiltered_low_confidence_or_empty               0             0             0             0
+      router_parse_failure                             0             0             0             0
+      filter_zero_recall                               1             0             0             1
+      all_gold_outside_filter                          2             0             0             2
+
+The unfiltered rows reproduce 01019ff395ec's hybrid column. Per item: 75 became
+sufficient with filters (xbrl_auto 66, llm_seeded 9), 1 stopped (xbrl_0083);
+66 - 1 = 65 of 200 and 9 of 83 are the column movements. Router confidence 0.85
+to 0.99 (0.95 on 221); intent: comparison 40 of 40, synthesis items 32 lookup, 3
+comparison, 1 synthesis.
+
+The two failures (F-119): xbrl_0083 (NVIDIA, "as of January 25, 2026") routed
+FY2025 against chunks stored as fiscal_year 2026, filtered list non-empty, no
+gold: silent. xbrl_0125 (Target, "fiscal year ended January 31, 2026") routed
+FY2026 against chunks stored as 2025: 0 allowed, `filter_zero_recall`, fell back.
+
+Findings F-118 (movement), F-119 (fiscal-year labels), F-120 (gate never
+exercised), F-121 (synthesis intent). Nothing tuned: the threshold, prompt and
+period rule are as first written.

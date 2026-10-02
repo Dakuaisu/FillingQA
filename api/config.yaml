@@ -222,6 +222,9 @@ retrieval:
   # Set before every dense query (F-109). At least k_dense; 100 chosen for recall,
   # not tuned on any metric.
   hnsw_ef_search: 100
+  # PRD 7.1: router entities become hard filters only at or above this confidence.
+  metadata_filter: true
+  filter_confidence_min: 0.6
   # Okapi BM25 over the chunk's stored text, header included (TRADEOFFS: BM25).
   # Standard parameters, not tuned on the candidates (PRD 11.7 ablation, later).
   sparse:
