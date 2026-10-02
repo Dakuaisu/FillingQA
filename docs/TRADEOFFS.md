@@ -3067,3 +3067,17 @@ MD&A and financial statements sit in an appended annual-report section the parse
 does not follow, stay quarantined. No parser change, no re-freeze. The README's
 "Known limitations" says so; their 10-Qs are in the corpus and there are no 10-K
 questions for JPM or XOM.
+
+## 2026-10-02 — OWNER DECISION - comparison items as built (D3; F-83, F-84)
+
+Owner review D3: auto comparison items draw only on consecutive-year pairs with
+no shared gold chunk (F-83); the 20 hand-written comparison items (F-84) are the
+plain year-over-year tests. No change. This adapts PRD 11.1 Stage 3's "gold set =
+both chunk_ids" to the data, as F-83 records; the owner accepts it.
+
+## 2026-10-02 — OWNER DECISION - no temperature pin (D4; F-60)
+
+Owner review D4, overriding PRD 7.4 / 11.4 and Appendix A's `temperature=0.0`:
+generation stays without a temperature (the pinned `anthropic==1.11.0`
+`Messages.create` takes no sampling parameters, F-60), and run-to-run noise
+keeps being measured. No SDK change.
