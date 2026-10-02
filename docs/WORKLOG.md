@@ -5482,3 +5482,31 @@ both: 0 of 283 differ. At k 50 against exact: live 68, restored (after REINDEX)
 sufficiency flips, aggregate 0.519 → 0.505 (F-136). Scratch database dropped.
 `rerank.device: mps` cannot run on a Linux runner (F-137). Upload of the archive
 OWNER-BLOCKED with the exact command under F-135.
+
+## 2026-10-02 — cost_per_query defined (F-134); xbrl_auto miss diagnosis (F-138)
+
+5bedaac: `eval/pricing.yaml` (read 2026-10-02 from platform.claude.com pricing:
+Haiku 4.5 $1 / $5, Sonnet 5.5 $2 / $10 per million tokens), `eval/metrics/cost.py`,
+router usage stored per item. `--report a4e39a65c2c8` (not kept) printed
+`cost n/a (dev backend)` with generator tokens input 690,321, output 282,504,
+cache read 107,229, cache creation 599,891 (router tokens not stored by that run).
+
+`python -m scripts.diagnose_misses a4e39a65c2c8 01019ff395ec` (read-only):
+
+     eval_run : a4e39a65c2c8
+     retrieval_run : 01019ff395ec
+     source : xbrl_auto
+     items : 200
+     misses : 59
+     by_cause : {'filter_excluded_all_gold': 0, 'header_mismatch': 0, 'neither_branch': 21, 'beyond_query_k': 7, 'ranked_below_10': 31, 'other': 0}
+     gold_chunks : 168
+     gold_label_in_text : 68
+     gold_tables : 168
+     gold_tables_label_in_caption : 0
+     gold_header_ok : 168
+     gold_filter_excluded : 56
+     in_filter_best_gold_rank_min_of_bm25_dense : {'<= 10': 16, '<= 100': 5, '<= 20': 25, '<= 50': 12, '> 100': 1}
+     gold_dense50_bm25_50 : {'dense=False bm25=False': 122, 'dense=True bm25=False': 38, 'dense=True bm25=True': 5, 'dense=False bm25=True': 3}
+
+No defect found (filters, headers, tokenizer checked); every cause is a ranking
+or budget effect, recorded for PRD 11.7 (F-138). Nothing tuned.

@@ -1,0 +1,4471 @@
+{
+ "kind": "read-only diagnosis, no tuning",
+ "summary": {
+  "eval_run": "a4e39a65c2c8",
+  "retrieval_run": "01019ff395ec",
+  "source": "xbrl_auto",
+  "items": 200,
+  "misses": 59,
+  "by_cause": {
+   "filter_excluded_all_gold": 0,
+   "header_mismatch": 0,
+   "neither_branch": 21,
+   "beyond_query_k": 7,
+   "ranked_below_10": 31,
+   "other": 0
+  },
+  "ids_by_cause": {
+   "filter_excluded_all_gold": [],
+   "header_mismatch": [],
+   "neither_branch": [
+    "xbrl_0024",
+    "xbrl_0027",
+    "xbrl_0028",
+    "xbrl_0030",
+    "xbrl_0034",
+    "xbrl_0035",
+    "xbrl_0036",
+    "xbrl_0037",
+    "xbrl_0038",
+    "xbrl_0040",
+    "xbrl_0044",
+    "xbrl_0057",
+    "xbrl_0064",
+    "xbrl_0065",
+    "xbrl_0068",
+    "xbrl_0078",
+    "xbrl_0079",
+    "xbrl_0085",
+    "xbrl_0090",
+    "xbrl_0097",
+    "xbrl_0100"
+   ],
+   "beyond_query_k": [
+    "xbrl_0004",
+    "xbrl_0022",
+    "xbrl_0026",
+    "xbrl_0033",
+    "xbrl_0094",
+    "xbrl_0126",
+    "xbrl_0150"
+   ],
+   "ranked_below_10": [
+    "cmp_0006",
+    "cmp_0007",
+    "cmp_0008",
+    "cmp_0009",
+    "cmp_0013",
+    "cmp_0014",
+    "cmp_0015",
+    "cmp_0018",
+    "cmp_0024",
+    "cmp_0025",
+    "cmp_0026",
+    "cmp_0027",
+    "cmp_0029",
+    "cmp_0037",
+    "cmp_0040",
+    "xbrl_0011",
+    "xbrl_0029",
+    "xbrl_0039",
+    "xbrl_0050",
+    "xbrl_0054",
+    "xbrl_0063",
+    "xbrl_0077",
+    "xbrl_0082",
+    "xbrl_0087",
+    "xbrl_0091",
+    "xbrl_0102",
+    "xbrl_0105",
+    "xbrl_0111",
+    "xbrl_0125",
+    "xbrl_0127",
+    "xbrl_0137"
+   ],
+   "other": []
+  },
+  "gold_chunks": 168,
+  "gold_label_in_text": 68,
+  "gold_tables": 168,
+  "gold_tables_label_in_caption": 0,
+  "gold_header_ok": 168,
+  "gold_filter_excluded": 56,
+  "in_filter_best_gold_rank_min_of_bm25_dense": {
+   "<= 10": 16,
+   "<= 100": 5,
+   "<= 20": 25,
+   "<= 50": 12,
+   "> 100": 1
+  },
+  "gold_dense50_bm25_50": {
+   "dense=False bm25=False": 122,
+   "dense=True bm25=False": 38,
+   "dense=True bm25=True": 5,
+   "dense=False bm25=True": 3
+  }
+ },
+ "items": [
+  {
+   "item_id": "cmp_0006",
+   "question_type": "comparison",
+   "question": "How did Bank of America's income before income taxes for the first quarter of fiscal 2026 compare with the first quarter of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2024,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 61,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 806,
+    "best_gold_rank_bm25": 28,
+    "best_gold_rank_exact_dense": 29
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000156:633.0:633.0",
+     "rank_routed": 8,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000070858-25-000200:611.0:611.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income before income taxes",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000070858-26-000249:595.0:595.0",
+     "rank_routed": 14,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0007",
+   "question_type": "comparison",
+   "question": "How did Bank of America's allowance for credit losses on loans at the end of the second quarter of fiscal 2026 compare with the end of the second quarter of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2026,
+      2
+     ],
+     [
+      2024,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 61,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 916,
+    "best_gold_rank_bm25": 31,
+    "best_gold_rank_exact_dense": 42
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000208:708.0:708.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    },
+    {
+     "chunk_id": "0000070858-24-000208:954.0:954.0",
+     "rank_routed": 34,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-24-000208:954.2:954.2",
+     "rank_routed": 24,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-24-000280:946.0:946.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-25-000268:926.1:926.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-25-000268:926.2:926.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-25-000405:916.0:916.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-26-000394:653.0:653.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    },
+    {
+     "chunk_id": "0000070858-26-000394:894.0:894.0",
+     "rank_routed": 29,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-26-000394:894.2:894.2",
+     "rank_routed": 35,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0008",
+   "question_type": "comparison",
+   "question": "What did Bank of America report as its noninterest expense for the second quarter of fiscal 2024 and for the second quarter of fiscal 2026, and what is the difference?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      2
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 63,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 916,
+    "best_gold_rank_bm25": 15,
+    "best_gold_rank_exact_dense": 112
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000208:1233.0:1233.0",
+     "rank_routed": 43,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000208:703.1:703.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000268:1210.0:1210.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000268:678.1:678.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:1171.0:1171.0",
+     "rank_routed": 17,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:648.1:648.1",
+     "rank_routed": 58,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0009",
+   "question_type": "comparison",
+   "question": "What did Bank of America report as its total stockholders' equity at the end of the second quarter of fiscal 2024 and at the end of the second quarter of fiscal 2026, and what is the difference?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      2
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 74,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 916,
+    "best_gold_rank_bm25": 140,
+    "best_gold_rank_exact_dense": 27
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000208:708.2:708.2",
+     "rank_routed": 60,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000208:712.0:712.0",
+     "rank_routed": 28,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000208:712.1:712.1",
+     "rank_routed": 30,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000280:705.0:705.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000268:687.2:687.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000268:687.3:687.3",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000405:676.2:676.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:653.2:653.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:657.0:657.0",
+     "rank_routed": 15,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:657.1:657.1",
+     "rank_routed": 31,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0013",
+   "question_type": "comparison",
+   "question": "Costco income tax expense, the first three quarters of fiscal 2024 versus the first three quarters of fiscal 2026: what are the two figures and the difference?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [
+     [
+      2024,
+      null
+     ],
+     [
+      2026,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 67,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 515,
+    "best_gold_rank_bm25": 72,
+    "best_gold_rank_exact_dense": 16
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-24-000029:33.0:33.0",
+     "rank_routed": 19,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income tax expense",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-25-000033:33.0:33.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income tax expense",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-26-000051:33.0:33.0",
+     "rank_routed": 20,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income tax expense",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0014",
+   "question_type": "comparison",
+   "question": "What did Costco report as its cost of revenue for the first three quarters of fiscal 2024 and for the first three quarters of fiscal 2026, and what is the difference?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first three quarters of fiscal 2024",
+     "first three quarters of fiscal 2026"
+    ]
+   },
+   "routed_list_len": 68,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 763,
+    "best_gold_rank_bm25": 182,
+    "best_gold_rank_exact_dense": 23
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-24-000029:33.0:33.0",
+     "rank_routed": 53,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-25-000033:33.0:33.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-26-000051:167.0:167.0",
+     "rank_routed": 22,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000909832-26-000051:33.0:33.0",
+     "rank_routed": 30,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0015",
+   "question_type": "comparison",
+   "question": "What is the difference between Costco's payments for property, plant and equipment for the first two quarters of fiscal 2026 and for the first two quarters of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first two quarters of fiscal 2026",
+     "first two quarters of fiscal 2024"
+    ]
+   },
+   "routed_list_len": 64,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 763,
+    "best_gold_rank_bm25": 48,
+    "best_gold_rank_exact_dense": 9
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-24-000017:68.0:68.0",
+     "rank_routed": 43,
+     "rank_unfiltered_hybrid": 36,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for property, plant and equipment",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000909832-25-000015:68.0:68.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for property, plant and equipment",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000909832-26-000029:68.0:68.0",
+     "rank_routed": 8,
+     "rank_unfiltered_hybrid": 23,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for property, plant and equipment",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0018",
+   "question_type": "comparison",
+   "question": "By how much did JPMorgan Chase's income before income taxes change from the third quarter of fiscal 2023 to the third quarter of fiscal 2025?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2023,
+      3
+     ],
+     [
+      2025,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 65,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 1501,
+    "best_gold_rank_bm25": 100,
+    "best_gold_rank_exact_dense": 11
+   },
+   "gold": [
+    {
+     "chunk_id": "0000019617-23-000524:1379.1:1379.1",
+     "rank_routed": 7,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000019617-23-000524:2442.0:2442.0",
+     "rank_routed": 6,
+     "rank_unfiltered_hybrid": 43,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000019617-24-000611:1259.1:1259.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000019617-24-000611:2236.0:2236.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001628280-25-048859:1192.1:1192.1",
+     "rank_routed": 56,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001628280-25-048859:2170.0:2170.0",
+     "rank_routed": 46,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0024",
+   "question_type": "comparison",
+   "question": "By how much did NVIDIA's cost of revenue change from the second quarter of fiscal 2025 to the second quarter of fiscal 2027?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2025,
+      2
+     ],
+     [
+      2027,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 68,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 283,
+    "best_gold_rank_bm25": 120,
+    "best_gold_rank_exact_dense": 54
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-24-000264:43.0:43.0",
+     "rank_routed": 38,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-25-000209:44.0:44.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-26-000075:45.0:45.0",
+     "rank_routed": 21,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0025",
+   "question_type": "comparison",
+   "question": "What is the difference between NVIDIA's income before income taxes for the first three quarters of fiscal 2026 and for the first three quarters of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first three quarters of fiscal 2026",
+     "first three quarters of fiscal 2024"
+    ]
+   },
+   "routed_list_len": 57,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 1212,
+    "best_gold_rank_bm25": 282,
+    "best_gold_rank_exact_dense": 18
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-23-000227:43.0:43.0",
+     "rank_routed": 29,
+     "rank_unfiltered_hybrid": 39,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-24-000316:43.0:43.0",
+     "rank_routed": 34,
+     "rank_unfiltered_hybrid": 48,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-25-000230:273.0:273.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-25-000230:45.0:45.0",
+     "rank_routed": 41,
+     "rank_unfiltered_hybrid": 35,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0026",
+   "question_type": "comparison",
+   "question": "How did Pfizer's cost of revenue for the first quarter of fiscal 2026 compare with the first quarter of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2024,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 81,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 344,
+    "best_gold_rank_bm25": 127,
+    "best_gold_rank_exact_dense": 15
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-24-000107:50.0:50.0",
+     "rank_routed": 26,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000078003-25-000114:50.0:50.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000078003-26-000054:50.0:50.0",
+     "rank_routed": 8,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0027",
+   "question_type": "comparison",
+   "question": "What did Pfizer report as its total assets at the end of the first quarter of fiscal 2024 and at the end of the first quarter of fiscal 2025, and what is the difference?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2024,
+      1
+     ],
+     [
+      2025,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 58,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 357,
+    "best_gold_rank_bm25": 70,
+    "best_gold_rank_exact_dense": 4
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-24-000107:65.0:65.0",
+     "rank_routed": 13,
+     "rank_unfiltered_hybrid": 27,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total assets",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000078003-25-000114:64.0:64.0",
+     "rank_routed": 5,
+     "rank_unfiltered_hybrid": 33,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total assets",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0029",
+   "question_type": "comparison",
+   "question": "By how much did Pfizer's net income change from the first quarter of fiscal 2024 to the first quarter of fiscal 2026?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2024,
+      1
+     ],
+     [
+      2026,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 66,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 344,
+    "best_gold_rank_bm25": 60,
+    "best_gold_rank_exact_dense": 23
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-24-000107:50.0:50.0",
+     "rank_routed": 22,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000078003-25-000114:50.0:50.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "net income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000078003-26-000054:50.0:50.0",
+     "rank_routed": 11,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0037",
+   "question_type": "comparison",
+   "question": "By how much did Exxon Mobil's diluted earnings per share change from the first two quarters of fiscal 2024 to the first two quarters of fiscal 2026?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "XOM"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first two quarters of fiscal 2024",
+     "first two quarters of fiscal 2026"
+    ]
+   },
+   "routed_list_len": 64,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 939,
+    "best_gold_rank_bm25": 7,
+    "best_gold_rank_exact_dense": 5
+   },
+   "gold": [
+    {
+     "chunk_id": "0000034088-24-000050:39.1:39.1",
+     "rank_routed": 18,
+     "rank_unfiltered_hybrid": 13,
+     "in_dense50": true,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000034088-24-000050:95.0:95.0",
+     "rank_routed": 7,
+     "rank_unfiltered_hybrid": 9,
+     "in_dense50": true,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000034088-25-000042:107.0:107.0",
+     "rank_routed": 3,
+     "rank_unfiltered_hybrid": 6,
+     "in_dense50": true,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000034088-25-000042:40.1:40.1",
+     "rank_routed": 21,
+     "rank_unfiltered_hybrid": 15,
+     "in_dense50": true,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000034088-26-000093:103.0:103.0",
+     "rank_routed": 25,
+     "rank_unfiltered_hybrid": 19,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000034088-26-000093:55.1:55.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "cmp_0040",
+   "question_type": "comparison",
+   "question": "What is the difference between Exxon Mobil's total stockholders' equity at the end of the third quarter of fiscal 2025 and at the end of the third quarter of fiscal 2024?",
+   "intent": "comparison",
+   "filters": {
+    "tickers": [
+     "XOM"
+    ],
+    "periods": [
+     [
+      2025,
+      3
+     ],
+     [
+      2024,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 60,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 225,
+    "best_gold_rank_bm25": 6,
+    "best_gold_rank_exact_dense": 50
+   },
+   "gold": [
+    {
+     "chunk_id": "0000034088-24-000068:45.1:45.1",
+     "rank_routed": 22,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000034088-25-000061:48.1:48.1",
+     "rank_routed": 21,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0004",
+   "question_type": "xbrl_numeric",
+   "question": "What did Apple report as its cost of revenue for fiscal 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "AAPL"
+    ],
+    "periods": [
+     [
+      2024,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 176,
+    "best_gold_rank_bm25": 33,
+    "best_gold_rank_exact_dense": 24
+   },
+   "gold": [
+    {
+     "chunk_id": "0000320193-24-000123:404.0:404.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000320193-25-000079:390.0:390.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000320193-25-000079:591.0:591.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0011",
+   "question_type": "xbrl_numeric",
+   "question": "What did Apple report as its cost of revenue for the first three quarters of fiscal 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "AAPL"
+    ],
+    "periods": [
+     [
+      2024,
+      1
+     ],
+     [
+      2024,
+      2
+     ],
+     [
+      2024,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 207,
+    "best_gold_rank_bm25": 42,
+    "best_gold_rank_exact_dense": 6
+   },
+   "gold": [
+    {
+     "chunk_id": "0000320193-24-000081:38.0:38.0",
+     "rank_routed": 14,
+     "rank_unfiltered_hybrid": 22,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000320193-25-000073:38.0:38.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 42,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0022",
+   "question_type": "xbrl_numeric",
+   "question": "How much payments for repurchases of common stock did Bank of America report for the six months ended June 30, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 460,
+    "best_gold_rank_bm25": 20,
+    "best_gold_rank_exact_dense": 30
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-25-000268:691.1:691.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000070858-26-000394:661.1:661.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0024",
+   "question_type": "xbrl_numeric",
+   "question": "What did Bank of America report as its total liabilities as of December 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 51,
+    "best_gold_rank_exact_dense": 81
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000157:1223.2:1223.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000249:600.2:600.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:653.2:653.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0026",
+   "question_type": "xbrl_numeric",
+   "question": "What did Bank of America report as its total deposits as of March 31, 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 406,
+    "best_gold_rank_bm25": 24,
+    "best_gold_rank_exact_dense": 20
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000156:638.1:638.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0027",
+   "question_type": "xbrl_numeric",
+   "question": "What was the balance of Bank of America's total stockholders' equity on December 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 28,
+    "best_gold_rank_exact_dense": 24
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000157:1223.2:1223.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1226.2:1226.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000249:600.2:600.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000249:603.1:603.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:653.2:653.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:657.0:657.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0028",
+   "question_type": "xbrl_numeric",
+   "question": "How much did Bank of America carry in total liabilities at the end of the third quarter of fiscal 2023?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2023,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 482,
+    "best_gold_rank_bm25": 17,
+    "best_gold_rank_exact_dense": 106
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-23-000272:710.2:710.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0029",
+   "question_type": "xbrl_numeric",
+   "question": "Bank of America payments for repurchases of common stock, fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 722,
+    "best_gold_rank_bm25": 44,
+    "best_gold_rank_exact_dense": 7
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-25-000139:1245.2:1245.2",
+     "rank_routed": 11,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1230.2:1230.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0030",
+   "question_type": "xbrl_numeric",
+   "question": "What did Bank of America report as its noninterest expense for the third quarter of fiscal 2023?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2023,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 482,
+    "best_gold_rank_bm25": 14,
+    "best_gold_rank_exact_dense": 93
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-23-000272:1274.0:1274.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-23-000272:705.1:705.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000280:1231.0:1231.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-24-000280:696.1:696.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0033",
+   "question_type": "xbrl_numeric",
+   "question": "According to its 10-Q for the first quarter of fiscal 2026, what figure did Bank of America report for total assets as of March 31, 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 400,
+    "best_gold_rank_bm25": 118,
+    "best_gold_rank_exact_dense": 14
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000249:1105.1:1105.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 43,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total assets",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000249:600.1:600.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total assets",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0034",
+   "question_type": "xbrl_numeric",
+   "question": "Bank of America total deposits at the end of fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 722,
+    "best_gold_rank_bm25": 12,
+    "best_gold_rank_exact_dense": 31
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-25-000139:1237.1:1237.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000200:616.1:616.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000268:683.1:683.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-25-000405:673.1:673.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1223.1:1223.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1716.0:1716.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total deposits",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0035",
+   "question_type": "xbrl_numeric",
+   "question": "According to its fiscal 2025 10-K, what figure did Bank of America report for total revenue in the fiscal year ended December 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 64,
+    "best_gold_rank_exact_dense": 67
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000157:1218.0:1218.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000157:2183.1:2183.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0036",
+   "question_type": "xbrl_numeric",
+   "question": "How much net interest income did Bank of America report for the fiscal year ended December 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 81,
+    "best_gold_rank_exact_dense": 131
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000157:1218.0:1218.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1387.0:1387.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0037",
+   "question_type": "xbrl_numeric",
+   "question": "What did Bank of America report as its total revenue for the first two quarters of fiscal 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 849,
+    "best_gold_rank_bm25": 181,
+    "best_gold_rank_exact_dense": 103
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000394:648.0:648.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0038",
+   "question_type": "xbrl_numeric",
+   "question": "How much did Bank of America carry in total stockholders' equity at the end of the first quarter of fiscal 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 400,
+    "best_gold_rank_bm25": 32,
+    "best_gold_rank_exact_dense": 15
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000249:600.2:600.2",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000249:603.1:603.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000070858-26-000394:657.0:657.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0039",
+   "question_type": "xbrl_numeric",
+   "question": "What was the balance of Bank of America's allowance for credit losses on loans on December 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 11,
+    "best_gold_rank_exact_dense": 13
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-26-000157:1223.0:1223.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 47,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    },
+    {
+     "chunk_id": "0000070858-26-000157:1617.0:1617.0",
+     "rank_routed": 17,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-26-000249:600.0:600.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    },
+    {
+     "chunk_id": "0000070858-26-000249:838.0:838.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0000070858-26-000394:653.0:653.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    },
+    {
+     "chunk_id": "0000070858-26-000394:894.1:894.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "allowance for credit losses on loans",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0040",
+   "question_type": "xbrl_numeric",
+   "question": "Bank of America income tax expense, the second quarter of fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "BAC"
+    ],
+    "periods": [
+     [
+      2024,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 467,
+    "best_gold_rank_bm25": 23,
+    "best_gold_rank_exact_dense": 72
+   },
+   "gold": [
+    {
+     "chunk_id": "0000070858-24-000208:703.1:703.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income tax expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000070858-25-000268:678.1:678.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income tax expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0044",
+   "question_type": "xbrl_numeric",
+   "question": "Costco diluted earnings per share, the first two quarters of fiscal 2026: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 170,
+    "best_gold_rank_bm25": 23,
+    "best_gold_rank_exact_dense": 23
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-26-000029:33.0:33.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0050",
+   "question_type": "xbrl_numeric",
+   "question": "Costco payments for property, plant and equipment, the first three quarters of fiscal 2026: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2026,
+      2
+     ],
+     [
+      2026,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 260,
+    "best_gold_rank_bm25": 28,
+    "best_gold_rank_exact_dense": 4
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-26-000051:68.0:68.0",
+     "rank_routed": 13,
+     "rank_unfiltered_hybrid": 11,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for property, plant and equipment",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0054",
+   "question_type": "xbrl_numeric",
+   "question": "Costco cost of revenue, fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [
+     [
+      2024,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 184,
+    "best_gold_rank_bm25": 23,
+    "best_gold_rank_exact_dense": 8
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-24-000049:430.0:430.0",
+     "rank_routed": 14,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-25-000101:439.0:439.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000909832-25-000101:722.0:722.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 18,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0057",
+   "question_type": "xbrl_numeric",
+   "question": "What amount of payments for repurchases of common stock did Costco record in the first two quarters of fiscal 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "COST"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 170,
+    "best_gold_rank_bm25": 14,
+    "best_gold_rank_exact_dense": 24
+   },
+   "gold": [
+    {
+     "chunk_id": "0000909832-26-000029:68.0:68.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 5
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0063",
+   "question_type": "xbrl_numeric",
+   "question": "According to its 10-Q for the second quarter of fiscal 2026, what figure did JPMorgan Chase report for noninterest expense in the three months ended June 30, 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 713,
+    "best_gold_rank_bm25": 9,
+    "best_gold_rank_exact_dense": 94
+   },
+   "gold": [
+    {
+     "chunk_id": "0001628280-26-054343:1146.1:1146.1",
+     "rank_routed": 20,
+     "rank_unfiltered_hybrid": 27,
+     "in_dense50": false,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001628280-26-054343:2102.0:2102.0",
+     "rank_routed": 18,
+     "rank_unfiltered_hybrid": 24,
+     "in_dense50": false,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "noninterest expense",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0064",
+   "question_type": "xbrl_numeric",
+   "question": "JPMorgan Chase noninterest income, the third quarter of fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2024,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 731,
+    "best_gold_rank_bm25": 18,
+    "best_gold_rank_exact_dense": 30
+   },
+   "gold": [
+    {
+     "chunk_id": "0000019617-24-000611:1259.0:1259.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000019617-24-000611:2236.0:2236.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001628280-25-048859:1192.0:1192.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001628280-25-048859:2170.0:2170.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0065",
+   "question_type": "xbrl_numeric",
+   "question": "How much did JPMorgan Chase carry in total liabilities at the end of the first quarter of fiscal 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 641,
+    "best_gold_rank_bm25": 23,
+    "best_gold_rank_exact_dense": 103
+   },
+   "gold": [
+    {
+     "chunk_id": "0001628280-26-029344:1031.1:1031.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0068",
+   "question_type": "xbrl_numeric",
+   "question": "According to its 10-Q for the first quarter of fiscal 2026, what figure did JPMorgan Chase report for payments for repurchases of common stock in the three months ended March 31, 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 641,
+    "best_gold_rank_bm25": 21,
+    "best_gold_rank_exact_dense": 14
+   },
+   "gold": [
+    {
+     "chunk_id": "0001628280-26-029344:1043.1:1043.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0077",
+   "question_type": "xbrl_numeric",
+   "question": "JPMorgan Chase noninterest income, the first two quarters of fiscal 2026: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2026,
+      1
+     ],
+     [
+      2026,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 1354,
+    "best_gold_rank_bm25": 11,
+    "best_gold_rank_exact_dense": 91
+   },
+   "gold": [
+    {
+     "chunk_id": "0001628280-26-054343:1146.0:1146.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001628280-26-054343:2105.0:2105.0",
+     "rank_routed": 19,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "noninterest income",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0078",
+   "question_type": "xbrl_numeric",
+   "question": "What was the balance of JPMorgan Chase's total liabilities on March 31, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2025,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 631,
+    "best_gold_rank_bm25": 68,
+    "best_gold_rank_exact_dense": 98
+   },
+   "gold": [
+    {
+     "chunk_id": "0000019617-25-000421:1033.1:1033.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0079",
+   "question_type": "xbrl_numeric",
+   "question": "JPMorgan Chase net interest income, the second quarter of fiscal 2025: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "JPM"
+    ],
+    "periods": [
+     [
+      2025,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 713,
+    "best_gold_rank_bm25": 24,
+    "best_gold_rank_exact_dense": 73
+   },
+   "gold": [
+    {
+     "chunk_id": "0000019617-25-000615:1187.0:1187.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000019617-25-000615:1541.1:1541.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0000019617-25-000615:2151.0:2151.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001628280-26-054343:1146.0:1146.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001628280-26-054343:1505.1:1505.1",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001628280-26-054343:2102.0:2102.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "net interest income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0082",
+   "question_type": "xbrl_numeric",
+   "question": "What amount of income before income taxes did NVIDIA record in the first two quarters of fiscal 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2025,
+      1
+     ],
+     [
+      2025,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 280,
+    "best_gold_rank_bm25": 79,
+    "best_gold_rank_exact_dense": 7
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-24-000264:43.0:43.0",
+     "rank_routed": 11,
+     "rank_unfiltered_hybrid": 27,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-25-000209:264.0:264.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    },
+    {
+     "chunk_id": "0001045810-25-000209:44.0:44.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 39,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0085",
+   "question_type": "xbrl_numeric",
+   "question": "NVIDIA gross profit, the third quarter of fiscal 2026: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2026,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 135,
+    "best_gold_rank_bm25": 39,
+    "best_gold_rank_exact_dense": 16
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-25-000230:45.0:45.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "gross profit",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0087",
+   "question_type": "xbrl_numeric",
+   "question": "How much did NVIDIA carry in total liabilities at the end of the third quarter of fiscal 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2025,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 138,
+    "best_gold_rank_bm25": 47,
+    "best_gold_rank_exact_dense": 5
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-24-000316:57.0:57.0",
+     "rank_routed": 14,
+     "rank_unfiltered_hybrid": 36,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total liabilities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0090",
+   "question_type": "xbrl_numeric",
+   "question": "How much did NVIDIA carry in cash and cash equivalents at the end of fiscal 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 267,
+    "best_gold_rank_bm25": 31,
+    "best_gold_rank_exact_dense": 15
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-25-000023:782.0:782.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cash and cash equivalents",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0001045810-25-000116:57.0:57.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cash and cash equivalents",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0001045810-25-000209:58.0:58.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cash and cash equivalents",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0001045810-25-000230:59.0:59.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cash and cash equivalents",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0001045810-26-000021:765.0:765.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "cash and cash equivalents",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0091",
+   "question_type": "xbrl_numeric",
+   "question": "What did NVIDIA report as its total revenue for the first quarter of fiscal 2027?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2027,
+      1
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 126,
+    "best_gold_rank_bm25": 56,
+    "best_gold_rank_exact_dense": 8
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-26-000052:270.0:270.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001045810-26-000052:280.0:280.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0001045810-26-000052:44.0:44.0",
+     "rank_routed": 15,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0094",
+   "question_type": "xbrl_numeric",
+   "question": "What did NVIDIA report as its net cash provided by operating activities for the first three quarters of fiscal 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first three quarters of fiscal 2024"
+    ]
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 1212,
+    "best_gold_rank_bm25": 28,
+    "best_gold_rank_exact_dense": 19
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-23-000227:75.0:75.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": 41,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net cash provided by operating activities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    },
+    {
+     "chunk_id": "0001045810-24-000316:78.0:78.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "net cash provided by operating activities",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 6
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0097",
+   "question_type": "xbrl_numeric",
+   "question": "What did NVIDIA report as its total assets as of July 28, 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2025,
+      2
+     ]
+    ],
+    "form_types": [],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 146,
+    "best_gold_rank_bm25": 28,
+    "best_gold_rank_exact_dense": 23
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-24-000264:57.0:57.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total assets",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0100",
+   "question_type": "xbrl_numeric",
+   "question": "NVIDIA operating income, the third quarter of fiscal 2026: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "NVDA"
+    ],
+    "periods": [
+     [
+      2026,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "neither_branch",
+   "in_filter": {
+    "scope_size": 135,
+    "best_gold_rank_bm25": 45,
+    "best_gold_rank_exact_dense": 18
+   },
+   "gold": [
+    {
+     "chunk_id": "0001045810-25-000230:45.0:45.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "operating income",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0102",
+   "question_type": "xbrl_numeric",
+   "question": "According to its fiscal 2023 10-K, what figure did Pfizer report for cost of revenue in the fiscal year ended December 31, 2023?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2023,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 464,
+    "best_gold_rank_bm25": 21,
+    "best_gold_rank_exact_dense": 5
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-24-000039:823.0:823.0",
+     "rank_routed": 15,
+     "rank_unfiltered_hybrid": 32,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "cost of revenue",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0105",
+   "question_type": "xbrl_numeric",
+   "question": "What did Pfizer report as its income before income taxes for the first three quarters of fiscal 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2025,
+      1
+     ],
+     [
+      2025,
+      2
+     ],
+     [
+      2025,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 585,
+    "best_gold_rank_bm25": 11,
+    "best_gold_rank_exact_dense": 20
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-25-000150:434.0:434.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 0
+    },
+    {
+     "chunk_id": "0000078003-25-000150:50.0:50.0",
+     "rank_routed": 20,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0111",
+   "question_type": "xbrl_numeric",
+   "question": "What did Pfizer report as its total stockholders' equity as of June 30, 2024?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "PFE"
+    ],
+    "periods": [
+     [
+      2024,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 215,
+    "best_gold_rank_bm25": 8,
+    "best_gold_rank_exact_dense": 23
+   },
+   "gold": [
+    {
+     "chunk_id": "0000078003-24-000166:65.1:65.1",
+     "rank_routed": 14,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total stockholders' equity",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0125",
+   "question_type": "xbrl_numeric",
+   "question": "How much income before income taxes did Target report for the fiscal year ended January 31, 2026?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "TGT"
+    ],
+    "periods": [
+     [
+      2025,
+      null
+     ]
+    ],
+    "form_types": [
+     "10-K"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 218,
+    "best_gold_rank_bm25": 29,
+    "best_gold_rank_exact_dense": 5
+   },
+   "gold": [
+    {
+     "chunk_id": "0000027419-26-000016:494.0:494.0",
+     "rank_routed": 11,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "income before income taxes",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0126",
+   "question_type": "xbrl_numeric",
+   "question": "How much did Target carry in inventories at the end of the third quarter of fiscal 2023?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "TGT"
+    ],
+    "periods": [
+     [
+      2023,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 72,
+    "best_gold_rank_bm25": 53,
+    "best_gold_rank_exact_dense": 15
+   },
+   "gold": [
+    {
+     "chunk_id": "0000027419-23-000052:44.0:44.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "inventories",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 0
+    },
+    {
+     "chunk_id": "0000027419-24-000179:44.0:44.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "inventories",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 0
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0127",
+   "question_type": "xbrl_numeric",
+   "question": "According to its 10-Q for the second quarter of fiscal 2025, what figure did Target report for payments for repurchases of common stock in the six months ended August 2, 2025?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "TGT"
+    ],
+    "periods": [
+     [
+      2025,
+      2
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 78,
+    "best_gold_rank_bm25": 22,
+    "best_gold_rank_exact_dense": 6
+   },
+   "gold": [
+    {
+     "chunk_id": "0000027419-25-000118:50.0:50.0",
+     "rank_routed": 17,
+     "rank_unfiltered_hybrid": 32,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "payments for repurchases of common stock",
+     "label_in_text": false,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 3
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0137",
+   "question_type": "xbrl_numeric",
+   "question": "Target diluted earnings per share, the first three quarters of fiscal 2024: what was the figure?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "TGT"
+    ],
+    "periods": [],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": [
+     "first three quarters of fiscal 2024"
+    ]
+   },
+   "routed_list_len": 20,
+   "cause": "ranked_below_10",
+   "in_filter": {
+    "scope_size": 663,
+    "best_gold_rank_bm25": 17,
+    "best_gold_rank_exact_dense": 13
+   },
+   "gold": [
+    {
+     "chunk_id": "0000027419-24-000179:36.0:36.0",
+     "rank_routed": 20,
+     "rank_unfiltered_hybrid": 29,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    },
+    {
+     "chunk_id": "0000027419-25-000126:36.0:36.0",
+     "rank_routed": 13,
+     "rank_unfiltered_hybrid": 17,
+     "in_dense50": true,
+     "in_bm25_50": true,
+     "filter_excludes": false,
+     "label": "diluted earnings per share",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 4
+    }
+   ]
+  },
+  {
+   "item_id": "xbrl_0150",
+   "question_type": "xbrl_numeric",
+   "question": "What did Exxon Mobil report as its total revenue for the third quarter of fiscal 2023?",
+   "intent": "lookup",
+   "filters": {
+    "tickers": [
+     "XOM"
+    ],
+    "periods": [
+     [
+      2023,
+      3
+     ]
+    ],
+    "form_types": [
+     "10-Q"
+    ],
+    "unresolved_periods": []
+   },
+   "routed_list_len": 20,
+   "cause": "beyond_query_k",
+   "in_filter": {
+    "scope_size": 101,
+    "best_gold_rank_bm25": 35,
+    "best_gold_rank_exact_dense": 16
+   },
+   "gold": [
+    {
+     "chunk_id": "0000034088-23-000056:39.0:39.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": true,
+     "in_bm25_50": false,
+     "filter_excludes": false,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    },
+    {
+     "chunk_id": "0000034088-24-000068:39.0:39.0",
+     "rank_routed": null,
+     "rank_unfiltered_hybrid": null,
+     "in_dense50": false,
+     "in_bm25_50": false,
+     "filter_excludes": true,
+     "label": "total revenue",
+     "label_in_text": true,
+     "label_in_context": false,
+     "is_table": true,
+     "label_in_caption": false,
+     "header_ok": true,
+     "words_of_label_in_text": 2
+    }
+   ]
+  }
+ ]
+}
