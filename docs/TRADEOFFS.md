@@ -2587,3 +2587,27 @@ matches).
 `fiscal_year` (rejected: it is the filing's year); a contradiction when any cited
 filing mismatches though another cited filing matches (rejected: comparisons cite
 two filings).
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: NLI for prose claims and its AUC gate (PRD 7.5)
+
+- Model `cross-encoder/nli-deberta-v3-base` @6c749ce3425c, on prose claims only
+  (no figure object). Premise: one cited chunk at a time, hypothesis: the claim
+  text; `entail` is the softmax probability of the label the model's own
+  `id2label` names `entailment`; a claim's score is the max over its cited
+  chunks (PRD 7.5 correction 1). Pairs over 512 tokens are truncated by the
+  model; each pair records its token count and whether it was truncated, so the
+  truncation PRD 7.5 warns about is visible, not silent.
+- Gate: 40 (prose claim, cited chunk) pairs drawn by seed from a run's
+  `claims_pre`, labelled by the owner (supports / does not) before any score is
+  shown; AUC of `entail` against the labels. AUC < 0.75: NLI is dropped and
+  prose claims fall to PRD 7.5's fallback (citation validity plus an LLM-judge
+  call), not built until that result. AUC ≥ 0.75: `nli_threshold` is the
+  threshold maximizing Youden's J on those 40 pairs, written to config with the
+  AUC, the sheet and the date. Nothing else sets it.
+- Until then `nli_threshold` is null: runs store every check including `entail`;
+  the report refuses claim metrics, as it already does.
+
+*Alternatives:* score against the eight chunks concatenated (rejected by PRD
+7.5); a threshold of 0.5 by convention (rejected: "set only from that check");
+labels by the developer's agent (rejected: PRD 7.5 asks for the owner's own
+labels, as for the judge, F-105).

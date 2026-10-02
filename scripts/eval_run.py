@@ -107,6 +107,12 @@ def current_meta(gen: dict, run_cfg: dict) -> dict:
                 json.dumps(claims.SCHEMA, sort_keys=True).encode()).hexdigest(),
             "system_prompt_sha256": hashlib.sha256(claims.SYSTEM_PROMPT.encode()).hexdigest(),
         }  # fmt: skip
+        from api.config import verification
+        from api.verify import nli
+
+        meta["verification"] = {**verification(), "nli_model": nli.MODEL,
+                                "nli_revision": nli.REVISION,
+                                "nli_threshold": run_cfg["nli_threshold"]}  # fmt: skip
     else:
         meta["generation_contract"] = {"kind": "plain prompt, free text (Phase 2 baseline)"}
     if pipeline == "config_4_routed":
@@ -141,6 +147,13 @@ class Context:
                 "SELECT chunk_id, ticker, fiscal_year, fiscal_quarter, form_type FROM chunks"
             ).fetchall()
             self.period_ends = conn.execute(PERIOD_ENDS_SQL).fetchall()
+        self.gate = None
+        if generation().get("structured"):
+            from api.verify.gate import Gate
+            from api.verify.nli import Nli
+
+            names = yaml.safe_load(TEMPLATES.read_text(encoding="utf-8"))["company_names"]
+            self.gate = Gate(conn, names, Nli())
 
 
 def texts_for(conn, ids: list[str]) -> dict[str, str]:
@@ -193,7 +206,8 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
     chunks = [Retrieved(cid, 0.0, texts[cid]) for cid in c["generator_input"]]
     a = call_model(chunks, it["question"], gen, TIER)
     return {
-        **record, **answer_fields(a, c["generator_input"]),
+        **record, **answer_fields(a, c["generator_input"], ctx, it["question"], texts,
+                                  run_cfg["nli_threshold"]),
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,
@@ -226,9 +240,11 @@ def call_model(prompt_or_chunks, question, gen: dict, tier: str):
     return a
 
 
-def answer_fields(a, given: list[str]) -> dict:
+def answer_fields(a, given: list[str], ctx=None, question: str = "", texts=None,
+                  nli_threshold: float | None = None) -> dict:  # fmt: skip
     """The answer part of a result. Structured (PRD 7.4): claims, the model's own
-    abstention (`sufficient_evidence` false) and contract violations; plain: text only."""
+    abstention (`sufficient_evidence` false), contract violations, and the PRD 7.5
+    gate's claims_pre / claims_post / verdict; plain: text only."""
     from api.generate.claims import contract_violations
 
     if a.structured is None:
@@ -240,6 +256,17 @@ def answer_fields(a, given: list[str]) -> dict:
            "contract_violations": contract_violations(doc, given)}  # fmt: skip
     if abstained:
         out["abstain_reason"] = "insufficient_evidence"
+    if ctx is not None and ctx.gate is not None:
+        g = ctx.gate.verify(question, doc["answer_claims"], given, texts or {}, nli_threshold)
+        out.update({"claims_pre": g["claims_pre"], "claims_post": g["claims_post"]})
+        if not abstained:
+            out["verdict"] = g["verify_verdict"] or "PENDING_NLI"
+            if g["verify_verdict"] == "ABSTAIN":
+                out["abstain_reason"] = (
+                    "xbrl_contradiction"
+                    if any(c["checks"]["xbrl_contradiction"] for c in g["claims_pre"])
+                    else "verifier"
+                )  # fmt: skip
     return out
 
 
@@ -323,7 +350,7 @@ def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dic
     a = call_model([Retrieved(c, 0.0, texts[c]) for c in post], it["question"], gen,
                    budget["tier"])  # fmt: skip
     return {
-        **record, **answer_fields(a, post),
+        **record, **answer_fields(a, post, ctx, it["question"], texts, run_cfg["nli_threshold"]),
         "model_served": a.model, "backend": a.backend,
         "usage": {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
                   "cache_read_tokens": a.cache_read_tokens,
@@ -396,12 +423,16 @@ def smoke(items: dict, gen: dict, run_cfg: dict, seed: int) -> None:
             format_report(build_report(items, results, meta, run_cfg["k"],
                                        run_cfg["nli_threshold"]))  # fmt: skip
             checks["report"] = "built and formatted"
+        except ValueError as e:
+            refused = run_cfg["nli_threshold"] is None and "nli_threshold" in str(e)
+            checks["report"] = ("refused: claims present and nli_threshold null (expected, "
+                                "PRD 7.5 gate)" if refused else f"ValueError: {e}")  # fmt: skip
         except Exception as e:
             checks["report"] = f"{type(e).__name__}: {e}"
     ok = (
         not failure
         and not checks["meta_disagreements"]
-        and checks["report"] == ("built and formatted")
+        and (checks["report"] == "built and formatted" or checks["report"].startswith("refused:"))
     )
     doc = {"kind": "PIPELINE CHECK, not a measurement: no number here goes into a finding "
                    "except a failure", "seed": seed, "item_ids": order, "ok": ok,

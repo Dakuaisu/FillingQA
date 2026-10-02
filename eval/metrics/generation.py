@@ -16,32 +16,10 @@ computed over answered items only and always returned with `answer_rate` (F-09).
 
 from __future__ import annotations
 
+from api.verify.verdict import check as _check
+from api.verify.verdict import is_figure, supported
+
 NA = "n/a: no claims"
-
-
-def _check(claim: dict, name: str):
-    checks = claim.get("checks") or {}
-    if name not in checks:
-        raise ValueError(f"claim {claim.get('claim_id')!r} has no {name!r} check")
-    return checks[name]
-
-
-def is_figure(claim: dict) -> bool:
-    return bool(claim.get("figure"))
-
-
-def supported(claim: dict, nli_threshold: float) -> bool:
-    """PRD 7.5 aggregation, with citation validity on both branches (F-10)."""
-    if not _check(claim, "citation_valid") or not _check(claim, "entity_ok"):
-        return False
-    if is_figure(claim):
-        return bool(
-            _check(claim, "numbers_grounded")
-            and _check(claim, "unit_ok")
-            and _check(claim, "period_stated")
-            and not _check(claim, "xbrl_contradiction")
-        )
-    return _check(claim, "entail") >= nli_threshold
 
 
 def _rate(num: int, den: int):
