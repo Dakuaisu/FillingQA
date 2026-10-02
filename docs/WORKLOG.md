@@ -5771,3 +5771,31 @@ to reproduce (`make eval`, `make eval-fast`, the gate, the dev-backend rule). Th
 only figures in the README remain the status section's model-free retrieval
 numbers; `tests/unit/test_metrics.py` passes. No `claude_cli` number, no
 screenshot. The local API and web dev servers are stopped.
+
+## 2026-10-02 — Owner review D1–D6 (`docs/OWNER_REVIEW.md`)
+
+- **D1** reranker `BAAI/bge-reranker-base@2cfc18c9415c912f9d8155881c133215df768a70`,
+  `timeout_ms: 3000` (`8df6409`). Rerank runs over retrieval run 5b3c3ac13e5e:
+  mps 063aac623748 p50 1.515 s, p95 2.063 s, max 2.774 s, 0 of 283 over;
+  cpu b6530895a7a4 p50 4.288 s, p95 8.518 s, 283 of 283 over. mps p95 < 2,500 ms,
+  so the timeout stays 3000 ms. Retrieval re-run 7fa009acac95: dense, sparse and
+  hybrid lists identical to 5b3c3ac13e5e on 283 of 283; now `current_retrieval_run`.
+  Smoke 27cbfa2741f2 ok (`20f790c`). TRADEOFFS OWNER DECISION, F-113 resolved,
+  F-111 and F-137 noted (`c83cf96`, `fdc6ec3`).
+- **D2** README known limitations; F-66, F-70 resolved (`8460428`).
+- **D3, D4** noted on F-83, F-60 (`6de4f3c`).
+- **D5** `scale_exception` flags on 11 worksheet entries, no item changed (`842fc3e`).
+- **D6** owner-review line under all 64 autonomous decisions (`c6b7e90`).
+- **F-144** `eval_run --report` rewrote a committed run file; now read-only (`65c442f`).
+
+### Development run 7a079fe7abfe (`claude_cli`; config_4_routed; not a baseline)
+
+Meta: bge-reranker-base @2cfc18c9, 3000 ms, `device_used: mps`, exact dense
+search. `make eval` started 12:48:47 UTC. The `claude` CLI session limit stopped
+it twice; each stop left the item only in `7a079fe7abfe.errors.jsonl`, and
+`--resume` (same run id, meta unchanged) retried it:
+
+| stop | item | at (UTC) | recorded | resumed (UTC) | verify_freeze on resume |
+|---|---|---|---|---|---|
+| 1 | xbrl_0050 | 14:25:33 | 172 of 283 | 16:10:40 | 96 accessions, mismatches 0 |
+| 2 | xbrl_0065 | 16:21:12 | 187 of 283 | scheduled 21:11 | — |
