@@ -2546,6 +2546,14 @@ error.
 **Period stated.** The claim text names a period: a date, an FY or quarter
 label, "fiscal YYYY", "year/months/quarter ended", or a year.
 
+*2026-10-02, amended after smoke run 4d1f5ce1e3f2 (a runner defect, not a
+measurement):* a figure grounded only as derived (F-85) is printed in no chunk,
+so the unit-scale rule above failed it on every correct comparison answer
+(cmp_0010's "$4,008 million" difference: grounded as derived, `unit_ok` false,
+verdict PARTIAL). Its scale is consistent when the figure object's base value is
+the derived value, since the operands were grounded at their printed scale; it
+is then `unit_ok`.
+
 *Alternatives:* sign-sensitive grounding (rejected, F-87); a 0.5% tolerance in
 grounding (rejected: rule 3; the tolerance belongs to the XBRL check, PRD 6.5.4);
 treating every dash as zero (rejected: dashes also mean n/a); stripping all

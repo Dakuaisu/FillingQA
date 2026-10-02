@@ -109,6 +109,8 @@ def test_f85_differences_and_percent_changes_of_the_answers_own_figures():
     r = ground_answer([c1, c2, diff, pct, wrong], chunks, set())
     assert [x["numbers_grounded"] for x in r] == [True, True, True, True, False]
     assert [x["numbers_derived"] for x in r] == [False, False, True, True, False]
+    # A derived figure's scale follows its operands (smoke run 4d1f5ce1e3f2, cmp_0010).
+    assert [x["unit_ok"] for x in r] == [True, True, True, None, False]
     # A difference alone, without the answer's own grounded figures, is not derived.
     assert not ground_answer([diff], chunks, set())[0]["numbers_grounded"]
 

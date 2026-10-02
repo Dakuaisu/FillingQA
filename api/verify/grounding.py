@@ -186,11 +186,22 @@ def ground_answer(claims: list[dict], chunk_text: dict[str, str],
             nums.append({"printed": x["num"].printed, "value": str(x["num"].value),
                          "pct": x["num"].pct, "grounded_in": x["in"], "how": how})  # fmt: skip
         c = r["claim"]
+        fv = figure_value(c.get("figure"))
+        unit = unit_ok(c.get("figure"), r["cited"])
+        if (
+            unit is False
+            and fv is not None
+            and any(
+                n["how"] == "derived" and Decimal(n["value"]) == fv.value and n["pct"] == fv.pct
+                for n in nums
+            )
+        ):
+            unit = True  # derived from the answer's own figures at their printed scale (F-85)
         out.append({
             "numbers": nums,
             "numbers_grounded": all(n["how"] for n in nums),
             "numbers_derived": any_derived,
-            "unit_ok": unit_ok(c.get("figure"), r["cited"]),
+            "unit_ok": unit,
             "period_stated": period_stated(c["text"]),
             "citations_supporting": sorted({cid for n in nums for cid in n["grounded_in"]}),
         })  # fmt: skip

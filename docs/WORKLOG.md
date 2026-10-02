@@ -5270,3 +5270,23 @@ seed_0006, 0032, 0042, xbrl_0070, 0082, 0123):
 
 No runner defect found. A pipeline check, not a measurement: nothing from it
 goes into a finding.
+
+## 2026-10-02 — PRD 7.5 verifier built; smoke run 4d1f5ce1e3f2 found a defect
+
+Commits: numeric grounding ddf8616, runtime XBRL validation 9f4219a, NLI +
+verdict + gate in eval_run f92a523 (decisions in TRADEOFFS, each before its
+code). `make test` 464 passed at f92a523. Real-data check of the XBRL lookup:
+AAPL inventories FY2024, $7,286 million cited from 0000320193-24-000123 →
+`verified` (fact 7286000000).
+
+`python -m scripts.eval_run --smoke 20261002` with the gate (02:26Z to 02:32Z):
+
+    smoke 4d1f5ce1e3f2: ok True; failure None; checks {'meta_disagreements': [], 'report': 'refused: claims present and nli_threshold null (expected, PRD 7.5 gate)'}
+
+The run passed its checks, but two comparisons came back PARTIAL. Re-running
+cmp_0010 directly (diagnostic, not stored): both period figures grounded, unit
+ok, XBRL `verified`; the difference claim "$4,008 million" grounded as derived
+(F-85) but `unit_ok` false, because the unit rule required a printed figure.
+Every correct comparison answer would have been PARTIAL. Fixed (derived figure's
+scale follows its operands; TRADEOFFS amendment; unit test). Smoke rerun below.
+The report's refusal is the expected one while `nli_threshold` is null.
