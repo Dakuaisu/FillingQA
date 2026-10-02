@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 
 import yaml
 
+from api import tracing
 from api.config import REPO_ROOT, generation, rerank, retrieval, router
 from api.generate import claude_cli
 from api.generate.generator import generate, generate_structured
@@ -62,6 +63,12 @@ def texts_for(conn, ids: list[str]) -> dict[str, str]:
     return dict(rows.fetchall())
 
 
+def usage_of(a) -> dict:
+    return {"input_tokens": a.input_tokens, "output_tokens": a.output_tokens,
+            "cache_read_tokens": a.cache_read_tokens,
+            "cache_creation_tokens": a.cache_creation_tokens}  # fmt: skip
+
+
 def call_model(prompt_or_chunks, question, gen: dict, tier: str):
     """One generator or router call with eval_run's transport retries and served-model check."""
     from api.generate.generator import complete
@@ -104,8 +111,13 @@ def answer_fields(a, given: list[str], ctx=None, question: str = "", texts=None,
     if ctx is not None and ctx.gate is not None:
         from api.verify.verdict import item_verdict
 
-        g = ctx.gate.verify(question, doc["answer_claims"], given, texts or {}, nli_threshold)
-        v, why = item_verdict(abstained, g["verify_verdict"], g["claims_pre"])
+        with tracing.span("gate") as gt:
+            claims = doc["answer_claims"]
+            g = ctx.gate.verify(question, claims, given, texts or {}, nli_threshold)
+            v, why = item_verdict(abstained, g["verify_verdict"], g["claims_pre"])
+            post = g["claims_post"]
+            gt.set(verdict=v, claims_pre=len(g["claims_pre"]),
+                   claims_post=None if post is None else len(post))  # fmt: skip
         out.update({"claims_pre": g["claims_pre"], "claims_post": g["claims_post"],
                     "gate_verdict": g["verify_verdict"], "verdict": v})  # fmt: skip
         if why:
@@ -131,12 +143,16 @@ def answer_question(
 
     t0 = time.monotonic()
     rc, rr = ctx.rcfg, ctx.rrcfg
-    ra = call_model(render(question, ctx.companies), None, gen, ctx.router["tier"])
-    try:
-        route, parse_error = parse(ra.text), None
-    except RouterParseError as e:
-        route, parse_error = None, str(e)
-    intent, budget = budget_for(route, ctx.router["budgets"])
+    with tracing.span("router", kind="generation") as sp:
+        ra = call_model(render(question, ctx.companies), None, gen, ctx.router["tier"])
+        sp.model_call(ra.model, usage_of(ra), ra.backend)
+        try:
+            route, parse_error = parse(ra.text), None
+        except RouterParseError as e:
+            route, parse_error = None, str(e)
+        intent, budget = budget_for(route, ctx.router["budgets"])
+        sp.set(intent=intent, confidence=route["confidence"] if route else None,
+               parse_error=parse_error)  # fmt: skip
     f = None
     if route and rc.get("metadata_filter"):
         f = filters(route, set(ctx.companies), rc["filter_confidence_min"], ctx.period_ends)
@@ -161,20 +177,26 @@ def answer_question(
     k, w = budget["k"], rc["weights"]
     per_query = []
     for q in queries_for(question, route, budget):
-        vec = embed_question(ctx.model, ctx.emb, q)
-        fused, zero = [], False
-        if allowed is not None:
-            dense = dense_filtered_top_k(conn, vec, k, allowed) if allowed else []
-            sp = [c for c, _ in ctx.index.search(q, k, allowed)]
-            fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
-            zero = not fused
-        if not fused:  # unfiltered, or the filter returned nothing (filter_zero_recall)
-            dense = dense_search(conn, vec, k, rc)
-            sp = [c for c, _ in ctx.index.search(q, k)]
-            fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
-        texts = texts_for(conn, fused)
-        ranked, secs = rerank_one(ctx.reranker, q, [(c, texts[c]) for c in fused])
-        post, fell = post_for_query(fused, ranked, secs, rr, budget["top_n"])
+        with tracing.span("retrieval") as rs:
+            rs.content("query", q)
+            vec = embed_question(ctx.model, ctx.emb, q)
+            fused, zero = [], False
+            if allowed is not None:
+                dense = dense_filtered_top_k(conn, vec, k, allowed) if allowed else []
+                sp = [c for c, _ in ctx.index.search(q, k, allowed)]
+                fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
+                zero = not fused
+            if not fused:  # unfiltered, or the filter returned nothing (filter_zero_recall)
+                dense = dense_search(conn, vec, k, rc)
+                sp = [c for c, _ in ctx.index.search(q, k)]
+                fused = rrf_fuse([dense, sp], [w["dense"], w["sparse"]], rc["rrf_k"])[:k]
+            rs.set(k=k, filtered=allowed is not None, filter_zero_recall=zero, chunks=len(fused),
+                   dense_search=rc.get("dense_search", "exact"))  # fmt: skip
+        with tracing.span("rerank") as rk:
+            texts = texts_for(conn, fused)
+            ranked, secs = rerank_one(ctx.reranker, q, [(c, texts[c]) for c in fused])
+            post, fell = post_for_query(fused, ranked, secs, rr, budget["top_n"])
+            rk.set(seconds=secs, fell_back=fell, kept=len(post))
         per_query.append({"query": q, "filter_zero_recall": zero, "retrieved": fused,
                           "retrieved_post_rerank": post, "rerank_seconds": secs,
                           "rerank_fell_back": fell})  # fmt: skip
@@ -195,8 +217,11 @@ def answer_question(
                 "latency_s": round(time.monotonic() - t0, 2),
                 "answered_at": datetime.now(UTC).isoformat(timespec="seconds")}  # fmt: skip
     texts = texts_for(conn, post)
-    a = call_model([Retrieved(c, 0.0, texts[c]) for c in post], question, gen,
-                   budget["tier"])  # fmt: skip
+    with tracing.span("generation", kind="generation") as gs:
+        a = call_model([Retrieved(c, 0.0, texts[c]) for c in post], question, gen,
+                       budget["tier"])  # fmt: skip
+        gs.model_call(a.model, usage_of(a), a.backend)
+        gs.set(tier=budget["tier"], chunks=len(post))
     return {
         **record, **answer_fields(a, post, ctx, question, texts, run_cfg["nli_threshold"]),
         "model_served": a.model, "backend": a.backend,

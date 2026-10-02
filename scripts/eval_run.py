@@ -36,7 +36,7 @@ from datetime import UTC, datetime
 
 import yaml
 
-from api import pipeline
+from api import pipeline, tracing
 from api.config import REPO_ROOT, baseline, eval_run, generation, rerank, retrieval, router
 from api.generate import claude_cli
 from api.generate.generator import refuse_dev_baseline
@@ -185,8 +185,14 @@ def answer_one(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
 
 
 def answer_routed(conn, ctx: Context, it: dict, gen: dict, run_cfg: dict) -> dict:
-    """The eval's call into the served path (api.pipeline.answer_question)."""
-    return pipeline.answer_question(conn, ctx, it["question"], gen, run_cfg, item_id=it["item_id"])
+    """The eval's call into the served path (api.pipeline.answer_question), one trace per item."""
+    with tracing.trace("eval-item", item_id=it["item_id"], pipeline=run_cfg["pipeline"]) as root:
+        if root is not None:
+            root.content("question", it["question"])
+        r = pipeline.answer_question(conn, ctx, it["question"], gen, run_cfg, item_id=it["item_id"])
+        if root is not None:
+            root.set(verdict=r["verdict"], intent=r.get("intent"), backend=r.get("backend"))
+        return r
 
 
 def run_items(todo: list[str], answer, results_path, errors_path) -> int:

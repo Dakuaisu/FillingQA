@@ -3014,3 +3014,26 @@ story later is simpler server-side).
 - The dashboard renders `/metrics` only: the gate box and per-metric table, the
   current retrieval run (other runs as superseded comparison points), development
   run ids with the banner and no value, and the owner-blocked list.
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: tracing (PRD 14 Phase 5, LangFuse with cost)
+
+`api/tracing.py`, no-op without keys. One trace per `POST /query` (root "query")
+and per eval item (root "eval-item"); spans `router` and `generation` (LangFuse
+`generation` observations: model, token counts as `usage_details`, and
+`cost_details` priced from `eval/pricing.yaml` when the backend is
+`anthropic_api`; `cost_note` "n/a (dev backend)" on `claude_cli`),
+`retrieval` and `rerank` per query, and `gate` (verdict, claim counts). Question
+and query text are attached only through `Span.content`, which records nothing
+unless `tracing.include_content` is true (default false); chunk text is never
+attached. Export is OTLP/HTTP JSON to LangFuse's `/api/public/otel/v1/traces`
+with `langfuse.*` attributes, following LangFuse's documentation read on
+2026-10-02 (the legacy ingestion API is deprecated); basic auth from
+LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY, host LANGFUSE_HOST. Without both keys
+no trace object is created and nothing is sent; `/health` reports `tracing`.
+An export failure is logged and never fails an answer. Tested with a fake
+exporter (`tests/unit/test_tracing.py`); the payload format has not met a live
+LangFuse endpoint (OWNER-BLOCKED with the deploy, F-143).
+
+*Alternatives:* the LangFuse Python SDK (rejected for now: a dependency for one
+POST, and its OTEL setup would trace libraries we do not want traced); the
+legacy ingestion API (rejected: deprecated per LangFuse's docs).

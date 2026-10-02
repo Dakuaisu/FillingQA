@@ -21,7 +21,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from api import pipeline
+from api import pipeline, tracing
 from api.config import REPO_ROOT, eval_run, generation
 from api.db import connect
 from api.generate.generator import DEV_BACKENDS
@@ -171,7 +171,7 @@ def health() -> dict:
     gen = generation()
     return {"status": "ok", "database": "reachable", "chunks": n, "chunks_with_embeddings": emb,
             "pipeline": eval_run()["pipeline"], "backend": gen["backend"],
-            "development": gen["backend"] in DEV_BACKENDS}  # fmt: skip
+            "development": gen["backend"] in DEV_BACKENDS, "tracing": tracing.status()}  # fmt: skip
 
 
 def check_length(ctx, question: str) -> None:
@@ -220,8 +220,14 @@ def create_app() -> FastAPI:
                     state["conn"] = connect()
                     state["ctx"] = load_context(state["conn"])
                 check_length(state["ctx"], req.question)
-                r = pipeline.answer_question(state["conn"], state["ctx"], req.question,
-                                             generation(), run_cfg)  # fmt: skip
+                with tracing.trace("query", pipeline=run_cfg["pipeline"]) as root:
+                    if root is not None:
+                        root.content("question", req.question)
+                    r = pipeline.answer_question(state["conn"], state["ctx"], req.question,
+                                                 generation(), run_cfg)  # fmt: skip
+                    if root is not None:
+                        root.set(verdict=r["verdict"], intent=r.get("intent"),
+                                 backend=r.get("backend"))  # fmt: skip
             except EmbeddingCheckError as e:
                 raise HTTPException(422, f"question exceeds the length limit: {e}") from e
             except psycopg.OperationalError as e:

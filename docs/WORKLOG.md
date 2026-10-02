@@ -5714,3 +5714,21 @@ Browse-only live pass (`node scripts/live-pass.mjs http://localhost:3000
     test: cd web && npm run test:e2e
     test: > playwright test
     test:   12 passed (9.8s)
+
+## 2026-10-02 — Tracing (no-op without keys); F-141 PARTIAL seen live
+
+`api/tracing.py`; spans in `api/pipeline.py`; traces opened by `POST /query` and
+`scripts.eval_run`; `tracing.include_content: false`; `/health` reports
+`tracing`. `tests/unit/test_tracing.py`: 4 passed (span tree router / retrieval /
+rerank / generation / gate under one root; usage on both model spans; "n/a (dev
+backend)" on claude_cli and cost 900 × $1/M + 60 × $5/M on anthropic_api;
+question and chunk text absent from the OTLP body by default, present only with
+include_content; no trace without keys). `make test`: 502 passed, e2e 12 passed.
+
+F-141: `a4e39a65c2c8` has no `restatement` claim, as run or re-verified; PARTIAL
+items: seed_0044 as run; cmp_0021, cmp_0039, seed_0044, xbrl_0153 re-verified.
+Asked live in the browser (claude_cli; screenshots in `build/web-live/f141/`):
+seed_0044 PARTIAL and cmp_0021 PARTIAL, both with "I could only partially verify
+this from the filings." and only the supported claims (cmp_0021's difference
+claim dropped, its two figures XBRL-verified, Confidence Medium); cmp_0039 and
+xbrl_0153 PASS this time. Restatement still unseen.
