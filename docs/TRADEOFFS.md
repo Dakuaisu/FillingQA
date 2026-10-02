@@ -3252,3 +3252,25 @@ alone p50 2.141 s, p95 3.86 s, slower than the standalone 063aac623748 (F-114);
 50 of 283 reranks went over 3000 ms and fell back to RRF order, so that run is
 `hardware_dependent`. The run was resumed twice, so cmp_0001 (first item, model
 warm-up) is in these figures; nothing was dropped.
+
+## 2026-10-02 — AUTONOMOUS DECISION - owner to review: rerank timeout stays 3000 ms after 50 of 283 in-eval fallbacks on mps (F-114)
+
+*Decision:* `rerank.timeout_ms` stays 3000 (D1). In development run 7a079fe7abfe
+(`claude_cli`, mps) 50 of 283 reranks went over it and fell back to RRF order;
+the run is flagged `hardware_dependent`. No config or `eval/thresholds.yaml`
+change. F-114 stays open with the cause undiagnosed.
+
+*Alternatives:* (a) 5000 ms, D1 step 2's rule (p95 + 20%, rounded up to the next
+500 ms) applied to the in-eval rerank p95 of 3.86 s, with a further full
+dev-backend run; (b) diagnose F-114 before choosing a timeout; (c) keep 3000 ms
+and record the fallbacks (chosen).
+
+*Why:* the rule was applied to the measurement the owner set it on, the
+standalone rerank run 063aac623748 (p95 2.063 s). Re-tuning against the in-eval
+number that exposed the slowdown, with its cause undiagnosed, would hide F-114 in
+every later run instead of flagging it. The two p95s are not the same statistic
+(in-eval: slowest sub-query per item; standalone: one pass per item), and 29 of
+the 50 fallbacks were single-query items that this difference does not explain.
+A further dev-backend run yields no baseline and no gated number. The fallback
+flag is the mechanism that surfaces this, and it did. Diagnosing F-114 is on no
+PRD 14 checklist; the project is at the owner-blocked boundary.
