@@ -450,6 +450,8 @@ to the Phase 2 eval corpus, which is still `years_back: 3` (F-42).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: raw-hash drift, lint scope, untracking
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Three decisions taken by the supervisor on the owner's behalf. Recorded with the
 alternatives rejected, so each can be reversed knowingly.
 
@@ -507,6 +509,8 @@ files, so `.omo/` session state would keep showing up in every diff.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 4c, where real tables departed from PRD 6.2 step 3
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Each of these is a place the data contradicted the PRD's wording. Accepted by
 the supervisor on the owner's behalf; recorded so the owner can overturn them.
@@ -604,6 +608,8 @@ fixtures, that no dollar figure in a scaled table is tagged at another scale.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 5, companyfacts decisions taken while building
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Taken while building, each following from an earlier decision; all four
 accepted by the supervisor on the owner's behalf.
 
@@ -628,6 +634,8 @@ accepted by the supervisor on the owner's behalf.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: step 6, validation suite and parse-quality score
+
+OWNER REVIEW 2026-10-02: accepted.
 
 **Assertions** (`api/parse/validate.py`, `check`). Any failure sets
 `parse_status = 'quarantined'` and `parse_error` to the failed messages; this is
@@ -681,6 +689,8 @@ tables, span misses are word-form numbers (F-33).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_spans rows, and the Phase 1 exit
 
+OWNER REVIEW 2026-10-02: accepted.
+
 **Which spans become rows.** `xbrl_spans` holds `is_numeric` spans with a parsed
 value; word-form figures (F-33: "one", "two") are skipped and counted, 4-13 per
 filing on the slice. `xbrl_spans.value` stays NOT NULL, as migration 0002 and PRD
@@ -710,6 +720,8 @@ table extractions, filed as F-50, F-51 and F-52; no stored span was implausible.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-50 and F-51, the last table fixes before chunking
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Fixed before the chunker because a parser change after embedding means a
 re-embed, and F-16 already says that budget is short. Scope is exactly two rules.
@@ -748,6 +760,8 @@ row.** Header rows changed across 404 tables: exactly 1, AAPL 10-Q
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the chunker (Phase 2 step 1, PRD 6.3)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Built and stopped for review; not committed. Choices PRD 6.3 does not make:
 
@@ -789,6 +803,8 @@ Open, not chosen: the tokenizer (a dependency) and the target size (F-53).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: chunk budget and tokenizer (F-53); split-table offsets
 
+OWNER REVIEW 2026-10-02: accepted.
+
 **Budget: `chunking.target_tokens: 500`**, counted on the whole embedded text --
 context header and [CLS]/[SEP] included -- with the embedding model's own
 tokenizer. 500 is the floor of PRD 6.3's 500-800 range and inside
@@ -823,6 +839,8 @@ Sentence pieces of an oversized paragraph still share their block's offsets; ste
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: span-to-chunk resolution (Phase 2 step 2)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 1. **A span resolves to a chunk whose `[char_start, char_end)` contains it; with
    several candidates, the earliest chunk wins.** Table spans have one candidate
@@ -859,6 +877,8 @@ filing.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: embedding cache (Phase 2 step 3)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 **The content-hash cache is its own table, `embedding_cache` (migration 0006),
 keyed on `(content_hash, model, revision)`; `chunks.embedding` is filled from
 it.** `content_hash` is sha256 of `chunks.text`, header included -- exactly what
@@ -882,6 +902,8 @@ vendored and sha-checked).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-54 navigation rule
+
+OWNER REVIEW 2026-10-02: accepted.
 
 The furniture rule's repeat signal, moved from text to link targets. No phrase
 rule and no new number: it reuses `furniture_min_repeats` and the furniture
@@ -917,6 +939,8 @@ re-resolves every gold chunk id, so it is a before-Phase-3 decision for the owne
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Phase 2 baseline
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Scope is PRD 14's line and nothing from PRD 7.4: dense-only, top 5, unstructured
 generation.
@@ -961,6 +985,8 @@ is; this entry carries the override.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the eval corpus is the PRD's 3-year filing-date window, materialized (F-42)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 The window, evaluated once as of 2026-10-01 (`scripts/materialize_corpus.py`):
 10-K and 10-Q by exact form (no amendments, the dev slice's rule), filed in
 [2023-10-01, 2026-10-01], reportDate present. The result, not the window, is what
@@ -981,6 +1007,8 @@ for accession is not in `recent`, bounded by an optional earliest filing date.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-62, XOM's corpus source
+
+OWNER REVIEW 2026-10-02: accepted.
 
 ExxonMobil reorganized in 2026: SEC's ticker map now sends XOM to the successor
 ExxonMobil Holdings Corp (CIK 0002115436, 8-K12B), whose first periodic filing is
@@ -1025,6 +1053,8 @@ current mapping differs (XOM) and does not fail.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: fix the parse findings before the freeze (F-63..F-67)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Decided by the supervisor on the owner's behalf after 45 of 96 filings
 quarantined and JPM's 10-Ks passed while mis-sectioned.
@@ -1073,6 +1103,8 @@ holding the content with no link. That is the stop condition: no page mechanism
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-67, splitting units over the token budget
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Never raise 512, never truncate. Measured first: of the 28 chunks over 512 after
 F-65, 16 were layout tables chunked as prose (PFE's pipeline tables, NVDA's
 exhibit index; longest row 98 tokens) and 12 were ordinary paragraphs that are a
@@ -1095,6 +1127,8 @@ fix (embedding cannot run until every chunk fits).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the stub check replaces the content floors (F-69); freeze at the resulting set
+
+OWNER REVIEW 2026-10-02: accepted.
 
 **The check, redefined by what it is for** -- F-66: content sitting outside the
 Item whose label it should carry. One parameter, `parser.stub_max_chars`; an
@@ -1141,6 +1175,8 @@ figures) is unavailable; quarterly comparisons from the 10-Qs remain.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-71 left as a known residual of the frozen corpus
 
+OWNER REVIEW 2026-10-02: accepted.
+
 BAC's 10-K Item 7 and 8 heading tables carry a "Table of Contents" cell that is
 not a link, so it stays in the section title; Item 7's title also carries the
 "Bank of America Corporation and Subsidiaries" prefix from the same table.
@@ -1161,6 +1197,8 @@ where parser work stops (PRD 14: timebox hard).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Phase 3 step 1, what xbrl_auto may draw on
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Measurement only; no eval item generated, no retrieval run against candidates.
 
@@ -1211,6 +1249,8 @@ Measurement only; no eval item generated, no retrieval run against candidates.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-72, gold is exact-value spans only
 
+OWNER REVIEW 2026-10-02: accepted.
+
 A fact's gold chunks are the chunks holding a span of the same accession,
 concept and non-dimensional period **whose value equals the fact's**. The
 reference answer is the fact's value and numeric accuracy is exact match after
@@ -1230,6 +1270,8 @@ context)`. F-72 stays OPEN until the generator enforces it under test.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-11, the `source` enum and natural_phrasing
+
+OWNER REVIEW 2026-10-02: accepted.
 
 1. `source` keeps PRD 11.2's three values: `xbrl_auto`, `llm_seeded`,
    `handwritten`. The per-source breakout is `filter(source=src)`.
@@ -1259,6 +1301,8 @@ F-11 stays OPEN until the share is printed from a real dataset.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: F-75, one item per period key
+
+OWNER REVIEW 2026-10-02: accepted.
 
 The sampling unit is the key (cik, concept, period_start, period_end), not the
 fact: 1,234 of 2,553 keys appear in more than one parsed accession, so a
@@ -1311,6 +1355,8 @@ F-75 stays OPEN until the generator enforces this under test.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_auto sampler design
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - Pure function, seeded RNG; the seed goes in the dataset manifest with the
   freeze versions.
 - Pool: eligible keys only (F-75 (a)-(c)). The rest are accounted for: review
@@ -1330,6 +1376,8 @@ tickers); per-fact sampling (repeats keys, F-75).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: pool and sampler code, config and validator rules
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - **Location:** `eval/generate/` (PRD 13.4); `scripts/xbrl_pool.py` imports from
   it. `build_pool` takes fact rows, so `eval/generate` imports nothing from
@@ -1355,6 +1403,8 @@ tickers); per-fact sampling (repeats keys, F-75).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the 1-3 rule stays per fact, per filing; no per-form split
+
+OWNER REVIEW 2026-10-02: accepted.
 
 **1-3 rule.** PRD 6.5.3's loop is per `(accession, concept, context)`, and its
 reason for review is a value repeating inside one filing. Rule (b) of F-75
@@ -1386,6 +1436,8 @@ manifest.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_numeric candidates (templates, values, fields)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - **Gold** comes from one pure function, `eval/generate/gold.select_gold`
   (non-dimensional, exact value, in a chunk), which the loader calls; tested on
@@ -1426,6 +1478,8 @@ manifest.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: negative and zero values keep their line item's wording
 
+OWNER REVIEW 2026-10-02: accepted.
+
 The question's label is a function of the line item, never of the value. Four
 candidates are negative: xbrl_0070 (JPM operating cash flow, -$47,257 million),
 xbrl_0113 and xbrl_0119 (PFE income tax), xbrl_0115 (PFE operating cash flow,
@@ -1459,6 +1513,8 @@ F-81, settled before any run, never by rewording gold.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: guard `xbrl_fact_id` instead of fixing it (F-78)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 The candidates manifest records each item's fact by natural key (accession,
 concept, period_start, period_end, unit, value).
 `python -m scripts.xbrl_candidates --verify` resolves every `xbrl_fact_id` in
@@ -1475,6 +1531,8 @@ now caught instead of silently pointing at another fact.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: xbrl_auto comparison items (PRD 11.1 comparison row, Stage 3)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Every number here is printed by `python -m scripts.comparison_supply`.
 
@@ -1552,6 +1610,8 @@ twice, their errors counted twice).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: tests use real rows; seeding before metric definitions
 
+OWNER REVIEW 2026-10-02: accepted.
+
 **Test rows.** A test asserts on a real pool row whenever the pool has an
 instance of the case. A modified copy of a real row is allowed only where the
 pool has none, and the test says so. The scale-mismatch test now runs on the real
@@ -1575,6 +1635,8 @@ one chunk vs several) are what F-77 and F-81 must cover.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: LLM seeding
+
+OWNER REVIEW 2026-10-02: accepted.
 
 PRD 11.1 Stage 1 and 2 for the 50 `table` and 40 `synthesis` (`llm_seeded`)
 items. Numbers are printed by `python -m scripts.seed_supply`; settings live in
@@ -1663,6 +1725,8 @@ allocation would then send slots to headings), or a percentile (not a reason).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding scale, floor, prompt
+
+OWNER REVIEW 2026-10-02: accepted.
 
 **1. F-90: flag, never scale a mixed table.** `attach_scale` applies the chunk's
 `unit_scale` only when nothing marks the table as mixed (`mixed_signals`). Mixed
@@ -1771,6 +1835,8 @@ through the `claude` CLI. This partly unblocks F-59.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding overdraw is per stratum (draw_v2)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Decided by the supervisor; recorded here for the owner. Amends item 4 of "LLM
 seeding".
 
@@ -1809,6 +1875,8 @@ seeding".
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the seeding runner
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Implements item 4 of "LLM seeding" (as amended for draw_v2).
 
 - `python -m scripts.seed_run` makes no call by default (status only). `--run`
@@ -1837,6 +1905,8 @@ input on the CLI, which reported 2 for the verification call).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding runner halts on a call with no response; rebuild before the run
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Decided by the supervisor before any drawn chunk was called; recorded for the
 owner. Amends "the seeding runner".
@@ -1885,6 +1955,8 @@ owner. Amends "the seeding runner".
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeding run protocol
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Decided by the supervisor before any drawn call; recorded for the owner.
 
 - **Wrong model halts.** If the requested `tier_large` model is not among the
@@ -1920,6 +1992,8 @@ Decided by the supervisor before any drawn call; recorded for the owner.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: no-context filter rule
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Proposed by the builder, adopted by the supervisor with one change (tolerance).
 
@@ -1966,6 +2040,8 @@ accounting presentation, F-87); a judge model for numbers (no kappa exists).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: seeded item fields
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Proposed by the builder, approved by the supervisor with changes; recorded for
 the owner. `eval/generate/seed_items.py`, written by `python -m
@@ -2017,6 +2093,8 @@ inflates recall).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: nDCG over alternative evidence sets (F-77) -- decided
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Status: proposed by the builder, adopted by the supervisor as written. F-77
 resolves when the code and its tests exist (`eval/metrics/retrieval.py`).
 
@@ -2051,6 +2129,8 @@ Gold is not shaped around the metric: the evidence-set counts in F-77 stand.
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: numeric accuracy normalization (F-81) -- decided
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Status: proposed by the builder, adopted by the supervisor with changes. F-81
 resolves when the code and its tests exist (`eval/metrics/numeric.py`).
@@ -2117,6 +2197,8 @@ them would let a system raise the number by citing periods we cannot check.
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: retrieval metrics are measured post-fusion, pre-rerank (F-13)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 As OPEN's recommendation for F-13 already states. Retrieval metrics
 (Sufficiency@k, Recall@k, MRR, nDCG@k, Precision@k) are computed on the ordered
 post-fusion, pre-rerank list, stored per item as `retrieved` (PRD 8's
@@ -2132,6 +2214,8 @@ whatever list the generator receives (moves with `top_k` and the score floor).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the eval runner (built, not run)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 `eval/runner.py` (pure scoring and report) and `scripts/eval_run.py`.
 
@@ -2182,6 +2266,8 @@ for all sources (PRD 11.2 forbids it).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: PARTIAL counts as answered in the abstention 2x2 (F-21)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Decided by the supervisor. A PARTIAL verdict (PRD 7.5: supported claims only,
 with a partial-verification notice) lands in the "answered" column: on an
 unanswerable item it is a failure to abstain (a false answer), on an answerable
@@ -2197,6 +2283,8 @@ false-answer rate stops counting partial answers).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: review decisions are an overlay
+
+OWNER REVIEW 2026-10-02: accepted.
 
 `eval/review_decisions.py` and `scripts/review.py`. The owner fills a YAML worksheet made
 from a review sheet (accept / reject / edit_evidence, with every alternative
@@ -2215,6 +2303,8 @@ sheets are regenerated by their scripts).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: the LLM judge and its validation set
+
+OWNER REVIEW 2026-10-02: accepted.
 
 `eval/judge/` (`rubrics.py`, `judge.py`, `agreement.py`, PRD 13.4) and
 `scripts/judge.py`.
@@ -2246,6 +2336,8 @@ owner's labels could be anchored on the judge's scores).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: hybrid retrieval as first built (Phase 4)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - Dense: unchanged `dense_top_k`, except `hnsw.ef_search` is raised to k when k
   exceeds pgvector's default 40, because HNSW returns at most `ef_search` rows;
   at k = 10 (the Phase 2 baseline) nothing changes.
@@ -2267,6 +2359,8 @@ OpenSearch BM25 (PRD 6.4's other option; a second service).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: Okapi BM25 for the sparse branch (F-108)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Decided by the supervisor on the F-108 measurement. PRD 6.4 calls Postgres FTS
 "adequate" and PRD 14 says "BM25"; the data decided.
@@ -2304,6 +2398,8 @@ hybrid 0.365 / 0.892 / 0.519 (run 01019ff395ec).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: `hnsw.ef_search` pinned at 100 (F-109)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Decided by the supervisor. `retrieval.hnsw_ef_search: 100`, at least `k_dense`
 (50), chosen for recall, not for any score; `dense_top_k` sets it before every
 dense query and refuses an `ef_search` below k; eval runs record it in their
@@ -2318,6 +2414,8 @@ always (fine at this size; the PRD specifies HNSW).
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: cross-encoder reranking as first built (PRD 7.3)
+
+OWNER REVIEW 2026-10-02: changed by D1 (docs/OWNER_REVIEW.md).
 
 - `api/query/rerank.py`: `BAAI/bge-reranker-base` pinned at revision
   2cfc18c9415c912f9d8155881c133215df768a70 (config `rerank`), over the fused
@@ -2342,6 +2440,8 @@ smaller and faster, not measured); raw logits for the floor (no fixed scale for
 ---
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: reranker chosen to meet the 800 ms timeout (F-111)
+
+OWNER REVIEW 2026-10-02: changed by D1 (docs/OWNER_REVIEW.md).
 
 Decided by the supervisor's rule: the 800 ms timeout is PRD 7.3's spec and stays;
 the fix is within PRD 7.3's two named models, chosen on measured latency, never
@@ -2376,6 +2476,8 @@ sufficiency (rejected: the eval set would pick the component).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: `make eval` runs Config 4 and stores every list (F-13, F-61)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Implements supervisor decision 2. `eval_run.pipeline` names PRD 11.6's config
 (`config_1_dense | config_3_hybrid | config_4_rerank`); the default is
 `config_4_rerank` (BM25 + dense, RRF, then the cross-encoder). Each result stores
@@ -2398,6 +2500,8 @@ pre-rerank list); make Config 4 a separate target and keep `make eval` dense
 the pipeline the PRD specifies; the floor is reported as pending instead).
 
 ## 2026-10-01 — AUTONOMOUS DECISION - owner to review: router and metadata filters as first built (PRD 7.1)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 One small-tier call per question (`claude-haiku-4-5-20251001` on the dev
 backend) returns PRD 7.1's JSON. The parse is strict (exact keys, intent in the
@@ -2467,6 +2571,8 @@ Synthesis routing is not changed to match the candidates' labels (F-121, F-89).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: how `config_4_routed` applies PRD 7.1's budgets
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - One router call per item on `tier_small`, recorded raw. A response that does
   not parse runs as `unrouted` with Config 4's settings (k 50, top-n 8, small
   tier), unfiltered; PRD 7.1 does not say. `unsupported` is declined: no
@@ -2495,6 +2601,8 @@ across sub-queries (rejected: same reason); keep Appendix A's single `top_n: 8`
 (F-122: PRD 7.1's table is the more specific rule).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: PRD 7.4 structured output as first built
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - Enforcement: `claude_cli` with `--json-schema` (checked: the CLI answers through
   a forced tool call, `stop_reason: tool_use`, and returns `structured_output`; a
@@ -2525,6 +2633,8 @@ enforced, not asked); drop or repair claims with bad citations at generation
 (rejected: hides the pre-verification faithfulness the PRD charts).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: numeric grounding (PRD 7.5), and F-82, F-85, F-87
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Decided before any verifier code, without touching gold or reference answers.
 
@@ -2585,6 +2695,8 @@ matches).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: runtime XBRL validation (PRD 6.5.4, 7.5)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - **Which fact.** Per figure claim, per cited chunk's filing (the accession,
   never "the latest value", Trap 1): facts of that filing for the claim's
   concept whose `period_end` is the claim's period end. `xbrl_facts.fiscal_year`
@@ -2619,6 +2731,8 @@ filing mismatches though another cited filing matches (rejected: comparisons cit
 two filings).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: NLI for prose claims and its AUC gate (PRD 7.5)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - Model `cross-encoder/nli-deberta-v3-base` @6c749ce3425c, on prose claims only
   (no figure object). Premise: one cited chunk at a time, hypothesis: the claim
@@ -2760,6 +2874,8 @@ Never a new run id; the run's files are not modified.
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the gate verifies faithfulness, not correctness (F-133)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 Decided by the supervisor. The PRD 7.5 gate checks claims against their cited
 evidence. Whether the answer addresses the question is correctness, measured by
 numeric accuracy and, once F-105 lands, the judge's answer correctness. **PASS is
@@ -2775,6 +2891,8 @@ concept the question asks for): faithfulness would then depend on the router and
 the synonym map, and a PASS would mean two things.
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the CI gate, `eval-fast` and the workflow (PRD 11.4, 11.5)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - **`eval/thresholds.yaml` did not exist.** PRD 11.5 names it the single source
   of truth and prints its contents; the repo had no such file. Created as a
@@ -2903,6 +3021,8 @@ corpus: the PRD does not ask for one.
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the HTTP API as first built (PRD 9)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - **One path.** `POST /api/v1/query` calls `api.pipeline.answer_question`, the
   function `scripts.eval_run` calls for `config_4_routed`, with the same config
   (`eval_run.pipeline`, `generation`, `retrieval`, `rerank`, `router`,
@@ -2938,6 +3058,8 @@ not be the measured path); a fixed character limit for 422 (rejected: invents a
 number the PRD does not give).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: the frontend as first built (PRD 10)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 Stack as PRD 10 (supervisor decision): Next.js 16.3.8 App Router, TypeScript,
 Tailwind 4, shadcn/ui (radix base), in `web/`. **npm**, since pnpm is not
@@ -2991,6 +3113,8 @@ story later is simpler server-side).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: `/metrics`, the Corpus screen and the eval dashboard
 
+OWNER REVIEW 2026-10-02: accepted.
+
 - `GET /api/v1/metrics` (`api/metrics.py`) reads committed files only: the gate
   table exactly as `eval/compare.py` computes it for the latest gated eval run
   (none yet: every row pending "no gated run exists (F-59)"; `compare.rows`
@@ -3017,6 +3141,8 @@ story later is simpler server-side).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: tracing (PRD 14 Phase 5, LangFuse with cost)
 
+OWNER REVIEW 2026-10-02: accepted.
+
 `api/tracing.py`, no-op without keys. One trace per `POST /query` (root "query")
 and per eval item (root "eval-item"); spans `router` and `generation` (LangFuse
 `generation` observations: model, token counts as `usage_details`, and
@@ -3039,6 +3165,8 @@ POST, and its OTEL setup would trace libraries we do not want traced); the
 legacy ingestion API (rejected: deprecated per LangFuse's docs).
 
 ## 2026-10-02 — AUTONOMOUS DECISION - owner to review: deployment as committed config, not deployed (F-143)
+
+OWNER REVIEW 2026-10-02: accepted.
 
 - `deploy/api.Dockerfile` (python 3.12-slim, CPU torch 2.14.1, editable install
   so `REPO_ROOT` resolves to the image's `/app`); `deploy/entrypoint.sh` migrates,
