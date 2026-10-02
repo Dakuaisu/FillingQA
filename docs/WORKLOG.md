@@ -5798,4 +5798,43 @@ it twice; each stop left the item only in `7a079fe7abfe.errors.jsonl`, and
 | stop | item | at (UTC) | recorded | resumed (UTC) | verify_freeze on resume |
 |---|---|---|---|---|---|
 | 1 | xbrl_0050 | 14:25:33 | 172 of 283 | 16:10:40 | 96 accessions, mismatches 0 |
-| 2 | xbrl_0065 | 16:21:12 | 187 of 283 | scheduled 21:11 | — |
+| 2 | xbrl_0065 | 16:21:12 | 187 of 283 | 21:11:00 | 96 accessions, mismatches 0 |
+
+Completed 283 of 283, exit 0 (`2cee0cd`). Report banners: DEVELOPMENT RUN
+(claude_cli), HARDWARE-DEPENDENT. Served models: claude-sonnet-5-5 45,
+claude-haiku-4-5-20251001 238.
+
+**Against development run a4e39a65c2c8, direction only.** Two configuration
+changes moved at once: HNSW to exact dense search (F-136, F-139) and MiniLM at
+800 ms to bge-reranker-base at 3000 ms (D1), on top of run-to-run noise on the
+dev backend (F-60). Nothing below is attributed to either change.
+
+| metric | xbrl_auto | llm_seeded | aggregate |
+|---|---|---|---|
+| Sufficiency@10 (pre-rerank) | up | same | up |
+| Recall@10 | up | same | up |
+| MRR | down | same | down |
+| nDCG@10 | down | same | down |
+| Sufficiency post-rerank (top-n) | up | down | up |
+| rerank fell back to RRF order | up (19 to 31) | up (0 to 19) | up (19 to 50) |
+| Numeric accuracy (dev run, not gated here) | up | down | up |
+| abstained (in numeric denominator) | down | up | down |
+| verdict pending NLI (F-125) | up | up | up |
+
+**Rerank in the eval** (`hardware_dependent: true`): 50 of 283 over 3000 ms on mps,
+fell back to RRF order (xbrl_auto 31, llm_seeded 19; ids in F-114). In-eval
+rerank seconds per item p50 2.141, p95 3.86, max 20.489 against the standalone
+063aac623748 p50 1.515, p95 2.063. Not tuned in response.
+
+**Retrieval latency, owner-accepted, not gated:** retrieve + rerank stage
+`retrieval_latency_s` p50 2.887 s, p95 6.342 s, max 22.811 s, n 283, against
+PRD 11's 900 ms. No threshold change. Warm-up: the run was resumed twice, so three
+items start a fresh process: cmp_0001 (stage 6.389 s, rerank 3.212 s, fell back),
+xbrl_0050 (stage 3.161 s, rerank 1.839 s), xbrl_0065 (stage 2.534 s, rerank
+1.665 s). Only cmp_0001 stands out; all three stay in the figures.
+
+Dashboard, README, `/metrics`: `eval/dashboard.yaml` unchanged
+(`current_retrieval_run: 7fa009acac95`); `api/metrics.py` lists 7a079fe7abfe among
+development runs by id and files only. No dev-run figure in the README metrics
+table. `docs/OWNER_REVIEW.md` boxes left to the owner; this entry is the record
+of completion.

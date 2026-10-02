@@ -3242,5 +3242,13 @@ Sufficiency at top-n 0.562 aggregate against 0.505 for the fused top-8
 (xbrl_auto 0.455 vs 0.335, llm_seeded 0.819 vs 0.916). On a CPU-only runner every
 item exceeds the timeout and falls back to RRF order; runs record `device_used`
 and are flagged `hardware_dependent` (F-137). The score floor stays `pending`
-(F-112). Retrieval latency against PRD 11's 900 ms target is reported, not gated,
-as an owner-accepted trade-off; see the D1 eval entry in WORKLOG.
+(F-112).
+
+Retrieval latency, owner-accepted trade-off, not gated (no threshold or
+`eval/thresholds.yaml` change): in development run 7a079fe7abfe (`claude_cli`,
+not a baseline; mps) the retrieve + rerank stage took p50 2.887 s, p95 6.342 s,
+max 22.811 s per item (n 283) against PRD 11's 900 ms target. In-eval rerank
+alone p50 2.141 s, p95 3.86 s, slower than the standalone 063aac623748 (F-114);
+50 of 283 reranks went over 3000 ms and fell back to RRF order, so that run is
+`hardware_dependent`. The run was resumed twice, so cmp_0001 (first item, model
+warm-up) is in these figures; nothing was dropped.
