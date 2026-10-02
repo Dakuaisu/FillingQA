@@ -1,0 +1,346 @@
+run_id: a4e39a65c2c8
+seed: 20261006
+pairs:
+- pair: p01
+  item_id: seed_0070
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-24-000039:239.0:246.0
+  claim: Pfizer characterizes the trend in formulary placement of its branded products
+    by managed care organizations as increasingly being placed on higher tiers or
+    in non-preferred status.
+  supports: null
+- pair: p02
+  item_id: seed_0051
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-26-000013:270.0:272.0
+  claim: Apple is currently subject to a court order in the U.S. preventing it from
+    imposing any commission or fee on certain purchases that consumers make.
+  supports: null
+- pair: p03
+  item_id: seed_0081
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-23-000056:132.0:133.0
+  claim: Earnings excluding Identified Items is not meant to be viewed in isolation
+    or as a substitute for net income (loss) attributable to ExxonMobil as prepared
+    in accordance with U.S. GAAP.
+  supports: null
+- pair: p04
+  item_id: seed_0059
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000909832-23-000065:143.0:146.0
+  claim: In the Yesenia Murillo matter, Costco Wholesale Corporation is named as an
+    alleged joint employer.
+  supports: null
+- pair: p05
+  item_id: seed_0083
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-26-000067:231.0:253.0
+  claim: Exxon Mobil Corporation identifies the ability to maintain near-term cost
+    reductions as ongoing efficiencies without impairing competitive positioning as
+    a risk factor in its Q1 FY2026 10-Q.
+  supports: null
+- pair: p06
+  item_id: seed_0071
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-24-000039:743.0:746.0
+  claim: These charges primarily represented product liability and other legal expenses
+    related to products discontinued and/or divested by Pfizer.
+  supports: null
+- pair: p07
+  item_id: seed_0054
+  claim_id: '6'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-25-000268:656.0:664.0
+  claim: The market multiplier approach utilized various market multiples, primarily
+    pricing multiples, from comparable publicly-traded companies in industries similar
+    to the reporting unit, with a control premium factored in based on observed comparable
+    premiums for change-in-control transactions for financial institutions.
+  supports: null
+- pair: p08
+  item_id: seed_0075
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000027419-24-000032:392.0:395.0
+  claim: Management characterizes the risk of inaccurate self-insurance liability
+    estimates by stating that liabilities could be significantly affected if future
+    occurrences or loss developments differ from the assumptions used in their estimates.
+  supports: null
+- pair: p09
+  item_id: seed_0056
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-25-000200:433.0:438.0
+  claim: The deterioration in commercial credit quality was primarily driven by commercial
+    real estate due to the sustained high interest rate environment.
+  supports: null
+- pair: p10
+  item_id: seed_0072
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-26-000026:511.0:512.0
+  claim: Pfizer characterizes patent litigation settlements and judgments as potentially
+    having a material adverse effect on its revenues.
+  supports: null
+- pair: p11
+  item_id: seed_0079
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-23-000056:75.0:77.0
+  claim: The company identifies specific examples of political and regulatory impacts,
+    including forced divestiture of assets, restrictions on production, imports and
+    exports, price controls, tax increases and retroactive tax claims, expropriation
+    of property, cancellation of contract rights, sanctions and environmental regulations.
+  supports: null
+- pair: p12
+  item_id: seed_0081
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-23-000056:132.0:133.0
+  claim: Management uses earnings excluding Identified Items to improve comparability
+    of the underlying business across multiple periods by isolating and removing significant
+    non-operational events from business results.
+  supports: null
+- pair: p13
+  item_id: seed_0073
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-26-000095:150.0:154.0
+  claim: The dividend income was recorded in Other (income)/deductions—net.
+  supports: null
+- pair: p14
+  item_id: seed_0049
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-24-000069:105.0:112.0
+  claim: As of March 30, 2024, two vendors each individually represented 10% or more
+    of total vendor non-trade receivables, accounting for 47% and 19%.
+  supports: null
+- pair: p15
+  item_id: seed_0052
+  claim_id: claim_1
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-24-000122:1193.0:1195.0
+  claim: Bank of America applies less reliance to broker quotes in less active markets
+    because such quotes may only be indicative and therefore are less reliable than
+    more directly observable market data.
+  supports: null
+- pair: p16
+  item_id: seed_0048
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-25-000079:478.0:485.0
+  claim: These deferred gains and losses from cash flow hedges are subsequently reclassified
+    into earnings when the hedged transaction affects earnings.
+  supports: null
+- pair: p17
+  item_id: seed_0056
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-25-000200:433.0:438.0
+  claim: With the exception of the office property type, credit quality of commercial
+    borrowers remained relatively stable since December 31, 2024.
+  supports: null
+- pair: p18
+  item_id: seed_0053
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-24-000122:1445.0:1453.0
+  claim: The Corporation enters into International Swaps and Derivatives Association,
+    Inc. (ISDA) master netting agreements or similar agreements with substantially
+    all of the Corporation's derivative counterparties.
+  supports: null
+- pair: p19
+  item_id: seed_0083
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-26-000067:231.0:253.0
+  claim: These cautionary statements suggest the company recognizes a significant
+    risk that its cost reductions may not prove to be sustainable over time and that
+    maintaining them could potentially compromise competitive positioning.
+  supports: null
+- pair: p20
+  item_id: seed_0058
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000909832-24-000049:704.0:704.0
+  claim: Costco Wholesale Corp is a named defendant in the Wei and Henry bodily injury
+    actions related to Real Water.
+  supports: null
+- pair: p21
+  item_id: seed_0068
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0001045810-25-000230:354.0:360.0
+  claim: One AI research and deployment company contributed a meaningful amount of
+    NVIDIA's revenue through cloud services purchases from NVIDIA's customers in the
+    third quarter of fiscal year 2026.
+  supports: null
+- pair: p22
+  item_id: seed_0066
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0001045810-25-000023:1199.0:1205.0
+  claim: The certifications will not be deemed 'filed' for purposes of Section 18
+    of the Exchange Act.
+  supports: null
+- pair: p23
+  item_id: seed_0063
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0001628280-25-048859:1284.0:1301.0
+  claim: The transfers occurred as a result of an increase in observability and a
+    decrease in the significance of unobservable inputs.
+  supports: null
+- pair: p24
+  item_id: seed_0055
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-25-000405:253.0:260.0
+  claim: The decline in return on average allocated capital occurred due to an increase
+    in allocated capital, which was only partially offset by the higher net income.
+  supports: null
+- pair: p25
+  item_id: seed_0048
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-25-000079:478.0:485.0
+  claim: Gains and losses arising from amounts included in the assessment of cash
+    flow hedge effectiveness are initially deferred in accumulated other comprehensive
+    income/(loss).
+  supports: null
+- pair: p26
+  item_id: seed_0076
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000027419-25-000018:704.0:708.0
+  claim: The statement that accumulated benefit obligation (which excludes assumed
+    future salary growth) is materially consistent with the projected benefit obligation
+    suggests that the effect of assumed future salary growth on the plan's obligations
+    is immaterial, despite the 3.00% compensation increase assumption.
+  supports: null
+- pair: p27
+  item_id: seed_0054
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-25-000268:991.0:993.0
+  claim: The Corporation concluded that none of its reporting units are at risk of
+    impairment.
+  supports: null
+- pair: p28
+  item_id: seed_0083
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-26-000067:323.0:335.0
+  claim: These cautionary statements suggest the company recognizes a significant
+    risk that its cost reductions may not prove to be sustainable over time and that
+    maintaining them could potentially compromise competitive positioning.
+  supports: null
+- pair: p29
+  item_id: seed_0053
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-24-000122:1445.0:1453.0
+  claim: For purposes of the Consolidated Balance Sheet, the Corporation offsets derivative
+    assets and liabilities with the same counterparty where it has a legally enforceable
+    ISDA master netting agreement.
+  supports: null
+- pair: p30
+  item_id: seed_0074
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-25-000114:498.0:503.0
+  claim: The increase in Medicare rebates in the first quarter of 2025 was primarily
+    driven by the impact of higher manufacturer discounts as a result of IRA Medicare
+    Part D Redesign.
+  supports: null
+- pair: p31
+  item_id: seed_0053
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000070858-24-000122:1445.0:1453.0
+  claim: Where legally enforceable, these ISDA master netting agreements also give
+    the Corporation the right to offset receivables and payables with the same counterparty.
+  supports: null
+- pair: p32
+  item_id: seed_0073
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000078003-26-000095:107.0:110.0
+  claim: The dividend income was recorded in Other (income)/deductions—net.
+  supports: null
+- pair: p33
+  item_id: seed_0068
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0001045810-25-000230:354.0:360.0
+  claim: NVIDIA characterizes its revenue as concentrated among a limited number of
+    direct, indirect and cloud service purchasers, and suggests this trend may continue
+    into the future.
+  supports: null
+- pair: p34
+  item_id: seed_0063
+  claim_id: '1'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0001628280-25-048859:1284.0:1301.0
+  claim: For the three months ended September 30, 2025, JPMorgan Chase & Co reported
+    significant transfers from level 3 into level 2 of $914 million of gross equity
+    derivative receivables and $1.2 billion of gross equity derivative payables.
+  supports: null
+- pair: p35
+  item_id: seed_0060
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000909832-26-000051:204.0:215.0
+  claim: Membership fee increases drove membership fee revenue growth in Q3 FY2026
+  supports: null
+- pair: p36
+  item_id: seed_0081
+  claim_id: '2'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000034088-23-000056:132.0:133.0
+  claim: The Corporation believes that earnings excluding Identified Items provides
+    investors increased transparency into business results and trends and provides
+    investors with a view of the business as seen through the eyes of management.
+  supports: null
+- pair: p37
+  item_id: seed_0048
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-25-000079:478.0:485.0
+  claim: For derivative instruments designated as cash flow hedges, amounts excluded
+    from the assessment of hedge effectiveness are recognized on a straight-line basis
+    over the life of the hedge in the Consolidated Statements of Operations line item
+    to which the hedge relates.
+  supports: null
+- pair: p38
+  item_id: seed_0077
+  claim_id: '3'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000027419-26-000022:131.0:131.0
+  claim: The filing directs readers to Note 3 for additional information about these
+    interchange fee settlements.
+  supports: null
+- pair: p39
+  item_id: seed_0060
+  claim_id: '4'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000909832-26-000051:225.0:226.0
+  claim: Upgrades to Executive Membership drove membership fee revenue growth in Q3
+    FY2026
+  supports: null
+- pair: p40
+  item_id: seed_0049
+  claim_id: '6'
+  stratum: llm_seeded/other checks pass
+  chunk_id: 0000320193-24-000069:105.0:112.0
+  claim: 'Interpretation: concentration eased modestly but remained high, with the
+    top two vendors together at 66% (47%+19%) versus 71% (48%+23%) previously. This
+    suggests continued significant exposure to a small number of vendors, especially
+    the largest, though the absolute balance fell.'
+  supports: null

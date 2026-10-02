@@ -5320,3 +5320,67 @@ the claim itself is not stored by a smoke. The full run stores it.
     smoke 34a69c7dac93: ok True; failure None; checks {'meta_disagreements': [], 'report': 'built and formatted'}
 
 Smoke rerun after 9e33863 (02:58Z to 03:05Z) passes; `make eval` launched next.
+
+## 2026-10-02 — First full run on the specified pipeline: a4e39a65c2c8 (config_4_routed + PRD 7.4 + PRD 7.5, nli_threshold null)
+
+`make eval`, 03:06Z to 05:14Z, 283 items, 0 errors; served claude-haiku-4-5
+240, claude-sonnet-5-5 43; stored lists agree with the meta on every item. Report
+(excerpt; claim and 2x2 rows all print "pending NLI threshold (F-125)"):
+
+    metric                                  xbrl_auto       llm_seeded      handwritten        aggregate
+    items                                         200               83                -              283
+    Sufficiency@10                              0.705            1.000                -            0.792
+    Recall@10                                   0.720            1.000                -            0.802
+    MRR                                         0.350            0.767                -            0.473
+    nDCG@10                                     0.431            0.825                -            0.547
+    Sufficiency post-rerank (top-n)             0.410            0.880                -            0.548
+      floor_empties (abstain, score_floor; F-112)                0                0                -                0
+      rerank fell back to RRF order                19                0                -               19
+      router filters applied                      200               83                -              283
+      filter_zero_recall (fell back)                0                0                -                0
+      declined: intent unsupported                  0                0                -                0
+    verdict pending NLI (F-125)                     1               35                -               36
+    Numeric accuracy (gated)                    0.540            0.757                -            0.574
+      numeric items scored                        200               37                -              237
+      excluded unit_scale_unknown                   0               10                -               10
+      strict first figure                       0.535            0.730                -            0.565
+      within 0.5% (reported)                    0.610            0.757                -            0.633
+      comparison values only                    0.875                -                -            0.875
+      sign agreement                            0.991            1.000                -            0.993
+      abstained (in denominator)                   65                5                -               70
+      free-text fallback used                       0                0                -                0
+    XBRL check status (claims): {'verified': 118, 'no_fact': 137, 'contradiction': 10, 'not_checked': 11}
+    XBRL contradictions: 10
+
+Verdicts: xbrl_auto PASS 106, ABSTAIN 93 (generator insufficient evidence 65,
+verifier 20, XBRL contradiction 8), PENDING_NLI 1; llm_seeded PASS 33, PARTIAL 1,
+ABSTAIN 14 (5 / 8 / 1), PENDING_NLI 35. Claims: 362 (figure 276, prose 86);
+contract violations 33 (30 a number with no figure object).
+
+**Contradictions reviewed item by item** (all 10 in the report): 7 are synonym
+errors (F-128; one correct answer, seed_0016, forced to ABSTAIN), 3 are rounded
+figures correct at their printed precision (F-129). **Verifier drops**: 36
+figure claims ungrounded because the cited chunk states no scale, 4 per-share
+claims failing unit scale (F-130). Nothing in the map or rules changed.
+
+**NLI sheet** (`python -m scripts.nli_auc --sheet a4e39a65c2c8`): 40 pairs from
+95, all from llm_seeded/other-checks-pass (94; the xbrl_auto stratum of 1 rounds
+to 0). OWNER-BLOCKED under F-125.
+
+**Direction only against 63cf35c328e2** (`python -m scripts.run_spread
+63cf35c328e2 a4e39a65c2c8`; config differs: router, filters, intent budgets,
+structured output, gate, sonnet-5-5 on comparison/synthesis intents):
+
+    metric: A / B (B - A)                        xbrl_auto              llm_seeded             handwritten               aggregate
+    Sufficiency@10                  0.365 / 0.705 (+0.340)  0.892 / 1.000 (+0.108)                       -  0.519 / 0.792 (+0.272)
+    Recall@10                       0.375 / 0.720 (+0.345)  0.892 / 1.000 (+0.108)                       -  0.527 / 0.802 (+0.276)
+    MRR                             0.178 / 0.350 (+0.173)  0.639 / 0.767 (+0.128)                       -  0.313 / 0.473 (+0.159)
+    nDCG@10                         0.213 / 0.431 (+0.218)  0.697 / 0.825 (+0.128)                       -  0.355 / 0.547 (+0.192)
+    Sufficiency post-rerank         0.270 / 0.410 (+0.140)  0.831 / 0.880 (+0.048)                       -  0.435 / 0.548 (+0.113)
+    Numeric accuracy (gated)        0.365 / 0.540 (+0.175)  0.757 / 0.757 (+0.000)                       -  0.426 / 0.574 (+0.148)
+      strict first figure           0.345 / 0.535 (+0.190)  0.703 / 0.730 (+0.027)                       -  0.401 / 0.565 (+0.165)
+      within 0.5%                   0.415 / 0.610 (+0.195)  0.757 / 0.757 (+0.000)                       -  0.468 / 0.633 (+0.165)
+      comparison values only        0.150 / 0.875 (+0.725)                       -                       -  0.150 / 0.875 (+0.725)
+    numeric correctness flips: correct in A only 11, in B only 46
+
+Findings F-128 to F-132; F-114 (19 fallbacks) and F-125 (sheet) updated.
