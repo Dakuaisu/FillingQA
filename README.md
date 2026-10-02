@@ -94,7 +94,7 @@ pass, and no number in this README describes it as passing:
   `ANTHROPIC_API_KEY` in CI (F-59).
 - **Retrieval sufficiency misses its thresholds.** The model-free hybrid
   retrieval measurement (BM25 + exact dense search, RRF; retrieval run
-  `5b3c3ac13e5e`, Config 3 of PRD 11.6, no router, on unreviewed candidates)
+  `7fa009acac95`, Config 3 of PRD 11.6, no router, on unreviewed candidates)
   reaches Sufficiency@10 0.537 aggregate against 0.82, 0.375 on the
   XBRL-templated slice against 0.90, and 0.928 on the LLM-seeded slice against
   0.80 (that slice is inflated by lexical overlap with its source chunk, F-110). The specified pipeline adds the

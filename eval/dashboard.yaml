@@ -2,7 +2,7 @@
 # if the two ever disagree, both are wrong (tests/unit/test_metrics.py checks).
 
 # The model-free retrieval run the README and the dashboard quote (F-136, F-139).
-current_retrieval_run: 5b3c3ac13e5e
+current_retrieval_run: 7fa009acac95
 
 # What waits on the owner, with its finding ids (README "What waits on the owner").
 owner_blocked:
