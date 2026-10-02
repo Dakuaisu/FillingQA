@@ -5384,3 +5384,34 @@ structured output, gate, sonnet-5-5 on comparison/synthesis intents):
     numeric correctness flips: correct in A only 11, in B only 46
 
 Findings F-128 to F-132; F-114 (19 fallbacks) and F-125 (sheet) updated.
+
+## 2026-10-02 — F-128, F-129, F-130 decided and re-verified over a4e39a65c2c8's stored claims
+
+Code 5a4bbbc (unknown scale, `rounded`, three synonyms removed and no
+id-derived phrases, `--reverify`); `make test` 470 passed. No model call:
+`python -m scripts.eval_run --reverify a4e39a65c2c8 f128-f129-f130` →
+`eval/runs/a4e39a65c2c8.reverify-f128-f129-f130.json`. As run / re-verified:
+
+    verdict:
+      as run      {'llm_seeded/ABSTAIN': 14, 'llm_seeded/PARTIAL': 1, 'llm_seeded/PASS': 33, 'llm_seeded/PENDING_NLI': 35, 'xbrl_auto/ABSTAIN': 93, 'xbrl_auto/PASS': 106, 'xbrl_auto/PENDING_NLI': 1}
+      re-verified {'llm_seeded/ABSTAIN': 8, 'llm_seeded/PARTIAL': 1, 'llm_seeded/PASS': 39, 'llm_seeded/PENDING_NLI': 35, 'xbrl_auto/ABSTAIN': 70, 'xbrl_auto/PARTIAL': 3, 'xbrl_auto/PASS': 126, 'xbrl_auto/PENDING_NLI': 1}
+    abstain_reason:
+      as run      {'llm_seeded/insufficient_evidence': 5, 'llm_seeded/verifier': 8, 'llm_seeded/xbrl_contradiction': 1, 'xbrl_auto/insufficient_evidence': 65, 'xbrl_auto/verifier': 20, 'xbrl_auto/xbrl_contradiction': 8}
+      re-verified {'llm_seeded/insufficient_evidence': 5, 'llm_seeded/verifier': 3, 'xbrl_auto/insufficient_evidence': 65, 'xbrl_auto/verifier': 5}
+    xbrl_status:
+      as run      {'contradiction': 10, 'no_fact': 137, 'not_checked': 11, 'verified': 118}
+      re-verified {'no_fact': 144, 'not_checked': 11, 'rounded': 3, 'verified': 118}
+    figure_ungrounded: as run 44, re-verified 14
+    figure_unit_false: as run 46, re-verified 15
+    figure_unit_unknown: as run 0, re-verified 18
+    verdict changes: 29 (all from ABSTAIN: 26 to PASS, 3 to PARTIAL)
+
+Retrieval and numeric columns are unchanged by construction (Sufficiency@10
+aggregate 0.792, numeric accuracy 0.574; both read the generator's answer, not
+the verdict); claim metrics still pending F-125. The F-130 set: 36 claims in 31
+items, 30 now grounded (unit unknown 18, XBRL-confirmed 14, false 4). F-129: the
+3 items `rounded`, PASS. F-128: seed_0016 ABSTAIN → PASS; the other five synonym
+items now PASS while answering a different line item (F-133; numeric accuracy
+scores all five wrong). Corpus count of no-scale table chunks and the 4
+per-share failures under F-90. NLI sheet carries a note: the gate is validated
+on llm_seeded prose only. F-128, F-129, F-130 resolved; F-133 logged.
